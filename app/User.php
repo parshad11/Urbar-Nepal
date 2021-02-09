@@ -245,6 +245,33 @@ class User extends Authenticatable
         return $users;
     }
 
+     /**
+     * Return list of users dropdown for a business
+     *
+     * @param $business_id int
+     * @param $prepend_none = true (boolean)
+     * @param $prepend_all = false (boolean)
+     *
+     * @return array users
+     */
+    public static function allDeliveryPersonDropdown($business_id, $prepend_none = true, $prepend_all = false)
+    {
+        $users=User::role('Delivery#'.$business_id)->where('business_id', $business_id)->select('id', DB::raw("CONCAT(COALESCE(surname, ''),' ',COALESCE(first_name, ''),' ',COALESCE(last_name,'')) as full_name"))->get();
+        $users = $users->pluck('full_name', 'id');
+        
+        //Prepend none
+        if ($prepend_none) {
+            $users = $users->prepend(__('lang_v1.none'), '');
+        }
+
+        //Prepend all
+        if ($prepend_all) {
+            $users = $users->prepend(__('lang_v1.all'), '');
+        }
+
+        return $users;
+    }
+
     /**
      * Get the user's full name.
      *

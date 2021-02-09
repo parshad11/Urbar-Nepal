@@ -29,9 +29,9 @@
 						<span class="input-group-addon">
 							<i class="fa fa-user"></i>
 						</span>
-						{!! Form::select('contact_id', [], null, ['class' => 'form-control', 'placeholder' => __('messages.please_select'), 'required', 'id' => 'supplier_id']); !!}
+						{!! Form::select('contact_id',[], null, ['class' => 'form-control', 'placeholder' => __('messages.please_select'), 'required', 'id' => 'supplier_id']); !!}
 						<span class="input-group-btn">
-							<button type="button" class="btn btn-default bg-white btn-flat add_new_supplier" data-name=""><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
+						<button type="button" class="btn btn-default bg-white btn-flat add_new_supplier" data-name=""><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
 						</span>
 					</div>
 				</div>
@@ -121,8 +121,65 @@
                     	@lang('purchase.max_file_size', ['size' => (config('constants.document_size_limit') / 1000000)])
                     	@includeIf('components.document_help_text')
                     </p>
+                </div>    
+            </div>
+
+			<div class="clearfix"></div>
+			
+			<div class="col-sm-3">
+                <div class="form-group">
+				<div class="checkbox">
+            	<br/>
+              <label>
+                {!! Form::checkbox('assign_delivery', 1, false, 
+                [ 'class' => 'input-icheck', 'id' => 'assign_delivery']); !!} {{ __( 'delivery.assign_delivery' ) }}
+              </label>
+            	</div>
                 </div>
             </div>
+			<div class=" col-sm-4 hide assign_delivery_person_div ">
+				<div class="form-group">
+					{!! Form::label('delivery_person_id', __('delivery.delivery_person') . ':') !!}
+					<div class="input-group">
+						<span class="input-group-addon">
+							<i class="fa fa-user"></i>
+						</span>
+							{!! Form::select('delivery_person_id', $delivery_people, null, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'),'id' => 'delivery_person_id', 'style' => 'width: 100%;' ]); !!}
+					</div>
+				</div>
+			</div>
+			<div class=" col-sm-4 hide assign_delivery_person_div ">
+				<div class="form-group">
+					{!! Form::label('special_instruction', __('delivery.special_instruction') . ':') !!}
+					{!! Form::text('special_instruction', null, ['class' => 'form-control']); !!}
+				</div>
+			</div>
+		</div>
+		
+
+	@endcomponent
+
+	@component('components.widget', ['class' => 'box-primary hide assign_delivery_div', 'title' => __('delivery.add_delivery')])
+		<div class="box-body payment_row">
+			<div class="row">
+				<div class="col-md-12">
+					<strong>@lang('lang_v1.advance_balance'):</strong> <span id="advance_balance_text">0</span>
+					{!! Form::hidden('advance_balance', null, ['id' => 'advance_balance', 'data-error-msg' => __('lang_v1.required_advance_balance_not_available')]); !!}
+				</div>
+			</div>
+			@include('sale_pos.partials.payment_row_form', ['row_index' => 0, 'show_date' => true])
+			<hr>
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="pull-right"><strong>@lang('purchase.payment_due'):</strong> <span id="payment_due">0.00</span></div>
+				</div>
+			</div>
+			<br>
+			<div class="row">
+				<div class="col-sm-12">
+					<button type="button" id="submit_purchase_form" class="btn btn-primary pull-right btn-flat">@lang('messages.save')</button>
+				</div>
+			</div>
 		</div>
 	@endcomponent
 
@@ -343,8 +400,10 @@
 @endsection
 
 @section('javascript')
-	<script src="{{ asset('js/purchase.js?v=' . $asset_v) }}"></script>
-	<script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
+	<!-- <script src="{{ asset('js/purchase.js?v=' . $asset_v) }}"></script>
+	<script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script> -->
+	<script src="http://nextgator.com/js/purchase.js?v=37"></script>
+	<script src="http://nextgator.com/js/product.js?v=37"></script>
 	<script type="text/javascript">
 		$(document).ready( function(){
       		__page_leave_confirmation('#add_purchase_form');
@@ -352,7 +411,16 @@
                 format: moment_date_format + ' ' + moment_time_format,
                 ignoreReadonly: true,
             });
+
+			$('#assign_delivery').on('ifChecked', function(event){
+				$('div.assign_delivery_person_div').removeClass('hide');
+   	    	});
+
+			$('#assign_delivery').on('ifUnchecked', function(event){
+				$('div.assign_delivery_person_div').addClass('hide');
+        	});
     	});
+
     	$(document).on('change', '.payment_types_dropdown, #location_id', function(e) {
 		    var default_accounts = $('select#location_id').length ? 
 		                $('select#location_id')

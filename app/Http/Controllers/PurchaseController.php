@@ -7,6 +7,7 @@ use App\Business;
 use App\BusinessLocation;
 use App\Contact;
 use App\CustomerGroup;
+use App\DeliveryPerson;
 use App\Product;
 use App\PurchaseLine;
 use App\TaxRate;
@@ -257,18 +258,20 @@ class PurchaseController extends Controller
             $types['both'] = __('lang_v1.both_supplier_customer');
         }
         $customer_groups = CustomerGroup::forDropdown($business_id);
-
+        $delivery_people=User::allDeliveryPersonDropdown($business_id,false);
+    
         $business_details = $this->businessUtil->getDetails($business_id);
         $shortcuts = json_decode($business_details->keyboard_shortcuts, true);
 
         $payment_line = $this->dummyPaymentLine;
         $payment_types = $this->productUtil->payment_types(null, true);
 
+
         //Accounts
         $accounts = $this->moduleUtil->accountsDropdown($business_id, true);
 
         return view('purchase.create')
-            ->with(compact('taxes', 'orderStatuses', 'business_locations', 'currency_details', 'default_purchase_status', 'customer_groups', 'types', 'shortcuts', 'payment_line', 'payment_types', 'accounts', 'bl_attributes'));
+            ->with(compact('taxes', 'orderStatuses','business_locations', 'currency_details', 'default_purchase_status', 'customer_groups','delivery_people', 'types', 'shortcuts', 'payment_line', 'payment_types', 'accounts', 'bl_attributes'));
     }
 
     /**

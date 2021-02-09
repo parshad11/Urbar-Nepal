@@ -17,6 +17,7 @@ return [
     'manage_your_contact' => 'Manage your :contacts',
     'all_your_contact' => 'All your :contacts',
     'add_contact' => 'Add a new contact',
+    'add_supplier' => 'Add a new supplier',
     'contact_type' => 'Contact type',
     'tax_no' => 'Tax number',
     'pay_term' => 'Pay term',

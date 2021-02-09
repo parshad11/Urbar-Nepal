@@ -131,6 +131,10 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::get('/sells/pos/get-featured-products/{location_id}', 'SellPosController@getFeaturedProducts');
     Route::resource('pos', 'SellPosController');
 
+    Route::resource('delivery', 'DeliveryController');
+    Route::resource('task', 'TaskController');
+    Route::get('/active/work', 'TaskController@getActiveWork');
+
     Route::resource('roles', 'RoleController');
 
     Route::resource('users', 'ManageUserController');
