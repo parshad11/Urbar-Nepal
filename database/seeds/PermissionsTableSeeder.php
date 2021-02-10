@@ -49,6 +49,18 @@ class PermissionsTableSeeder extends Seeder
             ['name' => 'sell.update'],
             ['name' => 'sell.delete'],
 
+            ['name' => 'delivery.view'],
+            ['name' => 'delivery.create'],
+            ['name' => 'delivery.update'],
+            ['name' => 'delivery.delete'],
+            ['name' => 'view_own_delivery'],
+            ['name' => 'task.view'],
+            ['name' => 'task.assign'],
+            ['name' => 'task.update'],
+            ['name' => 'task.delete'],
+            ['name' => 'view_own_task'],
+
+
             ['name' => 'purchase_n_sell_report.view'],
             ['name' => 'contacts_report.view'],
             ['name' => 'stock_report.view'],

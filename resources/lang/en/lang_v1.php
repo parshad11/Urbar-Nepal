@@ -561,7 +561,6 @@ return [
     'fields_for_customer_details' => 'Fields for customer details',
     'show_previous_bal_due' => 'Show total balance due (All sales)',
     'previous_bal_due_help' => 'Check this field to show sum of balance dues for all sales of the customer if exists',
-    'all_sales' => 'All sales',
     'current_sale' => 'Current sale',
     'view_invoice_url' => 'Invoice URL',
     'copy' => 'Copy',
@@ -1180,4 +1179,9 @@ return [
     'quantity_change' => 'Quantity change',
     'new_quantity' => 'New Quantity',
     'no_stock_history_found' => 'No stock history found',
+    'all_tasks' => 'All Tasks',
+    'task' => 'Task',
+    'tasks'=>'Tasks',
+    'assign_task'=>'Assign Task',
+    'received_work'=>'Received Work'
 ];

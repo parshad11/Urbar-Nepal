@@ -81,6 +81,19 @@ return [
     'category.create' => 'Add category',
     'category.update' => 'Edit category',
     'category.delete' => 'Delete category',
+
+    'delivery.view' => 'View delivery',
+    'delivery.create' => 'Add delivery',
+    'delivery.update' => 'Edit delivery',
+    'delivery.delete' => 'Delete delivery',
+    'view.own.delivery'=>'View Own Delivery',
+
+    'task.view' => 'View task',
+    'task.create' => 'Assign task',
+    'task.update' => 'Edit Task',
+    'task.delete' => 'Task delivery',
+    'view.own.task'=>'View Own Task',
+
     'select_all' => 'Select all',
     'settings' => 'Settings',
     'brand' => 'Brand',

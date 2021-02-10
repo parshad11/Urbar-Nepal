@@ -769,6 +769,101 @@
         <hr>
         <div class="row check_group">
         <div class="col-md-1">
+          <h4>@lang( 'delivery.delivery' )</h4>
+        </div>
+        <div class="col-md-2">
+          <div class="checkbox">
+              <label>
+                <input type="checkbox" class="check_all input-icheck" > {{ __( 'role.select_all' ) }}
+              </label>
+            </div>
+        </div>
+        <div class="col-md-9">
+          <div class="col-md-12">
+            <div class="checkbox">
+              <label>
+                {!! Form::checkbox('permissions[]', 'view_own_delivery', false, 
+                [ 'class' => 'input-icheck']); !!} {{ __( 'role.view.own.delivery' ) }}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="checkbox">
+              <label>
+                {!! Form::checkbox('permissions[]', 'delivery.view', false, 
+                [ 'class' => 'input-icheck']); !!} {{ __( 'role.delivery.view' ) }}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="checkbox">
+              <label>
+                {!! Form::checkbox('permissions[]', 'delivery.create', false, 
+                [ 'class' => 'input-icheck']); !!} {{ __( 'role.delivery.create' ) }}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="checkbox">
+              <label>
+                {!! Form::checkbox('permissions[]', 'delivery.update', false, 
+                [ 'class' => 'input-icheck']); !!} {{ __( 'role.delivery.update' ) }}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="checkbox">
+              <label>
+                {!! Form::checkbox('permissions[]', 'delivery.delete', false, 
+                [ 'class' => 'input-icheck']); !!} {{ __( 'role.delivery.delete' ) }}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="checkbox">
+              <label>
+                {!! Form::checkbox('permissions[]', 'view_own_task', false, 
+                [ 'class' => 'input-icheck']); !!} {{ __( 'role.view.own.task' ) }}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="checkbox">
+              <label>
+                {!! Form::checkbox('permissions[]', 'task.view', false, 
+                [ 'class' => 'input-icheck']); !!} {{ __( 'role.task.view' ) }}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="checkbox">
+              <label>
+                {!! Form::checkbox('permissions[]', 'task.assign', false, 
+                [ 'class' => 'input-icheck']); !!} {{ __( 'role.task.create' ) }}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="checkbox">
+              <label>
+                {!! Form::checkbox('permissions[]', 'task.update', false, 
+                [ 'class' => 'input-icheck']); !!} {{ __( 'role.task.update' ) }}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="checkbox">
+              <label>
+                {!! Form::checkbox('permissions[]', 'task.delete', false, 
+                [ 'class' => 'input-icheck']); !!} {{ __( 'role.task.delete' ) }}
+              </label>
+            </div>
+          </div>
+        </div>
+        </div>
+        <hr>
+        <div class="row check_group">
+        <div class="col-md-1">
           <h4>@lang( 'role.report' )</h4>
         </div>
         <div class="col-md-2">
