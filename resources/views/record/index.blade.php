@@ -37,7 +37,7 @@
     <!-- Main content -->
     <section class="content">
         @component('components.widget', ['class' => 'box-primary', 'title' => __( 'All Supplier Record' )])
-            @can('roles.create')
+            @can('record.create')
                 @slot('tool')
                     <div class="box-tools">
                         <a class="btn btn-block btn-primary"
@@ -46,7 +46,7 @@
                     </div>
                 @endslot
             @endcan
-            @can('roles.view')
+            @if (auth()->user()->can('record.view') || auth()->user()->can('record.view_own'))
                 <table class="table table-bordered table-striped" id="record_table">
                     <thead>
                     <tr>
@@ -62,7 +62,7 @@
 
                     </tbody>
                 </table>
-            @endcan
+            @endif
         @endcomponent
 
     </section>
@@ -100,8 +100,8 @@
                     record_table.ajax.reload();
                 });
             }
-            $(document).ready(function(){
-                $("#location").keyup(function(){
+            $(document).ready(function () {
+                $("#location").keyup(function () {
                     record_table.ajax.reload();
                 });
             });

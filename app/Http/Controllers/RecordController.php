@@ -10,15 +10,14 @@ use App\Contact;
 
 class RecordController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function __construct(Record $record)
+    {
+        $this->record = $record;
+    }
 
     public function index(Request $request)
     {
-        if (!auth()->user()->can('record.view')) {
+        if (!(auth()->user()->can('record.view') || auth()->user()->can('record.view_own'))) {
             abort(403, 'Unauthorized action.');
         }
         if ($request->ajax()) {
@@ -46,15 +45,19 @@ class RecordController extends Controller
                         $action .= '&nbsp
                                 <button data-href="' . action('RecordController@destroy', [$row->id]) . '" class="btn btn-xs btn-danger delete_role_button"><i class="glyphicon glyphicon-trash"></i> ' . __("messages.delete") . '</button>';
                     }
-
+                    else{
+                        $action=null;
+                    }
                     return $action;
                 })
-                ->addColumn('supplier name', function () {
-                    $data = Record::latest()->get();
-                    foreach ($data as $data) {
-                        return Contact::find($data->supplier_id)->supplier_business_name;
+                ->addColumn(
+                    'supplier name',
+                    function ($row) {
+                        $data=Record::all();
+                        $supplier_name = $this->record->contact_supplier($row->supplier_id);
+                        return $supplier_name;
                     }
-                })
+                )
                 ->rawColumns(['action', 'supplier name'])
                 ->make(true);
         } else {

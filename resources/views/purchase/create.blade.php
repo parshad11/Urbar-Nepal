@@ -157,7 +157,7 @@
 		</div>
 		
 
-	@endcomponent
+		@endcomponent
 
 	@component('components.widget', ['class' => 'box-primary hide assign_delivery_div', 'title' => __('delivery.add_delivery')])
 		<div class="box-body payment_row">

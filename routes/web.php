@@ -147,6 +147,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::resource('roles', 'RoleController');
 
     Route::resource('users', 'ManageUserController');
+    Route::get('deliveryusers', 'ManageUserController@getdeliveryuser')->name('user.getdeliveruser');
 
     Route::resource('group-taxes', 'GroupTaxController');
 

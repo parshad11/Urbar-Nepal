@@ -58,7 +58,7 @@ class AdminSidebarMenu
             }
 
             //Contacts dropdown
-            if (auth()->user()->can('supplier.view') || auth()->user()->can('customer.view')) {
+            if (auth()->user()->can('supplier.view') || auth()->user()->can('customer.view') ||auth()->user()->can('record.view') ||auth()->user()->can('record.view_own')) {
                 $menu->dropdown(
                     __('contact.contacts'),
                     function ($sub) {
@@ -69,7 +69,7 @@ class AdminSidebarMenu
                                 ['icon' => 'fa fas fa-star', 'active' => request()->input('type') == 'supplier']
                             );
                         }
-                        if (auth()->user()->can('record.view')) {
+                        if (auth()->user()->can('record.view') || auth()->user()->can('record.view_own')) {
                             $sub->url(
                                 action('RecordController@index', ['type' => 'supplier Record']),
                                 __('Supplier Record'),
@@ -326,7 +326,7 @@ class AdminSidebarMenu
             }
 
             //Delivery Dropdown
-            if (in_array('delivery', $enabled_modules)&&(auth()->user()->can('delivery.view') || auth()->user()->can('delivery.create') || auth()->user()->can('delivery.update')||auth()->user()->can('delivery.delete'))) {
+            if (in_array('delivery', $enabled_modules)&&(auth()->user()->can('delivery.view') || auth()->user()->can('delivery.create') || auth()->user()->can('delivery.update')||auth()->user()->can('delivery.delete'))||(auth()->user()->can('view_own_delivery') || auth()->user()->can('view_own_task'))) {
                 $menu->dropdown(
                     __('delivery.delivery'),
                     function ($sub) {

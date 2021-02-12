@@ -506,4 +506,20 @@ class ManageUserController extends Controller
             }
         }
     }
+
+    public function getdeliveryuser(){
+        if (request()->ajax()) {
+            $role=Role::where('name','like','%delivery%')->get();
+            $term = request()->q;
+            if (empty($term)) {
+                return json_encode([]);
+            }
+            $user = User::role($role)->where(function ($query) use ($term) {
+                $query->where('first_name', 'like', '%' . $term .'%')
+                    ->orWhere('last_name', 'like', '%' . $term .'%');
+            })
+                ->get();
+            return json_encode($user);
+        }
+    }
 }
