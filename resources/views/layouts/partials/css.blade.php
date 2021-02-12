@@ -7,7 +7,8 @@
 @yield('css')
 
 <!-- app css -->
-<link rel="stylesheet" href="{{ asset('css/app.css?v='.$asset_v) }}">
+{{-- <link rel="stylesheet" href="{{ asset('css/app.css?v='.$asset_v) }}"> --}}
+<link rel="stylesheet" href="http://nextgator.com/css/app.css?v=37">
 
 @if(isset($pos_layout) && $pos_layout)
 	<style type="text/css">

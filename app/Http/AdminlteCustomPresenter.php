@@ -83,7 +83,7 @@ class AdminlteCustomPresenter extends Presenter
 			      	' . $this->getChildMenuItems($item) . '
 			      </ul>
 		      	</li>'
-        . PHP_EOL;
+            . PHP_EOL;
     }
 
     /**
@@ -106,6 +106,6 @@ class AdminlteCustomPresenter extends Presenter
 			      	' . $this->getChildMenuItems($item) . '
 			      </ul>
 		      	</li>'
-        . PHP_EOL;
+            . PHP_EOL;
     }
 }

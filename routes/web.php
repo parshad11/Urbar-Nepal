@@ -12,9 +12,12 @@
 */
 
 include_once('install_r.php');
+// Route::middleware(['setData'])->group(function () {
+//     Auth::routes();
+// });
 
 Route::middleware(['setData'])->group(function () {
-    Route::get('/', function () {
+    Route::get('/admin', function () {
         return view('welcome');
     });
 
@@ -377,4 +380,10 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone'])
     Route::get('/sells/{transaction_id}/print', 'SellPosController@printInvoice')->name('sell.printInvoice');
     Route::get('/sells/invoice-url/{id}', 'SellPosController@showInvoiceUrl');
     Route::get('/show-notification/{id}', 'HomeController@showNotification');
+});
+
+// Routes for frontCMS
+Route::namespace('Front')->middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 'AdminSidebarMenu', 'CheckUserLogin'])->group(function () {
+    Route::resource('frontcms-settings', 'CmsController');
+    Route::get('frontcms/about/settings', 'CmsController@createAbout')->name('frontcms_about_form');
 });

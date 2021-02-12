@@ -618,6 +618,30 @@ class AdminSidebarMenu
                 $menu->url(action('NotificationTemplateController@index'), __('lang_v1.notification_templates'), ['icon' => 'fa fas fa-envelope', 'active' => request()->segment(1) == 'notification-templates'])->order(80);
             }
 
+            //Fornt CMS Setting
+            if (in_array('frontcms', $enabled_modules) ) {
+                $menu->dropdown(
+                    'FrontCMS',
+                    function ($sub) {
+                        $sub->url(
+                            action('Front\CmsController@create'),
+                            'Homepage Settings',
+                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'frontcms-settings' && request()->segment(2) == 'create']
+                        );
+                        $sub->url(
+                            action('Front\CmsController@createAbout'),
+                            'About Settings',
+                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'frontcms' && request()->segment(2) == 'about']
+                        );
+                        $sub->dropdown('Blog', function($sub){
+                            $sub->url(action('Front\CmsController@index'), 'Category');
+                            $sub->url(action('Front\CmsController@index'), 'Post');
+                        });
+                    },
+                    ['icon' => 'fa fas fa-house-damage', 'id' => 'tour_step6']
+                )->order(90);
+            }
+
             //Settings Dropdown
             if (auth()->user()->can('business_settings.access') ||
                 auth()->user()->can('barcode_settings.access') ||
@@ -695,8 +719,9 @@ class AdminSidebarMenu
                         }
                     },
                     ['icon' => 'fa fas fa-cog', 'id' => 'tour_step3']
-                )->order(85);
+                )->order(95);
             }
+
         });
         
         //Add menus from modules

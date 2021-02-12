@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Front\HomeSetting;
 use App\System;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
@@ -68,6 +69,9 @@ class AppServiceProvider extends ServiceProvider
                 }
             }
         );
+        View::composer('frontcms.partials.*', function($view){
+            $view->with('home_settings',HomeSetting::select('email', 'phone', 'social_links','logo_image')->first());
+        });
 
         //This will fix "Specified key was too long; max key length is 767 bytes issue during migration"
         Schema::defaultStringLength(191);
