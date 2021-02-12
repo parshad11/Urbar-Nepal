@@ -14,6 +14,10 @@
 <p class="text-muted">
     {!! $contact->contact_address !!}
 </p>
+<p class="text-muted">
+    {!! $contact->latitude !!},{!! $contact->longitude!!}
+    
+</p>
 @if($contact->supplier_business_name)
     <strong><i class="fa fa-briefcase margin-r-5"></i> 
     @lang('business.business_name')</strong>

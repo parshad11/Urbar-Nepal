@@ -316,6 +316,34 @@
             </div>
         </div>
       </div>
+      <div class="col-md-3">
+        <div class="form-group">
+            {!! Form::label('latitude', __('business.latitude') . ':*') !!}
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <i class="fa fa-map-marker"></i>
+                </span>
+                {!! Form::text('latitude', null, ['class' => 'form-control', 
+                'placeholder' => __('business.latitude')]); !!}
+            </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+            {!! Form::label('longitude', __('business.longitude') . ':*') !!}
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <i class="fa fa-map-marker"></i>
+                </span>
+                {!! Form::text('longitude', null, ['class' => 'form-control', 
+                'placeholder' => __('business.longitude')]); !!}
+            </div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+       <p>Please open this link to choose latitude and longitude: <a href="https://www.mapcoordinates.net/en" target="_blank">https://www.mapcoordinates.net/en </a></p>
+      </div>
       <div class="clearfix"></div>
       <div class="col-md-12">
         <hr/>

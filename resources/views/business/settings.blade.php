@@ -26,6 +26,7 @@
                     <a href="#" class="list-group-item text-center">@lang('business.sale')</a>
                     <a href="#" class="list-group-item text-center">@lang('sale.pos_sale')</a>
                     <a href="#" class="list-group-item text-center">@lang('purchase.purchases')</a>
+                    <a href="#" class="list-group-item text-center">@lang('delivery.delivery')</a>
                     <a href="#" class="list-group-item text-center">@lang('business.dashboard')</a>
                     <a href="#" class="list-group-item text-center">@lang('business.system')</a>
                     <a href="#" class="list-group-item text-center">@lang('lang_v1.prefixes')</a>
@@ -53,6 +54,9 @@
                 <!-- tab 5 start -->
                 @include('business.partials.settings_purchase')
                 <!-- tab 5 end -->
+                 <!-- tab delivery start -->
+                 @include('business.partials.settings_delivery')
+                <!-- tab delivery end -->
                 <!-- tab 6 start -->
                 @include('business.partials.settings_dashboard')
                 <!-- tab 6 end -->

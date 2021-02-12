@@ -63,7 +63,9 @@ return [
     'enable_sub_category' => 'Enable Sub-Categories',
     'enable_price_tax' => 'Enable Price & Tax info',
     'enable_purchase_status' => 'Enable Purchase Status',
+    'enable_delivery_status' => 'Enable Delivery Status',
     'tooltip_enable_purchase_status' => 'On disable all purchases will be marked as <i>Item Received</i>',
+    'tooltip_enable_delivery_status' => 'On disable all delivery will be marked as <i>Delivery Received</i>',
     'recent_product_quantity' => 'Go to product quantity',
     'full_screen' => 'Press F11 to go Full Screen',
     'Uncategorised' => 'Uncategorised',
@@ -1183,5 +1185,9 @@ return [
     'task' => 'Task',
     'tasks'=>'Tasks',
     'assign_task'=>'Assign Task',
-    'received_work'=>'Received Work'
+    'received_work'=>'Received Work',
+    'shipping'=>'Shipping',
+    'on_review'=>'On Review',
+    'delivered'=>'Delivered',
+    'canceled'=>'Canceled',
 ];

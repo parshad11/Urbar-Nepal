@@ -348,7 +348,8 @@
 
 @section('javascript')
   @php $asset_v = env('APP_VERSION'); @endphp
-  <script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
+  <!-- <script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script> -->
+  <script src="http://nextgator.com/js/product.js?v="></script>
 
     <script type="text/javascript">
         $(document).ready(function(){

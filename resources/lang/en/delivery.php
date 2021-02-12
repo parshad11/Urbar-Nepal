@@ -23,6 +23,9 @@ return [
     'deleted_success' => 'Delivery deleted successfully',
     'add_delivery' => 'Add Delivery',
     'edit_delivery' => 'Edit Delivery',
+    'delivery_status' => 'Delivery Status',
     'special_instruction'=>'Special Delivery Instruction',
+    'shipping_address'=>'Shipping Address',
+    'pickup_address'=>'Pickup Address',
 
 ];

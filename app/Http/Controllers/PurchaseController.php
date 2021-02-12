@@ -236,6 +236,7 @@ class PurchaseController extends Controller
                         ->ExcludeForTaxGroup()
                         ->get();
         $orderStatuses = $this->productUtil->orderStatuses();
+        $deliveryStatuses = $this->productUtil->deliveryStatuses();
         $business_locations = BusinessLocation::forDropdown($business_id, false, true);
         $bl_attributes = $business_locations['attributes'];
         $business_locations = $business_locations['locations'];
@@ -245,6 +246,11 @@ class PurchaseController extends Controller
         $default_purchase_status = null;
         if (request()->session()->get('business.enable_purchase_status') != 1) {
             $default_purchase_status = 'received';
+        }
+
+        $default_delivery_status = null;
+        if (request()->session()->get('business.enable_delivery_status') != 1) {
+            $default_delivery_status = 'received';
         }
 
         $types = [];
@@ -271,7 +277,7 @@ class PurchaseController extends Controller
         $accounts = $this->moduleUtil->accountsDropdown($business_id, true);
 
         return view('purchase.create')
-            ->with(compact('taxes', 'orderStatuses','business_locations', 'currency_details', 'default_purchase_status', 'customer_groups','delivery_people', 'types', 'shortcuts', 'payment_line', 'payment_types', 'accounts', 'bl_attributes'));
+            ->with(compact('taxes', 'orderStatuses','deliveryStatuses','delivery_people','business_locations', 'currency_details', 'default_purchase_status','default_delivery_status', 'customer_groups','delivery_people', 'types', 'shortcuts', 'payment_line', 'payment_types', 'accounts', 'bl_attributes'));
     }
 
     /**
@@ -282,6 +288,7 @@ class PurchaseController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request->all());
         if (!auth()->user()->can('purchase.create')) {
             abort(403, 'Unauthorized action.');
         }
@@ -294,7 +301,7 @@ class PurchaseController extends Controller
                 return $this->moduleUtil->expiredResponse(action('PurchaseController@index'));
             }
 
-            $transaction_data = $request->only([ 'ref_no', 'status', 'contact_id', 'transaction_date', 'total_before_tax', 'location_id','discount_type', 'discount_amount','tax_id', 'tax_amount', 'shipping_details', 'shipping_charges', 'final_total', 'additional_notes', 'exchange_rate', 'pay_term_number', 'pay_term_type']);
+            $transaction_data = $request->only([ 'ref_no', 'status','assign_delivery','contact_id', 'transaction_date', 'total_before_tax', 'location_id','discount_type', 'discount_amount','tax_id', 'tax_amount', 'shipping_details', 'shipping_charges', 'final_total', 'additional_notes', 'exchange_rate', 'pay_term_number', 'pay_term_type']);
 
             $exchange_rate = $transaction_data['exchange_rate'];
 
@@ -354,7 +361,6 @@ class PurchaseController extends Controller
             if (empty($transaction_data['ref_no'])) {
                 $transaction_data['ref_no'] = $this->productUtil->generateReferenceNumber($transaction_data['type'], $ref_count);
             }
-
             $transaction = Transaction::create($transaction_data);
             
             $purchase_lines = [];
@@ -750,20 +756,22 @@ class PurchaseController extends Controller
 
             $query = Contact::where('business_id', $business_id)
                             ->active();
-
+                   
             $selected_contacts = User::isSelectedContacts($user_id);
             if ($selected_contacts) {
                 $query->join('user_contact_access AS uca', 'contacts.id', 'uca.contact_id')
                 ->where('uca.user_id', $user_id);
             }
+           
             $suppliers = $query->where(function ($query) use ($term) {
                 $query->where('name', 'like', '%' . $term .'%')
                                 ->orWhere('supplier_business_name', 'like', '%' . $term .'%')
                                 ->orWhere('contacts.contact_id', 'like', '%' . $term .'%');
             })
-                        ->select('contacts.id', 'name as text', 'supplier_business_name as business_name', 'contact_id', 'contacts.pay_term_type', 'contacts.pay_term_number', 'contacts.balance')
+                        ->select('contacts.id', 'name as text', 'supplier_business_name as business_name', 'contact_id', 'contacts.pay_term_type', 'contacts.pay_term_number', 'contacts.balance','contacts.shipping_address as pickup_address')
                         ->onlySuppliers()
                         ->get();
+                        
             return json_encode($suppliers);
         }
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Business;
+use App\BusinessLocation;
 use App\Currency;
 use App\Notifications\TestEmailNotification;
 use App\System;
@@ -17,6 +18,7 @@ use DateTimeZone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Expr\AssignOp\Concat;
 use Spatie\Permission\Models\Permission;
 
 class BusinessController extends Controller
@@ -263,6 +265,34 @@ class BusinessController extends Controller
     }
     
     /**
+     * Get all business locations settings
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getBusinessLocations()
+    {
+        if (request()->ajax()) {
+            $term = request()->q;
+            if (empty($term)) {
+                return json_encode([]);
+            }
+
+            $business_id = request()->session()->get('user.business_id');
+            $query = BusinessLocation::where('business_id', $business_id)->Active();
+
+            $locations = $query->where(function ($query) use ($term) {
+                $query->where('name', 'like', '%' . $term .'%')
+                                ->orWhere('business_locations.location_id', 'like', '%' . $term .'%');
+            })
+                        ->select('business_locations.id', 'name as text','location_id','country as business_location_address')
+                        ->get();
+                      
+            return json_encode($locations);
+        }
+      
+    }
+
+    /**
      * Shows business settings form
      *
      * @return \Illuminate\Http\Response
@@ -409,7 +439,7 @@ class BusinessController extends Controller
 
             $checkboxes = ['enable_editing_product_from_purchase',
                 'enable_inline_tax',
-                'enable_brand', 'enable_category', 'enable_sub_category', 'enable_price_tax', 'enable_purchase_status',
+                'enable_brand', 'enable_category', 'enable_sub_category', 'enable_price_tax', 'enable_purchase_status', 'enable_delivery_status',
                 'enable_lot_number', 'enable_racks', 'enable_row', 'enable_position', 'enable_sub_units'];
             foreach ($checkboxes as $value) {
                 $business_details[$value] = !empty($request->input($value)) &&  $request->input($value) == 1 ? 1 : 0;
