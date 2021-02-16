@@ -8,6 +8,7 @@ use App\User;
 use App\Role;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 use Session;
 
 class TaskController extends Controller
@@ -15,6 +16,12 @@ class TaskController extends Controller
     public function __construct(Task $task)
     {
         $this->task = $task;
+        $this->status_colors = [
+            'received' => 'bg-purple',
+            'on process' => 'bg-yellow',
+            'completed' => 'bg-green',
+            'cancelled' => 'bg-red',
+        ];
     }
 
     public function index(Request $request)
@@ -23,6 +30,7 @@ class TaskController extends Controller
         if (!auth()->user()->can('task.view') && !auth()->user()->can('view_own_task')) {
             abort(403, 'Unauthorized action.');
         }
+        $statuses = $this->taskStatus();
         if ($request->ajax()) {
             if (auth()->user()->can('task.view') && auth()->user()->can('view_own_task')) {
                 $task = Task::all();
@@ -51,25 +59,29 @@ class TaskController extends Controller
                         $assign_to = $this->task->task_assign($row->assign_to);
                         return $assign_to;
                     })
-                ->addColumn('location', function () {
-                    $task = Task::all();
-                    foreach ($task as $task) {
-                        $location = $task->start_loc . '-' . $task->end_loc;
+                ->addColumn('location',
+                    function ($row) {
+                        $location = $this->task->location($row->id);
                         return $location;
-                    }
-                })
-                ->addColumn('date', function () {
-                    $task = Task::all();
-                    foreach ($task as $task) {
-                        $date = $task->start_date . '-' . $task->end_date;
+                    })
+                ->addColumn('date',
+                    function ($row) {
+                        $date = $this->task->date($row->id);
                         return $date;
-                    }
+                    })
+                ->editColumn('status', function($row) use($statuses) {
+                    $row->status = $row->status == 'final' ? 'completed' : $row->status;
+                    $status =  $statuses[$row->status];
+                    $status_color = !empty($this->status_colors[$row->status]) ? $this->status_colors[$row->status] : 'bg-gray';
+                    $status ='<a href="#" class="update_status" data-status="' . $row->status . '" data-href="' . action("TaskController@statusupdate", [$row->id]) . '"><span class="label ' . $status_color .'">' . $statuses[$row->status] . '</span></a>';
+
+                    return $status;
                 })
                 ->rawColumns(['action', 'status'])
                 ->make(true);
 
         } else {
-            return view('task.index');
+            return view('task.index')->with(compact('statuses'));
         }
 
     }
@@ -97,7 +109,6 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
         if (!auth()->user()->can('task.assign')) {
             abort(403, 'Unauthorized action.');
         }
@@ -107,8 +118,10 @@ class TaskController extends Controller
             'title' => 'required|',
             'description' => '',
             'special_instruction' => '',
-            'start_loc' => 'required',
-            'end_loc' => 'required',
+            'start_lat' => ['required','regex:/^[-]?(([0-8]?[0-9])\.(\d+))|(90(\.0+)?)$/'],
+            'start_log' => ['required','regex:/^[-]?((((1[0-7][0-9])|([0-9]?[0-9]))\.(\d+))|180(\.0+)?)$/'],
+            'end_lat' => ['required','regex:/^[-]?(([0-8]?[0-9])\.(\d+))|(90(\.0+)?)$/'],
+            'end_log' => ['required','regex:/^[-]?((((1[0-7][0-9])|([0-9]?[0-9]))\.(\d+))|180(\.0+)?)$/'],
             'start_date' => 'required',
             'end_date' => 'required',
             'status' => 'required',
@@ -123,9 +136,64 @@ class TaskController extends Controller
         }
     }
 
-    public function getActiveWork()
+    public function getActiveWork(Request $request)
     {
-        //
+        if (!auth()->user()->can('task.view') && !auth()->user()->can('view_own_task')) {
+            abort(403, 'Unauthorized action.');
+        }
+        $statuses = $this->taskStatus();
+        if ($request->ajax()) {
+            if (auth()->user()->can('task.view') && auth()->user()->can('view_own_task')) {
+                $task = Task::where('status','received')->get();
+            }
+            if (auth()->user()->can('view_own_task') && !auth()->user()->can('task.view')) {
+                $task = Task::where('status','received')->where('assign_to', Auth::user()->id);
+            }
+            return Datatables::of($task)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+
+                    if (auth()->user()->can('task.update')) {
+                        $action = '<a href="' . action('TaskController@edit', [$row->id]) . '" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> ' . __("messages.edit") . '</a>';
+                    }
+                    if (auth()->user()->can('task.delete')) {
+                        $action .= '&nbsp
+                                <button data-href="' . action('TaskController@destroy', [$row->id]) . '" class="btn btn-xs btn-danger delete_role_button"><i class="glyphicon glyphicon-trash"></i> ' . __("messages.delete") . '</button>';
+                    } else {
+                        $action = null;
+                    }
+
+                    return $action;
+                })
+                ->addColumn('assign to',
+                    function ($row) {
+                        $assign_to = $this->task->task_assign($row->assign_to);
+                        return $assign_to;
+                    })
+                ->addColumn('location',
+                    function ($row) {
+                        $location = $this->task->location($row->id);
+                        return $location;
+                    })
+                ->addColumn('date',
+                    function ($row) {
+                        $date = $this->task->date($row->id);
+                        return $date;
+                    })
+                ->editColumn('status', function($row) use($statuses) {
+                    $row->status = $row->status == 'final' ? 'completed' : $row->status;
+                    $status =  $statuses[$row->status];
+                    $status_color = !empty($this->status_colors[$row->status]) ? $this->status_colors[$row->status] : 'bg-gray';
+                    $status ='<p><span class="label ' . $status_color .'">' . $statuses[$row->status] . '</span></p>';
+
+                    return $status;
+                })
+                ->rawColumns(['action', 'status'])
+                ->make(true);
+
+        } else {
+            return view('task.receivedtask');
+        }
     }
 
 
@@ -176,8 +244,10 @@ class TaskController extends Controller
             'title' => 'required|',
             'description' => '',
             'special_instruction' => '',
-            'start_loc' => 'required',
-            'end_loc' => 'required',
+            'start_lat' => ['required','regex:/^[-]?(([0-8]?[0-9])\.(\d+))|(90(\.0+)?)$/'],
+            'start_log' => ['required','regex:/^[-]?((((1[0-7][0-9])|([0-9]?[0-9]))\.(\d+))|180(\.0+)?)$/'],
+            'end_lat' => ['required','regex:/^[-]?(([0-8]?[0-9])\.(\d+))|(90(\.0+)?)$/'],
+            'end_log' => ['required','regex:/^[-]?((((1[0-7][0-9])|([0-9]?[0-9]))\.(\d+))|180(\.0+)?)$/'],
             'start_date' => 'required',
             'end_date' => 'required',
             'status' => 'required',
@@ -191,7 +261,21 @@ class TaskController extends Controller
         }
 
     }
-
+    public function statusupdate(Request $request, $id){
+        if (!auth()->user()->can('task.update')) {
+            abort(403, 'Unauthorized action.');
+        }
+        $task = Task::findorfail($id);
+        $data = $request->validate([
+            'status' => 'required',
+        ]);
+        $task->fill($data);
+        $success = $task->save();
+        $output = ['success' => 1,
+            'msg' => __('Task status updated succesfully')
+        ];
+        return $output;
+    }
     /**
      * Remove the specified resource from storage.
      *
@@ -222,4 +306,15 @@ class TaskController extends Controller
             return $output;
         }
     }
+
+    private function taskStatus()
+    {
+        return [
+            'received' => __('received'),
+            'on process' => __('on process'),
+            'completed' => __('completed'),
+            'cancelled' => __('cancelled')
+        ];
+    }
 }
+

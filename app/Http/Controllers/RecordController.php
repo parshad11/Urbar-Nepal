@@ -193,4 +193,18 @@ class RecordController extends Controller
             return $output;
         }
     }
+
+    public function getallsupplier(){
+        if (request()->ajax()) {
+            $term = request()->q;
+            if (empty($term)) {
+                return json_encode([]);
+            }
+            $user = Contact::where('type','supplier')->where(function ($query) use ($term) {
+                $query->where('name', 'like', '%' . $term .'%');
+            })
+                ->get();
+            return json_encode($user);
+        }
+    }
 }

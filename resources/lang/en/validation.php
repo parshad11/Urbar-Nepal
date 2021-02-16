@@ -117,6 +117,7 @@ return [
     'url' => 'The :attribute format is invalid.',
     'uuid' => 'The :attribute must be a valid UUID.',
 
+
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines
@@ -145,10 +146,16 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'supplier_id'=>'supplier',
+        'start_lat'=>'start latitude',
+        'end_lat'=>'end latitude',
+        'start_log'=>'start longitude',
+        'end_log'=>'end longitude',
+    ],
     'custom-messages' => [
         'quantity_not_available' => 'Only :qty :unit available',
-        'this_field_is_required' => 'This field is required'
+        'this_field_is_required' => 'This field is required',
     ],
 
 ];

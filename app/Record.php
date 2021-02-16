@@ -11,7 +11,8 @@ class Record extends Model
     public function contact_supplier($supplier)
     {
         $contact = Contact::findOrFail($supplier);
-        $name = $contact->supplier_business_name;
+        $name =$contact->name.' ('.$contact->supplier_business_name.')';
         return $name;
     }
+
 }

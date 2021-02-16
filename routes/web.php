@@ -76,6 +76,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     route::get('/supplier/record/edit/{id}', 'RecordController@edit')->name('record.edit');
     route::post('/supplier/record/update/{id}', 'RecordController@update')->name('record.update');
     route::Delete('/supplier/record/delete/{id}', 'RecordController@destroy')->name('record.delete');
+    route::get('/supplier/detail', 'RecordController@getallsupplier');
 
     Route::get('taxonomies-ajax-index-page', 'TaxonomyController@getTaxonomyIndexPage');
     Route::resource('taxonomies', 'TaxonomyController');
@@ -142,6 +143,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
 
     Route::resource('delivery', 'DeliveryController');
     Route::resource('task', 'TaskController');
+    Route::put('task/statusupdate/{id}', 'TaskController@statusupdate');
     Route::get('/active/work', 'TaskController@getActiveWork');
 
     Route::resource('roles', 'RoleController');

@@ -20,11 +20,13 @@ class CreateTasksTable extends Migration
             $table->string('title');
             $table->longText('description')->nullable();
             $table->longText('special_instruction')->nullable();
-            $table->string('start_loc');
-            $table->string('end_loc');
+            $table->string('start_lat');
+            $table->string('start_log');
+            $table->string('end_lat');
+            $table->string('end_log');
             $table->date('start_date');
             $table->date('end_date');
-            $table->enum('status',['pending','on process','completed'])->default('pending');
+            $table->enum('status',['received','on process','completed','cancelled'])->default('received');
             $table->timestamps();
         });
     }
