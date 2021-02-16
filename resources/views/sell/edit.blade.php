@@ -88,7 +88,7 @@
 							<input type="hidden" id="default_customer_name" 
 							value="{{ $transaction->contact->name }}" >
 							{!! Form::select('contact_id', 
-								[], null, ['class' => 'form-control mousetrap', 'id' => 'customer_id', 'placeholder' => 'Enter Customer name / phone', 'required']); !!}
+								[], null, ['class' => 'form-control mousetrap select2', 'id' => 'customer_id', 'placeholder' => 'Enter Customer name / phone',]); !!}
 							<span class="input-group-btn">
 								<button type="button" class="btn btn-default bg-white btn-flat add_new_customer" data-name=""><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
 							</span>
@@ -239,8 +239,91 @@
 						</tr>
 					</table>
 					</div>
+					<div class="col-sm-3  hide">
+					<div class="checkbox">
+					<label>
+						{!! Form::checkbox('assign_delivery', 1, true, 
+						[  'class' => 'input-icheck' ,'id' => 'assign_delivery' ]); !!} 
+					</label>	
+					</div>		
+			</div>
 				</div>
 			@endcomponent
+
+			@component('components.widget', ['class' => 'box-primary', 'title' => __('delivery.assign_delivery')])
+
+<div class="row">
+	<div class="col-md-12 " style="display:flex;justify-content: space-between;">
+
+	<div class=" col-sm-4 ">
+		<div class="form-group">
+			{!! Form::label('delivery_person_id', __('delivery.delivery_person') . ':*') !!}
+			<div class="input-group">
+				<span class="input-group-addon">
+					<i class="fa fa-user"></i>
+				</span>
+					{!! Form::select('delivery_person_id',$delivery_people, (isset($delivery) ? $delivery->delivery_person_id : '' ), ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'),'id' => 'delivery_person_id', 'style' => 'width: 100%;' ]); !!}
+			</div>
+		</div>
+	</div>
+	<br>
+	<div class=" col-sm-4 @if(!empty($default_delivery_status)) hide @endif">
+		<div class="form-group">
+			{!! Form::label('delivery_status', __('delivery.delivery_status') . ':*') !!}
+			{!! Form::select('delivery_status', $shipping_statuses,  (isset($delivery) ? $delivery->delivery_status : '' ), ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required','style' => 'width: 100%;']); !!}
+		</div>
+	</div>
+	</div>
+</div>
+<br>
+<div class="row">
+	<div class="col-md-12" style="display:flex;justify-content: space-between;">
+		<div class=" col-sm-4">
+			<div class="form-group">
+				{!! Form::label('pickup_address', __('delivery.pickup_address') . ':*') !!}
+				{!! Form::text('pickup_address', (isset($delivery) ? $delivery->pickup_address : '' ), ['class' => 'form-control','id'=>'pickup_address']); !!}
+			</div>
+		</div>
+		
+	</div>
+</div>
+<br>
+<div class="row">
+	<div class="col-md-12" style="display:flex;justify-content: space-between;">
+		<div class=" col-sm-4">
+			<div class="form-group">
+				{!! Form::label('shipping_address', __('delivery.shipping_address') . ':*') !!}
+				{!! Form::text('shipping_address', (isset($delivery) ? $delivery->shipping_address : '' ), ['class' => 'form-control','id'=>'shipping_address']); !!}
+			</div>
+			<div class="form-group">
+			<p>Please open this link to choose pickup location's latitude and longitude: <a href="https://www.mapcoordinates.net/en" target="_blank">https://www.mapcoordinates.net/en </a></p>
+			</div>
+		</div>
+		<div class=" col-sm-4">
+			<div class="form-group">
+				{!! Form::label('shipping_latitude', __('business.latitude') . ':*') !!}
+				{!! Form::text('shipping_latitude',(isset($delivery) ? $delivery->shipping_latitude : '' ), ['class' => 'form-control','id'=>'shipping_latitude']); !!}
+			</div>
+			<div class="form-group">
+				{!! Form::label('shipping_longitude', __('business.longitude') . ':*') !!}
+				{!! Form::text('shipping_longitude',(isset($delivery) ? $delivery->shipping_longitude : '' ), ['class' => 'form-control','id'=>'shipping_longitude']); !!}
+			</div>
+		</div>
+	</div>
+</div>
+<br>
+<div class="row">
+	<div class="col-md-12" style="display:flex;justify-content: space-between;">
+		<div class=" col-sm-4 ">
+			<div class="form-group">
+				{!! Form::label('special_instructions', __('delivery.special_delivery_instructions') . ':') !!}
+				{!! Form::textarea('special_delivery_instructions',  (isset($delivery) ? $delivery->special_delivery_instructions : '' ), ['class' => 'form-control','rows'=>3]); !!}
+			</div>
+		</div>
+	</div>
+</div>
+@endcomponent
+
 
 			@component('components.widget', ['class' => 'box-primary'])
 				<div class="col-md-4">
@@ -316,6 +399,8 @@
 					<span class="display_currency" id="order_tax">{{$transaction->tax_amount}}</span>
 			    </div>
 			    <div class="clearfix"></div>
+				<div class="row" >
+				<div class="col-md-12" style="display:flex;justify-content: space-between;" >
 				<div class="col-md-4">
 					<div class="form-group">
 			            {!! Form::label('shipping_details', __('sale.shipping_details')) !!}
@@ -327,17 +412,7 @@
 			            </div>
 			        </div>
 				</div>
-				<div class="col-md-4">
-					<div class="form-group">
-			            {!! Form::label('shipping_address', __('lang_v1.shipping_address')) !!}
-			            <div class="input-group">
-							<span class="input-group-addon">
-			                    <i class="fa fa-map-marker"></i>
-			                </span>
-			                {!! Form::textarea('shipping_address', $transaction->shipping_address, ['class' => 'form-control','placeholder' => __('lang_v1.shipping_address') ,'rows' => '1', 'cols'=>'30']); !!}
-			            </div>
-			        </div>
-				</div>
+			
 				<div class="col-md-4">
 					<div class="form-group">
 						{!!Form::label('shipping_charges', __('sale.shipping_charges'))!!}
@@ -349,18 +424,9 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-4">
-					<div class="form-group">
-			            {!! Form::label('shipping_status', __('lang_v1.shipping_status')) !!}
-			            {!! Form::select('shipping_status',$shipping_statuses, $transaction->shipping_status, ['class' => 'form-control','placeholder' => __('messages.please_select')]); !!}
-			        </div>
 				</div>
-				<div class="col-md-4">
-			        <div class="form-group">
-			            {!! Form::label('delivered_to', __('lang_v1.delivered_to') . ':' ) !!}
-			            {!! Form::text('delivered_to', $transaction->delivered_to, ['class' => 'form-control','placeholder' => __('lang_v1.delivered_to')]); !!}
-			        </div>
-			    </div>
+				</div>
+				
 			    <div class="col-md-4 col-md-offset-8">
 			    	@if(!empty($pos_settings['amount_rounding_method']) && $pos_settings['amount_rounding_method'] > 0)
 			    	<small id="round_off"><br>(@lang('lang_v1.round_off'): <span id="round_off_text">0</span>)</small>

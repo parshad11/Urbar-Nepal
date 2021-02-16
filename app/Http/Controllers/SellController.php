@@ -7,6 +7,7 @@ use App\Business;
 use App\BusinessLocation;
 use App\Contact;
 use App\CustomerGroup;
+use App\Delivery;
 use App\InvoiceScheme;
 use App\SellingPriceGroup;
 use App\TaxRate;
@@ -466,6 +467,7 @@ class SellController extends Controller
         $business_locations = BusinessLocation::forDropdown($business_id, false, true);
         $bl_attributes = $business_locations['attributes'];
         $business_locations = $business_locations['locations'];
+     
 
         $default_location = null;
         foreach ($business_locations as $id => $name) {
@@ -479,6 +481,11 @@ class SellController extends Controller
             $commission_agent = User::forDropdown($business_id);
         } elseif ($commsn_agnt_setting == 'cmsn_agnt') {
             $commission_agent = User::saleCommissionAgentsDropdown($business_id);
+        }
+
+        $default_delivery_status = null;
+        if (request()->session()->get('business.enable_delivery_status') != 1) {
+            $default_delivery_status = 'received';
         }
 
         $types = [];
@@ -506,7 +513,7 @@ class SellController extends Controller
         $invoice_schemes = InvoiceScheme::forDropdown($business_id);
         $default_invoice_schemes = InvoiceScheme::getDefault($business_id);
         $shipping_statuses = $this->transactionUtil->shipping_statuses();
-
+        $delivery_people=User::allDeliveryPersonDropdown($business_id,false);
         //Types of service
         $types_of_service = [];
         if ($this->moduleUtil->isModuleEnabled('types_of_service')) {
@@ -530,6 +537,8 @@ class SellController extends Controller
                 'bl_attributes',
                 'default_location',
                 'commission_agent',
+                'delivery_people',
+                'default_delivery_status',
                 'types',
                 'customer_groups',
                 'payment_line',
@@ -657,6 +666,8 @@ class SellController extends Controller
                             ->where('type', 'sell')
                             ->findorfail($id);
 
+         $delivery=Delivery::where('transaction_id',$transaction->id)->with('transaction','delivery_person')->first();
+
         $location_id = $transaction->location_id;
         $location_printer_type = BusinessLocation::find($location_id)->receipt_printer_type;
 
@@ -759,6 +770,8 @@ class SellController extends Controller
             $commission_agent = User::saleCommissionAgentsDropdown($business_id);
         }
 
+        
+        $delivery_people=User::allDeliveryPersonDropdown($business_id,false);
         $types = [];
         if (auth()->user()->can('supplier.create')) {
             $types['supplier'] = __('report.supplier');
@@ -812,7 +825,7 @@ class SellController extends Controller
         $warranties = $is_warranty_enabled ? Warranty::forDropdown($business_id) : [];
         
         return view('sell.edit')
-            ->with(compact('business_details', 'taxes', 'sell_details', 'transaction', 'commission_agent', 'types', 'customer_groups', 'pos_settings', 'waiters', 'invoice_schemes', 'default_invoice_schemes', 'redeem_details', 'edit_discount', 'edit_price', 'accounts', 'shipping_statuses', 'warranties'));
+            ->with(compact('business_details','delivery_people','delivery', 'taxes', 'sell_details', 'transaction', 'commission_agent', 'types', 'customer_groups', 'pos_settings', 'waiters', 'invoice_schemes', 'default_invoice_schemes', 'redeem_details', 'edit_discount', 'edit_price', 'accounts', 'shipping_statuses', 'warranties'));
     }
 
     /**
@@ -1050,7 +1063,7 @@ class SellController extends Controller
 
             //Create duplicate transaction
             $duplicate_transaction = Transaction::create($duplicate_transaction_data);
-
+            $delivery=Delivery::where('transaction_id',$id)->with('transaction','delivery_person')->first();
             //Create duplicate transaction sell lines
             $duplicate_sell_lines_data = [];
 

@@ -32,7 +32,7 @@
 				<span class="input-group-addon">
 					<i class="fa fa-map-marker"></i>
 				</span>
-			{!! Form::select('select_location_id', $business_locations, $default_location->id ?? null, ['class' => 'form-control input-sm',
+			{!! Form::select('select_location_id', [], $default_location->id ?? null, ['class' => 'form-control input-sm select2','placeholder' => __('messages.please_select'),
 			'id' => 'select_location_id', 
 			'required', 'autofocus'], $bl_attributes); !!}
 			<span class="input-group-addon">
@@ -184,6 +184,7 @@
 						{!! Form::select('invoice_scheme_id', $invoice_schemes, $default_invoice_schemes->id, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select')]); !!}
 					</div>
 				</div>
+				
 				<div class="clearfix"></div>
 				<!-- Call restaurant module if defined -->
 		        @if(in_array('tables' ,$enabled_modules) || in_array('service_staff' ,$enabled_modules))
@@ -265,9 +266,93 @@
 							</td>
 						</tr>
 					</table>
+					
+					</div>
+
+					<div class="col-sm-3  hide">
+					<div class="checkbox">
+					<label>
+						{!! Form::checkbox('assign_delivery', 1, true, 
+						[  'class' => 'input-icheck' ,'id' => 'assign_delivery' ]); !!} 
+					</label>	
+					</div>		
 					</div>
 				</div>
 			@endcomponent
+
+			@component('components.widget', ['class' => 'box-primary', 'title' => __('delivery.assign_delivery')])
+
+		<div class="row">
+			<div class="col-md-12 " style="display:flex;justify-content: space-between;">
+		
+			<div class=" col-sm-4 ">
+				<div class="form-group">
+					{!! Form::label('delivery_person_id', __('delivery.delivery_person') . ':*') !!}
+					<div class="input-group">
+						<span class="input-group-addon">
+							<i class="fa fa-user"></i>
+						</span>
+							{!! Form::select('delivery_person_id',$delivery_people, null, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'),'id' => 'delivery_person_id', 'style' => 'width: 100%;' ]); !!}
+					</div>
+				</div>
+			</div>
+			<br>
+			<div class=" col-sm-4 @if(!empty($default_delivery_status)) hide @endif">
+				<div class="form-group">
+					{!! Form::label('delivery_status', __('delivery.delivery_status') . ':*') !!}
+					{!! Form::select('delivery_status', $shipping_statuses, $default_delivery_status, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required','style' => 'width: 100%;']); !!}
+				</div>
+			</div>
+			</div>
+		</div>
+		<br>
+		<div class="row">
+			<div class="col-md-12" style="display:flex;justify-content: space-between;">
+				<div class=" col-sm-4">
+					<div class="form-group">
+						{!! Form::label('pickup_address', __('delivery.pickup_address') . ':*') !!}
+						{!! Form::text('pickup_address', null, ['class' => 'form-control','id'=>'pickup_address']); !!}
+					</div>
+				</div>
+				
+			</div>
+		</div>
+		<br>
+		<div class="row">
+			<div class="col-md-12" style="display:flex;justify-content: space-between;">
+				<div class=" col-sm-4">
+					<div class="form-group">
+						{!! Form::label('shipping_address', __('delivery.shipping_address') . ':*') !!}
+						{!! Form::text('shipping_address', null, ['class' => 'form-control','id'=>'shipping_address']); !!}
+					</div>
+					<div class="form-group">
+					<p>Please open this link to choose pickup location's latitude and longitude: <a href="https://www.mapcoordinates.net/en" target="_blank">https://www.mapcoordinates.net/en </a></p>
+					</div>
+				</div>
+				<div class=" col-sm-4">
+					<div class="form-group">
+						{!! Form::label('shipping_latitude', __('business.latitude') . ':*') !!}
+						{!! Form::text('shipping_latitude', null, ['class' => 'form-control','id'=>'shipping_latitude']); !!}
+					</div>
+					<div class="form-group">
+						{!! Form::label('shipping_longitude', __('business.longitude') . ':*') !!}
+						{!! Form::text('shipping_longitude', null, ['class' => 'form-control','id'=>'shipping_longitude']); !!}
+					</div>
+				</div>
+			</div>
+		</div>
+		<br>
+		<div class="row">
+			<div class="col-md-12" style="display:flex;justify-content: space-between;">
+				<div class=" col-sm-4 ">
+					<div class="form-group">
+						{!! Form::label('special_instructions', __('delivery.special_delivery_instructions') . ':') !!}
+						{!! Form::textarea('special_delivery_instructions', null, ['class' => 'form-control','rows'=>3]); !!}
+					</div>
+				</div>
+			</div>
+		</div>
+	@endcomponent
 
 			@component('components.widget', ['class' => 'box-primary'])
 				<div class="col-md-4">
@@ -347,6 +432,9 @@
 					<span class="display_currency" id="order_tax">0</span>
 			    </div>
 			    <div class="clearfix"></div>
+				
+				<div class="row" >
+				<div class="col-md-12" style="display:flex;justify-content: space-between;" >
 				<div class="col-md-4">
 					<div class="form-group">
 			            {!! Form::label('shipping_details', __('sale.shipping_details')) !!}
@@ -358,17 +446,7 @@
 			            </div>
 			        </div>
 				</div>
-				<div class="col-md-4">
-					<div class="form-group">
-			            {!! Form::label('shipping_address', __('lang_v1.shipping_address')) !!}
-			            <div class="input-group">
-							<span class="input-group-addon">
-			                    <i class="fa fa-map-marker"></i>
-			                </span>
-			                {!! Form::textarea('shipping_address',null, ['class' => 'form-control','placeholder' => __('lang_v1.shipping_address') ,'rows' => '1', 'cols'=>'30']); !!}
-			            </div>
-			        </div>
-				</div>
+			
 				<div class="col-md-4">
 					<div class="form-group">
 						{!!Form::label('shipping_charges', __('sale.shipping_charges'))!!}
@@ -380,18 +458,9 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-4">
-					<div class="form-group">
-			            {!! Form::label('shipping_status', __('lang_v1.shipping_status')) !!}
-			            {!! Form::select('shipping_status',$shipping_statuses, null, ['class' => 'form-control','placeholder' => __('messages.please_select')]); !!}
-			        </div>
 				</div>
-				<div class="col-md-4">
-			        <div class="form-group">
-			            {!! Form::label('delivered_to', __('lang_v1.delivered_to') . ':' ) !!}
-			            {!! Form::text('delivered_to', null, ['class' => 'form-control','placeholder' => __('lang_v1.delivered_to')]); !!}
-			        </div>
-			    </div>
+				</div>
+				
 				<div class="clearfix"></div>
 			    <div class="col-md-4 col-md-offset-8">
 			    	@if(!empty($pos_settings['amount_rounding_method']) && $pos_settings['amount_rounding_method'] > 0)
@@ -482,10 +551,118 @@
     @endif
     <script type="text/javascript">
     	$(document).ready( function(){
+			
     		$('.paid_on').datetimepicker({
                 format: moment_date_format + ' ' + moment_time_format,
                 ignoreReadonly: true,
             });
+
+			$('#select_location_id').select2({
+			ajax: {
+				url: '/business/get_locations',
+				dataType: 'json',
+				delay: 250,
+				data: function(params) {
+					return {
+						q: params.term, // search term
+						page: params.page,
+					};
+				},
+				processResults: function(data) {
+					return {
+						results: data,
+					};
+				},
+			},
+			minimumInputLength: 1,
+			escapeMarkup: function(m) {
+				return m;
+			},
+			templateResult: function(data) {
+				if (!data.id) {
+					return data.text;
+				}
+				var html = data.text + ' (' + data.location_id + ')';
+				return html;
+			},
+			}).on('select2:select', function (e) {
+				var data = e.params.data;
+				 $('#pickup_address').val(data.business_location_address);
+		
+			});
+
+			$('#customer_id').select2({
+        ajax: {
+            url: '/contacts/customers',
+            dataType: 'json',
+            delay: 250,
+            data: function(params) {
+                return {
+                    q: params.term, // search term
+                    page: params.page,
+                };
+            },
+            processResults: function(data) {
+                return {
+                    results: data,
+                };
+            },
+        },
+        templateResult: function (data) { 
+            var template = '';
+            if (data.supplier_business_name) {
+                template += data.supplier_business_name + "<br>";
+            }
+            template += data.text + "<br>" + LANG.mobile + ": " + data.mobile;
+
+            if (typeof(data.total_rp) != "undefined") {
+                var rp = data.total_rp ? data.total_rp : 0;
+                template += "<br><i class='fa fa-gift text-success'></i> " + rp;
+            }
+
+            return  template;
+        },
+        minimumInputLength: 1,
+        language: {
+            noResults: function() {
+                var name = $('#customer_id')
+                    .data('select2')
+                    .dropdown.$search.val();
+                return (
+                    '<button type="button" data-name="' +
+                    name +
+                    '" class="btn btn-link add_new_customer"><i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i>&nbsp; ' +
+                    __translate('add_name_as_new_customer', { name: name }) +
+                    '</button>'
+                );
+            },
+        },
+        escapeMarkup: function(markup) {
+            return markup;
+        },
+    });
+    $('#customer_id').on('select2:select', function(e) {
+        var data = e.params.data;
+        if (data.pay_term_number) {
+            $('input#pay_term_number').val(data.pay_term_number);
+        } else {
+            $('input#pay_term_number').val('');
+        }
+
+        if (data.pay_term_type) {
+            $('#pay_term_type').val(data.pay_term_type);
+        } else {
+            $('#pay_term_type').val('');
+        }
+
+        $('#advance_balance_text').text(__currency_trans_from_en(data.balance), true);
+        $('#advance_balance').val(data.balance);
+        $('#shipping_address').val(data.shipping_address);
+        $('#shipping_latitude').val(data.latitude);
+        $('#shipping_longitude').val(data.longitude);
+    });
+
+
     	});
     </script>
 @endsection

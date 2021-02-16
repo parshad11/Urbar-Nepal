@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\BusinessLocation;
 use App\Contact;
+use App\DeliveryPerson;
 use App\System;
 use App\User;
 use App\Utils\ModuleUtil;
@@ -15,6 +16,7 @@ use Yajra\DataTables\Facades\DataTables;
 
 class ManageUserController extends Controller
 {
+    protected $moduleUtil;
     /**
      * Constructor
      *
@@ -46,7 +48,7 @@ class ManageUserController extends Controller
                         ->where('is_cmmsn_agnt', 0)
                         ->select(['id', 'username',
                             DB::raw("CONCAT(COALESCE(surname, ''), ' ', COALESCE(first_name, ''), ' ', COALESCE(last_name, '')) as full_name"), 'email', 'allow_login']);
-
+                    
             return Datatables::of($users)
                 ->editColumn('username', '{{$username}} @if(empty($allow_login)) <span class="label bg-gray">@lang("lang_v1.login_not_allowed")</span>@endif')
                 ->addColumn(
@@ -77,7 +79,7 @@ class ManageUserController extends Controller
                 ->rawColumns(['action', 'username'])
                 ->make(true);
         }
-
+       
         return view('manage_user.index');
     }
 
@@ -136,7 +138,11 @@ class ManageUserController extends Controller
             
             $user_details['status'] = !empty($request->input('is_active')) ? 'active' : 'inactive';
 
-            $user_details['user_type'] = 'user';
+            $role_id = $request->input('role');
+            $role = Role::findOrFail($role_id);
+   
+            $user_role= explode( '#',$role->name);
+            $user_details['user_type']=strtolower($user_role[0]);
 
             if (empty($request->input('allow_login'))) {
                 unset($user_details['username']);
@@ -188,10 +194,13 @@ class ManageUserController extends Controller
 
             //Create the user
             $user = User::create($user_details);
-
-            $role_id = $request->input('role');
-            $role = Role::findOrFail($role_id);
             $user->assignRole($role->name);
+            if($user->user_type=='delivery'){
+                $delivery_person_detail['user_id']=$user->id;
+                $delivery_person_detail['join_date']=$user->created_at;
+                $delivery_person_detail= DeliveryPerson::create($delivery_person_detail);
+                
+            }
 
             //Grant Location permissions
             $this->giveLocationPermissions($user, $request);
@@ -435,12 +444,13 @@ class ManageUserController extends Controller
             if (empty($term)) {
                 return json_encode([]);
             }
+            
             $business_id = request()->session()->get('user.business_id');
             // $user_id = request()->session()->get('user.id');
 
             $query = User::role('Delivery#'.$business_id)->where('business_id', $business_id)->active();
             
-
+          
             $deliveryPeople = $query->where(function ($query) use ($term) {
                 $query->where('name', 'like', '%' . $term .'%');
                                 // ->orWhere('supplier_business_name', 'like', '%' . $term .'%')

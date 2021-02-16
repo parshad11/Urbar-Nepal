@@ -7,6 +7,7 @@ use App\Business;
 use App\BusinessLocation;
 use App\Contact;
 use App\CustomerGroup;
+use App\Delivery;
 use App\DeliveryPerson;
 use App\Product;
 use App\PurchaseLine;
@@ -288,7 +289,6 @@ class PurchaseController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
         if (!auth()->user()->can('purchase.create')) {
             abort(403, 'Unauthorized action.');
         }
@@ -362,7 +362,18 @@ class PurchaseController extends Controller
                 $transaction_data['ref_no'] = $this->productUtil->generateReferenceNumber($transaction_data['type'], $ref_count);
             }
             $transaction = Transaction::create($transaction_data);
-            
+            if($transaction->assign_delivery){
+                $delivery_details['transaction_id']=$transaction->id;
+                $delivery_details['delivery_person_id']=$request->input('delivery_person_id');
+                $delivery_details['delivery_status']=$request->input('delivery_status');
+                $delivery_details['pickup_address']=$request->input('pickup_address');
+                $delivery_details['pickup_latitude']=$request->input('pickup_latitude');
+                $delivery_details['pickup_longitude']=$request->input('pickup_longitude');
+                $delivery_details['shipping_address']=$request->input('shipping_address');
+                $delivery_details['special_delivery_instructions']=$request->input('special_delivery_instructions');
+                Delivery::create($delivery_details);
+
+            }
             $purchase_lines = [];
             $purchases = $request->input('purchases');
 
@@ -501,7 +512,10 @@ class PurchaseController extends Controller
                         'purchase_lines.sub_unit'
                     )
                     ->first();
-        
+
+        $delivery=Delivery::where('transaction_id',$purchase->id)->with('transaction','delivery_person')->first();
+    
+       
         foreach ($purchase->purchase_lines as $key => $value) {
             if (!empty($value->sub_unit_id)) {
                 $formated_purchase_line = $this->productUtil->changePurchaseLineUnit($value, $business_id);
@@ -510,8 +524,9 @@ class PurchaseController extends Controller
         }
         
         $orderStatuses = $this->productUtil->orderStatuses();
-
+        $deliveryStatuses = $this->productUtil->deliveryStatuses();
         $business_locations = BusinessLocation::forDropdown($business_id);
+        $delivery_people=User::allDeliveryPersonDropdown($business_id,false);
 
         $default_purchase_status = null;
         if (request()->session()->get('business.enable_purchase_status') != 1) {
@@ -537,7 +552,10 @@ class PurchaseController extends Controller
             ->with(compact(
                 'taxes',
                 'purchase',
+                'delivery',
+                'delivery_people',
                 'orderStatuses',
+                'deliveryStatuses',
                 'business_locations',
                 'business',
                 'currency_details',
@@ -563,7 +581,6 @@ class PurchaseController extends Controller
 
         try {
             $transaction = Transaction::findOrFail($id);
-
             //Validate document size
             $request->validate([
                 'document' => 'file|max:'. (config('constants.document_size_limit') / 1000)
@@ -576,7 +593,7 @@ class PurchaseController extends Controller
 
             $currency_details = $this->transactionUtil->purchaseCurrencyDetails($business_id);
 
-            $update_data = $request->only([ 'ref_no', 'status', 'contact_id',
+            $update_data = $request->only([ 'ref_no', 'status', 'contact_id','assign_delivery',
                             'transaction_date', 'total_before_tax',
                             'discount_type', 'discount_amount', 'tax_id',
                             'tax_amount', 'shipping_details',
@@ -614,9 +631,23 @@ class PurchaseController extends Controller
             }
 
             DB::beginTransaction();
-
+        
             //update transaction
             $transaction->update($update_data);
+
+            if($transaction->assign_delivery){
+                $delivery_details['delivery_person_id']=$request->input('delivery_person_id');
+                $delivery_details['delivery_status']=$request->input('delivery_status');
+                $delivery_details['pickup_address']=$request->input('pickup_address');
+                $delivery_details['pickup_latitude']=$request->input('pickup_latitude');
+                $delivery_details['pickup_longitude']=$request->input('pickup_longitude');
+                $delivery_details['shipping_address']=$request->input('shipping_address');
+                $delivery_details['special_delivery_instructions']=$request->input('special_delivery_instructions');
+                $delivery=Delivery::where('transaction_id',$transaction->id)->first();
+             
+                $delivery->update($delivery_details);
+
+            }
 
             //Update transaction payment status
             $this->transactionUtil->updatePaymentStatus($transaction->id);
@@ -768,7 +799,7 @@ class PurchaseController extends Controller
                                 ->orWhere('supplier_business_name', 'like', '%' . $term .'%')
                                 ->orWhere('contacts.contact_id', 'like', '%' . $term .'%');
             })
-                        ->select('contacts.id', 'name as text', 'supplier_business_name as business_name', 'contact_id', 'contacts.pay_term_type', 'contacts.pay_term_number', 'contacts.balance','contacts.shipping_address as pickup_address')
+                        ->select('contacts.id', 'name as text', 'supplier_business_name as business_name', 'contact_id', 'contacts.pay_term_type', 'contacts.pay_term_number', 'contacts.balance','contacts.shipping_address as pickup_address','contacts.latitude as pickup_latitude','contacts.longitude as pickup_longitude')
                         ->onlySuppliers()
                         ->get();
                         

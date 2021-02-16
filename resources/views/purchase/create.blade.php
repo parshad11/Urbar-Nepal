@@ -264,7 +264,7 @@
 			</div>
 		</div>
 		<br>
-		<div class="row mt-5">
+		<div class="row">
 			<div class="col-md-12" style="display:flex;justify-content: space-between;">
 				<div class=" col-sm-4">
 					<div class="form-group">
@@ -272,19 +272,43 @@
 						{!! Form::text('pickup_address', null, ['class' => 'form-control','id'=>'pickup_address']); !!}
 					</div>
 					<div class="form-group">
-						{!! Form::label('shipping_address', __('delivery.shipping_address') . ':*') !!}
-						{!! Form::text('shipping_address', null, ['class' => 'form-control','id'=>'shipping_address']); !!}
+					<p>Please open this link to choose pickup location's latitude and longitude: <a href="https://www.mapcoordinates.net/en" target="_blank">https://www.mapcoordinates.net/en </a></p>
 					</div>
 				</div>
-				<div class=" col-sm-4 ">
+				<div class=" col-sm-4">
 					<div class="form-group">
-						{!! Form::label('special_instruction', __('delivery.special_instruction') . ':') !!}
-						{!! Form::textarea('special_instruction', null, ['class' => 'form-control','rows'=>3]); !!}
+						{!! Form::label('pickup_latitude', __('business.latitude') . ':*') !!}
+						{!! Form::text('pickup_latitude', null, ['class' => 'form-control','id'=>'pickup_latitude']); !!}
+					</div>
+					<div class="form-group">
+						{!! Form::label('longitude', __('business.longitude') . ':*') !!}
+						{!! Form::text('pickup_longitude', null, ['class' => 'form-control','id'=>'pickup_longitude']); !!}
 					</div>
 				</div>
 			</div>
 		</div>
-	
+		<br>
+		<div class="row">
+			<div class="col-md-12" style="display:flex;justify-content: space-between;">
+				<div class=" col-sm-4">
+					<div class="form-group">
+						{!! Form::label('shipping_address', __('delivery.shipping_address') . ':*') !!}
+						{!! Form::text('shipping_address', null, ['class' => 'form-control','id'=>'shipping_address']); !!}
+					</div>
+				</div>
+			</div>
+		</div>
+		<br>
+		<div class="row">
+			<div class="col-md-12" style="display:flex;justify-content: space-between;">
+				<div class=" col-sm-4 ">
+					<div class="form-group">
+						{!! Form::label('special_instructions', __('delivery.special_delivery_instructions') . ':') !!}
+						{!! Form::textarea('special_delivery_instructions', null, ['class' => 'form-control','rows'=>3]); !!}
+					</div>
+				</div>
+			</div>
+		</div>
 	@endcomponent
 
 	@component('components.widget', ['class' => 'box-primary'])
@@ -409,10 +433,9 @@
 @endsection
 
 @section('javascript')
-	<!-- <script src="{{ asset('js/purchase.js?v=' . $asset_v) }}"></script>
-	<script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script> -->
-	<script src="http://nextgator.com/js/purchase.js?v=37"></script>
-	<script src="http://nextgator.com/js/product.js?v=37"></script>
+	<script src="{{ asset('js/purchase.js?v=' . $asset_v) }}"></script>
+	<script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script> 
+	
 	<script type="text/javascript">
 		$(document).ready( function(){
 			__page_leave_confirmation('#add_purchase_form');
@@ -517,6 +540,8 @@
 				$('#advance_balance_text').text(__currency_trans_from_en(data.balance), true);
 				$('#advance_balance').val(data.balance);
 				$('#pickup_address').val(data.pickup_address);
+				$('#pickup_latitude').val(data.pickup_longitude);
+				$('#pickup_longitude').val(data.pickup_longitude);
 
 			});
 

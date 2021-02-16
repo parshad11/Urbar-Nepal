@@ -718,7 +718,10 @@ class ContactController extends Controller
                 'pay_term_number',
                 'pay_term_type',
                 'balance',
-                'supplier_business_name'
+                'supplier_business_name',
+                'shipping_address',
+                'latitude',
+                'longitude'
             )
                     ->onlyCustomers();
 

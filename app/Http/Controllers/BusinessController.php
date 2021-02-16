@@ -284,7 +284,7 @@ class BusinessController extends Controller
                 $query->where('name', 'like', '%' . $term .'%')
                                 ->orWhere('business_locations.location_id', 'like', '%' . $term .'%');
             })
-                        ->select('business_locations.id', 'name as text','location_id','country as business_location_address')
+                        ->select('business_locations.id', 'name as text','location_id',DB::raw("CONCAT(business_locations.landmark,' ',business_locations.city,', ',business_locations.state,', ',business_locations.country,', ',business_locations.zip_code) AS business_location_address"))
                         ->get();
                       
             return json_encode($locations);

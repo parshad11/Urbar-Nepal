@@ -96,19 +96,13 @@
     <script src="http://nextgator.com/js/lang/en.js?v=37"></script>
 @endif
 
-<!-- <script src="{{ asset('js/functions.js?v=' . $asset_v) }}"></script>
+ <script src="{{ asset('js/functions.js?v=' . $asset_v) }}"></script>
 <script src="{{ asset('js/common.js?v=' . $asset_v) }}"></script>
 <script src="{{ asset('js/app.js?v=' . $asset_v) }}"></script>
 <script src="{{ asset('js/help-tour.js?v=' . $asset_v) }}"></script>
-<script src="{{ asset('js/documents_and_note.js?v=' . $asset_v) }}"></script> -->
+<script src="{{ asset('js/documents_and_note.js?v=' . $asset_v) }}"></script> 
 
 
-
-<script src="http://nextgator.com/js/functions.js?v=37"></script>
-<script src="http://nextgator.com/js/common.js?v=37"></script>
-<script src="http://nextgator.com/js/app.js?v=37"></script>
-<script src="http://nextgator.com/js/help-tour.js?v=37"></script>
-<script src="http://nextgator.com/js/documents_and_note.js?v=37"></script>
 
 <!-- TODO -->
 @if(file_exists(public_path('AdminLTE/plugins/select2/lang/' . session()->get('user.language', config('app.locale')) . '.js')))

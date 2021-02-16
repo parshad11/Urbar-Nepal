@@ -67,9 +67,7 @@ class TransactionUtil extends Util
             'commission_agent' => $input['commission_agent'],
             'is_quotation' => isset($input['is_quotation']) ? $input['is_quotation'] : 0,
             'shipping_details' => isset($input['shipping_details']) ? $input['shipping_details'] : null,
-            'shipping_address' => isset($input['shipping_address']) ? $input['shipping_address'] : null,
-            'shipping_status' => isset($input['shipping_status']) ? $input['shipping_status'] : null,
-            'delivered_to' => isset($input['delivered_to']) ? $input['delivered_to'] : null,
+            'assign_delivery'=>$input['assign_delivery'],
             'shipping_charges' => isset($input['shipping_charges']) ? $uf_data ? $this->num_uf($input['shipping_charges']) : $input['shipping_charges'] : 0,
             'exchange_rate' => !empty($input['exchange_rate']) ?
                                 $uf_data ? $this->num_uf($input['exchange_rate']) : $input['exchange_rate'] : 1,
@@ -126,7 +124,7 @@ class TransactionUtil extends Util
                         ->where('business_id', $business_id)
                         ->firstOrFail();
         }
-        
+       
         //Update invoice number if changed from draft to finalize or vice-versa
         $invoice_no = $transaction->invoice_no;
         if ($transaction->status != $input['status'] && $change_invoice_number) {
@@ -134,6 +132,7 @@ class TransactionUtil extends Util
             $invoice_no = $this->getInvoiceNumber($business_id, $input['status'], $transaction->location_id, $invoice_scheme_id);
         }
         $final_total = $uf_data ? $this->num_uf($input['final_total']) : $input['final_total'];
+      
         $update_date = [
             'status' => $input['status'],
             'invoice_no' => $invoice_no,
@@ -151,9 +150,7 @@ class TransactionUtil extends Util
             'is_quotation' => isset($input['is_quotation']) ? $input['is_quotation'] : 0,
             'shipping_details' => isset($input['shipping_details']) ? $input['shipping_details'] : null,
             'shipping_charges' => isset($input['shipping_charges']) ? $uf_data ? $this->num_uf($input['shipping_charges']) : $input['shipping_charges'] : 0,
-            'shipping_address' => isset($input['shipping_address']) ? $input['shipping_address'] : null,
-            'shipping_status' => isset($input['shipping_status']) ? $input['shipping_status'] : null,
-            'delivered_to' => isset($input['delivered_to']) ? $input['delivered_to'] : null,
+            'assign_delivery'=>isset($input['assign_delivery'])?$input['assign_delivery']: 1 ,
             'exchange_rate' => !empty($input['exchange_rate']) ?
                                 $uf_data ? $this->num_uf($input['exchange_rate']) : $input['exchange_rate'] : 1,
             'selling_price_group_id' => isset($input['selling_price_group_id']) ? $input['selling_price_group_id'] : null,
@@ -187,8 +184,8 @@ class TransactionUtil extends Util
         
         $transaction->fill($update_date);
         $transaction->update();
-
         return $transaction;
+        
     }
 
     /**

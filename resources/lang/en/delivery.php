@@ -24,7 +24,7 @@ return [
     'add_delivery' => 'Add Delivery',
     'edit_delivery' => 'Edit Delivery',
     'delivery_status' => 'Delivery Status',
-    'special_instruction'=>'Special Delivery Instruction',
+    'special_delivery_instructions'=>'Special Delivery Instructions',
     'shipping_address'=>'Shipping Address',
     'pickup_address'=>'Pickup Address',
 

@@ -10,7 +10,7 @@ class Delivery extends Model
 {
     use Notifiable;
 
-    use SoftDeletes;
+
     /**
      * The attributes that aren't mass assignable.
      *
@@ -26,11 +26,11 @@ class Delivery extends Model
     protected $table = 'deliveries';
 
     public function transaction(){
-        return $this->belongsTo(Transaction::class);
+        return $this->belongsTo(Transaction::class,'transaction_id');
     }
 
     public function delivery_person(){
-        return $this->belongsTo(User::class,'delivery_person_id');
+        return $this->belongsTo(DeliveryPerson::class,'delivery_person_id');
     }
 
 

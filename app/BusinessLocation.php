@@ -53,14 +53,19 @@ class BusinessLocation extends Model
                 'id',
                 'receipt_printer_type',
                 'selling_price_group_id',
-                'default_payment_accounts'
+                'default_payment_accounts',
+                'country',
+                'state',
+                'city',
+                'zip_code',
+                'landmark'
             );
         }
 
         $result = $query->get();
-
-        $locations = $result->pluck('name', 'id');
-
+     
+        $locations = $result->pluck('name', 'id','country','state','city','zip_code','landmark');
+   
         $price_groups = SellingPriceGroup::forDropdown($business_id);
 
         if ($show_all) {
