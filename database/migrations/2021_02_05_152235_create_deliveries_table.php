@@ -15,11 +15,21 @@ class CreateDeliveriesTable extends Migration
     {
         Schema::create('deliveries', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('modal_id');
-            $table->integer('delivery_person_id')->nullable();
-            $table->string('delivery_status')->default('Task Received');
+            $table->integer('transaction_id');
+            // $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
+            $table->integer('delivery_person_id');
+            // $table->foreign('delivery_person_id')->references('id')->on('delivery_people')->onDelete('cascade');
+            $table->string('delivery_status')->default('Ordered');
+            $table->string('shipping_address');
+            $table->string('shipping_latitude')->nullable();
+            $table->string('shipping_longitude')->nullable();
+            $table->string('pickup_address');
+            $table->string('pickup_latitude')->nullable();
+            $table->string('pickup_longitude')->nullable();
+            $table->string('special_delivery_instructions')->nullable();
             $table->dateTime('delivery_started_at')->nullable();
-            $table->dateTime('delivered_at')->nullable();
+            $table->dateTime('delivered_ended_at')->nullable();
+            $table->string('delivered_to')->nullable();
             $table->timestamps();
         });
     }

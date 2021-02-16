@@ -16,6 +16,7 @@ class CreateDeliveryPeopleTable extends Migration
         Schema::create('delivery_people', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('user_id');
+            $table->integer('tracking_id')->nullable();
             $table->dateTime('join_date');
             $table->timestamps();
         });

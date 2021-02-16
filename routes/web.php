@@ -44,6 +44,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::post('/test-sms', 'BusinessController@testSmsConfiguration');
     Route::get('/business/settings', 'BusinessController@getBusinessSettings')->name('business.getBusinessSettings');
     Route::post('/business/update', 'BusinessController@postBusinessSettings')->name('business.postBusinessSettings');
+    Route::get('/business/get_locations', 'BusinessController@getBusinessLocations')->name('business.getBusinessLocations');
     Route::get('/user/profile', 'UserController@getProfile')->name('user.getProfile');
     Route::post('/user/update', 'UserController@updateProfile')->name('user.updateProfile');
     Route::post('/user/update-password', 'UserController@updatePassword')->name('user.updatePassword');
@@ -149,7 +150,11 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::resource('roles', 'RoleController');
 
     Route::resource('users', 'ManageUserController');
+
     Route::get('deliveryusers', 'ManageUserController@getdeliveryuser')->name('user.getdeliveruser');
+
+    Route::get('users/get_delivery_people', 'ManageUserController@getDeliveryPeople');
+
 
     Route::resource('group-taxes', 'GroupTaxController');
 

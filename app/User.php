@@ -49,6 +49,7 @@ class User extends Authenticatable
         return $this->belongsTo(\App\Business::class);
     }
 
+
     public function scopeUser($query)
     {
         return $query->where('users.user_type', 'user');
@@ -256,6 +257,7 @@ class User extends Authenticatable
      */
     public static function allDeliveryPersonDropdown($business_id, $prepend_none = true, $prepend_all = false)
     {
+
         $users=User::role('Delivery#'.$business_id)->where('business_id', $business_id)->select('id', DB::raw("CONCAT(COALESCE(surname, ''),' ',COALESCE(first_name, ''),' ',COALESCE(last_name,'')) as full_name"))->get();
         $users = $users->pluck('full_name', 'id');
         

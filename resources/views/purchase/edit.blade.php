@@ -36,7 +36,7 @@
                   <span class="input-group-addon">
                     <i class="fa fa-user"></i>
                   </span>
-                  {!! Form::select('contact_id', [ $purchase->contact_id => $purchase->contact->name], $purchase->contact_id, ['class' => 'form-control', 'placeholder' => __('messages.please_select') , 'required', 'id' => 'supplier_id']); !!}
+                  {!! Form::select('contact_id', [ $purchase->contact_id => $purchase->contact->name], $purchase->contact_id, ['class' => 'form-control', 'placeholder' => __('messages.please_select') , 'disabled', 'id' => 'supplier_id']); !!}
                   <span class="input-group-btn">
                     <button type="button" class="btn btn-default bg-white btn-flat add_new_supplier" data-name=""><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
                   </span>
@@ -176,9 +176,93 @@
                 </table>
               </div>
 
+              <div class="col-sm-3">
+                <div class="form-group">
+					<div class="checkbox">
+					<br/>
+					<label>
+						{!! Form::checkbox('assign_delivery', 1, $purchase->assign_delivery,
+						[ 'class' => 'input-icheck', 'id' => 'assign_delivery']); !!} {{ __( 'delivery.assign_delivery' ) }}
+					</label>
+					</div>
+                </div>
+
             </div>
         </div>
     @endcomponent
+
+
+    @component('components.widget', ['class' => 'box-primary hide assign_delivery_div', 'title' => __('delivery.assign_delivery')])
+
+		<div class="row">
+			<div class="col-md-12 " style="display:flex;justify-content: space-between;">
+			<div class=" col-sm-4 ">
+				<div class="form-group">
+					{!! Form::label('delivery_person_id', __('delivery.delivery_person') . ':*') !!}
+					<div class="input-group">
+						<span class="input-group-addon">
+							<i class="fa fa-user"></i>
+						</span>
+							{!! Form::select('delivery_person_id',$delivery_people, $delivery->delivery_person_id, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'),'id' => 'delivery_person_id', 'style' => 'width: 100%;' ]); !!}
+					</div>
+				</div>
+			</div>
+			<br>
+			<div class=" col-sm-4 @if(!empty($default_delivery_status)) hide @endif">
+				<div class="form-group">
+					{!! Form::label('delivery_status', __('delivery.delivery_status') . ':*') !!}
+					{!! Form::select('delivery_status', $deliveryStatuses,$delivery->delivery_status, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required','style' => 'width: 100%;']); !!}
+				</div>
+			</div>
+			</div>
+		</div>
+		<br>
+		<div class="row">
+			<div class="col-md-12" style="display:flex;justify-content: space-between;">
+				<div class=" col-sm-4">
+					<div class="form-group">
+						{!! Form::label('pickup_address', __('delivery.pickup_address') . ':*') !!}
+						{!! Form::text('pickup_address', $delivery->pickup_address, ['class' => 'form-control','id'=>'pickup_address']); !!}
+					</div>
+					<div class="form-group">
+					<p>Please open this link to choose pickup location's latitude and longitude: <a href="https://www.mapcoordinates.net/en" target="_blank">https://www.mapcoordinates.net/en </a></p>
+					</div>
+				</div>
+				<div class=" col-sm-4">
+					<div class="form-group">
+						{!! Form::label('latitude', __('business.latitude') . ':*') !!}
+						{!! Form::text('pickup_latitude',$delivery->pickup_latitude, ['class' => 'form-control','id'=>'latitude']); !!}
+					</div>
+					<div class="form-group">
+						{!! Form::label('longitude', __('business.longitude') . ':*') !!}
+						{!! Form::text('pickup_longitude', $delivery->pickup_longitude, ['class' => 'form-control','id'=>'longitude']); !!}
+					</div>
+				</div>
+			</div>
+		</div>
+		<br>
+		<div class="row">
+			<div class="col-md-12" style="display:flex;justify-content: space-between;">
+				<div class=" col-sm-4">
+					<div class="form-group">
+						{!! Form::label('shipping_address', __('delivery.shipping_address') . ':*') !!}
+						{!! Form::text('shipping_address', $delivery->shipping_address, ['class' => 'form-control','id'=>'shipping_address']); !!}
+					</div>
+				</div>
+			</div>
+		</div>
+		<br>
+		<div class="row">
+			<div class="col-md-12" style="display:flex;justify-content: space-between;">
+				<div class=" col-sm-4 ">
+					<div class="form-group">
+						{!! Form::label('special_instructions', __('delivery.special_delivery_instructions') . ':') !!}
+						{!! Form::textarea('special_delivery_instructions',$delivery->special_delivery_instructions, ['class' => 'form-control','rows'=>3]); !!}
+					</div>
+				</div>
+			</div>
+		</div>
+	@endcomponent
 
     @component('components.widget', ['class' => 'box-primary'])
         <div class="row">
@@ -293,13 +377,120 @@
 @endsection
 
 @section('javascript')
-  <script src="{{ asset('js/purchase.js?v=' . $asset_v) }}"></script>
-  <script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
+  <!-- <script src="{{ asset('js/purchase.js?v=' . $asset_v) }}"></script>
+  <script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script> -->
+  <script src="http://nextgator.com/js/purchase.js?v=37"></script>
+  <script src="http://nextgator.com/js/product.js?v=37"></script>
   <script type="text/javascript">
     $(document).ready( function(){
       update_table_total();
       update_grand_total();
       __page_leave_confirmation('#add_purchase_form');
+
+     if($('#assign_delivery').is(':checked')) {
+				$('div.assign_delivery_div').removeClass('hide');
+        }
+
+      $('#assign_delivery').on('ifChecked', function(event){
+				$('div.assign_delivery_div').removeClass('hide');
+   	    	});
+
+			$('#assign_delivery').on('ifUnchecked', function(event){
+				$('div.assign_delivery_div').addClass('hide');
+        	});
+
+			$('delivery_person_id').select2({
+			ajax: {
+				url: '/users/get_delivery_people',
+				method:'get',
+				dataType: 'json',
+				delay: 250,
+				data: function(params) {
+					return {
+						q: params.term, // search term
+						page: params.page,
+					};
+				},
+				processResults: function(data) {
+					console.log(data)
+					return {
+						results: data,
+					};
+				},
+			},
+			minimumInputLength: 1,
+			escapeMarkup: function(m) {
+				return m;
+			},
+			templateResult: function(data) {
+				if (!data.id) {
+					return data.text;
+				}
+				var html = data.text;
+				return html;
+			},
+			language: {
+				noResults: function() {
+					// var name = $('#delivery_person_id')
+					// 	.data('select2')
+					// 	.dropdown.$search.val();
+				},
+			},
+  		    });
+
+			$('#supplier_id').select2({
+			ajax: {
+				url: '/purchases/get_suppliers',
+				dataType: 'json',
+				delay: 250,
+				data: function(params) {
+					return {
+						q: params.term, // search term
+						page: params.page,
+					};
+				},
+				processResults: function(data) {
+					return {
+						results: data,
+					};
+				},
+			},
+			minimumInputLength: 1,
+			escapeMarkup: function(m) {
+				return m;
+			},
+			templateResult: function(data) {
+				if (!data.id) {
+					return data.text;
+				}
+				var html = data.text + ' - ' + data.business_name + ' (' + data.contact_id + ')';
+				return html;
+			},
+			language: {
+				noResults: function() {
+					var name = $('#supplier_id')
+						.data('select2')
+						.dropdown.$search.val();
+					return (
+						'<button type="button" data-name="' +
+						name +
+						'" class="btn btn-link add_new_supplier"><i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i>&nbsp; ' +
+						__translate('add_name_as_new_supplier', { name: name }) +
+						'</button>'
+					);
+				},
+			},
+			}).on('select2:select', function (e) {
+				var data = e.params.data;
+				$('#pay_term_number').val(data.pay_term_number);
+				$('#pay_term_type').val(data.pay_term_type);
+				$('#advance_balance_text').text(__currency_trans_from_en(data.balance), true);
+				$('#advance_balance').val(data.balance);
+				$('#pickup_address').val(data.pickup_address);
+
+			});
+
+
     });
   </script>
   @include('purchase.partials.keyboard_shortcuts')
