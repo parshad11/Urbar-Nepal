@@ -184,12 +184,67 @@
           <div class="col-md-12">
             <div class="checkbox">
               <label>
-                {!! Form::checkbox('permissions[]', 'supplier.delete', in_array('supplier.delete', $role_permissions), 
+                {!! Form::checkbox('permissions[]', 'supplier.delete', in_array('supplier.delete', $role_permissions),
                 [ 'class' => 'input-icheck']); !!} {{ __( 'role.supplier.delete' ) }}
               </label>
             </div>
           </div>
         </div>
+        </div>
+        <hr>
+        <div class="row check_group">
+            <div class="col-md-1">
+                <h4>@lang( 'supplier record' )</h4>
+            </div>
+            <div class="col-md-2">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" class="check_all input-icheck" > {{ __( 'role.select_all' ) }}
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="col-md-12">
+                    <div class="checkbox">
+                        <label>
+                            {!! Form::checkbox('permissions[]', 'record.view_own', in_array('record.view_own', $role_permissions),
+                            [ 'class' => 'input-icheck']); !!} {{ __( 'View own supplier record' ) }}
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="checkbox">
+                        <label>
+                            {!! Form::checkbox('permissions[]', 'record.view', in_array('record.view', $role_permissions),
+                            [ 'class' => 'input-icheck']); !!} {{ __( 'View all supplier record' ) }}
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="checkbox">
+                        <label>
+                            {!! Form::checkbox('permissions[]', 'record.create', in_array('record.create', $role_permissions),
+                            [ 'class' => 'input-icheck']); !!} {{ __( 'Add supplier' ) }}
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="checkbox">
+                        <label>
+                            {!! Form::checkbox('permissions[]', 'record.update', in_array('record.update', $role_permissions),
+                            [ 'class' => 'input-icheck']); !!} {{ __( 'Edit supplier' ) }}
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="checkbox">
+                        <label>
+                            {!! Form::checkbox('permissions[]', 'record.delete', in_array('record.delete', $role_permissions),
+                            [ 'class' => 'input-icheck']); !!} {{ __( 'Delete supplier' ) }}
+                        </label>
+                    </div>
+                </div>
+            </div>
         </div>
         <hr>
         <div class="row check_group">

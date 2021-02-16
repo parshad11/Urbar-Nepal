@@ -15,6 +15,18 @@ class CreateTasksTable extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->integer('assign_to');
+            $table->enum('task_type',['delivery','pick-up']);
+            $table->string('title');
+            $table->longText('description')->nullable();
+            $table->longText('special_instruction')->nullable();
+            $table->string('start_lat');
+            $table->string('start_log');
+            $table->string('end_lat');
+            $table->string('end_log');
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->enum('status',['received','on process','completed','cancelled'])->default('received');
             $table->timestamps();
         });
     }

@@ -24,6 +24,11 @@ class PermissionsTableSeeder extends Seeder
             ['name' => 'supplier.update'],
             ['name' => 'supplier.delete'],
 
+            ['name' => 'record.view'],
+            ['name' => 'record.create'],
+            ['name' => 'record.update'],
+            ['name' => 'record.delete'],
+
             ['name' => 'customer.view'],
             ['name' => 'customer.create'],
             ['name' => 'customer.update'],
@@ -89,6 +94,7 @@ class PermissionsTableSeeder extends Seeder
             ['name' => 'category.update'],
             ['name' => 'category.delete'],
             ['name' => 'expense.access'],
+
 
             ['name' => 'access_all_locations'],
             ['name' => 'dashboard.data'],

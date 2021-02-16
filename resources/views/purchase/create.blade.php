@@ -129,7 +129,7 @@
 		</div>
 		
 
-	@endcomponent
+		@endcomponent
 
 	@component('components.widget', ['class' => 'box-primary'])
 		<div class="row">

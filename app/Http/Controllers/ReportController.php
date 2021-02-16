@@ -69,16 +69,16 @@ class ReportController extends Controller
 
         //Return the details in ajax call
         if ($request->ajax()) {
-            $start_date = $request->get('start_date');
-            $end_date = $request->get('end_date');
-            $location_id = $request->get('location_id');
+        $start_date = $request->get('start_date');
+        $end_date = $request->get('end_date');
+        $location_id = $request->get('location_id');
 
-            $data = $this->transactionUtil->getProfitLossDetails($business_id, $location_id, $start_date, $end_date);
+        $data = $this->transactionUtil->getProfitLossDetails($business_id, $location_id, $start_date, $end_date);
 
-            // $data['closing_stock'] = $data['closing_stock'] - $data['total_sell_return'];
+        // $data['closing_stock'] = $data['closing_stock'] - $data['total_sell_return'];
 
-            return view('report.partials.profit_loss_details', compact('data'))->render();
-        }
+        return view('report.partials.profit_loss_details', compact('data'))->render();
+    }
 
         $business_locations = BusinessLocation::forDropdown($business_id, true);
         return view('report.profit_loss', compact('business_locations'));
