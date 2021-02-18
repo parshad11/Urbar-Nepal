@@ -1190,4 +1190,5 @@ return [
     'on_review'=>'On Review',
     'delivered'=>'Delivered',
     'canceled'=>'Canceled',
+    'tranfer_status'=>'Transfer Status',
 ];

@@ -1131,7 +1131,7 @@ class SellPosController extends Controller
                        'shipping_address'=>$request->input('shipping_address'),
                        'shipping_latitude'=>$request->input('shipping_latitude'),
                        'shipping_longitude'=>$request->input('shipping_longitude'),
-                       'special_delivery_instructions'=>$request->input('special_delivery_instructions')],
+                       'special_delivery_instructions'=>$request->input('special_delivery_instructions')]
 
                     );
                    

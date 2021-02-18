@@ -1074,6 +1074,19 @@ class Util
         return $statuses;
     }
 
+    public function stockDeliveryStatuses()
+    {
+        $stockstatuses = [
+            'received' => __('lang_v1.received'),
+            'packed' => __('lang_v1.packed'),
+            'shipped' => __('lang_v1.shipped'),
+            'delivered' => __('lang_v1.delivered'),
+            'cancelled' => __('restaurant.cancelled')
+        ];
+
+        return $stockstatuses ;
+    }
+
     /**
      * Retrieves sum of due amount of a contact
      * @param int $contact_id

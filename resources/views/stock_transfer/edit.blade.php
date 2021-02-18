@@ -50,7 +50,7 @@
 						{!! Form::select('transfer_location_id', $business_locations, $purchase_transfer->location_id, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'id' => 'transfer_location_id', 'disabled']); !!}
 					</div>
 				</div>
-				
+
 			</div>
 		</div>
 	</div> <!--box end-->
@@ -74,11 +74,11 @@
 			<div class="row">
 				<div class="col-sm-10 col-sm-offset-1">
 					<div class="table-responsive">
-					<table class="table table-bordered table-striped table-condensed" 
+					<table class="table table-bordered table-striped table-condensed"
 					id="stock_adjustment_product_table">
 						<thead>
 							<tr>
-								<th class="col-sm-4 text-center">	
+								<th class="col-sm-4 text-center">
 									@lang('sale.product')
 								</th>
 								<th class="col-sm-3 text-center">
@@ -109,6 +109,74 @@
 					</table>
 					<input type="hidden" id="product_row_index" value="{{$product_row_index}}">
 					<input type="hidden" id="total_amount" name="final_total" value="{{$subtotal}}">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div> <!--box end-->
+	<!--box start-->
+	<div class="box box-solid">
+		<div class="box-header">
+			<h3 class="box-title">{{ __('delivery.assign_delivery') }}</h3>
+		</div>
+		<div class="col-sm-3  hide">
+			<div class="checkbox">
+				<label>
+					{!! Form::checkbox('assign_delivery', 1, true,
+                    [  'class' => 'input-icheck' ,'id' => 'assign_delivery' ]); !!}
+				</label>
+			</div>
+		</div>
+		<div class="box-body">
+			<div class="row">
+				<div class="col-md-12 " style="display:flex;justify-content: space-between;">
+
+					<div class=" col-sm-4 ">
+						<div class="form-group">
+							{!! Form::label('delivery_person_id', __('delivery.delivery_person') . ':*') !!}
+							<div class="input-group">
+						<span class="input-group-addon">
+							<i class="fa fa-user"></i>
+						</span>
+                                <select name="delivery_person_id" id="delivery_person_id"
+                                        class="form-control select2" style="width: 100%" required>
+                                    <option value="" selected disabled>--select any one--</option>
+                                    @foreach ($delivery_people as $delivery_people)
+                                        <option @if ($delivery_people->id == @$main_delivery->delivery_person_id) selected
+                                                @endif value="{{$delivery_people->id}}">{{
+                                                $delivery_people->first_name}} {{
+                                                $delivery_people->last_name}}
+                                        </option>
+                                    @endforeach
+                                </select>
+							</div>
+						</div>
+					</div>
+					<br>
+					<div class=" col-sm-4 @if(!empty($default_delivery_status)) hide @endif">
+						<div class="form-group">
+							{!! Form::label('delivery_status', __('Pickup Status') . ':*') !!}
+							<select name="delivery_status" id="delivery_status"
+									class="form-control select2" style="width: 100%" required>
+                                <option value="" selected disabled>--select any one--</option>
+								<option @if(@$main_delivery->delivery_status=='received') selected @endif value="received">Received</option>
+								<option @if(@$main_delivery->delivery_status=='packed') selected @endif value="packed">Packed</option>
+								<option @if(@$main_delivery->delivery_status=='shipped') selected @endif value="shipped">Shipped</option>
+								<option @if(@$main_delivery->delivery_status=='delivered') selected @endif value="delivered">Delivered</option>
+								<option @if(@$main_delivery->delivery_status=='cancelled') selected @endif value="cancelled">Cancelled</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+			<br>
+			<div class="row">
+				<div class="col-md-12" style="display:flex;justify-content: space-between;">
+					<div class=" col-sm-4 ">
+						<div class="form-group">
+							{!! Form::label('special_instructions', __('delivery.special_delivery_instructions') . ':') !!}
+							{!! Form::textarea('special_delivery_instructions', null, ['class' => 'form-control','rows'=>3]); !!}
+						</div>
 					</div>
 				</div>
 			</div>
@@ -145,5 +213,38 @@
 	<script src="{{ asset('js/stock_transfer.js?v=' . $asset_v) }}"></script>
 	<script type="text/javascript">
 		__page_leave_confirmation('#stock_transfer_form');
+	</script>
+	<script>
+        $(document).ready(function (e) {
+        $('#delivery_person_id').select2({
+            ajax: {
+                url: '/deliveryusers',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        q: params.term, // search term
+                        page: params.page,
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data,
+                    };
+                },
+            },
+            minimumInputLength: 1,
+            escapeMarkup: function (m) {
+                return m;
+            },
+            templateResult: function (data) {
+                if (!data.id) {
+                    return data.first_name + ' ' + data.last_name;
+                }
+                var html = data.first_name + ' ' + data.last_name;
+                return html;
+            },
+        })
+        });
 	</script>
 @endsection

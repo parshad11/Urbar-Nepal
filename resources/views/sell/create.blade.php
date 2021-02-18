@@ -33,11 +33,11 @@
 					<i class="fa fa-map-marker"></i>
 				</span>
 			{!! Form::select('select_location_id', [], $default_location->id ?? null, ['class' => 'form-control input-sm select2','placeholder' => __('messages.please_select'),
-			'id' => 'select_location_id', 
+			'id' => 'select_location_id',
 			'required', 'autofocus'], $bl_attributes); !!}
 			<span class="input-group-addon">
 					@show_tooltip(__('tooltip.sale_location'))
-				</span> 
+				</span>
 			</div>
 		</div>
 	</div>
@@ -65,11 +65,11 @@
 									{!! Form::select('price_group', $price_groups, null, ['class' => 'form-control select2', 'id' => 'price_group']); !!}
 									<span class="input-group-addon">
 										@show_tooltip(__('lang_v1.price_group_help_text'))
-									</span> 
+									</span>
 								</div>
 							</div>
 						</div>
-						
+
 					@else
 						@php
 							reset($price_groups);
@@ -93,14 +93,14 @@
 
 								<span class="input-group-addon">
 									@show_tooltip(__('lang_v1.types_of_service_help'))
-								</span> 
+								</span>
 							</div>
 							<small><p class="help-block hide" id="price_group_text">@lang('lang_v1.price_group'): <span></span></p></small>
 						</div>
 					</div>
 					<div class="modal fade types_of_service_modal" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel"></div>
 				@endif
-				
+
 				@if(in_array('subscription', $enabled_modules))
 					<div class="col-md-4 pull-right col-sm-6">
 						<div class="checkbox">
@@ -118,12 +118,12 @@
 							<span class="input-group-addon">
 								<i class="fa fa-user"></i>
 							</span>
-							<input type="hidden" id="default_customer_id" 
+							<input type="hidden" id="default_customer_id"
 							value="{{ $walk_in_customer['id']}}" >
-							<input type="hidden" id="default_customer_name" 
+							<input type="hidden" id="default_customer_name"
 							value="{{ $walk_in_customer['name']}}" >
 							<input type="hidden" id="default_customer_balance" value="{{ $walk_in_customer['balance'] ?? ''}}" >
-							{!! Form::select('contact_id', 
+							{!! Form::select('contact_id',
 								[], null, ['class' => 'form-control mousetrap', 'id' => 'customer_id', 'placeholder' => 'Enter Customer name / phone', 'required']); !!}
 							<span class="input-group-btn">
 								<button type="button" class="btn btn-default bg-white btn-flat add_new_customer" data-name=""><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
@@ -139,10 +139,10 @@
 		              <br/>
 		              {!! Form::number('pay_term_number', $walk_in_customer['pay_term_number'], ['class' => 'form-control width-40 pull-left', 'placeholder' => __('contact.pay_term')]); !!}
 
-		              {!! Form::select('pay_term_type', 
-		              	['months' => __('lang_v1.months'), 
-		              		'days' => __('lang_v1.days')], 
-		              		$walk_in_customer['pay_term_type'], 
+		              {!! Form::select('pay_term_type',
+		              	['months' => __('lang_v1.months'),
+		              		'days' => __('lang_v1.days')],
+		              		$walk_in_customer['pay_term_type'],
 		              	['class' => 'form-control width-60 pull-left','placeholder' => __('messages.please_select')]); !!}
 		            </div>
 		          </div>
@@ -152,7 +152,7 @@
 				<div class="col-sm-3">
 					<div class="form-group">
 					{!! Form::label('commission_agent', __('lang_v1.commission_agent') . ':') !!}
-					{!! Form::select('commission_agent', 
+					{!! Form::select('commission_agent',
 								$commission_agent, null, ['class' => 'form-control select2']); !!}
 					</div>
 				</div>
@@ -184,7 +184,7 @@
 						{!! Form::select('invoice_scheme_id', $invoice_schemes, $default_invoice_schemes->id, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select')]); !!}
 					</div>
 				</div>
-				
+
 				<div class="clearfix"></div>
 				<!-- Call restaurant module if defined -->
 		        @if(in_array('tables' ,$enabled_modules) || in_array('service_staff' ,$enabled_modules))
@@ -217,7 +217,7 @@
 					<input type="hidden" name="sell_price_tax" id="sell_price_tax" value="{{$business_details->sell_price_tax}}">
 
 					<!-- Keeps count of product rows -->
-					<input type="hidden" id="product_row_count" 
+					<input type="hidden" id="product_row_count"
 						value="0">
 					@php
 						$hide_tax = '';
@@ -229,7 +229,7 @@
 					<table class="table table-condensed table-bordered table-striped table-responsive" id="pos_table">
 						<thead>
 							<tr>
-								<th class="text-center">	
+								<th class="text-center">
 									@lang('sale.product')
 								</th>
 								<th class="text-center">
@@ -257,7 +257,7 @@
 						<tr>
 							<td>
 								<div class="pull-right">
-								<b>@lang('sale.item'):</b> 
+								<b>@lang('sale.item'):</b>
 								<span class="total_quantity">0</span>
 								&nbsp;&nbsp;&nbsp;&nbsp;
 								<b>@lang('sale.total'): </b>
@@ -266,17 +266,17 @@
 							</td>
 						</tr>
 					</table>
-					
+
 					</div>
 
-					<div class="col-sm-3  hide">
-					<div class="checkbox">
-					<label>
-						{!! Form::checkbox('assign_delivery', 1, true, 
-						[  'class' => 'input-icheck' ,'id' => 'assign_delivery' ]); !!} 
-					</label>	
-					</div>		
-					</div>
+                    <div class="col-sm-3  hide">
+                        <div class="checkbox">
+                            <label>
+                                {!! Form::checkbox('assign_delivery', 1, true,
+                                [  'class' => 'input-icheck' ,'id' => 'assign_delivery' ]); !!}
+                            </label>
+                        </div>
+                    </div>
 				</div>
 			@endcomponent
 
@@ -284,7 +284,7 @@
 
 		<div class="row">
 			<div class="col-md-12 " style="display:flex;justify-content: space-between;">
-		
+
 			<div class=" col-sm-4 ">
 				<div class="form-group">
 					{!! Form::label('delivery_person_id', __('delivery.delivery_person') . ':*') !!}
@@ -314,7 +314,7 @@
 						{!! Form::text('pickup_address', null, ['class' => 'form-control','id'=>'pickup_address']); !!}
 					</div>
 				</div>
-				
+
 			</div>
 		</div>
 		<br>
@@ -385,7 +385,7 @@
 			        </div>
 			    </div>
 			    <div class="col-md-4"><br>
-			    	<b>@lang( 'sale.discount_amount' ):</b>(-) 
+			    	<b>@lang( 'sale.discount_amount' ):</b>(-)
 					<span class="display_currency" id="total_discount">0</span>
 			    </div>
 			    <div class="clearfix"></div>
@@ -422,17 +422,17 @@
 			                </span>
 			                {!! Form::select('tax_rate_id', $taxes['tax_rates'], $business_details->default_sales_tax, ['placeholder' => __('messages.please_select'), 'class' => 'form-control', 'data-default'=> $business_details->default_sales_tax], $taxes['attributes']); !!}
 
-							<input type="hidden" name="tax_calculation_amount" id="tax_calculation_amount" 
+							<input type="hidden" name="tax_calculation_amount" id="tax_calculation_amount"
 							value="@if(empty($edit)) {{@num_format($business_details->tax_calculation_amount)}} @else {{@num_format(optional($transaction->tax)->amount)}} @endif" data-default="{{$business_details->tax_calculation_amount}}">
 			            </div>
 			        </div>
 			    </div>
 			    <div class="col-md-4 col-md-offset-4">
-			    	<b>@lang( 'sale.order_tax' ):</b>(+) 
+			    	<b>@lang( 'sale.order_tax' ):</b>(+)
 					<span class="display_currency" id="order_tax">0</span>
 			    </div>
 			    <div class="clearfix"></div>
-				
+
 				<div class="row" >
 				<div class="col-md-12" style="display:flex;justify-content: space-between;" >
 				<div class="col-md-4">
@@ -446,7 +446,7 @@
 			            </div>
 			        </div>
 				</div>
-			
+
 				<div class="col-md-4">
 					<div class="form-group">
 						{!!Form::label('shipping_charges', __('sale.shipping_charges'))!!}
@@ -460,13 +460,13 @@
 				</div>
 				</div>
 				</div>
-				
+
 				<div class="clearfix"></div>
 			    <div class="col-md-4 col-md-offset-8">
 			    	@if(!empty($pos_settings['amount_rounding_method']) && $pos_settings['amount_rounding_method'] > 0)
 			    	<small id="round_off"><br>(@lang('lang_v1.round_off'): <span id="round_off_text">0</span>)</small>
 					<br/>
-					<input type="hidden" name="round_off_amount" 
+					<input type="hidden" name="round_off_amount"
 						id="round_off_amount" value=0>
 					@endif
 			    	<div><b>@lang('sale.total_payable'): </b>
@@ -506,7 +506,7 @@
 			@endcomponent
 		@endcan
 	@endif
-	
+
 	<div class="row">
 		{!! Form::hidden('is_save_and_print', 0, ['id' => 'is_save_and_print']); !!}
 		<div class="col-sm-12 text-right">
@@ -514,11 +514,11 @@
 			<button type="button" id="save-and-print" class="btn btn-primary btn-flat">@lang('lang_v1.save_and_print')</button>
 		</div>
 	</div>
-	
+
 	@if(empty($pos_settings['disable_recurring_invoice']))
 		@include('sale_pos.partials.recurring_invoice_modal')
 	@endif
-	
+
 	{!! Form::close() !!}
 </section>
 
@@ -526,10 +526,10 @@
 	@include('contact.create', ['quick_add' => true])
 </div>
 <!-- /.content -->
-<div class="modal fade register_details_modal" tabindex="-1" role="dialog" 
+<div class="modal fade register_details_modal" tabindex="-1" role="dialog"
 	aria-labelledby="gridSystemModalLabel">
 </div>
-<div class="modal fade close_register_modal" tabindex="-1" role="dialog" 
+<div class="modal fade close_register_modal" tabindex="-1" role="dialog"
 	aria-labelledby="gridSystemModalLabel">
 </div>
 
@@ -551,7 +551,7 @@
     @endif
     <script type="text/javascript">
     	$(document).ready( function(){
-			
+
     		$('.paid_on').datetimepicker({
                 format: moment_date_format + ' ' + moment_time_format,
                 ignoreReadonly: true,
@@ -588,7 +588,7 @@
 			}).on('select2:select', function (e) {
 				var data = e.params.data;
 				 $('#pickup_address').val(data.business_location_address);
-		
+
 			});
 
 			$('#customer_id').select2({
@@ -608,7 +608,7 @@
                 };
             },
         },
-        templateResult: function (data) { 
+        templateResult: function (data) {
             var template = '';
             if (data.supplier_business_name) {
                 template += data.supplier_business_name + "<br>";

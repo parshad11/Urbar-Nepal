@@ -27,5 +27,6 @@ return [
     'special_delivery_instructions'=>'Special Delivery Instructions',
     'shipping_address'=>'Shipping Address',
     'pickup_address'=>'Pickup Address',
+    ''
 
 ];
