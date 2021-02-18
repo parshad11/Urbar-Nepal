@@ -70,13 +70,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::resource('contacts', 'ContactController');
 
     /*supplier detail*/
-    route::get('/supplier/record', 'RecordController@index')->name('record.index');
-    route::get('/supplier/record/create', 'RecordController@create')->name('record.create');
-    route::post('/supplier/record/store', 'RecordController@store')->name('record.store');
-    route::post('/supplier/record/store', 'RecordController@store')->name('record.store');
-    route::get('/supplier/record/edit/{id}', 'RecordController@edit')->name('record.edit');
-    route::post('/supplier/record/update/{id}', 'RecordController@update')->name('record.update');
-    route::Delete('/supplier/record/delete/{id}', 'RecordController@destroy')->name('record.delete');
+    Route::resource('records', 'RecordController');
     route::get('/supplier/detail', 'RecordController@getallsupplier');
 
     Route::get('taxonomies-ajax-index-page', 'TaxonomyController@getTaxonomyIndexPage');

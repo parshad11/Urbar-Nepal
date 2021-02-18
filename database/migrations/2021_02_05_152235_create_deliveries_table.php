@@ -15,10 +15,10 @@ class CreateDeliveriesTable extends Migration
     {
         Schema::create('deliveries', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('transaction_id');
-            // $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
-            $table->integer('delivery_person_id');
-            // $table->foreign('delivery_person_id')->references('id')->on('delivery_people')->onDelete('cascade');
+            $table->integer('transaction_id')->unsigned();
+            $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
+            $table->integer('delivery_person_id')->unsigned();
+            $table->foreign('delivery_person_id')->references('id')->on('delivery_people')->onDelete('cascade');
             $table->string('delivery_status')->default('Ordered');
             $table->string('shipping_address');
             $table->string('shipping_latitude')->nullable();

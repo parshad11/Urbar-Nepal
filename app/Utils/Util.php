@@ -12,6 +12,7 @@ use App\TransactionSellLine;
 use App\Unit;
 use App\User;
 use App\VariationLocationDetails;
+use Carbon\Carbon;
 use DB;
 use GuzzleHttp\Client;
 use Spatie\Permission\Models\Role;
@@ -138,6 +139,16 @@ class Util
     {
         return [ 'ordered' => __('lang_v1.ordered'), 'on review' => __('lang_v1.on_review'),'shipping' => __('lang_v1.shipping'), 'delivered' => __('lang_v1.delivered'), 'canceled' => __('lang_v1.canceled')];
     }
+
+    public function taskTypes()
+    {
+        return [ 'delivery' => __('delivery.delivery'), 'pick up' => __('delivery.pick_up')];
+    }
+
+    public function taskStatuses()
+    {
+        return [ 'received' => __('lang_v1.received'), 'on process' => __('lang_v1.on_process'), 'completed' => __('lang_v1.completed'), 'cancelled' => __('lang_v1.cancelled')];
+    }
     /**
      * Defines available Payment Types
      *
@@ -239,7 +250,7 @@ class Util
             $mysql_format = 'Y-m-d H:i:s';
         }
 
-        return !empty($date_format) ? \Carbon::createFromFormat($date_format, $date)->format($mysql_format) : null;
+        return !empty($date_format) ? Carbon::createFromFormat($date_format, $date)->format($mysql_format) : null;
     }
 
     /**
@@ -254,7 +265,7 @@ class Util
         if (session('business.time_format') == 12) {
             $time_format = 'h:i A';
         }
-        return !empty($time_format) ? \Carbon::createFromFormat($time_format, $time)->format('H:i') : null;
+        return !empty($time_format) ? Carbon::createFromFormat($time_format, $time)->format('H:i') : null;
     }
 
     /**

@@ -1185,9 +1185,15 @@ return [
     'task' => 'Task',
     'tasks'=>'Tasks',
     'assign_task'=>'Assign Task',
+    'assign_new_task'=>'Assign new task',
     'received_work'=>'Received Work',
+    'current_work'=>'Current Work',
     'shipping'=>'Shipping',
     'on_review'=>'On Review',
     'delivered'=>'Delivered',
     'canceled'=>'Canceled',
+    'on_process'=>'On Process',
+    'completed'=>'Completed',
+    'cancelled'=>'Cancelled',
+    
 ];

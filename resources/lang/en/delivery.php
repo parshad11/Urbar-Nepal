@@ -27,5 +27,13 @@ return [
     'special_delivery_instructions'=>'Special Delivery Instructions',
     'shipping_address'=>'Shipping Address',
     'pickup_address'=>'Pickup Address',
+    'task_type'=>'Task Type',
+    'task_status'=>'Task Status',
+    'task_title'=>'Task Title',
+    'pick_up'=>'Pick Up',
+    'description'=>'Description',
+    'special_instructions'=>'Special Instructions',
+    'assign_task_to'=>'Assign Task To',
+    
 
 ];

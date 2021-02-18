@@ -6,8 +6,24 @@ use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
 {
-    protected $fillable=['assign_to','task_type','title','description','special_instruction','start_lat','start_log',
-        'end_lat','end_log','start_date','end_date','status'];
+      /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded=['id'];
+
+     /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'tasks';
+
+    public function delivery_person(){
+        return $this->belongsTo(DeliveryPerson::class,'delivery_person_id');
+    }
+
 
     public function task_assign($task){
         $user = User::findOrFail($task);
@@ -26,5 +42,8 @@ class Task extends Model
         $date = $task->start_date . '-' . $task->end_date;
         return $date;
     }
+
+    
+    
 
 }

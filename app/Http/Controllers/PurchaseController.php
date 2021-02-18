@@ -63,6 +63,7 @@ class PurchaseController extends Controller
             abort(403, 'Unauthorized action.');
         }
         $business_id = request()->session()->get('user.business_id');
+        
         if (request()->ajax()) {
             $purchases = $this->transactionUtil->getListPurchases($business_id);
 
@@ -361,7 +362,9 @@ class PurchaseController extends Controller
             if (empty($transaction_data['ref_no'])) {
                 $transaction_data['ref_no'] = $this->productUtil->generateReferenceNumber($transaction_data['type'], $ref_count);
             }
+            
             $transaction = Transaction::create($transaction_data);
+
             if($transaction->assign_delivery){
                 $delivery_details['transaction_id']=$transaction->id;
                 $delivery_details['delivery_person_id']=$request->input('delivery_person_id');
@@ -580,6 +583,7 @@ class PurchaseController extends Controller
         }
 
         try {
+            
             $transaction = Transaction::findOrFail($id);
             //Validate document size
             $request->validate([
@@ -599,6 +603,8 @@ class PurchaseController extends Controller
                             'tax_amount', 'shipping_details',
                             'shipping_charges', 'final_total',
                             'additional_notes', 'exchange_rate', 'pay_term_number', 'pay_term_type']);
+
+                        
 
             $exchange_rate = $update_data['exchange_rate'];
 
