@@ -58,7 +58,7 @@ class AdminSidebarMenu
             }
 
             //Contacts dropdown
-            if (auth()->user()->can('supplier.view') || auth()->user()->can('customer.view') ||auth()->user()->can('record.view') ||auth()->user()->can('record.view_own')) {
+            if (auth()->user()->can('supplier.view') || auth()->user()->can('customer.view') ||auth()->user()->can('record.view') ||auth()->user()->can('record.create')) {
                 $menu->dropdown(
                     __('contact.contacts'),
                     function ($sub) {
@@ -71,9 +71,9 @@ class AdminSidebarMenu
                         }
                         if (auth()->user()->can('record.view') || auth()->user()->can('record.view_own')) {
                             $sub->url(
-                                action('RecordController@index', ['type' => 'supplier Record']),
+                                action('RecordController@index'),
                                 __('Supplier Record'),
-                                ['icon' => 'fa fas fa-star', 'active' => request()->input('type') == 'Supplier Record']
+                                ['icon' => 'fa fas fa-star', 'active' => request()->segment(1) == 'records']
                             );
                         }
                         if (auth()->user()->can('customer.view')) {
@@ -326,7 +326,7 @@ class AdminSidebarMenu
             }
 
             //Delivery Dropdown
-            if (in_array('delivery', $enabled_modules)&&(auth()->user()->can('delivery.view') || auth()->user()->can('delivery.create') || auth()->user()->can('delivery.update')||auth()->user()->can('delivery.delete'))||(auth()->user()->can('view_own_delivery') || auth()->user()->can('view_own_task'))) {
+            if (in_array('delivery', $enabled_modules) && (auth()->user()->can('delivery.view') || auth()->user()->can('delivery.create') || auth()->user()->can('delivery.update')||auth()->user()->can('task.assign')||auth()->user()->can('task.view')||auth()->user()->can('view_own_delivery') || auth()->user()->can('view_own_task'))) {
                 $menu->dropdown(
                     __('delivery.delivery'),
                     function ($sub) {
@@ -355,7 +355,7 @@ class AdminSidebarMenu
                         if (auth()->user()->can('view_own_delivery')||auth()->user()->can('view_own_task')) {
                             $sub->url(
                                 action('TaskController@getActiveWork'),
-                                __('lang_v1.received_work'),
+                                __('lang_v1.current_work'),
                                 ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'active' && request()->segment(2) =='work']
                             );
                         }

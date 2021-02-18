@@ -48,6 +48,8 @@ return [
     'order_status' => 'Products in this purchase will be available for sale only if the <b>Order Status</b> is <b>Items Received</b>.',
 
     'purchase_location' => 'Business location where the purchased product will be available for sale.',
+   
+    'supplier_record_location' => 'Business location where the associated suppliers record need to be tracked.',
 
     'sale_location' => 'Business location from where you want to sell',
 

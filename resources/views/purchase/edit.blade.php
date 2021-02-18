@@ -203,7 +203,7 @@
 						<span class="input-group-addon">
 							<i class="fa fa-user"></i>
 						</span>
-							{!! Form::select('delivery_person_id',$delivery_people, $delivery->delivery_person_id, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'),'id' => 'delivery_person_id', 'style' => 'width: 100%;' ]); !!}
+							{!! Form::select('delivery_person_id',$delivery_people,  (isset($delivery) ? $delivery->delivery_person_id : '' ), ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'),'id' => 'delivery_person_id', 'style' => 'width: 100%;' ]); !!}
 					</div>
 				</div>
 			</div>
@@ -211,7 +211,7 @@
 			<div class=" col-sm-4 @if(!empty($default_delivery_status)) hide @endif">
 				<div class="form-group">
 					{!! Form::label('delivery_status', __('delivery.delivery_status') . ':*') !!}
-					{!! Form::select('delivery_status', $deliveryStatuses,$delivery->delivery_status, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required','style' => 'width: 100%;']); !!}
+					{!! Form::select('delivery_status', $deliveryStatuses,(isset($delivery) ? $delivery->delivery_status : '' ), ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required','style' => 'width: 100%;']); !!}
 				</div>
 			</div>
 			</div>
@@ -222,7 +222,7 @@
 				<div class=" col-sm-4">
 					<div class="form-group">
 						{!! Form::label('pickup_address', __('delivery.pickup_address') . ':*') !!}
-						{!! Form::text('pickup_address', $delivery->pickup_address, ['class' => 'form-control','id'=>'pickup_address']); !!}
+						{!! Form::text('pickup_address',  (isset($delivery) ? $delivery->pickup_address : '' ), ['class' => 'form-control','id'=>'pickup_address']); !!}
 					</div>
 					<div class="form-group">
 					<p>Please open this link to choose pickup location's latitude and longitude: <a href="https://www.mapcoordinates.net/en" target="_blank">https://www.mapcoordinates.net/en </a></p>
@@ -231,11 +231,11 @@
 				<div class=" col-sm-4">
 					<div class="form-group">
 						{!! Form::label('latitude', __('business.latitude') . ':*') !!}
-						{!! Form::text('pickup_latitude',$delivery->pickup_latitude, ['class' => 'form-control','id'=>'latitude']); !!}
+						{!! Form::text('pickup_latitude',(isset($delivery) ? $delivery->pickup_latitude : '' ), ['class' => 'form-control','id'=>'latitude']); !!}
 					</div>
 					<div class="form-group">
 						{!! Form::label('longitude', __('business.longitude') . ':*') !!}
-						{!! Form::text('pickup_longitude', $delivery->pickup_longitude, ['class' => 'form-control','id'=>'longitude']); !!}
+						{!! Form::text('pickup_longitude', (isset($delivery) ? $delivery->pickup_longitude : '' ), ['class' => 'form-control','id'=>'longitude']); !!}
 					</div>
 				</div>
 			</div>
@@ -246,7 +246,7 @@
 				<div class=" col-sm-4">
 					<div class="form-group">
 						{!! Form::label('shipping_address', __('delivery.shipping_address') . ':*') !!}
-						{!! Form::text('shipping_address', $delivery->shipping_address, ['class' => 'form-control','id'=>'shipping_address']); !!}
+						{!! Form::text('shipping_address', (isset($delivery) ? $delivery->shipping_address : '' ), ['class' => 'form-control','id'=>'shipping_address']); !!}
 					</div>
 				</div>
 			</div>
@@ -257,7 +257,7 @@
 				<div class=" col-sm-4 ">
 					<div class="form-group">
 						{!! Form::label('special_instructions', __('delivery.special_delivery_instructions') . ':') !!}
-						{!! Form::textarea('special_delivery_instructions',$delivery->special_delivery_instructions, ['class' => 'form-control','rows'=>3]); !!}
+						{!! Form::textarea('special_delivery_instructions', (isset($delivery) ? $delivery->special_delivery_instructions : '' ), ['class' => 'form-control','rows'=>3]); !!}
 					</div>
 				</div>
 			</div>

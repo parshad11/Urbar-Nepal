@@ -484,66 +484,11 @@
 			},
 			language: {
 				noResults: function() {
-					// var name = $('#delivery_person_id')
-					// 	.data('select2')
-					// 	.dropdown.$search.val();
+					
 				},
 			},
   		    });
 
-			$('#supplier_id').select2({
-			ajax: {
-				url: '/purchases/get_suppliers',
-				dataType: 'json',
-				delay: 250,
-				data: function(params) {
-					return {
-						q: params.term, // search term
-						page: params.page,
-					};
-				},
-				processResults: function(data) {
-					return {
-						results: data,
-					};
-				},
-			},
-			minimumInputLength: 1,
-			escapeMarkup: function(m) {
-				return m;
-			},
-			templateResult: function(data) {
-				if (!data.id) {
-					return data.text;
-				}
-				var html = data.text + ' - ' + data.business_name + ' (' + data.contact_id + ')';
-				return html;
-			},
-			language: {
-				noResults: function() {
-					var name = $('#supplier_id')
-						.data('select2')
-						.dropdown.$search.val();
-					return (
-						'<button type="button" data-name="' +
-						name +
-						'" class="btn btn-link add_new_supplier"><i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i>&nbsp; ' +
-						__translate('add_name_as_new_supplier', { name: name }) +
-						'</button>'
-					);
-				},
-			},
-			}).on('select2:select', function (e) {
-				var data = e.params.data;
-				$('#pay_term_number').val(data.pay_term_number);
-				$('#pay_term_type').val(data.pay_term_type);
-				$('#advance_balance_text').text(__currency_trans_from_en(data.balance), true);
-				$('#advance_balance').val(data.balance);
-				$('#pickup_address').val(data.pickup_address);
-				$('#pickup_latitude').val(data.pickup_longitude);
-				$('#pickup_longitude').val(data.pickup_longitude);
-
-			});
 
 			$('#location_id').select2({
 			ajax: {

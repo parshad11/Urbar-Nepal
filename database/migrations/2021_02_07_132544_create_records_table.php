@@ -14,12 +14,21 @@ class CreateRecordsTable extends Migration
     public function up()
     {
         Schema::create('records', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->integer('supplier_id');
-            $table->date('date');
-            $table->string('location');
+            $table->bigIncrements('id');  
+            $table->integer('business_id')->unsigned();
+            $table->foreign('business_id')->references('id')->on('business')->onDelete('cascade');
+            $table->integer('location_id')->unsigned();
+            $table->foreign('location_id')->references('id')->on('business_locations')->onDelete('cascade');
+            $table->integer('contact_id')->unsigned();
+            $table->foreign('contact_id')->references('id')->on('contacts')->onDelete('cascade');
             $table->string('item');
-            $table->longText('quantity')->nullable();
+            $table->date('expected_collection_date');
+            $table->string('location');
+            $table->decimal('quantity')->nullable();
+            $table->integer('unit_id')->unsigned();
+            $table->foreign('unit_id')->references('id')->on('units')->onDelete('cascade');
+            $table->integer('created_by')->unsigned();
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

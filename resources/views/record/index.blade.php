@@ -1,11 +1,11 @@
 @extends('layouts.app')
-@section('title', __('supplier record'))
+@section('title', __('contact.supplier_record'))
 @section('content')
 
     <!-- Content Header (Page header) -->
     <section class="content-header">
-        <h1>@lang( 'supplier record' )
-            <small>@lang( 'Manage supplier record' )</small>
+        <h1>@lang( 'contact.supplier_record' )
+            <small>@lang( 'contact.manage_supplier_record' )</small>
         </h1>
         {!! Form::open(['url' => action('RecordController@index'), 'method' => 'get', 'id' => 'cg_report_filter_form' ]) !!}
         <div class="row no-print">
@@ -50,12 +50,15 @@
                 <table class="table table-bordered table-striped" id="record_table">
                     <thead>
                     <tr>
-                        <th>Supplier</th>
-                        <th>item</th>
-                        <th>quantity</th>
-                        <th>Location</th>
-                        <th>Date</th>
                         <th>Action</th>
+                        <th>@lang('purchase.business_location')</th>
+                        <th>@lang('purchase.supplier')</th>
+                        <th>Item Name</th>
+                        <th>Quantity</th>
+                        <th>Unit</th>
+                        <th>Expected Collection Date</th>
+                        <th>Supplier Location</th>
+                        <th>@lang('lang_v1.added_by')</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -109,7 +112,7 @@
                 processing: true,
                 serverSide: true,
                 "ajax": {
-                    "url": "/supplier/record",
+                    "url": "/records",
                     "data": function (d) {
                         d.start_date = $('#cg_date_range').data('daterangepicker').startDate.format('YYYY-MM-DD');
                         d.end_date = $('#cg_date_range').data('daterangepicker').endDate.format('YYYY-MM-DD');
@@ -117,34 +120,38 @@
                     }
                 },
                 columns: [
-                    {data: 'supplier name', name: 'supplier name'},
-                    {data: 'item', name: 'item'},
-                    {data: 'quantity', name: 'quantity'},
-                    {data: 'location', name: 'location'},
-                    {data: 'date', name: 'date'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
+                    {data: 'location_name', name: 'BS.name'},
+                    {data: 'name', name: 'contacts.name'},       
+                    {data: 'item', name: 'item'},       
+                    {data: 'quantity', name: 'quantity'},
+                    {data: 'unit', name: 'units.actual_name',orderable: false},
+                    {data: 'expected_collection_date', name: 'expected_collection_date'},
+                    {data: 'location', name: 'location'},  
+                    {data: 'added_by', name: 'u.first_name'},
+                   
                 ],
                 "fnDrawCallback": function (oSettings) {
                     __currency_convert_recursively($('#record_table'));
                 }
             });
-            $(document).on('click', 'button.delete_role_button', function () {
+            $(document).on('click', 'a.delete-record', function (e) {
+                e.preventDefault();
                 swal({
                     title: LANG.sure,
-                    text: LANG.confirm_delete_role,
+                    text: LANG.confirm_delete_record,
                     icon: "warning",
                     buttons: true,
                     dangerMode: true,
                 }).then((willDelete) => {
                     if (willDelete) {
-                        var href = $(this).data('href');
+                        var href = $(this).attr('href');
                         var data = $(this).serialize();
 
                         $.ajax({
                             method: "DELETE",
                             url: href,
                             dataType: "json",
-                            data: data,
                             success: function (result) {
                                 if (result.success == true) {
                                     toastr.success(result.msg);

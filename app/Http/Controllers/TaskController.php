@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\BusinessLocation;
 use App\Task;
 use Illuminate\Http\Request;
 use App\User;
 use App\Role;
+use App\Utils\ModuleUtil;
+use App\Utils\ProductUtil;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
@@ -13,9 +16,14 @@ use Session;
 
 class TaskController extends Controller
 {
-    public function __construct(Task $task)
+    protected $moduleUtil;
+    protected $productUtil;
+
+    public function __construct(ModuleUtil $moduleUtil,ProductUtil $productUtil)
     {
-        $this->task = $task;
+        $this->moduleUtil=$moduleUtil;
+        $this->productUtil=$productUtil;
+
         $this->status_colors = [
             'received' => 'bg-purple',
             'on process' => 'bg-yellow',
@@ -97,8 +105,13 @@ class TaskController extends Controller
             abort(403, 'Unauthorized action.');
         }
         $business_id = request()->session()->get('user.business_id');
-        $user = User::role('Delivery#' . $business_id)->get();
-        return view('task.create', compact('user'));
+        $business_locations = BusinessLocation::forDropdown($business_id, false, true);
+        $bl_attributes = $business_locations['attributes'];
+        $business_locations = $business_locations['locations'];
+        $taskTypes = $this->productUtil->taskTypes();
+        $taskStatuses = $this->productUtil->taskStatuses();
+        $delivery_people=User::allDeliveryPersonDropdown($business_id,false);
+        return view('task.create')->with(compact('delivery_people','business_locations','bl_attributes','taskTypes','taskStatuses'));
     }
 
     /**

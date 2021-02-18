@@ -481,8 +481,8 @@ class ModuleUtil extends Util
             'expenses' => ['name' => __('expense.expenses')],
             'account' => ['name' => __('lang_v1.account')],
 
-            'tables' => [ 'name' => __('restaurant.tables'),
-                        'tooltip' => __('restaurant.tooltip_tables') ] ,
+            // 'tables' => [ 'name' => __('restaurant.tables'),
+            //             'tooltip' => __('restaurant.tooltip_tables') ] ,
 
             'modifiers' => [ 'name' => __('restaurant.modifiers'),
                     'tooltip' => __('restaurant.tooltip_modifiers') ],
@@ -491,10 +491,10 @@ class ModuleUtil extends Util
                     'name' => __('restaurant.service_staff'),
                     'tooltip' => __('restaurant.tooltip_service_staff') ],
 
-            'booking' => ['name' => __('lang_v1.enable_booking')],
+            // 'booking' => ['name' => __('lang_v1.enable_booking')],
 
-            'kitchen' => [
-                'name' => __('restaurant.kitchen_for_restaurant') ],
+            // 'kitchen' => [
+            //     'name' => __('restaurant.kitchen_for_restaurant') ],
 
             'subscription' => ['name' => __('lang_v1.enable_subscription')],
 

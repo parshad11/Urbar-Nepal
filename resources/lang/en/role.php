@@ -29,6 +29,11 @@ return [
     'supplier.update' => 'Edit supplier',
     'supplier.delete' => 'Delete supplier',
 
+    'record.view' => 'View supplier record',
+    'record.create' => 'Add supplier record',
+    'record.update' => 'Edit supplier record',
+    'record.delete' => 'Delete supplier record',
+
     'customer.view' => 'View customer',
     'customer.create' => 'Add customer',
     'customer.update' => 'Edit customer',
