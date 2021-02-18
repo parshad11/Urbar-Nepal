@@ -159,6 +159,30 @@
           		</div>
           	</div>
         @endif
+        @if(!empty($all_locations))
+            <div class="row">
+                <div class="col-sm-12">
+                    @component('components.widget', ['class' => 'box-primary', 'title' => __('Supplier upcomming record(for 15 days)')])
+                        @if (auth()->user()->can('record.view') || auth()->user()->can('record.view_own'))
+                            <table class="table table-bordered table-striped" id="record_table">
+                                <thead>
+                                <tr>
+                                    <th>Supplier</th>
+                                    <th>item</th>
+                                    <th>quantity</th>
+                                    <th>Location</th>
+                                    <th>Date</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        @endif
+                    @endcomponent
+                </div>
+            </div>
+        @endif
       	<!-- sales chart end -->
         @if(!empty($widgets['after_sales_current_fy']))
             @foreach($widgets['after_sales_current_fy'] as $widget)
@@ -267,5 +291,28 @@
         {!! $sells_chart_1->script() !!}
         {!! $sells_chart_2->script() !!}
     @endif
+
+    <script type="text/javascript">
+        record_table = $('#record_table').DataTable({
+            processing: true,
+            serverSide: true,
+            "ajax": {
+                "url": "/home",
+                "data": function (d) {
+
+                }
+            },
+            columns: [
+                {data: 'supplier name', name: 'supplier name'},
+                {data: 'item', name: 'item'},
+                {data: 'quantity', name: 'quantity'},
+                {data: 'location', name: 'location'},
+                {data: 'date', name: 'date'},
+            ],
+            "fnDrawCallback": function (oSettings) {
+                __currency_convert_recursively($('#record_table'));
+            }
+        });
+    </script>
 @endsection
 

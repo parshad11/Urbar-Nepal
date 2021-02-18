@@ -1194,6 +1194,7 @@ return [
     'canceled'=>'Canceled',
     'on_process'=>'On Process',
     'completed'=>'Completed',
-    'cancelled'=>'Cancelled',
-    
+    'cancelled'=>'Cancelled',  
+    'tranfer_status'=>'Transfer Status',
+
 ];

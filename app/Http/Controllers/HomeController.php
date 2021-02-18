@@ -18,6 +18,8 @@ use Illuminate\Http\Request;
 use App\Utils\Util;
 use App\Utils\RestaurantUtil;
 use App\User;
+use App\Record;
+use \Carbon\Carbon;
 use Illuminate\Notifications\DatabaseNotification;
 
 class HomeController extends Controller
@@ -42,13 +44,14 @@ class HomeController extends Controller
         TransactionUtil $transactionUtil,
         ModuleUtil $moduleUtil,
         Util $commonUtil,
-        RestaurantUtil $restUtil
+        RestaurantUtil $restUtil,Record $record
     ) {
         $this->businessUtil = $businessUtil;
         $this->transactionUtil = $transactionUtil;
         $this->moduleUtil = $moduleUtil;
         $this->commonUtil = $commonUtil;
         $this->restUtil = $restUtil;
+        $this->record=$record;
     }
 
     /**
@@ -56,7 +59,7 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $business_id = request()->session()->get('user.business_id');
 
@@ -204,6 +207,30 @@ class HomeController extends Controller
             if (!empty($widget_array['position'])) {
                 $widgets[$widget_array['position']][] = $widget_array['widget'];
             }
+        }
+
+        if ($request->ajax()) {
+            $today=Carbon::today();
+            $dateafter15days=Carbon::today()->addDays(15);
+            if (auth()->user()->can('record.view') && auth()->user()->can('record.view_own')) {
+                $record = Record::whereBetween('date', [$today, $dateafter15days]);
+            }
+            elseif(!auth()->user()->can('record.view') && auth()->user()->can('record.view_own')){
+                $record = Record::whereBetween('date', [$today, $dateafter15days])->where('supplier_id',auth()->user()->id);
+            }
+
+            return Datatables::of($record)
+                ->addIndexColumn()
+                ->addColumn(
+                    'supplier name',
+                    function ($row) {
+                        $data=Record::all();
+                        $supplier_name = $this->record->contact_supplier($row->supplier_id);
+                        return $supplier_name;
+                    }
+                )
+                ->rawColumns(['action', 'supplier name'])
+                ->make(true);
         }
 
         return view('home.index', compact('date_filters', 'sells_chart_1', 'sells_chart_2', 'widgets', 'all_locations'));
