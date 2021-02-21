@@ -24,7 +24,7 @@ class PermissionsTableSeeder extends Seeder
             ['name' => 'supplier.update'],
             ['name' => 'supplier.delete'],
 
-            
+            ['name' => 'record.view_own'],
             ['name' => 'record.view'],
             ['name' => 'record.create'],
             ['name' => 'record.update'],

@@ -77,7 +77,7 @@ class RecordController extends Controller
                     </button>
                     <ul class="dropdown-menu dropdown-menu-left" role="menu">';
                     if (auth()->user()->can("record.view")) {
-                        $html .= '<li><a href="#" data-href="' . action('RecordController@show', [$row->id]) . '" class="btn-modal" data-container=".view_modal"><i class="fas fa-eye" aria-hidden="true"></i>' . __("messages.view") . '</a></li>';
+                        $html .= '<li><a href="#" data-href="' . action('RecordController@view', [$row->id]) . '" class="btn-modal" data-container=".view_modal"><i class="fas fa-eye" aria-hidden="true"></i>' . __("messages.view") . '</a></li>';
                     }
                     if (auth()->user()->can('record.update')) {
                         $html .=  '<li><a href="' . action('RecordController@edit', [$row->id]) . '"><i class="fas fa-edit"></i> ' . __("messages.edit") . '</a></li>';
@@ -151,7 +151,7 @@ class RecordController extends Controller
         $record_data['business_id'] = $business_id;
         $record_data['expected_collection_date']=$this->moduleUtil->uf_date($record_data['expected_collection_date']);
 
-        DB::beginTransaction(); 
+        DB::beginTransaction();
 
         $record = Record::create($record_data);
         
@@ -179,7 +179,7 @@ class RecordController extends Controller
      */
     public function show($id)
     {
-        //
+
     }
 
     /**
@@ -278,7 +278,7 @@ class RecordController extends Controller
                 DB::commit();
 
                 $output = ['success' => true,
-                    'msg' => __("contact.record_deleted_sucess")
+                    'msg' => __("contact.deleted_success")
                 ];
 
             } catch (\Exception $e) {
@@ -304,5 +304,18 @@ class RecordController extends Controller
                 ->get();
             return json_encode($user);
         }
+    }
+
+    public function view($id){
+        if (!auth()->user()->can('record.view')) {
+            abort(403, 'Unauthorized action.');
+        }
+        $record=Record::findorfail($id);
+        $contact=Contact::find($record->contact_id);
+        $business_location=BusinessLocation::find($record->business_id);
+        $unit=Unit::find($record->unit_id);
+        $created_by=User::find($record->created_by);
+        return view('record.detail',compact('record','contact',
+            'business_location','unit','created_by'));
     }
 }

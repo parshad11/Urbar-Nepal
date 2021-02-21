@@ -74,6 +74,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     /*supplier detail*/
     Route::resource('records', 'RecordController');
     route::get('/supplier/detail', 'RecordController@getallsupplier');
+    Route::get('/record/view/{id}', 'RecordController@view');
 
     Route::get('taxonomies-ajax-index-page', 'TaxonomyController@getTaxonomyIndexPage');
     Route::resource('taxonomies', 'TaxonomyController');
@@ -95,6 +96,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::post('/products/bulk-update', 'ProductController@bulkUpdate');
     Route::post('/products/bulk-update-location', 'ProductController@updateProductLocation');
     Route::get('/products/get-product-to-edit/{product_id}', 'ProductController@getProductToEdit');
+
 
     Route::post('/products/get_sub_categories', 'ProductController@getSubCategories');
     Route::get('/products/get_sub_units', 'ProductController@getSubUnits');
