@@ -42,7 +42,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::get('/home/purchase-payment-dues', 'HomeController@getPurchasePaymentDues');
     Route::get('/home/sales-payment-dues', 'HomeController@getSalesPaymentDues');
     Route::get('/calendar', 'HomeController@getCalendar')->name('calendar');
-    
+
     Route::post('/test-email', 'BusinessController@testEmailConfiguration');
     Route::post('/test-sms', 'BusinessController@testSmsConfiguration');
     Route::get('/business/settings', 'BusinessController@getBusinessSettings')->name('business.getBusinessSettings');
@@ -52,7 +52,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::post('/user/update-password', 'UserController@updatePassword')->name('user.updatePassword');
 
     Route::resource('brands', 'BrandController');
-    
+
     Route::resource('payment-account', 'PaymentAccountController');
 
     Route::resource('tax-rates', 'TaxRateController');
@@ -91,7 +91,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::post('/products/bulk-update', 'ProductController@bulkUpdate');
     Route::post('/products/bulk-update-location', 'ProductController@updateProductLocation');
     Route::get('/products/get-product-to-edit/{product_id}', 'ProductController@getProductToEdit');
-    
+
     Route::post('/products/get_sub_categories', 'ProductController@getSubCategories');
     Route::get('/products/get_sub_units', 'ProductController@getSubUnits');
     Route::post('/products/product_form_part', 'ProductController@getProductVariationFormPart');
@@ -102,7 +102,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::get('/products/quick_add', 'ProductController@quickAdd');
     Route::post('/products/save_quick_product', 'ProductController@saveQuickProduct');
     Route::get('/products/get-combo-product-entry-row', 'ProductController@getComboProductEntryRow');
-    
+
     Route::resource('products', 'ProductController');
 
     Route::post('/purchases/update-status', 'PurchaseController@updateStatus');
@@ -190,7 +190,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::get('/reports/get-profit/{by?}', 'ReportController@getProfit');
     Route::get('/reports/items-report', 'ReportController@itemsReport');
     Route::get('/reports/get-stock-value', 'ReportController@getStockValue');
-    
+
     Route::get('business-location/activate-deactivate/{location_id}', 'BusinessLocationController@activateDeactivateLocation');
 
     //Business Location Settings...
@@ -244,7 +244,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::get('stock-transfers/print/{id}', 'StockTransferController@printInvoice');
     Route::post('stock-transfers/update-status/{id}', 'StockTransferController@updateStatus');
     Route::resource('stock-transfers', 'StockTransferController');
-    
+
     Route::get('/opening-stock/add/{product_id}', 'OpeningStockController@add');
     Route::post('/opening-stock/save', 'OpeningStockController@save');
 
@@ -260,7 +260,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::get('sell-return/get-product-row', 'SellReturnController@getProductRow');
     Route::get('/sell-return/print/{id}', 'SellReturnController@printInvoice');
     Route::get('/sell-return/add/{id}', 'SellReturnController@add');
-    
+
     //Backup
     Route::get('backup/download/{file_name}', 'BackUpController@download');
     Route::get('backup/delete/{file_name}', 'BackUpController@delete');
@@ -307,7 +307,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
         Route::post('/link-account', 'AccountReportsController@postLinkAccount');
         Route::get('/cash-flow', 'AccountController@cashFlow');
     });
-    
+
     Route::resource('account-types', 'AccountTypeController');
 
     //Restaurant module
@@ -347,7 +347,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::resource('warranties', 'WarrantyController');
 
     Route::resource('dashboard-configurator', 'DashboardConfiguratorController')
-    ->only(['edit', 'update']);
+        ->only(['edit', 'update']);
 
     //common controller for document & note
     Route::get('get-document-note-page', 'DocumentAndNoteController@getDocAndNoteIndexPage');
@@ -385,5 +385,43 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone'])
 // Routes for frontCMS
 Route::namespace('Front')->middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 'AdminSidebarMenu', 'CheckUserLogin'])->group(function () {
     Route::resource('frontcms-settings', 'CmsController');
-    Route::get('frontcms/about/settings', 'CmsController@createAbout')->name('frontcms_about_form');
+
+    // about page
+    Route::get('frontcms/about-settings/create', 'CmsController@createAbout')->name('frontcms_about_form');
+    Route::post('frontcms/about-settings/store', 'CmsController@storeAbout')->name('frontcms_about_store');
+    Route::get('frontcms/about-settings', 'CmsController@editAbout')->name('frontcms_about_edit');
+    Route::post('frontcms/about-settings/update', 'CmsController@updateAbout')->name('frontcms_about_update');
+
+    // team section
+    Route::get('/frontcms/teams', 'CmsController@viewTeam')->name('cms_team');
+    Route::get('/frontcms/teams/create', 'CmsController@createTeam')->name('cms_team_form');
+    Route::post('/frontcms/teams', 'CmsController@storeTeam')->name('cms_team_store');
+    Route::get('/frontcms/teams/{id}/edit', 'CmsController@editTeam')->name('cms_team_edit');
+    Route::put('/frontcms/teams/{id}', 'CmsController@updateTeam')->name('cms_team_update');
+    Route::delete('/frontcms/teams/{id}', 'CmsController@deleteTeam')->name('cms_team_delete');
+
+    // service section
+    Route::get('/frontcms/services', 'CmsController@viewServices')->name('cms_service');
+    Route::get('/frontcms/services/create', 'CmsController@createServices')->name('cms_service_form');
+    Route::post('/frontcms/services', 'CmsController@storeServices')->name('cms_service_store');
+    Route::get('/frontcms/services/{id}/edit', 'CmsController@editServices')->name('cms_service_edit');
+    Route::put('/frontcms/services/{id}', 'CmsController@updateServices')->name('cms_service_update');
+    Route::delete('/frontcms/services/{id}', 'CmsController@deleteServices')->name('cms_service_delete');
+
+    // Blog section
+    Route::get('/frontcms/blogs', 'CmsController@viewBlog')->name('cms_blog');
+    Route::get('/frontcms/blogs/create', 'CmsController@createBlog')->name('cms_blog_form');
+    Route::post('/frontcms/blogs', 'CmsController@storeBlog')->name('cms_blog_store');
+    Route::get('/frontcms/blogs/{id}/edit', 'CmsController@editBlog')->name('cms_blog_edit');
+    Route::put('/frontcms/blogs/{id}', 'CmsController@updateBlog')->name('cms_blog_update');
+    Route::delete('/frontcms/blogs/{id}', 'CmsController@deleteBlog')->name('cms_blog_delete');
+   
+    //Testimonial section 
+    Route::get('/frontcms/testimonial', 'CmsController@viewTestimonial')->name('cms_testimonial');
+    Route::get('/frontcms/testimonial/create', 'CmsController@createTestimonial')->name('cms_testimonial_form');
+    Route::post('/frontcms/testimonial', 'CmsController@storeTestimonial')->name('cms_testimonial_store');
+    Route::get('/frontcms/testimonial/{id}/edit', 'CmsController@editTestimonial')->name('cms_testimonial_edit');
+    Route::put('/frontcms/testimonial/{id}', 'CmsController@updateTestimonial')->name('cms_testimonial_update');
+    Route::delete('/frontcms/testimonial/{id}', 'CmsController@deleteTestimonial')->name('cms_testimonial_delete');
+    
 });

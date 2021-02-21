@@ -11,5 +11,11 @@
 |
 */
 Route::namespace('Front')->group(function(){
-    Route::get('/', 'FrontendController@index');
+    Route::get('/', 'FrontendController@index')->name('front_dashboard');
+    Route::get('/about-us', 'FrontendController@getAbout')->name('front_about');
+    Route::get('/blog', 'FrontendController@getBlog')->name('blog');
+    Route::get('/blog/{slug}', 'FrontendController@getSingleBlog')->name('blog_single');
+    Route::get('/team', 'FrontendController@getTeam')->name('teams');
+    Route::get('/contact', 'FrontendController@getContact')->name('contact');
+    Route::get('/faqs', 'FrontendController@getFaqs')->name('faqs');
 });

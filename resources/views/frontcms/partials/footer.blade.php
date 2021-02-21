@@ -7,27 +7,19 @@
                     <div class="footer-title">
                         <h2>Recent post</h2>
                     </div>
+                    @foreach ($blogs as $blog)
                     <div class="our-post">
-                        <img src="images/blog/post-1.jpg" alt="">
-                        <p><a href="#">Consectetur adipisicing elit. Eveniet, ex quis atque ab est corporis.</a></p>
-                        <a href="#">3 minutes ago</a>
+                        <img src="{{asset('uploads/img/home/blogs/'.$blog->image)}}" alt="">
+                        <p><a href="{{ route('blog_single', $blog->slug) }}">{{$blog->summary}}</a></p>
+                        <a href="javascript:;">{{\Carbon\Carbon::parse($blog->created_at)->diffForHumans()}}</a>
                     </div>
-                    <div class="our-post">
-                        <img src="images/blog/post-2.jpg" alt="">
-                        <p><a href="#">Consectetur adipisicing elit. Eveniet, ex quis atque ab est corporis.</a></p>
-                        <a href="#">5 minutes ago</a>
-                    </div>
-                    <div class="our-post last-post">
-                        <img src="images/blog/post-3.jpg" alt="">
-                        <p><a href="#">Consectetur adipisicing elit. Eveniet, ex quis atque ab est corporis.</a></p>
-                        <a href="#">10 minutes ago</a>
-                    </div>
+                    @endforeach
                 </div>  
             </div>
             <div class="col-lg-4 col-md-6">
                 <div class="our-footer-col">
                     <div class="our-footer-logo">
-                        <a href="#"><img src="{{ asset('uploads/img/home/'.$home_settings->logo_image) }}" alt=""></a>
+                        <a href="{{route('front_dashboard')}}"><img src="{{ asset('uploads/img/home/'.$home_settings->logo_image) }}" alt=""></a>
                         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed numquam hic nobis! Sint accusamus sapiente excepturi debitis corporis.</p>
                         <ul class="our-footer-social clearfix">
                             @php

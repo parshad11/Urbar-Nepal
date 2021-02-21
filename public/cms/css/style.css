@@ -260,7 +260,7 @@ input:-moz-placeholder {
     font-weight: bold;
     border: none;
     color: #ffffff;
-    background: #82b440;;
+    background: #4A9E4A
     padding: 14px 45px;
     text-transform: capitalize;
     position: relative;
@@ -272,7 +272,7 @@ input:-moz-placeholder {
 }
 .theme-btn:hover {
     color: #ffffff;
-    background: #82b440;
+    background: #4A9E4A;
 }
 /* Shutter Out Horizontal */
 .theme-btn {
@@ -297,7 +297,7 @@ input:-moz-placeholder {
   bottom: 0;
   left: 0;
   right: 0;
-  background: #82b440;
+  background: #4A9E4A;
   -webkit-transform: scaleX(0);
   transform: scaleX(0);
   -webkit-transform-origin: 50%;
@@ -334,7 +334,7 @@ input:-moz-placeholder {
 .pagination{
     display: inline-flex;
     padding: 15px 20px;
-    background: #82b440;
+    background: #4A9E4A;
     border-radius: 50px;
     position: relative;
     z-index: 0;
@@ -346,7 +346,7 @@ input:-moz-placeholder {
     border: none;
     border-radius: 0;
     font-size: 25px;
-    color: #82b440;;;
+    color: #4A9E4A;
     box-shadow: 5px 5px 5px rgba(0,0,0,0.2);
     transition: all 0.3s ease 0s;
 }
@@ -361,7 +361,7 @@ input:-moz-placeholder {
 .pagination li.active a.page-link,
 .pagination li a.page-link:hover,
 .pagination li.active a.page-link:hover{
-    background: #82b440;;;
+    background: #4A9E4A;
     color: #fff;
     box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
 }
@@ -411,7 +411,7 @@ input:-moz-placeholder {
     margin-bottom: 20px;
 }
 .section-title h2 span {
-    color: #82b440;
+    color: #4A9E4A;
 }
 .section-title p {
     font-weight: bold;
@@ -422,7 +422,7 @@ input:-moz-placeholder {
     margin: 0 auto;
     margin-bottom: 10px;
     position: relative;
-    background: #82b440;;
+    background: #4A9E4A
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     -ms-border-radius: 50%;
@@ -437,7 +437,7 @@ input:-moz-placeholder {
     z-index: 0;
     width: 80px;
     height: 2px;
-    background: #82b440;;
+    background: #4A9E4A
 }
 .section-title .title-border:after {
     content: "";
@@ -447,7 +447,7 @@ input:-moz-placeholder {
     z-index: 0;
     width: 80px;
     height: 2px;
-    background: #82b440;;
+    background: #4A9E4A
 }
 .section-title img {
     position: absolute;
@@ -479,7 +479,7 @@ input:-moz-placeholder {
     position: absolute;
     left: 0;
     bottom: 10px;
-    color: #82b440;; 
+    color: #4A9E4A 
     font-size: 45px;
 }
 
@@ -510,7 +510,7 @@ input:-moz-placeholder {
 
 /* Header Top CSS Start */
 .header-topbar {
-    background: #82b440;
+    background: #4A9E4A;
     position: relative;
     padding: 10px 0 0;
     overflow: hidden; 
@@ -614,7 +614,7 @@ input:-moz-placeholder {
 
 }
 .quote-box a {
-    background: #82b440;
+    background: #4A9E4A;
     color: #ffffff;
     display: block;
     text-align: center;
@@ -632,7 +632,7 @@ input:-moz-placeholder {
     background: transparent;
 }
 .my-nav-row {
-    background: #3C4767;
+    background: #2393D1;
     padding-left: 20px;
     padding-right: 20px;
 }
@@ -666,7 +666,7 @@ input:-moz-placeholder {
 }
 .header-navbar .navbar-default .navbar-nav>.active>a,
 .header-navbar .navbar-default .navbar-nav>li>a:hover {
-    color: #82B440;
+    color: #4A9E4A;
     background-color: transparent;
 }
 .header-navbar .navbar-default .navbar-nav>li>a:focus,
@@ -682,7 +682,7 @@ input:-moz-placeholder {
 .header-navbar .navbar-nav .dropdown-menu {
     padding: 0;
     border: none;
-    border-top: 3px solid #82b440;
+    border-top: 3px solid #4A9E4A;
     border-radius: 0;
 }
 .header-navbar .navbar-nav .dropdown-menu>li>a {
@@ -694,7 +694,7 @@ input:-moz-placeholder {
 }
 .header-navbar .navbar-nav .dropdown-menu>li>a:hover {
     padding-left: 15px;
-    color: #82b440;
+    color: #4A9E4A;
 }
 .header-navbar .navbar-default .navbar-nav>.open>a,
 .header-navbar .navbar-default .navbar-nav>.open>a:focus,
@@ -711,7 +711,7 @@ input:-moz-placeholder {
 }
 .my-search-box .form-control {
     width: 100%;
-    background: #82b440;
+    background: #4A9E4A;
     color: #f6f6f6;
     border-color: #dddddd;
     border-radius: 30px 0 0 30px;
@@ -720,7 +720,7 @@ input:-moz-placeholder {
 .my-search-box .btn {
     width: 50px;
     height: 45px;
-    background: #82b440;
+    background: #4A9E4A;
     border: none;
     border-left: none;
     border-radius: 0 30px 30px 0;
@@ -832,7 +832,7 @@ input:-moz-placeholder {
 .slider-ontext h1 span {
 /*    font-style: italic;*/
     font-weight: bold;
-    color: #82b440;;;
+    color: #4A9E4A;
 }
 .slider-ontext .cd-headline {
     color: #f3f3f3;
@@ -906,7 +906,7 @@ input:-moz-placeholder {
     font-family: FontAwesome;
     font-style: normal;
     font-weight: normal;
-    background: #82b440;;;
+    background: #4A9E4A;
     color: #ffffff;
     font-size: 24px;
     padding: 10px 15px;
@@ -916,7 +916,7 @@ input:-moz-placeholder {
     font-family: FontAwesome;
     font-style: normal;
     font-weight: normal;
-    background: #82b440;;;
+    background: #4A9E4A;
     color: #ffffff;
     font-size: 24px;
     padding: 10px 15px;
@@ -994,7 +994,7 @@ input:-moz-placeholder {
     letter-spacing: 1px;
 }
 .carousel-caption h3 span {
-    color: #82b440;;;
+    color: #4A9E4A;
 }
 
 .carousel-indicators li {
@@ -1007,7 +1007,7 @@ input:-moz-placeholder {
     width: 30px;
     height: 10px;
     border-radius: 0;
-    background-color: #82B440;
+    background-color: #4A9E4A;
 }
 
 /* Animation delays */
@@ -1060,7 +1060,7 @@ input:-moz-placeholder {
     border-radius: 5px;
 }
 .hero-col h1 span {
-    color: #82B440;
+    color: #4A9E4A;
 }
 .hero-col h3 {
     font-size: 24px;
@@ -1074,7 +1074,7 @@ input:-moz-placeholder {
 clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
 }
 .hero-col .owl-theme .owl-nav [class*=owl-] {
-    background: #82B440;
+    background: #4A9E4A;
     display: none;
 }
 
@@ -1132,7 +1132,7 @@ clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
 .features-box .features-icon {
     padding: 25px 0;
     border-radius: 20px 20px 0 0;
-    background: #82b440;;
+    background: #4A9E4A;
 }
 .features-box .features-icon i {
     font-size: 60px;
@@ -1178,7 +1178,7 @@ clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
     margin-bottom: 20px;
 }
 .about-col h2 span {
-    color: #82b440;;;
+    color: #4A9E4A;
 }
 .about-col h4 {
     margin-bottom: 20px;
@@ -1221,7 +1221,7 @@ clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
     box-shadow: none;
 }
 .about-box i {
-    color: #82B440;
+    color: #4A9E4A;
     font-size: 60px;
     margin-bottom: 20px;
 }
@@ -1294,7 +1294,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     border-radius: 5px;
 }
 .choose-col ul li i {
-    color: #82b440;;;
+    color: #4A9E4A;
     margin-right: 5px;
 }
 
@@ -1320,7 +1320,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     width: 80px;
     height: 80px;
     font-size: 80px;
-    color: #82B440;
+    color: #4A9E4A;
 }
 
 
@@ -1398,7 +1398,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     color: #2d2d2d;
 }
 .service-content h3 a:hover {
-    color: #82b440;
+    color: #4A9E4A;
 }
 .service-content p {
     margin-bottom: 20px;
@@ -1493,7 +1493,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     font-size: 18px;
 }
 .portfolio-box ul li a:hover {
-    color: #82b440;
+    color: #4A9E4A;
 }
 .ask-box {
     
@@ -1505,7 +1505,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
    margin-top: 50px;
 }
 .support-content {
-    background: #82b440;
+    background: #4A9E4A;
     padding: 30px 20px;
     text-align: center;
 }
@@ -1614,7 +1614,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
 .call-box h1 {
     margin-bottom: 0;
     font-size: 45px;
-    color: #82b440;
+    color: #4A9E4A;
     padding: 20px 20px;
     border-radius: 5px;
     margin-bottom: 30px;
@@ -1632,7 +1632,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     margin-bottom: 0;
 }
 .call-number i {
-    color: #82b440;
+    color: #4A9E4A;
 }
 
 
@@ -1646,7 +1646,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
 .our-team{
     margin-bottom: 30px;
     text-align: center;
-    background: #F2F9FD;
+    background: #cc4232;
     border-radius: 400px 400px 0 0;
     -webkit-transition: all 0.5s ease-in-out;
     -moz-transition: all 0.5s ease-in-out;
@@ -1655,7 +1655,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     transition: all 0.5s ease-in-out;
 }
 .our-team:hover{
-    background: #82b440;;
+    background: #4A9E4A
     -webkit-transition: all 0.5s ease-in-out;
     -moz-transition: all 0.5s ease-in-out;
     -o-transition: all 0.5s ease-in-out;
@@ -1746,13 +1746,13 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     height: 35px;
     border-radius: 50%;
     font-size: 16px;
-    color: #82b440;;;
+    color: #4A9E4A;
     line-height: 35px;
     background: #ffffff;
     transition: all 0.3s ease 0s;
 }
 .our-team .social a:hover{
-    color: #82b440;;;
+    color: #4A9E4A;
 }
 
 /* agent Single CSS Start */
@@ -1823,7 +1823,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     width: 90%;
     height: 90%;
     border-radius: 50%;
-    border: 5px solid #82b440;
+    border: 5px solid #4A9E4A;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -1831,7 +1831,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
 }
 .counter .counter-icon{
     font-size: 45px;
-    color: #82b440;
+    color: #4A9E4A;
     line-height: 40px;
     margin-bottom: 10px;
     transition: all 0.5s ease 0s;
@@ -1884,7 +1884,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     transition: all 0.5s ease-in-out;
 }
 .portfolio-nav li:hover {
-    color: #82B440;
+    color: #4A9E4A;
     -webkit-transition: all 0.5s ease-in-out;
     -moz-transition: all 0.5s ease-in-out;
     -o-transition: all 0.5s ease-in-out;
@@ -2024,12 +2024,12 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     height: 190px;
     line-height: 200px;
     border-radius: 50%;
-    border: 10px solid #82b440;;
+    border: 10px solid #4A9E4A;
     position: absolute;
     top: -15px;
     left: -100px;
     overflow: hidden;
-    background: #82b440;;
+    background: #4A9E4A;
 }
 .testimonial .testimonial-title{
     display: inline-block;
@@ -2044,7 +2044,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     border-right: 1px solid #3C4767;
 }
 .testimonial .testimonial-title small{
-    color: #82B440;
+    color: #4A9E4A
     display: block;
     font-size: 12px;
     margin-top: 5px;
@@ -2094,7 +2094,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
 }
 .testimonial-area .owl-theme .owl-dots .owl-dot.active span, 
 .testimonial-area .owl-theme .owl-dots .owl-dot:hover span {
-    background: #82b440;;
+    background: #4A9E4A;
 }
 
 
@@ -2104,7 +2104,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     16. Request CSS
 *****-----*****-----*****-----*****/
 .request-area {
-    padding: 100px 0 0;
+    padding: 100px 0 100px;
     overflow: hidden;
     position: relative;
 }
@@ -2160,7 +2160,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     transition: all 0.3s ease-in-out;
 }
 .blog-box-content p a {
-    color: #82b440;
+    color: #4A9E4A;
 }
 .time-date {
     padding: 10px 15px;
@@ -2174,14 +2174,14 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     margin-right: 5px;
 }
 .time-date ul li i {
-    color: #82B440;
+    color: #4A9E4A;
     margin-right: 5px;
 }
 .time-date ul li a {
     color: #ffffff;
 }
 .time-date ul li a:hover {
-    color: #82b440;;;
+    color: #4A9E4A;
 }
 
 
@@ -2249,7 +2249,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     transition: all 300ms linear 0ms;
 }
 .post-box .post-title a:hover{
-    color: #82b440;;;
+    color: #4A9E4A;
     text-decoration: none;
 }
 .post-box .post-description{
@@ -2303,7 +2303,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     border-radius: 0;
     height: 50px;
     width: 60px;
-    background: #82b440;;;
+    background: #4A9E4A;
 }
 .sidebar-search .input-group-btn .btn i {
     font-size: 28px;
@@ -2329,7 +2329,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     border-bottom: none;
 }
 .categories ul li:hover {
-    border-color: #82b440;;;
+    border-color: #4A9E4A;
     -webkit-transition: all 0.3s ease-in-out;
     -moz-transition: all 0.3s ease-in-out;
     -o-transition: all 0.3s ease-in-out;
@@ -2346,7 +2346,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     transition: all 0.3s ease-in-out;
 }
 .categories ul li:hover a {
-    color: #82b440;;;
+    color: #4A9E4A;
     -webkit-transition: all 0.3s ease-in-out;
     -moz-transition: all 0.3s ease-in-out;
     -o-transition: all 0.3s ease-in-out;
@@ -2354,7 +2354,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     transition: all 0.3s ease-in-out;
 }
 .categories ul li:hover span {
-    color: #82b440;;;
+    color: #4A9E4A;
     -webkit-transition: all 0.3s ease-in-out;
     -moz-transition: all 0.3s ease-in-out;
     -o-transition: all 0.3s ease-in-out;
@@ -2418,8 +2418,8 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     transition: all 0.3s ease-in-out;
 }
 .sidebar-tags a:hover {
-    border-color: #82b440;;;
-    background: #82b440;;;
+    border-color: #4A9E4A;
+    background: #4A9E4A;
     color: #ffffff;
     -webkit-transition: all 0.3s ease-in-out;
     -moz-transition: all 0.3s ease-in-out;
@@ -2490,7 +2490,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     margin-bottom: 10px;
 }
 .comment-item a i {
-    color: #82b440;;;
+    color: #4A9E4A;
 }
 .form-area .hvr-bounce-to-right {
     margin-top: 0;
@@ -2533,7 +2533,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
 .page-heading-col {
     position: relative;
     text-align: center;
-    background: rgba(130, 180, 64, 0.6);
+    background: rgb(96 147 78 / 60%);
     padding: 50px 100px;
     display: inline-block;
     border-radius: 50%;
@@ -2655,7 +2655,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     width: 30%;
     height: 100%;
     opacity: 0.2;
-    background: #82b440;;
+    background: #4A9E4A
     -webkit-transform: skewX(-25deg);
     transform: skewX(-25deg);
 }
@@ -2739,7 +2739,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     margin-bottom: 0;
     font-size: 50px;
     padding: 20px 20px;
-    background: #82b440;
+    background: #4A9E4A;
     -webkit-border-radius: 15px;
     -moz-border-radius: 15px;
     -ms-border-radius: 15px;
@@ -2774,7 +2774,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     font-size: 20px;
     cursor: pointer;
     text-transform: capitalize;
-    background: #82b440;
+    background: #4A9E4A;
 }
 .pricing-footer .btn:hover {
     background: #111111;
@@ -2807,7 +2807,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     line-height: 100px;
     border-radius: 50%;
     border: 5px solid #fff;
-    background: #82b440;;
+    background: #4A9E4A
     font-size: 40px;
     line-height: 100px;
     color: #fff;
@@ -2888,7 +2888,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
 .form-horizontal .btn{
     display: inline-block;
     width: 50%;
-    background: #82b440;;
+    background: #4A9E4A
     padding: 10px 20px;
     margin: 20px auto 0;
     border: none;
@@ -2897,7 +2897,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     text-transform: capitalize;
 }
 .form-horizontal .btn:focus{
-    background: #82b440;;;
+    background: #4A9E4A;
     color: #fff;
     outline: none;
     box-shadow: none;
@@ -2917,7 +2917,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     text-transform: capitalize;
     transition: all 0.3s ease 0s;
 }
-.form-horizontal .forgot-pass a:hover{ color: #82b440;;; }
+.form-horizontal .forgot-pass a:hover{ color: #4A9E4A; }
 
 
 
@@ -2943,7 +2943,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
 #accordion .panel-title a{
     display: block;
     padding: 12px 15px 12px 50px;
-    background: #82b440;;
+    background: #4A9E4A;
     border: none;
     border-radius: 5px;
     font-size: 18px;
@@ -2960,7 +2960,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     border-radius: 50%;
     background: #ffffff;
     font-size: 12px;
-    color: #82b440;;;
+    color: #4A9E4A;
     text-align: center;
     text-shadow: none;
     position: absolute;
@@ -3018,7 +3018,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     width: 80px;
     height: 60px;
     color: #ffffff;
-    background: #82b440;
+    background: #4A9E4A;
     text-align: center;
     font-size: 30px;
     line-height: 45px;
@@ -3100,10 +3100,10 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     color: #eeeeee;
 }
 .our-post p a:hover {
-    color: #82b440;
+    color: #4A9E4A;
 }
 .our-post a {
-    color: #82b440;
+    color: #4A9E4A;
 }
 
 .our-footer-logo {
@@ -3131,7 +3131,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     color: #eeeeee;
     font-size: 18px;
     line-height: 40px;
-    border: 1px solid #82b440;
+    border: 1px solid #4A9E4A;
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -3143,7 +3143,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     transition: all 0.3s ease-in-out;
 }
 .our-footer-logo .our-footer-social li i:hover {
-    background: #82b440;
+    background: #4A9E4A;
     color: #ffffff;
     -webkit-transition: all 0.3s ease-in-out;
     -moz-transition: all 0.3s ease-in-out;
@@ -3165,7 +3165,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     border-radius: 30px;
     text-transform: capitalize;
     color: #ffffff;
-    background: #82b440;
+    background: #4A9E4A;
     -webkit-transition: all 0.3s ease-in-out;
     -moz-transition: all 0.3s ease-in-out;
     -o-transition: all 0.3s ease-in-out;
@@ -3173,7 +3173,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     transition: all 0.3s ease-in-out;
 }
 .our-footer-col form .btn:hover {
-    background: #82b440;
+    background: #4A9E4A;
     -webkit-transition: all 0.3s ease-in-out;
     -moz-transition: all 0.3s ease-in-out;
     -o-transition: all 0.3s ease-in-out;
@@ -3207,7 +3207,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     color: #dedede;
 }
 .copyright p a {
-    color: #82b440;
+    color: #4A9E4A;
 }
 .social {
     margin-top: 20px;
@@ -3221,7 +3221,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     height: 35px;
     text-align: center;
     font-size: 18px;
-    color: #82b440;;;
+    color: #4A9E4A;
     line-height: 36px;
     background: #ffffff;
     -webkit-border-radius: 50%;
@@ -3231,7 +3231,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     border-radius: 50%;
 }
 .social i:hover {
-    background: #82b440;;;
+    background: #4A9E4A;
     color: #ffffff;
 }
 

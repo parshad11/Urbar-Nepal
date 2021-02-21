@@ -2,7 +2,13 @@
 
 namespace App\Http\Controllers\Front;
 
+use App\Front\Blog;
+use App\Front\Faq;
+use App\Front\FrontAbout;
 use App\Front\HomeSetting;
+use App\Front\Service;
+use App\Front\Team;
+use App\Front\Testimonial;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -18,6 +24,11 @@ class FrontendController extends Controller
     public function index()
     {
         $home_settings = HomeSetting::first();
+        $teams = Team::where('status', 'active')->get();
+        $service = Service::where('status', 'active')->get();
+        $blogs = Blog::take(4)->get();
+        $testimonials = Testimonial::where('status', 'active')->get();
+        // dd($testimonials);
         // $home_setting = json_decode($home_settings->why_choose_us, true);
         // dd($home_setting['Agriculture Leader']);
         // $home_setting = explode(',',str_replace('+', ' ', $home_settings->why_choose_us));
@@ -25,7 +36,59 @@ class FrontendController extends Controller
         //     list($k, $v) = explode('=', $value);
         //     $result[ $k ] = $v;
         // }
-        return view('frontcms.index')->with('home_setting',$home_settings);
+        return view('frontcms.index')->with('home_setting',$home_settings)
+                                    ->with('team_members', $teams)
+                                    ->with('services', $service)
+                                    ->with('blogs', $blogs)
+                                    ->with('testimonials', $testimonials);
+    }
+    public function getAbout(){
+        $about_details = FrontAbout::first();
+        // dd(json_decode($about_details->why_short_points, true));
+        // $home_setting = explode(',',$about_details->why_short_points);
+        // $home_setting = json_decode($about_details->why_short_points);
+        // dd($home_setting);
+        return view('frontcms.about_page')->with('about_info', $about_details);
+    }
+    public function getBlog(){
+        $about_details = FrontAbout::first();
+        $blogs = Blog::get();
+        return view('frontcms.blog')
+        ->with('about_info', $about_details)
+        ->with('blogs', $blogs);
+    }
+    public function getSingleBlog($slug){
+        $about_details = FrontAbout::select('banner_image')->first();
+        $blog_single = Blog::where('slug',$slug)->first();
+        $blogs = Blog::orderBy('created_at','desc')->take(5)->get();
+        return view('frontcms.blog_single')
+        ->with('about_info', $about_details)
+        ->with('blog_single', $blog_single)
+        ->with('blogs', $blogs);
+    }
+    public function getTeam(){
+        $about_details = FrontAbout::first();
+        $teams = Team::where('status', 'active')->get();
+        return view('frontcms.team')
+        ->with('about_info', $about_details)
+        ->with('teams', $teams);
+    }
+    public function getFaqs(){
+        $about_details = FrontAbout::first();
+        $faq = HomeSetting::first();
+        // dd($faq->summary);
+        return view('frontcms.faqs')
+        ->with('faq', $faq)
+        ->with('about_info', $about_details);
+    }
+
+    public function getContact(){
+        $about_details = FrontAbout::first();
+        $home_settings = HomeSetting::first();
+        // dd($home_settings);
+        return view('frontcms.contact')
+        ->with('about_info', $about_details)
+        ->with('contact', $home_settings);
     }
 
     /**

@@ -624,19 +624,35 @@ class AdminSidebarMenu
                     'FrontCMS',
                     function ($sub) {
                         $sub->url(
-                            action('Front\CmsController@create'),
+                            action('Front\CmsController@index'),
                             'Homepage Settings',
                             ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'frontcms-settings' && request()->segment(2) == 'create']
                         );
                         $sub->url(
-                            action('Front\CmsController@createAbout'),
+                            route('frontcms_about_edit'),
                             'About Settings',
-                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'frontcms' && request()->segment(2) == 'about']
+                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'frontcms' && request()->segment(2) == 'about-settings']
                         );
-                        $sub->dropdown('Blog', function($sub){
-                            $sub->url(action('Front\CmsController@index'), 'Category');
-                            $sub->url(action('Front\CmsController@index'), 'Post');
-                        });
+                        $sub->url(
+                            route('cms_team'),
+                            'Team Setting',
+                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'frontcms' && request()->segment(2) == 'teams']
+                        );
+                        $sub->url(
+                            route('cms_service'),
+                            'Services Setting',
+                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'frontcms' && request()->segment(2) == 'services']
+                        );
+                        $sub->url(
+                            route('cms_blog'),
+                            'Blog Setting',
+                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'frontcms' && request()->segment(2) == 'blogs']
+                        );
+                        $sub->url(
+                            route('cms_testimonial'),
+                            'Testimonial Setting',
+                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'frontcms' && request()->segment(2) == 'testimonial']
+                        );
                     },
                     ['icon' => 'fa fas fa-house-damage', 'id' => 'tour_step6']
                 )->order(90);

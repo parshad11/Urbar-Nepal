@@ -8,7 +8,18 @@
     @php
         $banner_images= explode(',',$home_setting->banner_images);
     @endphp
-    <div id="slider" data-zs-src='["{{ asset('uploads/img/home/'.$banner_images[0]) }}", "{{ asset('uploads/img/home/'.$banner_images[1]) }}", "{{ asset('uploads/img/home/'.$banner_images[2]) }}"]' data-zs-bullets="false" data-zs-interval="8000" data-zs-switchSpeed="800" data-zs-interval="4500" data-zs-overlay="false" data-zs-autoplay="true">
+    <div id="slider" data-zs-src='[
+        @if(isset($banner_images[0]))  
+        "{{ asset('uploads/img/home/'.$banner_images[0]) }}"
+        @endif
+        ,"{{ asset('uploads/img/home/'.$banner_images[0]) }}"
+        @if(isset($banner_images[1]))  
+        ,"{{ asset('uploads/img/home/'.$banner_images[1]) }}"
+        @endif
+        @if(isset($banner_images[2])) 
+        ,"{{ asset('uploads/img/home/'.$banner_images[2]) }}"
+        @endif
+        ]' data-zs-bullets="false" data-zs-interval="8000" data-zs-switchSpeed="800" data-zs-interval="4500" data-zs-overlay="false" data-zs-autoplay="true">
         <div class="slider-content">
             <div class="container">
                 <div class="row">
@@ -149,78 +160,24 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-4 col-sm-6 col-xs-6 fw600">
-                <div class="service-col">
-                    <div class="service-img">
-                        <img src="images/service/1.jpg" alt="">
-                    </div>
-                    <div class="service-content">
-                        <h3><a href="#">Fresh Vegetables</a></h3>
-                        <p>There aremany variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form.</p>
-                        <a class="btn btn-default theme-btn btn-hover" href="#">Read More</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 col-sm-6 col-xs-6 fw600">
-                <div class="service-col">
-                    <div class="service-img">
-                        <img src="images/service/2.jpg" alt="">
-                    </div>
-                    <div class="service-content">
-                        <h3><a href="#">Organic Products</a></h3>
-                        <p>There aremany variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form.</p>
-                        <a class="btn btn-default theme-btn btn-hover" href="#">Read More</a>
+            @if(isset($services) && !empty($services))
+                @foreach($services as $service)
+                <div class="col-md-4 col-sm-6 col-xs-6 fw600">
+                    <div class="service-col">
+                        <div class="service-img">
+                            @if(isset($service->service_image) && !empty($service->service_image) && file_exists(public_path().'/uploads/img/home/services/'.$service->service_image))
+                            <img src="{{ asset('uploads/img/home/services/'.$service->service_image)}}" alt="">
+                            @endif
+                        </div>
+                        <div class="service-content">
+                            <h3><a href="#">{{ $service->title }}</a></h3>
+                            <p>{{ $service->summary }}</p>
+                            <span></span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4 col-sm-6 col-xs-6 fw600">
-                <div class="service-col">
-                    <div class="service-img">
-                        <img src="images/service/3.jpg" alt="">
-                    </div>
-                    <div class="service-content">
-                        <h3><a href="#">Agriculture Products</a></h3>
-                        <p>There aremany variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form.</p>
-                        <a class="btn btn-default theme-btn btn-hover" href="#">Read More</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 col-sm-6 col-xs-6 fw600">
-                <div class="service-col">
-                    <div class="service-img">
-                        <img src="images/service/4.jpg" alt="">
-                    </div>
-                    <div class="service-content">
-                        <h3><a href="#">Dairy Products</a></h3>
-                        <p>There aremany variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form.</p>
-                        <a class="btn btn-default theme-btn btn-hover" href="#">Read More</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 col-sm-6 col-xs-6 fw600">
-                <div class="service-col">
-                    <div class="service-img">
-                        <img src="images/service/5.jpg" alt="">
-                    </div>
-                    <div class="service-content">
-                        <h3><a href="#">insurance Business</a></h3>
-                        <p>There aremany variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form.</p>
-                        <a class="btn btn-default theme-btn btn-hover" href="#">Read More</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 col-sm-6 col-xs-6 fw600">
-                <div class="service-col">
-                    <div class="service-img">
-                        <img src="images/service/6.jpg" alt="">
-                    </div>
-                    <div class="service-content">
-                        <h3><a href="#">MLM Business</a></h3>
-                        <p>There aremany variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form.</p>
-                        <a class="btn btn-default theme-btn btn-hover" href="#">Read More</a>
-                    </div>
-                </div>
-            </div>
+                @endforeach
+            @endif
         </div>
     </div>
 </section>
@@ -251,14 +208,17 @@
                     <p>Sed pellentesque, ligula at lacinia molestie sapien consequat</p>
                 </div>
             </div>
+            @foreach($team_members as $team_member)
             <div class="col-md-3 col-sm-6 col-xs-6 fw600">
                 <div class="our-team">
                     <div class="pic">
-                        <img src="images/team/1.jpg" alt="">
+                    @if (isset($team_member->member_image) && !empty($team_member->member_image) && file_exists(public_path().'/uploads/img/home/team/'.$team_member->member_image))
+                        <img src="{{ asset('uploads/img/home/team/'.$team_member->member_image) }}" alt="">                        
+                    @endif
                     </div>
                     <div class="team-content">
-                        <h3 class="title"><a href="team-single.html">Pradip Shreshta</a></h3>
-                        <span class="post">CEO and Founder</span>
+                        <h3 class="title"><a href="team-single.html">{{$team_member->name}}</a></h3>
+                        <span class="post">{{$team_member->post}}</span>
                         <ul class="social">
                             <li><a href="#" class="fa fa-facebook"></a></li>
                             <li><a href="#" class="fa fa-twitter"></a></li>
@@ -267,54 +227,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 col-sm-6 col-xs-6 fw600">
-                <div class="our-team">
-                    <div class="pic">
-                        <img src="images/team/2.jpg" alt="">
-                    </div>
-                    <div class="team-content">
-                        <h3 class="title"><a href="team-single.html">Shiva Neupane</a></h3>
-                        <span class="post">Marketing Manager</span>
-                        <ul class="social">
-                            <li><a href="#" class="fa fa-facebook"></a></li>
-                            <li><a href="#" class="fa fa-twitter"></a></li>
-                            <li><a href="#" class="fa fa-skype"></a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 col-xs-6 fw600">
-                <div class="our-team">
-                    <div class="pic">
-                        <img src="images/team/3.jpg" alt="">
-                    </div>
-                    <div class="team-content">
-                        <h3 class="title"><a href="team-single.html">Rohasn Sharma</a></h3>
-                        <span class="post">general manager</span>
-                        <ul class="social">
-                            <li><a href="#" class="fa fa-facebook"></a></li>
-                            <li><a href="#" class="fa fa-twitter"></a></li>
-                            <li><a href="#" class="fa fa-skype"></a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 col-xs-6 fw600">
-                <div class="our-team">
-                    <div class="pic">
-                        <img src="images/team/4.jpg" alt="">
-                    </div>
-                    <div class="team-content">
-                        <h3 class="title"><a href="team-single.html">Kiran Malla</a></h3>
-                        <span class="post">business advisor</span>
-                        <ul class="social">
-                            <li><a href="#" class="fa fa-facebook"></a></li>
-                            <li><a href="#" class="fa fa-twitter"></a></li>
-                            <li><a href="#" class="fa fa-skype"></a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
 </section>
@@ -382,102 +295,26 @@
                     <li data-filter="3"> B2B </li>
                 </ul> --}}
                 <div class="filtr-container">
+                    @if (isset($services))
+                    @foreach($services as $service)
                     <div class="col-md-4 filtr-item" data-category="3, 2" data-sort="value">
                         <div class="box">
-                            <img src="{{ asset('uploads/img/home/'.$home_setting->quote_background_image)}}" alt="">
+                            <img src="{{ asset('uploads/img/home/services/'.$service->service_image)}}" alt="">
                             <div class="box-content">
-                                <h3 class="title">Photo One</h3>
+                                <h3 class="title">{{$service->title}}</h3>
                                 <ul class="icon">
                                     <li>
-                                        <a href="{{ asset('uploads/img/home/'.$home_setting->quote_background_image)}}" data-lightbox="lightbox" data-title="Photo Title">
+                                        <a href="{{ asset('uploads/img/home/services/'.$service->service_image)}}" data-lightbox="lightbox" data-title="{{$service->title}}">
                                             <i class="fa fa-search"></i>
                                         </a>
                                     </li>
-                                    <li><a href="#" class="fa fa-link"></a></li>
+                                    {{-- <li><a href="#" class="fa fa-link"></a></li> --}}
                                 </ul>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-4 filtr-item" data-category="2, 1" data-sort="value">
-                        <div class="box">
-                            <img src="{{ asset('uploads/img/home/'.$home_setting->quote_background_image)}}" alt="">
-                            <div class="box-content">
-                                <h3 class="title">Photo Two</h3>
-                                <ul class="icon">
-                                    <li>
-                                        <a href="{{ asset('uploads/img/home/'.$home_setting->quote_background_image)}}" data-lightbox="lightbox" data-title="Photo Title">
-                                            <i class="fa fa-search"></i>
-                                        </a>
-                                    </li>
-                                    <li><a href="#" class="fa fa-link"></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 filtr-item" data-category="3, 1" data-sort="value">
-                        <div class="box">
-                            <img src="{{ asset('uploads/img/home/'.$home_setting->quote_background_image)}}" alt="">
-                            <div class="box-content">
-                                <h3 class="title">Photo Three</h3>
-                                <ul class="icon">
-                                    <li>
-                                        <a href="{{ asset('uploads/img/home/'.$home_setting->quote_background_image)}}" data-lightbox="lightbox" data-title="Photo Title">
-                                            <i class="fa fa-search"></i>
-                                        </a>
-                                    </li>
-                                    <li><a href="#" class="fa fa-link"></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 filtr-item" data-category="1, 2" data-sort="value">
-                        <div class="box">
-                            <img src="{{ asset('uploads/img/home/'.$home_setting->quote_background_image)}}" alt="">
-                            <div class="box-content">
-                                <h3 class="title">Photo Four</h3>
-                                <ul class="icon">
-                                    <li>
-                                        <a href="{{ asset('uploads/img/home/'.$home_setting->quote_background_image)}}" data-lightbox="lightbox" data-title="Photo Title">
-                                            <i class="fa fa-search"></i>
-                                        </a>
-                                    </li>
-                                    <li><a href="#" class="fa fa-link"></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 filtr-item" data-category="3, 2" data-sort="value">
-                        <div class="box">
-                            <img src="{{ asset('uploads/img/home/'.$home_setting->quote_background_image)}}" alt="">
-                            <div class="box-content">
-                                <h3 class="title">Photo Five</h3>
-                                <ul class="icon">
-                                    <li>
-                                        <a href="{{ asset('uploads/img/home/'.$home_setting->quote_background_image)}}" data-lightbox="lightbox" data-title="Photo Title">
-                                            <i class="fa fa-search"></i>
-                                        </a>
-                                    </li>
-                                    <li><a href="#" class="fa fa-link"></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 filtr-item" data-category="3, 1" data-sort="value">
-                        <div class="box">
-                            <img src="{{ asset('uploads/img/home/'.$home_setting->quote_background_image)}}" alt="">
-                            <div class="box-content">
-                                <h3 class="title">Photo Six</h3>
-                                <ul class="icon">
-                                    <li>
-                                        <a href="{{ asset('uploads/img/home/'.$home_setting->quote_background_image)}}" data-lightbox="lightbox" data-title="Photo Title">
-                                            <i class="fa fa-search"></i>
-                                        </a>
-                                    </li>
-                                    <li><a href="#" class="fa fa-link"></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+                    </div>    
+                    @endforeach                    
+                    @endif
                 </div>
             </div>
         </div>
@@ -546,36 +383,18 @@
             </div>
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <div class="testimonial-carousel">
+                    @foreach ($testimonials as $testimonial_info)
                     <div class="testimonial">
                         <div class="pic">
-                            <img src="images/testimonial/1.jpg" alt="" class="img-responsive">
+                            <img src="{{asset('uploads/img/home/testimonials/'.$testimonial_info->image)}}" alt="" class="img-responsive">
                         </div>
                         <h3 class="testimonial-title">
-                            Fokir Baba
-                            <small>CEO, Envato</small>
+                            {{$testimonial_info->name}}
+                            <small>{{$testimonial_info->post}}</small>
                         </h3>
-                        <p class="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi facilisis.</p>
+                        <p class="description">{{$testimonial_info->comment}}</p>
                     </div>
-                    <div class="testimonial">
-                        <div class="pic">
-                            <img src="images/testimonial/2.jpg" alt="" class="img-responsive">
-                        </div>
-                        <h3 class="testimonial-title">
-                            Pairlal
-                            <small>Manager, Envato</small>
-                        </h3>
-                        <p class="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi facilisis.</p>
-                    </div>
-                    <div class="testimonial">
-                        <div class="pic">
-                            <img src="images/testimonial/3.jpg" alt="" class="img-responsive">
-                        </div>
-                        <h3 class="testimonial-title">
-                            Ananta Jalil
-                            <small>Web Developer, Envato</small>
-                        </h3>
-                        <p class="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi facilisis.</p>
-                    </div>
+                    @endforeach
                 </div>
             </div>   
         </div>
@@ -593,78 +412,28 @@
                     <p>Sed pellentesque, ligula at lacinia molestie sapien consequat</p>
                 </div>
             </div>
+            @if(isset($blogs))
+            @foreach($blogs as $blog)
             <div class="col-md-6 col-sm-12">
                 <div class="blog-box">
                     <div class="blog-img">
-                        <img src="images/blog/1.jpg" alt="">
+                        <img src="{{ asset('uploads/img/home/blogs/'.$blog->image)}}" alt="">
                     </div>
                     <div class="blog-box-content">
-                        <h4>share business systems</h4>
+                        <h4>{{$blog->title}}</h4>
                         <div class="time-date">
                             <ul>
-                                <li><i class="fa fa-user" aria-hidden="true"></i> <a href="#">Admin</a></li>
-                                <li><i class="fa fa-calendar" aria-hidden="true"></i> <a href="#">June 22, 2018</a></li>
-                                <li><i class="fa fa-comments-o" aria-hidden="true"></i> <a href="#">3 comments</a></li>
+                                {{-- <li><i class="fa fa-user" aria-hidden="true"></i> <a href="#">Admin</a></li> --}}
+                                <li><i class="fa fa-calendar" aria-hidden="true"></i> <a href="#">{{\Carbon\Carbon::parse($blog->created_at)->format('M d, Y')}}</a></li>
+                                {{-- <li><i class="fa fa-comments-o" aria-hidden="true"></i> <a href="#">3 comments</a></li> --}}
                             </ul>
                         </div>
-                        <p>Repudiandae illo sint debitis maxime neque accusantium dicta, totam. Corporis libero porro, praesentium sapiente illo debitis. <a href="blog-single.html">[Read More]</a></p>
+                        <p>{{ $blog->summary }}<a href="{{ route('blog_single', $blog->slug) }}">[Read More]</a></p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 col-sm-12">
-                <div class="blog-box">
-                    <div class="blog-img">
-                        <img src="images/blog/2.jpg" alt="">
-                    </div>
-                    <div class="blog-box-content">
-                        <h4>Office Management Systems</h4>
-                        <div class="time-date">
-                            <ul>
-                                <li><i class="fa fa-user" aria-hidden="true"></i> <a href="#">Admin</a></li>
-                                <li><i class="fa fa-calendar" aria-hidden="true"></i> <a href="#">June 20, 2018</a></li>
-                                <li><i class="fa fa-comments-o" aria-hidden="true"></i> <a href="#">1 comments</a></li>
-                            </ul>
-                        </div>
-                        <p>Repudiandae illo sint debitis maxime neque accusantium dicta, totam. Corporis libero porro, praesentium sapiente illo debitis. <a href="blog-single.html">[Read More]</a></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-sm-12">
-                <div class="blog-box">
-                    <div class="blog-img">
-                        <img src="images/blog/3.jpg" alt="">
-                    </div>
-                    <div class="blog-box-content">
-                        <h4>Business For Everyone</h4>
-                        <div class="time-date">
-                            <ul>
-                                <li><i class="fa fa-user" aria-hidden="true"></i> <a href="#">Admin</a></li>
-                                <li><i class="fa fa-calendar" aria-hidden="true"></i> <a href="#">June 18, 2018</a></li>
-                                <li><i class="fa fa-comments-o" aria-hidden="true"></i> <a href="#">5 comments</a></li>
-                            </ul>
-                        </div>
-                        <p>Repudiandae illo sint debitis maxime neque accusantium dicta, totam. Corporis libero porro, praesentium sapiente illo debitis. <a href="blog-single.html">[Read More]</a></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-sm-12">
-                <div class="blog-box">
-                    <div class="blog-img">
-                        <img src="images/blog/4.jpg" alt="">
-                    </div>
-                    <div class="blog-box-content">
-                        <h4>increase your business</h4>
-                        <div class="time-date">
-                            <ul>
-                                <li><i class="fa fa-user" aria-hidden="true"></i> <a href="#">Admin</a></li>
-                                <li><i class="fa fa-calendar" aria-hidden="true"></i> <a href="#">June 10, 2018</a></li>
-                                <li><i class="fa fa-comments-o" aria-hidden="true"></i> <a href="#">2 comments</a></li>
-                            </ul>
-                        </div>
-                        <p>Repudiandae illo sint debitis maxime neque accusantium dicta, totam. Corporis libero porro, praesentium sapiente illo debitis. <a href="blog-single.html">[Read More]</a></p>
-                    </div>
-                </div>
-            </div>
+            @endforeach
+            @endif
         </div>
     </div>
 </section>

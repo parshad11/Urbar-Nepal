@@ -17,27 +17,24 @@
                                 </div>
                                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" data-hover="dropdown" data-animations="fadeIn">
                                     <ul class="nav navbar-nav">
-                                        <li class="dropdown active">
-                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Home <i class="fa fa-home" aria-hidden="true"></i></a>
+                                        <li class="{{ Request::segment(1) == '' ? 'active' : ''}}">
+                                            <a href="{{ route('front_dashboard') }}">Home <i class="fa fa-home" aria-hidden="true"></i></a>
                                         </li>
-                                        <li><a href="about.html">About</a></li>
+                                        <li class="{{ Request::segment(1) == 'about-us' ? 'active' : ''}}">
+                                            <a href="{{ route('front_about') }}" >About</a>
+                                        </li>
                                         <li><a href="#">Shop</a></li>
-                                        <li class="dropdown">
-                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Portfolio</a>
-                                        </li>
-                                        <li class="dropdown">
-                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Blog </a>
-                                        </li>
+                                        <li><a href="{{route('blog')}}">Blog</a></li>
                                         <li class="dropdown">
                                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Pages <i class="fa fa-angle-down" aria-hidden="true"></i></a>
                                             <ul class="dropdown-menu">
-                                                <li><a href="team.html">Our Team</a></li>
-                                                <li><a href="faq.html">Faq Page</a></li>
+                                                <li><a href="{{route('teams')}}">Our Team</a></li>
+                                                <li><a href="{{route('faqs')}}">Faq Page</a></li>
                                              
                                             </ul>
                                         </li>
-                                        <li><a href="contact.html">Contact</a></li>
-                                        <li><a href="signin-signup.html">Login / Register</a></li>
+                                        <li><a href="{{ route('contact')}}">Contact</a></li>
+                                        <li><a href="javascript:;">Login / Register</a></li>
                                     </ul>
                                 </div>
                             </nav>

@@ -11,7 +11,7 @@
                 <div class="herader-topbar-col tobar-rightside center767">
                     <ul>
                         @php
-                            $result = json_decode($home_setting->social_links, true);
+                            $result = json_decode($home_settings->social_links, true);
                             // $social_link = explode(",",$home_settings->social_links);
                             // foreach($social_link as $key => $value){
                             //     list($k, $v) = explode('=', $value);
@@ -35,7 +35,7 @@
         <div class="row">
             <div class="col-md-3 col-sm-4 col-xs-12 full-wd480">
                 <div class="header-middle-col main-logo">
-                   <a href="index.html"><img src="{{ asset('uploads/img/home/'.$home_settings->logo_image) }}" alt=""></a>
+                   <a href="{{ route('front_dashboard') }}"><img src="{{ asset('uploads/img/home/'.$home_settings->logo_image) }}" alt=""></a>
                 </div>
             </div>
             <div class="col-md-3 col-md-offset-1 col-sm-4 col-xs-6 full-wd480">
