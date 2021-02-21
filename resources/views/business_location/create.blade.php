@@ -55,6 +55,7 @@
               {!! Form::text('country', null, ['class' => 'form-control', 'placeholder' => __( 'business.country'), 'required' ]); !!}
           </div>
         </div>
+        <div class="clearfix"></div>
         <div class="col-sm-6">
           <div class="form-group">
             {!! Form::label('Latitude', __( 'business.latitude' ) . ':*') !!}
@@ -67,8 +68,11 @@
             {!! Form::text('longitude', null, ['class' => 'form-control', 'placeholder' => __( 'business.longitude'), 'required' ]); !!}
           </div>
         </div>
-        <div class="col-md-12">
-          <span><a target="_blank" href="https://www.mapcoordinates.net/en" class="btn-sm btn-primary">Click here</a> to find latitude and longitude</span>
+        <div class="clearfix"></div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <span><a target="_blank" href="https://www.mapcoordinates.net/en" class="btn-sm btn-primary">Click here</a> to find latitude and longitude</span>
+          </div>
         </div>
         <div class="clearfix"></div>
         <div class="col-sm-6">

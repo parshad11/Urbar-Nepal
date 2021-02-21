@@ -813,6 +813,32 @@ class PurchaseController extends Controller
         }
     }
 
+   
+
+    public function getDeliveryPeople(){
+        if (request()->ajax()) {
+            $term = request()->q;
+            if (empty($term)) {
+                return json_encode([]);
+            }
+            
+            $business_id = request()->session()->get('user.business_id');
+            $user_id = request()->session()->get('user.id');
+
+          
+            $deliveryPeople = DeliveryPerson::with(array('user'=>function ($query) use ($term) {
+                $query ->where('first_name', 'like', '%' . $term .'%')
+                      ->orWhere('last_name', 'like', '%' . $term .'%')
+                    ->select('id',DB::raw("CONCAT(surname,'. ',first_name,' ',last_name) AS name"));
+                                // ->orWhere('supplier_business_name', 'like', '%' . $term .'%')
+                                //  ->orWhere('users.contact_id', 'like', '%' . $term .'%');
+            }))
+            ->get();
+            return json_encode($deliveryPeople);
+        }
+    }
+
+
     /**
      * Retrieves products list.
      *

@@ -209,30 +209,6 @@ class HomeController extends Controller
             }
         }
 
-        if ($request->ajax()) {
-            $today=Carbon::today();
-            $dateafter15days=Carbon::today()->addDays(15);
-            if (auth()->user()->can('record.view') && auth()->user()->can('record.view_own')) {
-                $record = Record::whereBetween('date', [$today, $dateafter15days]);
-            }
-            elseif(!auth()->user()->can('record.view') && auth()->user()->can('record.view_own')){
-                $record = Record::whereBetween('date', [$today, $dateafter15days])->where('supplier_id',auth()->user()->id);
-            }
-
-            return Datatables::of($record)
-                ->addIndexColumn()
-                ->addColumn(
-                    'supplier name',
-                    function ($row) {
-                        $data=Record::all();
-                        $supplier_name = $this->record->contact_supplier($row->supplier_id);
-                        return $supplier_name;
-                    }
-                )
-                ->rawColumns(['action', 'supplier name'])
-                ->make(true);
-        }
-
         return view('home.index', compact('date_filters', 'sells_chart_1', 'sells_chart_2', 'widgets', 'all_locations'));
     }
 

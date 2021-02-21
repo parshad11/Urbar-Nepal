@@ -25,15 +25,14 @@
                 <table class="table table-bordered table-striped" id="task_table">
                     <thead>
                     <tr>
-                        <th>Assign To</th>
-                        <th>Task Type</th>
-                        <th>title</th>
-                        <th>Description</th>
-                        <th>Special Instruction</th>
-                        <th>Location(start-end)</th>
-                        <th>date(start-end)</th>
-                        <th>status</th>
                         <th>Action</th>
+                        <th>@lang('purchase.business_location')</th>
+                        <th>Assigned To</th>
+                        <th>Task Type</th>
+                        <th>Title</th>
+                        <th>Task Status</th>
+                        <th>Task Address</th>
+                        <th>Assigned_by</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -67,47 +66,48 @@
     <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-
             task_table = $('#task_table').DataTable({
                 processing: true,
                 serverSide: true,
                 "ajax": {
                     "url": "/task",
                     "data": function (d) {
+                        
                     }
                 },
                 columns: [
-                    {data: 'assign to', name: 'assign to'},
+                    
+                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                    {data: 'location_name', name: 'BS.name'},
+                    {data: 'assign_to', name: 'u.first_name'},
                     {data: 'task_type', name: 'task_type'},
                     {data: 'title', name: 'title'},
-                    {data: 'description', name: 'description'},
-                    {data: 'special_instruction', name: 'special_instruction'},
-                    {data: 'location', name: 'location'},
-                    {data: 'date', name: 'date'},
-                    {data: 'status', name: 'status',},
-                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                    {data: 'task_status', name: 'task_status'},
+                    {data: 'task_address', name: 'task_address'},
+                    {data: 'assigned_by', name: 'u.first_name'},
                 ],
+
                 "fnDrawCallback": function (oSettings) {
                     __currency_convert_recursively($('#task_table'));
                 }
             });
-            $(document).on('click', 'button.delete_role_button', function () {
+            $(document).on('click', 'a.delete-task', function (e) {
+                e.preventDefault();
                 swal({
                     title: LANG.sure,
-                    text: LANG.confirm_delete_role,
+                    text: LANG.confirm_delete_task,
                     icon: "warning",
                     buttons: true,
                     dangerMode: true,
                 }).then((willDelete) => {
                     if (willDelete) {
-                        var href = $(this).data('href');
+                        var href = $(this).attr('href');
                         var data = $(this).serialize();
 
                         $.ajax({
                             method: "DELETE",
                             url: href,
                             dataType: "json",
-                            data: data,
                             success: function (result) {
                                 if (result.success == true) {
                                     toastr.success(result.msg);
@@ -119,9 +119,6 @@
                         });
                     }
                 });
-            });
-            $('select#cg_location_id, select#cg_customer_group_id, #cg_date_range').change(function () {
-                task_table.ajax.reload();
             });
 
             $(document).on('click', 'a.update_status', function(e) {
@@ -145,7 +142,6 @@
                     method: 'post',
                     url: $(this).attr('action'),
                     dataType: 'json',
-                    data: data,
                     success: function(result) {
                         if (result.success == true) {
                             $('div#update_status_modal').modal('hide');

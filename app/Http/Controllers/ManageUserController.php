@@ -44,7 +44,6 @@ class ManageUserController extends Controller
             $user_id = request()->session()->get('user.id');
 
             $users = User::where('business_id', $business_id)
-                        ->user()
                         ->where('is_cmmsn_agnt', 0)
                         ->select(['id', 'username',
                             DB::raw("CONCAT(COALESCE(surname, ''), ' ', COALESCE(first_name, ''), ' ', COALESCE(last_name, '')) as full_name"), 'email', 'allow_login']);
@@ -438,30 +437,7 @@ class ManageUserController extends Controller
         }
     }
     
-    public function getDeliveryPeople(){
-        if (request()->ajax()) {
-            $term = request()->q;
-            if (empty($term)) {
-                return json_encode([]);
-            }
-            
-            $business_id = request()->session()->get('user.business_id');
-            // $user_id = request()->session()->get('user.id');
-
-            $query = User::role('Delivery#'.$business_id)->where('business_id', $business_id)->active();
-            
-          
-            $deliveryPeople = $query->where(function ($query) use ($term) {
-                $query->where('name', 'like', '%' . $term .'%');
-                                // ->orWhere('supplier_business_name', 'like', '%' . $term .'%')
-                                //  ->orWhere('users.contact_id', 'like', '%' . $term .'%');
-            })
-                        ->select('name as text')
-                        ->get();
-                        dd($deliveryPeople);
-            return json_encode($deliveryPeople);
-        }
-    }
+  
 
     private function getUsernameExtension()
     {
@@ -543,17 +519,17 @@ class ManageUserController extends Controller
 
     public function getdeliveryuser(){
         if (request()->ajax()) {
-            $role=Role::where('name','like','%delivery%')->get();
-
             $term = request()->q;
             if (empty($term)) {
                 return json_encode([]);
             }
-            $user = User::role($role)->where(function ($query) use ($term) {
+            $business_id = request()->session()->get('user.business_id');
+
+            $user = User::role('Delivery#'.$business_id)->where(function ($query) use ($term) {
                 $query->where('surname', 'like', '%' . $term .'%')
                     ->orwhere('first_name', 'like', '%' . $term .'%')
                     ->orWhere('last_name', 'like', '%' . $term .'%');
-            })
+            })->select('id', DB::raw("CONCAT(surname,' ',first_name,' ',last_name) AS text"))
                 ->get();
             return json_encode($user);
         }

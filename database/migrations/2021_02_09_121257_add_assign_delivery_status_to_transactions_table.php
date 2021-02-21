@@ -15,6 +15,7 @@ class AddAssignDeliveryStatusToTransactionsTable extends Migration
     {
         Schema::table('transactions', function (Blueprint $table) {
             $table->boolean('assign_delivery')->default(false)->after('transaction_date');
+            $table->boolean('assign_delivery_status')->default(false)->after('assign_delivery');
         });
     }
 
@@ -27,6 +28,8 @@ class AddAssignDeliveryStatusToTransactionsTable extends Migration
     {
         Schema::table('transactions', function (Blueprint $table) {
             $table->dropColumn('assign_delivery');
+            $table->dropColumn('assign_delivery_status');
+           
         });
     }
 }

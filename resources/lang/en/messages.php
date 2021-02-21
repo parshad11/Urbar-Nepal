@@ -12,6 +12,7 @@ return [
     */
 
     'add' => 'Add',
+    'assign_delivery' => 'Assign Delivery',
     'edit' => 'Edit',
     'save' => 'Save',
     'update' => 'Update',

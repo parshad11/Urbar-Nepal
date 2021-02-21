@@ -139,17 +139,18 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::resource('pos', 'SellPosController');
 
     Route::resource('delivery', 'DeliveryController');
+    Route::get('/delivery-transaction', 'DeliveryController@listDeliveryTransaction');
     Route::resource('task', 'TaskController');
-    Route::put('task/statusupdate/{id}', 'TaskController@statusupdate');
+    Route::put('/task/statusupdate/{id}', 'TaskController@statusupdate');
     Route::get('/active/work', 'TaskController@getActiveWork');
 
     Route::resource('roles', 'RoleController');
 
     Route::resource('users', 'ManageUserController');
 
-    Route::get('deliveryusers', 'ManageUserController@getdeliveryuser')->name('user.getdeliveruser');
+    Route::get('/delivery_users', 'ManageUserController@getdeliveryuser')->name('user.getdeliveryuser');
 
-    Route::get('users/get_delivery_people', 'ManageUserController@getDeliveryPeople');
+    Route::get('/user/get_delivery_people', 'PurchaseController@getDeliveryPeople');
 
 
     Route::resource('group-taxes', 'GroupTaxController');

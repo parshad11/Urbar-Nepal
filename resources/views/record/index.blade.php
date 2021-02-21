@@ -7,7 +7,7 @@
         <h1>@lang( 'contact.supplier_record' )
             <small>@lang( 'contact.manage_supplier_record' )</small>
         </h1>
-        {!! Form::open(['url' => action('RecordController@index'), 'method' => 'get', 'id' => 'cg_report_filter_form' ]) !!}
+        {!! Form::open(['url' => action('RecordController@index'), 'method' => 'get', 'id' => 'record_form' ]) !!}
         <div class="row no-print">
             <div class="col-md-3 col-md-offset-9 col-xs-6 ">
                 <div class="input-group">

@@ -17,7 +17,7 @@ class CreateDeliveriesTable extends Migration
             $table->bigIncrements('id');
             $table->integer('transaction_id')->unsigned();
             $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
-            $table->integer('delivery_person_id')->unsigned();
+            $table->bigInteger('delivery_person_id')->unsigned();
             $table->foreign('delivery_person_id')->references('id')->on('delivery_people')->onDelete('cascade');
             $table->string('delivery_status')->default('Ordered');
             $table->string('shipping_address');
@@ -30,6 +30,8 @@ class CreateDeliveriesTable extends Migration
             $table->dateTime('delivery_started_at')->nullable();
             $table->dateTime('delivered_ended_at')->nullable();
             $table->string('delivered_to')->nullable();
+            $table->integer('assigned_by')->unsigned();
+            $table->foreign('assigned_by')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

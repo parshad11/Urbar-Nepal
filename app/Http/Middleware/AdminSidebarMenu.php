@@ -330,18 +330,18 @@ class AdminSidebarMenu
                 $menu->dropdown(
                     __('delivery.delivery'),
                     function ($sub) {
+                        if (auth()->user()->can('delivery.assign')) {
+                            $sub->url(
+                                action('DeliveryController@listDeliveryTransaction'),
+                                __('delivery.assign_delivery'),
+                                ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'delivery-transaction' && request()->segment(2) == 'null']
+                            );
+                        }
                         if (auth()->user()->can('delivery.view') ||  auth()->user()->can('view_own_delivery')) {
                             $sub->url(
                                 action('DeliveryController@index'),
                                 __('delivery.all_deliveries'),
                                 ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'delivery' && request()->segment(2) == null]
-                            );
-                        }
-                        if (auth()->user()->can('task.view') ||  auth()->user()->can('view_own_task')) {
-                            $sub->url(
-                                action('TaskController@index'),
-                                __('lang_v1.all_tasks'),
-                                ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'task' && request()->segment(2) == null]
                             );
                         }
                         if (auth()->user()->can('task.assign')) {
@@ -351,7 +351,13 @@ class AdminSidebarMenu
                                 ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'task' && request()->segment(2) == 'create']
                             );
                         }
-
+                        if (auth()->user()->can('task.view') ||  auth()->user()->can('view_own_task')) {
+                            $sub->url(
+                                action('TaskController@index'),
+                                __('lang_v1.all_tasks'),
+                                ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'task' && request()->segment(2) == null]
+                            );
+                        }
                         if (auth()->user()->can('view_own_delivery')||auth()->user()->can('view_own_task')) {
                             $sub->url(
                                 action('TaskController@getActiveWork'),

@@ -13,8 +13,9 @@ return [
 
     'deliveries' => 'Deliveries',
     'delivery_person'=>'Delivery Person',
-    'manage_your_deliveries' => 'Manage your deliveries',
+    'manage_deliveries' => 'Manage deliveries',
     'assign_delivery'=>'Assign Delivery',
+    'assign_status'=>'Assign Status',
     'all_your_deliveries' => 'All your deliveries',
     'all_deliveries' => 'All Deliveries',
     'delivery' => 'Delivery',
@@ -27,13 +28,17 @@ return [
     'special_delivery_instructions'=>'Special Delivery Instructions',
     'shipping_address'=>'Shipping Address',
     'pickup_address'=>'Pickup Address',
+    'task_address'=>'Task Address',
     'task_type'=>'Task Type',
+    'edit_task'=>'Edit Task',
     'task_status'=>'Task Status',
     'task_title'=>'Task Title',
     'pick_up'=>'Pick Up',
     'description'=>'Description',
     'special_instructions'=>'Special Instructions',
     'assign_task_to'=>'Assign Task To',
+    'latitude'=>'Longitude',
+    'longitude'=>'Longitude',
     
 
 

@@ -124,7 +124,7 @@
                 minDate: moment()
              });
 
-            $('#location_id').select2({
+             $('#location_id').select2({
 			ajax: {
 				url: '/business/get_locations',
 				dataType: 'json',

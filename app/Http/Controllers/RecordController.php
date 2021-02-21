@@ -32,10 +32,10 @@ class RecordController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $business_id = request()->session()->get('user.business_id');
 
         if ($request->ajax()) {
 
+            $business_id = request()->session()->get('user.business_id');
             $records = $this->recordUtil->getListRecords($business_id);
             $permitted_locations = auth()->user()->permitted_locations();
             if ($permitted_locations != 'all') {
@@ -166,8 +166,9 @@ class RecordController extends Controller
              $output = ['success' => 0,
                 'msg' => __("messages.something_went_wrong")
             ];
-            return redirect('records')->with('status',$output);
+            
         }
+        return redirect('records')->with('status',$output);
     }
 
     /**

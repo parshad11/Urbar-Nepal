@@ -1196,5 +1196,11 @@ return [
     'completed'=>'Completed',
     'cancelled'=>'Cancelled',  
     'tranfer_status'=>'Transfer Status',
+    'type'=>'Type',
+    'assign_status'=>'Assign Status',
+    'assigned_by'=>'Assigned By',
+    'all_transactions'=>'All Transactions',
+    'assigned'=>'Assigned',
+    'not_assigned'=>'Not Assigned',
 
 ];

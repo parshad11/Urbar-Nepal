@@ -24,18 +24,16 @@ class Task extends Model
         return $this->belongsTo(DeliveryPerson::class,'delivery_person_id');
     }
 
-
-    public function task_assign($task){
-        $user = User::findOrFail($task);
-        $name = $user->surname.'.'.$user->first_name.' '.$user->last_name;
-        return $name;
+    public function record_staff()
+    {
+        return $this->belongsTo(\App\User::class, 'assigned_by');
     }
 
-    public function location($id){
-        $task=Task::findOrFail($id);
-        $location = $task->start_lat.'/'.$task->start_log.'-'.$task->end_lat.'/'.$task->end_log;
-        return $location;
+    public function location()
+    {
+        return $this->belongsTo(\App\BusinessLocation::class, 'location_id');
     }
+
 
     public function date($id){
         $task=Task::findOrFail($id);

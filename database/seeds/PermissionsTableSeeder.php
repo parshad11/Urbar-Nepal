@@ -24,6 +24,7 @@ class PermissionsTableSeeder extends Seeder
             ['name' => 'supplier.update'],
             ['name' => 'supplier.delete'],
 
+            
             ['name' => 'record.view'],
             ['name' => 'record.create'],
             ['name' => 'record.update'],
@@ -39,6 +40,7 @@ class PermissionsTableSeeder extends Seeder
             ['name' => 'product.update'],
             ['name' => 'product.delete'],
 
+            ['name' => 'view_own_purchase'],
             ['name' => 'purchase.view'],
             ['name' => 'purchase.create'],
             ['name' => 'purchase.update'],
@@ -50,7 +52,7 @@ class PermissionsTableSeeder extends Seeder
             ['name' => 'sell.delete'],
 
             ['name' => 'delivery.view'],
-            ['name' => 'delivery.create'],
+            ['name' => 'delivery.assign'],
             ['name' => 'delivery.update'],
             ['name' => 'delivery.delete'],
             ['name' => 'view_own_delivery'],

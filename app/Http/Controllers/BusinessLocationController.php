@@ -150,12 +150,12 @@ class BusinessLocationController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
         if (!auth()->user()->can('business_settings.access')) {
             abort(403, 'Unauthorized action.');
         }
 
         try {
+      
             $business_id = $request->session()->get('user.business_id');
 
             //Check if subscribed or not, then check for location quota

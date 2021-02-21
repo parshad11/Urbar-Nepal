@@ -19,19 +19,20 @@ class CreateTasksTable extends Migration
             $table->foreign('business_id')->references('id')->on('business')->onDelete('cascade');
             $table->integer('location_id')->unsigned();
             $table->foreign('location_id')->references('id')->on('business_locations')->onDelete('cascade');
-            $table->integer('delivery_person_id');
+            $table->bigInteger('delivery_person_id')->unsigned();
             $table->foreign('delivery_person_id')->references('id')->on('delivery_people')->onDelete('cascade');
             $table->string('task_type')->default('delivery');
             $table->string('task_status')->default('received');
             $table->string('title');
             $table->longText('description')->nullable();
             $table->longText('special_instructions')->nullable();
-            $table->string('from_latitude');
-            $table->string('from_longitude');
-            $table->string('to_latitude');
-            $table->string('to_longitude');
-            $table->date('started_at');
-            $table->date('ended_at');
+            $table->string('task_address')->nullable();
+            $table->string('task_latitude');
+            $table->string('task_longitude');
+            $table->date('started_at')->nullable();
+            $table->date('ended_at')->nullable();
+            $table->integer('assigned_by')->unsigned();
+            $table->foreign('assigned_by')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

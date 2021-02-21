@@ -962,7 +962,7 @@ class Util
         $user = User::findOrFail($user_id);
 
         $roles = $user->getRoleNames();
-
+        
         $role_name = '';
 
         if (!empty($roles[0])) {
@@ -1084,6 +1084,17 @@ class Util
 
         return $statuses;
     }
+
+    public function delivery_assign_statuses()
+    {
+        $assignStatuses = [
+            'assigned' => __('lang_v1.assigned'),
+            'not assigned' => __('lang_v1.not_assigned'),
+        ];
+
+        return $assignStatuses;
+    }
+
 
     public function stockDeliveryStatuses()
     {
