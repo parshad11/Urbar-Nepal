@@ -23,11 +23,11 @@
             <div class="box-body">
                 <div class="row">
                 @if(count($business_locations) == 1)
-				@php 
+				@php
 					$default_location = current(array_keys($business_locations->toArray()));
 				@endphp
 			@else
-				@php 
+				@php
                 $default_location = null;
 				@endphp
 			@endif
@@ -53,7 +53,7 @@
                             </div>
                         </div>
                         </div>
-                  
+
                     <div class="col-sm-4">
                         <div class="form-group">
                         {!! Form::label('item', __('contact.item_name').':*') !!}
@@ -61,7 +61,7 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-4">             
+                    <div class="col-sm-4">
                         <div class="form-group">
                         {!! Form::label('quantity', __('contact.quantity').':*') !!}
                         {!! Form::text('quantity', null, ['class' => 'form-control']); !!}
@@ -89,9 +89,9 @@
                                     <i class="fa fa-calendar"></i>
                                 </span>
                                 {!! Form::text('expected_collection_date', null, ['class' => 'form-control','id'=>'datetimepicker', 'required']); !!}
-                            </div>  
+                            </div>
                         </div>
-                    </div>    
+                    </div>
 
                     <div class="col-sm-4">
                         <div class="form-group">
@@ -99,10 +99,10 @@
 						{!! Form::text('location', null, ['class' => 'form-control','id'=>'supplier_location']); !!}
                         </div>
                     </div>
-                   
-                      
-                       
-                   
+
+
+
+
                     <div class="col-sm-12">
                         <button type="submit" class="btn btn-primary pull-right">@lang('messages.save')</button>
                     </div>
@@ -110,13 +110,13 @@
             </div>
             @endcomponent
         {!! Form::close() !!}
-        
+
     </section>
     <!-- /.content -->
 @endsection
 @section('javascript')
     <script src="{{ asset('js/purchase.js?v=' . $asset_v) }}"></script>
-	<script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script> 
+	<script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
     <script>
         $(document).ready(function (e) {
             $('#datetimepicker').datepicker({
@@ -154,8 +154,6 @@
 			},
 			}).on('select2:select', function (e) {
 				var data = e.params.data;
-				 $('#shipping_address').val(data.business_location_address);
-		
 			});
 
         });

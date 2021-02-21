@@ -194,7 +194,7 @@ class RestaurantUtil extends Util
      *
      * @return array
      */
-    public function getBookingsForCalendar($filters)
+    public function getSupplierCalendar($filters)
     {
         $start_date = request()->start;
         $end_date = request()->end;
@@ -266,7 +266,8 @@ class RestaurantUtil extends Util
                     'event_type' => 'bookings'
                 ];
         }
-
+        dd('hello');
+        dd($events);
         return $events;
     }
 }

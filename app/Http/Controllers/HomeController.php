@@ -19,6 +19,8 @@ use App\Utils\Util;
 use App\Utils\RestaurantUtil;
 use App\User;
 use App\Record;
+use App\Contact;
+use App\Utils\RecordUtil;
 use \Carbon\Carbon;
 use Illuminate\Notifications\DatabaseNotification;
 
@@ -33,6 +35,7 @@ class HomeController extends Controller
     protected $moduleUtil;
     protected $commonUtil;
     protected $restUtil;
+    protected $recordUtil;
 
     /**
      * Create a new controller instance.
@@ -44,14 +47,18 @@ class HomeController extends Controller
         TransactionUtil $transactionUtil,
         ModuleUtil $moduleUtil,
         Util $commonUtil,
-        RestaurantUtil $restUtil,Record $record
-    ) {
+        RestaurantUtil $restUtil, Record $record,
+        RecordUtil $recordUtil, Contact $contact
+    )
+    {
         $this->businessUtil = $businessUtil;
         $this->transactionUtil = $transactionUtil;
         $this->moduleUtil = $moduleUtil;
         $this->commonUtil = $commonUtil;
         $this->restUtil = $restUtil;
-        $this->record=$record;
+        $this->record = $record;
+        $this->recordUtil = $recordUtil;
+        $this->contact = $contact;
     }
 
     /**
@@ -75,7 +82,7 @@ class HomeController extends Controller
         $date_filters['this_week']['end'] = date('Y-m-d', strtotime('sunday this week'));
 
         $currency = Currency::where('id', request()->session()->get('business.currency_id'))->first();
-        
+
         //Chart for sells last 30 days
         $sells_last_30_days = $this->transactionUtil->getSellsLast30Days($business_id);
         $labels = [];
@@ -88,7 +95,7 @@ class HomeController extends Controller
             $labels[] = date('j M Y', strtotime($date));
 
             if (!empty($sells_last_30_days[$date])) {
-                $all_sell_values[] = (float) $sells_last_30_days[$date];
+                $all_sell_values[] = (float)$sells_last_30_days[$date];
             } else {
                 $all_sell_values[] = 0;
             }
@@ -105,9 +112,9 @@ class HomeController extends Controller
                     return $item->date == $date &&
                         $item->location_id == $loc_id;
                 });
-                
+
                 if (!empty($sell)) {
-                    $values[] = (float) $sell->total_sells;
+                    $values[] = (float)$sell->total_sells;
                 } else {
                     $values[] = 0;
                 }
@@ -119,10 +126,10 @@ class HomeController extends Controller
         $sells_chart_1 = new CommonChart;
 
         $sells_chart_1->labels($labels)
-                        ->options($this->__chartOptions(__(
-                            'home.total_sells',
-                            ['currency' => $currency->code]
-                            )));
+            ->options($this->__chartOptions(__(
+                'home.total_sells',
+                ['currency' => $currency->code]
+            )));
 
         if (!empty($location_sells)) {
             foreach ($location_sells as $location_sell) {
@@ -142,7 +149,7 @@ class HomeController extends Controller
 
         $months = [];
         $date = strtotime($fy['start']);
-        $last   = date('m-Y', strtotime($fy['end']));
+        $last = date('m-Y', strtotime($fy['end']));
 
         $fy_months = [];
         do {
@@ -152,11 +159,11 @@ class HomeController extends Controller
             $month_number = date('m', $date);
 
             $labels[] = \Carbon::createFromFormat('m-Y', $month_year)
-                            ->format('M-Y');
+                ->format('M-Y');
             $date = strtotime('+1 month', $date);
 
             if (!empty($sells_this_fy[$month_year])) {
-                $values[] = (float) $sells_this_fy[$month_year];
+                $values[] = (float)$sells_this_fy[$month_year];
             } else {
                 $values[] = 0;
             }
@@ -172,9 +179,9 @@ class HomeController extends Controller
                     return $item->yearmonth == $month &&
                         $item->location_id == $loc_id;
                 });
-                
+
                 if (!empty($sell)) {
-                    $values_data[] = (float) $sell->total_sells;
+                    $values_data[] = (float)$sell->total_sells;
                 } else {
                     $values_data[] = 0;
                 }
@@ -185,10 +192,10 @@ class HomeController extends Controller
 
         $sells_chart_2 = new CommonChart;
         $sells_chart_2->labels($labels)
-                    ->options($this->__chartOptions(__(
-                        'home.total_sells',
-                        ['currency' => $currency->code]
-                            )));
+            ->options($this->__chartOptions(__(
+                'home.total_sells',
+                ['currency' => $currency->code]
+            )));
         if (!empty($fy_sells_by_location_data)) {
             foreach ($fy_sells_by_location_data as $location_sell) {
                 $sells_chart_2->dataset($location_sell['loc_label'], 'line', $location_sell['values']);
@@ -210,26 +217,67 @@ class HomeController extends Controller
         }
 
         if ($request->ajax()) {
-            $today=Carbon::today();
-            $dateafter15days=Carbon::today()->addDays(15);
+            $today = Carbon::today();
+            $dateafter15days = Carbon::today()->addDays(15);
             if (auth()->user()->can('record.view') && auth()->user()->can('record.view_own')) {
-                $record = Record::whereBetween('date', [$today, $dateafter15days]);
+                $records = $this->recordUtil->getListRecords($business_id)->whereBetween('expected_collection_date', [$today, $dateafter15days])->get();
+            } elseif (!auth()->user()->can('record.view') && auth()->user()->can('record.view_own')) {
+                $records = $this->recordUtil->getListRecords($business_id)->whereBetween('expected_collection_date', [$today, $dateafter15days])
+                    ->where('records.contact_id', auth()->user()->id);
             }
-            elseif(!auth()->user()->can('record.view') && auth()->user()->can('record.view_own')){
-                $record = Record::whereBetween('date', [$today, $dateafter15days])->where('supplier_id',auth()->user()->id);
+            $permitted_locations = auth()->user()->permitted_locations();
+            if ($permitted_locations != 'all') {
+                $records->whereIn('records.location_id', $permitted_locations);
             }
 
-            return Datatables::of($record)
+            if (!empty(request()->supplier_id)) {
+                $records->where('contacts.id', request()->supplier_id);
+            }
+
+            if (!empty(request()->location_id)) {
+                $records->where('records.location_id', request()->location_id);
+            }
+
+            $start_date = $request->start_date;
+            $end_date = $request->end_date;
+
+            $location = $request->location;
+
+            if (!empty($start_date) && !empty($end_date || !empty($request->location))) {
+                $records->whereBetween('expected_collection_date', [$start_date, $end_date]);
+            }
+            if (!empty($request->location)) {
+                $records->where('location', 'like', '%' . $location . '%');
+            }
+            if (!empty($start_date) && !empty($end_date && !empty($request->location))) {
+                $records->whereBetween('expected_collection_date', [$start_date, $end_date])->where('location', 'like', '%' . $location . '%');
+            }
+
+            return Datatables::of($records)
                 ->addIndexColumn()
-                ->addColumn(
-                    'supplier name',
-                    function ($row) {
-                        $data=Record::all();
-                        $supplier_name = $this->record->contact_supplier($row->supplier_id);
-                        return $supplier_name;
+                ->addColumn('action', function ($row) {
+                    $html = '<div class="btn-group">
+                    <button type="button" class="btn btn-info dropdown-toggle btn-xs" 
+                        data-toggle="dropdown" aria-expanded="false">' .
+                        __("messages.actions") .
+                        '<span class="caret"></span><span class="sr-only">Toggle Dropdown
+                        </span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-left" role="menu">';
+                    if (auth()->user()->can("record.view")) {
+                        $html .= '<li><a href="#" data-href="' . action('RecordController@view', [$row->id]) . '" class="btn-modal" data-container=".view_modal"><i class="fas fa-eye" aria-hidden="true"></i>' . __("messages.view") . '</a></li>';
                     }
-                )
-                ->rawColumns(['action', 'supplier name'])
+                    if (auth()->user()->can('record.update')) {
+                        $html .= '<li><a href="' . action('RecordController@edit', [$row->id]) . '"><i class="fas fa-edit"></i> ' . __("messages.edit") . '</a></li>';
+                    }
+                    if (auth()->user()->can('record.delete')) {
+                        $html .= '<li><a href="' . action('RecordController@destroy', [$row->id]) . '" class="delete-record"><i class="fas fa-trash"></i> ' . __("messages.delete") . '</a></li>';
+                    }
+                    $html .= '</ul></div>';
+                    return $html;
+                })
+                ->removeColumn('id')
+                ->rawColumns(['action'])
                 ->make(true);
         }
 
@@ -241,7 +289,8 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getTotals()
+    public
+    function getTotals()
     {
         if (request()->ajax()) {
             $start = request()->start;
@@ -279,7 +328,7 @@ class HomeController extends Controller
 
             $output['invoice_due'] = $sell_details['invoice_due'];
             $output['total_expense'] = $transaction_totals['total_expense'];
-            
+
             return $output;
         }
     }
@@ -289,7 +338,8 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getProductStockAlert()
+    public
+    function getProductStockAlert()
     {
         if (request()->ajax()) {
             $business_id = request()->session()->get('user.business_id');
@@ -300,29 +350,29 @@ class HomeController extends Controller
                 '=',
                 'pv.id'
             )
-                    ->join(
-                        'variations as v',
-                        'variation_location_details.variation_id',
-                        '=',
-                        'v.id'
-                    )
-                    ->join(
-                        'products as p',
-                        'variation_location_details.product_id',
-                        '=',
-                        'p.id'
-                    )
-                    ->leftjoin(
-                        'business_locations as l',
-                        'variation_location_details.location_id',
-                        '=',
-                        'l.id'
-                    )
-                    ->leftjoin('units as u', 'p.unit_id', '=', 'u.id')
-                    ->where('p.business_id', $business_id)
-                    ->where('p.enable_stock', 1)
-                    ->where('p.is_inactive', 0)
-                    ->whereRaw('variation_location_details.qty_available <= p.alert_quantity');
+                ->join(
+                    'variations as v',
+                    'variation_location_details.variation_id',
+                    '=',
+                    'v.id'
+                )
+                ->join(
+                    'products as p',
+                    'variation_location_details.product_id',
+                    '=',
+                    'p.id'
+                )
+                ->leftjoin(
+                    'business_locations as l',
+                    'variation_location_details.location_id',
+                    '=',
+                    'l.id'
+                )
+                ->leftjoin('units as u', 'p.unit_id', '=', 'u.id')
+                ->where('p.business_id', $business_id)
+                ->where('p.enable_stock', 1)
+                ->where('p.is_inactive', 0)
+                ->whereRaw('variation_location_details.qty_available <= p.alert_quantity');
 
             //Check for permitted locations of a user
             $permitted_locations = auth()->user()->permitted_locations();
@@ -339,8 +389,8 @@ class HomeController extends Controller
                 'variation_location_details.qty_available as stock',
                 'u.short_name as unit'
             )
-                    ->groupBy('variation_location_details.id')
-                    ->orderBy('stock', 'asc');
+                ->groupBy('variation_location_details.id')
+                ->orderBy('stock', 'asc');
 
             return Datatables::of($products)
                 ->editColumn('product', function ($row) {
@@ -351,8 +401,8 @@ class HomeController extends Controller
                     }
                 })
                 ->editColumn('stock', function ($row) {
-                    $stock = $row->stock ? $row->stock : 0 ;
-                    return '<span data-is_quantity="true" class="display_currency" data-currency_symbol=false>'. (float)$stock . '</span> ' . $row->unit;
+                    $stock = $row->stock ? $row->stock : 0;
+                    return '<span data-is_quantity="true" class="display_currency" data-currency_symbol=false>' . (float)$stock . '</span> ' . $row->unit;
                 })
                 ->removeColumn('unit')
                 ->removeColumn('type')
@@ -368,7 +418,8 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getPurchasePaymentDues()
+    public
+    function getPurchasePaymentDues()
     {
         if (request()->ajax()) {
             $business_id = request()->session()->get('user.business_id');
@@ -380,16 +431,16 @@ class HomeController extends Controller
                 '=',
                 'c.id'
             )
-                    ->leftJoin(
-                        'transaction_payments as tp',
-                        'transactions.id',
-                        '=',
-                        'tp.transaction_id'
-                    )
-                    ->where('transactions.business_id', $business_id)
-                    ->where('transactions.type', 'purchase')
-                    ->where('transactions.payment_status', '!=', 'paid')
-                    ->whereRaw("DATEDIFF( DATE_ADD( transaction_date, INTERVAL IF(c.pay_term_type = 'days', c.pay_term_number, 30 * c.pay_term_number) DAY), '$today') <= 7");
+                ->leftJoin(
+                    'transaction_payments as tp',
+                    'transactions.id',
+                    '=',
+                    'tp.transaction_id'
+                )
+                ->where('transactions.business_id', $business_id)
+                ->where('transactions.type', 'purchase')
+                ->where('transactions.payment_status', '!=', 'paid')
+                ->whereRaw("DATEDIFF( DATE_ADD( transaction_date, INTERVAL IF(c.pay_term_type = 'days', c.pay_term_number, 30 * c.pay_term_number) DAY), '$today') <= 7");
 
             //Check for permitted locations of a user
             $permitted_locations = auth()->user()->permitted_locations();
@@ -397,25 +448,25 @@ class HomeController extends Controller
                 $query->whereIn('transactions.location_id', $permitted_locations);
             }
 
-            $dues =  $query->select(
+            $dues = $query->select(
                 'transactions.id as id',
                 'c.name as supplier',
                 'ref_no',
                 'final_total',
                 DB::raw('SUM(tp.amount) as total_paid')
             )
-                        ->groupBy('transactions.id');
+                ->groupBy('transactions.id');
 
             return Datatables::of($dues)
                 ->addColumn('due', function ($row) {
                     $total_paid = !empty($row->total_paid) ? $row->total_paid : 0;
                     $due = $row->final_total - $total_paid;
                     return '<span class="display_currency" data-currency_symbol="true">' .
-                    $due . '</span>';
+                        $due . '</span>';
                 })
                 ->editColumn('ref_no', function ($row) {
                     if (auth()->user()->can('purchase.view')) {
-                        return  '<a href="#" data-href="' . action('PurchaseController@show', [$row->id]) . '"
+                        return '<a href="#" data-href="' . action('PurchaseController@show', [$row->id]) . '"
                                     class="btn-modal" data-container=".view_modal">' . $row->ref_no . '</a>';
                     }
                     return $row->ref_no;
@@ -433,7 +484,8 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getSalesPaymentDues()
+    public
+    function getSalesPaymentDues()
     {
         if (request()->ajax()) {
             $business_id = request()->session()->get('user.business_id');
@@ -445,18 +497,18 @@ class HomeController extends Controller
                 '=',
                 'c.id'
             )
-                    ->leftJoin(
-                        'transaction_payments as tp',
-                        'transactions.id',
-                        '=',
-                        'tp.transaction_id'
-                    )
-                    ->where('transactions.business_id', $business_id)
-                    ->where('transactions.type', 'sell')
-                    ->where('transactions.payment_status', '!=', 'paid')
-                    ->whereNotNull('transactions.pay_term_number')
-                    ->whereNotNull('transactions.pay_term_type')
-                    ->whereRaw("DATEDIFF( DATE_ADD( transaction_date, INTERVAL IF(transactions.pay_term_type = 'days', transactions.pay_term_number, 30 * transactions.pay_term_number) DAY), '$today') <= 7");
+                ->leftJoin(
+                    'transaction_payments as tp',
+                    'transactions.id',
+                    '=',
+                    'tp.transaction_id'
+                )
+                ->where('transactions.business_id', $business_id)
+                ->where('transactions.type', 'sell')
+                ->where('transactions.payment_status', '!=', 'paid')
+                ->whereNotNull('transactions.pay_term_number')
+                ->whereNotNull('transactions.pay_term_type')
+                ->whereRaw("DATEDIFF( DATE_ADD( transaction_date, INTERVAL IF(transactions.pay_term_type = 'days', transactions.pay_term_number, 30 * transactions.pay_term_number) DAY), '$today') <= 7");
 
             //Check for permitted locations of a user
             $permitted_locations = auth()->user()->permitted_locations();
@@ -464,25 +516,25 @@ class HomeController extends Controller
                 $query->whereIn('transactions.location_id', $permitted_locations);
             }
 
-            $dues =  $query->select(
+            $dues = $query->select(
                 'transactions.id as id',
                 'c.name as customer',
                 'transactions.invoice_no',
                 'final_total',
                 DB::raw('SUM(tp.amount) as total_paid')
             )
-                        ->groupBy('transactions.id');
+                ->groupBy('transactions.id');
 
             return Datatables::of($dues)
                 ->addColumn('due', function ($row) {
                     $total_paid = !empty($row->total_paid) ? $row->total_paid : 0;
                     $due = $row->final_total - $total_paid;
                     return '<span class="display_currency" data-currency_symbol="true">' .
-                    $due . '</span>';
+                        $due . '</span>';
                 })
                 ->editColumn('invoice_no', function ($row) {
                     if (auth()->user()->can('sell.view')) {
-                        return  '<a href="#" data-href="' . action('SellController@show', [$row->id]) . '"
+                        return '<a href="#" data-href="' . action('SellController@show', [$row->id]) . '"
                                     class="btn-modal" data-container=".view_modal">' . $row->invoice_no . '</a>';
                     }
                     return $row->invoice_no;
@@ -495,7 +547,8 @@ class HomeController extends Controller
         }
     }
 
-    public function loadMoreNotifications()
+    public
+    function loadMoreNotifications()
     {
         $notifications = auth()->user()->notifications()->orderBy('created_at', 'DESC')->paginate(10);
 
@@ -512,7 +565,8 @@ class HomeController extends Controller
      *
      * @return json
      */
-    public function getTotalUnreadNotifications()
+    public
+    function getTotalUnreadNotifications()
     {
         $unread_notifications = auth()->user()->unreadNotifications;
         $total_unread = $unread_notifications->count();
@@ -535,14 +589,15 @@ class HomeController extends Controller
         ];
     }
 
-    private function __chartOptions($title)
+    private
+    function __chartOptions($title)
     {
         return [
             'yAxis' => [
-                    'title' => [
-                        'text' => $title
-                    ]
-                ],
+                'title' => [
+                    'text' => $title
+                ]
+            ],
             'legend' => [
                 'align' => 'right',
                 'verticalAlign' => 'top',
@@ -552,44 +607,40 @@ class HomeController extends Controller
         ];
     }
 
-    public function getCalendar()
+    public
+    function getCalendar()
     {
+        if (!(auth()->user()->can('record.view') || auth()->user()->can('record.view_own'))) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $business_id = request()->session()->get('user.business_id');
         $is_admin = $this->restUtil->is_admin(auth()->user(), $business_id);
-        $is_superadmin = auth()->user()->can('superadmin');
         if (request()->ajax()) {
             $data = [
                 'start_date' => request()->start,
                 'end_date' => request()->end,
-                'user_id' => ($is_admin || $is_superadmin) && !empty(request()->user_id) ? request()->user_id : auth()->user()->id,
+                'supplier_id' => request()->supplier_id,
                 'location_id' => !empty(request()->location_id) ? request()->location_id : null,
                 'business_id' => $business_id,
-                'events' => request()->events ?? [],
                 'color' => '#007FFF'
             ];
             $events = [];
-
-            if (in_array('bookings', $data['events'])) {
-                $events = $this->restUtil->getBookingsForCalendar($data);
-            }
-            
-            $module_events = $this->moduleUtil->getModuleData('calendarEvents', $data);
-
-            foreach ($module_events as $module_event) {
-                $events = array_merge($events, $module_event);
-            }  
-
+            $events = $this->recordUtil->getRecordCalendar($data);
+            $module_event = $this->moduleUtil->getModuleData('calendarEvents', $data);
+            $events = array_merge($events, $module_event);
             return $events;
         }
 
         $all_locations = BusinessLocation::forDropdown($business_id)->toArray();
-        $users = [];
+        $supplier = [];
         if ($is_admin) {
-            $users = User::forDropdown($business_id, false);
+            $all_supplier = Contact::where('type', 'supplier')->get();
+            $supplier = $all_supplier->pluck('name', 'id');
         }
 
         $event_types = [
-            'bookings' => [
+            'records' => [
                 'label' => __('restaurant.bookings'),
                 'color' => '#007FFF'
             ]
@@ -598,11 +649,12 @@ class HomeController extends Controller
         foreach ($module_event_types as $module_event_type) {
             $event_types = array_merge($event_types, $module_event_type);
         }
-        
-        return view('home.calendar')->with(compact('all_locations', 'users', 'event_types'));
+
+        return view('home.calendar')->with(compact('all_locations', 'supplier', 'event_types'));
     }
 
-    public function showNotification($id)
+    public
+    function showNotification($id)
     {
         $notification = DatabaseNotification::find($id);
 
@@ -611,7 +663,7 @@ class HomeController extends Controller
         $notification->markAsRead();
 
         return view('home.notification_modal')->with([
-                'notifications' => [$notification]
-            ]);
+            'notifications' => [$notification]
+        ]);
     }
 }

@@ -167,11 +167,14 @@
                             <table class="table table-bordered table-striped" id="record_table">
                                 <thead>
                                 <tr>
-                                    <th>Supplier</th>
-                                    <th>item</th>
-                                    <th>quantity</th>
-                                    <th>Location</th>
-                                    <th>Date</th>
+                                    <th>@lang('purchase.business_location')</th>
+                                    <th>@lang('purchase.supplier')</th>
+                                    <th>Item Name</th>
+                                    <th>Quantity</th>
+                                    <th>Unit</th>
+                                    <th>Expected Collection Date</th>
+                                    <th>Supplier Location</th>
+                                    <th>@lang('lang_v1.added_by')</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -299,15 +302,17 @@
             "ajax": {
                 "url": "/home",
                 "data": function (d) {
-
                 }
             },
             columns: [
-                {data: 'supplier name', name: 'supplier name'},
+                {data: 'location_name', name: 'BS.name'},
+                {data: 'name', name: 'contacts.name'},
                 {data: 'item', name: 'item'},
                 {data: 'quantity', name: 'quantity'},
+                {data: 'unit', name: 'units.actual_name',orderable: false},
+                {data: 'expected_collection_date', name: 'expected_collection_date'},
                 {data: 'location', name: 'location'},
-                {data: 'date', name: 'date'},
+                {data: 'added_by', name: 'u.first_name'},
             ],
             "fnDrawCallback": function (oSettings) {
                 __currency_convert_recursively($('#record_table'));
