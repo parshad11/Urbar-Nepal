@@ -38,7 +38,7 @@ class TransactionUtil extends Util
      *
      * @return boolean
      */
-    public function createSellTransaction($business_id, $input, $invoice_total, $user_id, $uf_data = true)
+    public function createSellTransaction($business_id, $input, $invoice_total, $user_id,$assign_delivery,$uf_data = true)
     {
         $invoice_scheme_id = !empty($input['invoice_scheme_id']) ? $input['invoice_scheme_id'] : null;
         $invoice_no = !empty($input['invoice_no']) ? $input['invoice_no'] : $this->getInvoiceNumber($business_id, $input['status'], $input['location_id'], $invoice_scheme_id);
@@ -67,7 +67,7 @@ class TransactionUtil extends Util
             'commission_agent' => @$input['commission_agent'],
             'is_quotation' => isset($input['is_quotation']) ? $input['is_quotation'] : 0,
             'shipping_details' => isset($input['shipping_details']) ? $input['shipping_details'] : null,
-            'assign_delivery'=>$input['assign_delivery'],
+            'assign_delivery'=>$assign_delivery,
             'shipping_charges' => isset($input['shipping_charges']) ? $uf_data ? $this->num_uf($input['shipping_charges']) : $input['shipping_charges'] : 0,
             'exchange_rate' => !empty($input['exchange_rate']) ?
                                 $uf_data ? $this->num_uf($input['exchange_rate']) : $input['exchange_rate'] : 1,
@@ -4277,76 +4277,31 @@ class TransactionUtil extends Util
     */
     public function getListTransactions($business_id)
     {
-        $sells = Transaction::leftJoin('contacts', 'transactions.contact_id', '=', 'contacts.id')
-                // ->leftJoin('transaction_payments as tp', 'transactions.id', '=', 'tp.transaction_id')
-                ->leftJoin('transaction_sell_lines as tsl', 'transactions.id', '=', 'tsl.transaction_id')
+        $transactions = Transaction::leftJoin('contacts', 'transactions.contact_id', '=', 'contacts.id')
                 ->leftJoin('users as u', 'transactions.created_by', '=', 'u.id')
-                ->leftJoin('users as ss', 'transactions.res_waiter_id', '=', 'ss.id')
-                ->leftJoin('res_tables as tables', 'transactions.res_table_id', '=', 'tables.id')
                 ->join(
                     'business_locations AS bl',
                     'transactions.location_id',
                     '=',
                     'bl.id'
                 )
-                ->leftJoin(
-                    'transactions AS SR',
-                    'transactions.id',
-                    '=',
-                    'SR.return_parent_id'
-                )
-                ->leftJoin(
-                    'types_of_services AS tos',
-                    'transactions.types_of_service_id',
-                    '=',
-                    'tos.id'
-                )
                 ->where('transactions.business_id', $business_id)
-                ->where('transactions.type', 'sell')
-                ->where('transactions.status', 'final')
+                ->where('assign_delivery', 1)
+                ->whereIn('transactions.status', ['received','final'])
                 ->select(
                     'transactions.id',
                     'transactions.transaction_date',
-                    'transactions.is_direct_sale',
-                    'transactions.invoice_no',
-                    'transactions.invoice_no as invoice_no_text',
+                    'transactions.type',
                     'contacts.name',
-                    'contacts.mobile',
                     'contacts.contact_id',
-                    'transactions.payment_status',
-                    'transactions.final_total',
-                    'transactions.tax_amount',
-                    'transactions.discount_amount',
-                    'transactions.discount_type',
-                    'transactions.total_before_tax',
-                    'transactions.rp_redeemed',
-                    'transactions.rp_redeemed_amount',
-                    'transactions.rp_earned',
-                    'transactions.types_of_service_id',
-                    'transactions.shipping_status',
-                    'transactions.pay_term_number',
-                    'transactions.pay_term_type',
-                    'transactions.additional_notes',
-                    'transactions.staff_note',
+                    DB::raw(""),
+                    'transactions.assign_delivery_status',
                     'transactions.shipping_details',
-                    DB::raw('DATE_FORMAT(transactions.transaction_date, "%Y/%m/%d") as sale_date'),
-                    DB::raw("CONCAT(COALESCE(u.surname, ''),' ',COALESCE(u.first_name, ''),' ',COALESCE(u.last_name,'')) as added_by"),
-                    DB::raw('(SELECT SUM(IF(TP.is_return = 1,-1*TP.amount,TP.amount)) FROM transaction_payments AS TP WHERE
-                        TP.transaction_id=transactions.id) as total_paid'),
                     'bl.name as business_location',
-                    DB::raw('COUNT(SR.id) as return_exists'),
-                    DB::raw('(SELECT SUM(TP2.amount) FROM transaction_payments AS TP2 WHERE
-                        TP2.transaction_id=SR.id ) as return_paid'),
-                    DB::raw('COALESCE(SR.final_total, 0) as amount_return'),
-                    'SR.id as return_transaction_id',
-                    'tos.name as types_of_service_name',
-                    'transactions.service_custom_field_1',
-                    DB::raw('COUNT( DISTINCT tsl.id) as total_items'),
-                    DB::raw("CONCAT(COALESCE(ss.surname, ''),' ',COALESCE(ss.first_name, ''),' ',COALESCE(ss.last_name,'')) as waiter"),
-                    'tables.name as table_name'
+                    DB::raw("CONCAT(COALESCE(u.surname, ''),' ',COALESCE(u.first_name, ''),' ',COALESCE(u.last_name,'')) as added_by"),
                 );
 
-        return $sells;
+        return $transactions;
     }
 
     /**

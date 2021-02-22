@@ -146,27 +146,28 @@ class TaskController extends Controller
         }
 
         try {
-            $task_details = $request->only(['delivery_person_id','location_id','title','task_latitude','task_longitude','task_status','task_type','special_instructions','description']);
+            $task_details = $request->only(['delivery_person_id','location_id','task_address','title','task_latitude','task_longitude','task_status','task_type','special_instructions','description']);
         $request->validate([
-            'delivery_person_id' => 'required|integer',
+            'delivery_person_id' => 'required',
             'location_id' => 'required',
-            'title' => 'required|',
-            'task_latitude' => ['required','regex:/^[-]?(([0-8]?[0-9])\.(\d+))|(90(\.0+)?)$/'],
-            'task_longitude' => ['required','regex:/^[-]?((((1[0-7][0-9])|([0-9]?[0-9]))\.(\d+))|180(\.0+)?)$/'],
+            'title' => 'required',
+            'task_latitude' => 'required',
+            'task_longitude' => 'required',
             'task_status' => 'required',
             'task_type' => 'required',
+
         ]);
         $business_id = $request->session()->get('user.business_id');
         $user_id = $request->session()->get('user.id');
         $task_details['assigned_by'] = $user_id;
         $task_details['business_id'] = $business_id;
         DB::beginTransaction(); 
-
+        
         $task = Task::create($task_details);
         
         DB::commit();
         $output = ['success' => 1,
-        'msg' => __('contact.record_added_success')
+        'msg' => __('delivery.task_added_success')
         ];
         } catch (\Exception $e) {
              DB::rollBack();

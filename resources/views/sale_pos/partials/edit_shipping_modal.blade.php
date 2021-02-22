@@ -9,6 +9,17 @@
 			<div class="modal-body">
 				<div class="row">
 					<div class="col-md-6">
+						<div class="form-group">
+							<div class="checkbox">
+								<br/>
+								<label>
+								{!! Form::checkbox('assign_delivery_modal', 1, !empty($transaction->assign_delivery) ? $transaction->assign_delivery: '',	[ 'class' => 'input-icheck']); !!} {{ __( 'delivery.assign_delivery' ) }}
+								</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-6">
 				        <div class="form-group">
 				            {!! Form::label('shipping_details_modal', __('sale.shipping_details') . ':*' ) !!}
 				            {!! Form::textarea('shipping_details_modal', !empty($transaction->shipping_details) ? $transaction->shipping_details : '', ['class' => 'form-control','placeholder' => __('sale.shipping_details'), 'required' ,'rows' => '4']); !!}

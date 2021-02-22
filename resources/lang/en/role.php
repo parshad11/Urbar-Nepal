@@ -29,11 +29,11 @@ return [
     'supplier.update' => 'Edit supplier',
     'supplier.delete' => 'Delete supplier',
 
-    'record.own.view' => 'View Own Record',
-    'record.view' => 'View Record',
-    'record.create' => 'Add Record',
-    'record.update' => 'Edit Record',
-    'record.delete' => 'Delete Record',
+    'record.own.view' => 'View own record',
+    'record.view' => 'View record',
+    'record.create' => 'Add record',
+    'record.update' => 'Edit record',
+    'record.delete' => 'Delete record',
 
     'record.view' => 'View supplier record',
     'record.create' => 'Add supplier record',
@@ -50,10 +50,10 @@ return [
     'product.update' => 'Edit product',
     'product.delete' => 'Delete product',
 
-    'purchase.view' => 'View purchase & Stock Adjustment',
-    'purchase.create' => 'Add purchase & Stock Adjustment',
-    'purchase.update' => 'Edit purchase & Stock Adjustment',
-    'purchase.delete' => 'Delete purchase & Stock Adjustment',
+    'purchase.view' => 'View purchase & Stock adjustment',
+    'purchase.create' => 'Add purchase & Stock adjustment',
+    'purchase.update' => 'Edit purchase & Stock adjustment',
+    'purchase.delete' => 'Delete purchase & Stock adjustment',
 
     'sell.view' => 'View POS sell',
     'sell.create' => 'Add POS sell',
@@ -97,13 +97,13 @@ return [
     'delivery.create' => 'Add delivery',
     'delivery.update' => 'Edit delivery',
     'delivery.delete' => 'Delete delivery',
-    'view.own.delivery'=>'View Own Delivery',
+    'view.own.delivery'=>'View own Delivery',
 
     'task.view' => 'View task',
     'task.create' => 'Assign task',
     'task.update' => 'Edit Task',
     'task.delete' => 'Task delivery',
-    'view.own.task'=>'View Own Task',
+    'view.own.task'=>'View own Task',
 
     'select_all' => 'Select all',
     'settings' => 'Settings',

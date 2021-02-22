@@ -799,6 +799,8 @@ $(document).ready(function() {
         //update shipping details
         $('input#shipping_details').val($('#shipping_details_modal').val());
 
+        $('input#assign_delivery').val($('#assign_delivery_modal').val());
+
         $('input#shipping_address').val($('#shipping_address_modal').val());
         $('input#shipping_status').val($('#shipping_status_modal').val());
         $('input#delivered_to').val($('#delivered_to_modal').val());

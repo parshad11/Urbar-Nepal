@@ -11,8 +11,7 @@
 <!-- Main content -->
 <section class="content no-print">
 	{!! Form::open(['url' => action('StockTransferController@store'), 'method' => 'post', 'id' => 'stock_transfer_form' ]) !!}
-	<div class="box box-solid">
-		<div class="box-body">
+	@component('components.widget', ['class' => 'box-primary'])
 			<div class="row">
 				<div class="col-sm-4">
 					<div class="form-group">
@@ -38,13 +37,13 @@
 					</div>
 				</div>
 				<div class="clearfix"></div>
-				<div class="col-sm-6">
+				<div class="col-sm-4">
 					<div class="form-group">
 						{!! Form::label('location_id', __('lang_v1.location_from').':*') !!}
 						{!! Form::select('location_id', $business_locations, null, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required', 'id' => 'location_id']); !!}
 					</div>
 				</div>
-				<div class="col-sm-6">
+				<div class="col-sm-4">
 					<div class="form-group">
 						{!! Form::label('transfer_location_id', __('lang_v1.location_to').':*') !!}
 						{!! Form::select('transfer_location_id', $business_locations, null, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required', 'id' => 'transfer_location_id']); !!}
@@ -52,13 +51,10 @@
 				</div>
 
 			</div>
-		</div>
-	</div> <!--box end-->
-	<div class="box box-solid">
-		<div class="box-header">
-        	<h3 class="box-title">{{ __('stock_adjustment.search_products') }}</h3>
-       	</div>
-		<div class="box-body">
+		
+			@endcomponent
+
+			@component('components.widget', ['class' => 'box-primary','title'=>'Search Products'])
 			<div class="row">
 				<div class="col-sm-8 col-sm-offset-2">
 					<div class="form-group">
@@ -100,25 +96,20 @@
 					</table>
 					</div>
 				</div>
-			</div>
-		</div>
-		<!--box start-->
-		<div class="box box-solid">
-			<div class="box-header">
-				<h3 class="box-title">{{ __('delivery.assign_delivery') }}</h3>
-			</div>
-			<div class="col-sm-3  hide">
+				<div class="col-sm-3">
 				<div class="checkbox">
 					<label>
-						{!! Form::checkbox('assign_delivery', 1, true,
-                        [  'class' => 'input-icheck' ,'id' => 'assign_delivery' ]); !!}
+						{!! Form::checkbox('assign_delivery', 1, null,
+                        [  'class' => 'input-icheck' ,'id' => 'assign_delivery' ]); !!}{{ __( 'delivery.assign_delivery' ) }}
 					</label>
 				</div>
+				</div>
 			</div>
-			<div class="box-body">
+			@endcomponent
+	
+			@component('components.widget', ['class' => 'box-primary hide assign_delivery_div'])
 				<div class="row">
-					<div class="col-md-12 " style="display:flex;justify-content: space-between;">
-
+				<div class="col-md-12 " style="display:flex;justify-content: space-between;">
 						<div class=" col-sm-4 ">
 							<div class="form-group">
 								{!! Form::label('delivery_person_id', __('delivery.delivery_person') . ':*') !!}
@@ -130,14 +121,19 @@
 								</div>
 							</div>
 						</div>
-						<br>
+						<div class="col-sm-4">
+						<div class="form-group">
+							{!! Form::label('shipping_charges', __('lang_v1.shipping_charges') . ':') !!}
+							{!! Form::text('shipping_charges', 0, ['class' => 'form-control input_number', 'placeholder' => __('lang_v1.shipping_charges')]); !!}
+						</div>
+						</div>
+					
 						<div class=" col-sm-4 @if(!empty($default_delivery_status)) hide @endif">
 							<div class="form-group">
 								{!! Form::label('delivery_status', __('delivery.delivery_status') . ':*') !!}
-								{!! Form::select('delivery_status', $stockstatuses , $default_delivery_status, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required','style' => 'width: 100%;']); !!}
+								{!! Form::select('delivery_status', $stock_delivery_statuses , null, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required','style' => 'width: 100%;']); !!}
 							</div>
 						</div>
-					</div>
 				</div>
 				<br>
 				<div class="row">
@@ -148,34 +144,29 @@
 								{!! Form::textarea('special_delivery_instructions', null, ['class' => 'form-control','rows'=>3]); !!}
 							</div>
 						</div>
+						<div class="col-sm-4">
+						<div class="form-group">
+						{!! Form::label('shipping_details', __( 'purchase.shipping_details' ) . ':') !!}
+						{!! Form::text('shipping_details', null, ['class' => 'form-control']); !!}
+						</div>	
+						</div>
+						<div class="col-sm-4">
+						<div class="form-group">
+							{!! Form::label('additional_notes',__('purchase.additional_notes')) !!}
+							{!! Form::textarea('additional_notes', null, ['class' => 'form-control', 'rows' => 3]); !!}
+						</div>
+						</div>
 					</div>
 				</div>
-			</div>
-	</div> <!--box end-->
-	<div class="box box-solid">
-		<div class="box-body">
-			<div class="row">
-				<div class="col-sm-4">
-					<div class="form-group">
-							{!! Form::label('shipping_charges', __('lang_v1.shipping_charges') . ':') !!}
-							{!! Form::text('shipping_charges', 0, ['class' => 'form-control input_number', 'placeholder' => __('lang_v1.shipping_charges')]); !!}
-					</div>
-				</div>
-				<div class="col-sm-4">
-					<div class="form-group">
-						{!! Form::label('additional_notes',__('purchase.additional_notes')) !!}
-						{!! Form::textarea('additional_notes', null, ['class' => 'form-control', 'rows' => 3]); !!}
-					</div>
-				</div>
-			</div>
+			    </div>
 			<div class="row">
 				<div class="col-sm-12">
 					<button type="submit" id="save_stock_transfer" class="btn btn-primary pull-right">@lang('messages.save')</button>
 				</div>
 			</div>
 
-		</div>
-	</div> <!--box end-->
+		
+			@endcomponent
 	{!! Form::close() !!}
 </section>
 @stop
@@ -187,9 +178,18 @@
 
 	<script>
         $(document).ready(function (e) {
+
+		$('#assign_delivery').on('ifChecked', function(event){
+				$('div.assign_delivery_div').removeClass('hide');
+   	    	});
+
+		$('#assign_delivery').on('ifUnchecked', function(event){
+				$('div.assign_delivery_div').addClass('hide');
+        	});
+
             $('#location_id').select2({
                 ajax: {
-                    url: '/location/from-to',
+                    url: '/business/get_locations',
                     dataType: 'json',
                     delay: 250,
                     data: function(params) {
@@ -210,29 +210,17 @@
                 },
                 templateResult: function(data) {
                     if (!data.id) {
-                        return data.name;
+                        return data.text;
                     }
-                    var html = data.name;
+                    var html = data.text;
                     return html;
                 },
-                language: {
-                    noResults: function() {
-                        var name = $('#location_id')
-                            .data('select2')
-                            .dropdown.$search.val();
-                        return (
-                            'No result found'
-                        );
-                    },
-                },
-            }).on('select2:select', function (e) {
-                var data = e.params.data;
-            });
-
+               
+            })
 
             $('#transfer_location_id').select2({
                 ajax: {
-                    url: '/location/from-to',
+                    url: '/business/get_locations',
                     dataType: 'json',
                     delay: 250,
                     data: function(params) {
@@ -253,54 +241,44 @@
                 },
                 templateResult: function(data) {
                     if (!data.id) {
-                        return data.name;
+                        return data.text;
                     }
-                    var html = data.name;
+                    var html = data.text;
                     return html;
                 },
-                language: {
-                    noResults: function() {
-                        var name = $('#location_id')
-                            .data('select2')
-                            .dropdown.$search.val();
-                        return (
-                            'No result found'
-                        );
-                    },
-                },
-            }).on('select2:select', function (e) {
-                var data = e.params.data;
-            });
+            })
 
-                $('#delivery_person_id').select2({
-                    ajax: {
-                        url: '/deliveryusers',
-                        dataType: 'json',
-                        delay: 250,
-                        data: function (params) {
-                            return {
-                                q: params.term, // search term
-                                page: params.page,
-                            };
-                        },
-                        processResults: function (data) {
-                            return {
-                                results: data,
-                            };
-                        },
-                    },
-                    minimumInputLength: 1,
-                    escapeMarkup: function (m) {
-                        return m;
-                    },
-                    templateResult: function (data) {
-                        if (!data.id) {
-                            return data.first_name + ' ' + data.last_name;
-                        }
-                        var html = data.first_name + ' ' + data.last_name;
-                        return html;
-                    },
-                })
+			$('#delivery_person_id').select2({
+            ajax: {
+                url: '/user/get_delivery_people',
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        q: params.term, // search term
+                        page: params.page,
+                    };
+                },
+                processResults: function(data) {
+                    console.log(data);
+                    return {
+                        results: data,
+                    };
+                },
+            },
+            minimumInputLength: 1,
+            escapeMarkup: function(m) {
+                return m;
+            },
+         
+            templateResult: function(data) {
+                if (!data.id) {
+                    return data.text;
+                }
+                var html = data.text;
+                return html;
+            },
+        })
 	});
 	</script>
 @endsection

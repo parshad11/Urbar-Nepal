@@ -365,18 +365,18 @@ class PurchaseController extends Controller
             
             $transaction = Transaction::create($transaction_data);
 
-            if($transaction->assign_delivery){
-                $delivery_details['transaction_id']=$transaction->id;
-                $delivery_details['delivery_person_id']=$request->input('delivery_person_id');
-                $delivery_details['delivery_status']=$request->input('delivery_status');
-                $delivery_details['pickup_address']=$request->input('pickup_address');
-                $delivery_details['pickup_latitude']=$request->input('pickup_latitude');
-                $delivery_details['pickup_longitude']=$request->input('pickup_longitude');
-                $delivery_details['shipping_address']=$request->input('shipping_address');
-                $delivery_details['special_delivery_instructions']=$request->input('special_delivery_instructions');
-                Delivery::create($delivery_details);
+            // if($transaction->assign_delivery){
+            //     $delivery_details['transaction_id']=$transaction->id;
+            //     $delivery_details['delivery_person_id']=$request->input('delivery_person_id');
+            //     $delivery_details['delivery_status']=$request->input('delivery_status');
+            //     $delivery_details['pickup_address']=$request->input('pickup_address');
+            //     $delivery_details['pickup_latitude']=$request->input('pickup_latitude');
+            //     $delivery_details['pickup_longitude']=$request->input('pickup_longitude');
+            //     $delivery_details['shipping_address']=$request->input('shipping_address');
+            //     $delivery_details['special_delivery_instructions']=$request->input('special_delivery_instructions');
+            //     Delivery::create($delivery_details);
 
-            }
+            // }
             $purchase_lines = [];
             $purchases = $request->input('purchases');
 
@@ -516,7 +516,6 @@ class PurchaseController extends Controller
                     )
                     ->first();
 
-        $delivery=Delivery::where('transaction_id',$purchase->id)->with('transaction','delivery_person')->first();
     
        
         foreach ($purchase->purchase_lines as $key => $value) {
@@ -555,7 +554,6 @@ class PurchaseController extends Controller
             ->with(compact(
                 'taxes',
                 'purchase',
-                'delivery',
                 'delivery_people',
                 'orderStatuses',
                 'deliveryStatuses',
@@ -641,19 +639,19 @@ class PurchaseController extends Controller
             //update transaction
             $transaction->update($update_data);
 
-            if($transaction->assign_delivery){
-                $delivery_details['delivery_person_id']=$request->input('delivery_person_id');
-                $delivery_details['delivery_status']=$request->input('delivery_status');
-                $delivery_details['pickup_address']=$request->input('pickup_address');
-                $delivery_details['pickup_latitude']=$request->input('pickup_latitude');
-                $delivery_details['pickup_longitude']=$request->input('pickup_longitude');
-                $delivery_details['shipping_address']=$request->input('shipping_address');
-                $delivery_details['special_delivery_instructions']=$request->input('special_delivery_instructions');
-                $delivery=Delivery::where('transaction_id',$transaction->id)->first();
+            // if($transaction->assign_delivery){
+            //     $delivery_details['delivery_person_id']=$request->input('delivery_person_id');
+            //     $delivery_details['delivery_status']=$request->input('delivery_status');
+            //     $delivery_details['pickup_address']=$request->input('pickup_address');
+            //     $delivery_details['pickup_latitude']=$request->input('pickup_latitude');
+            //     $delivery_details['pickup_longitude']=$request->input('pickup_longitude');
+            //     $delivery_details['shipping_address']=$request->input('shipping_address');
+            //     $delivery_details['special_delivery_instructions']=$request->input('special_delivery_instructions');
+            //     $delivery=Delivery::where('transaction_id',$transaction->id)->first();
              
-                $delivery->update($delivery_details);
+            //     $delivery->update($delivery_details);
 
-            }
+            // }
 
             //Update transaction payment status
             $this->transactionUtil->updatePaymentStatus($transaction->id);
@@ -815,28 +813,7 @@ class PurchaseController extends Controller
 
    
 
-    public function getDeliveryPeople(){
-        if (request()->ajax()) {
-            $term = request()->q;
-            if (empty($term)) {
-                return json_encode([]);
-            }
-            
-            $business_id = request()->session()->get('user.business_id');
-            $user_id = request()->session()->get('user.id');
-
-          
-            $deliveryPeople = DeliveryPerson::with(array('user'=>function ($query) use ($term) {
-                $query ->where('first_name', 'like', '%' . $term .'%')
-                      ->orWhere('last_name', 'like', '%' . $term .'%')
-                    ->select('id',DB::raw("CONCAT(surname,'. ',first_name,' ',last_name) AS name"));
-                                // ->orWhere('supplier_business_name', 'like', '%' . $term .'%')
-                                //  ->orWhere('users.contact_id', 'like', '%' . $term .'%');
-            }))
-            ->get();
-            return json_encode($deliveryPeople);
-        }
-    }
+   
 
 
     /**

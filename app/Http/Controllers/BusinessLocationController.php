@@ -372,21 +372,4 @@ class BusinessLocationController extends Controller
 
         return $output;
     }
-
-    public function locationfromto(Request $request)
-    {
-        if (request()->ajax()) {
-            $term = request()->q;
-            if (empty($term)) {
-                return json_encode([]);
-            }
-            $business_id = request()->session()->get('user.business_id');
-            $locations = BusinessLocation::where('business_locations.business_id', $business_id)
-                ->where(function ($query) use ($term) {
-                    $query->where('name', 'like', '%' . $term . '%');
-                })
-                ->get();
-            return json_encode($locations);
-        }
-    }
 }

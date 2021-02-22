@@ -58,8 +58,7 @@ class StockTransferController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $statuses = $this->stockTransferStatuses();
-
+        $statuses  = $this->transactionUtil->stockStatuses();
         if (request()->ajax()) {
             $business_id = request()->session()->get('user.business_id');
             $edit_days = request()->session()->get('business.transaction_edit_days');
@@ -91,6 +90,7 @@ class StockTransferController extends Controller
                     'transactions.id as DT_RowId',
                     'transactions.status'
                 );
+
 
             return Datatables::of($stock_transfers)
                 ->addColumn('action', function ($row) use ($edit_days) {
@@ -161,24 +161,15 @@ class StockTransferController extends Controller
 
         $business_locations = BusinessLocation::forDropdown($business_id);
 
-        $statuses = $this->stockTransferStatuses();
-        $stockstatuses  = $this->transactionUtil->stockDeliveryStatuses();
-        $default_delivery_status = null;
+        $stock_delivery_statuses  = $this->transactionUtil->stockDeliveryStatuses();
+        $statuses  = $this->transactionUtil->stockStatuses();
+
         $delivery_people=User::allDeliveryPersonDropdown($business_id,false);
 
         return view('stock_transfer.create')
-            ->with(compact('business_locations', 'statuses','delivery_people',
-                'default_delivery_status','stockstatuses'));
+            ->with(compact('business_locations', 'statuses','delivery_people','stock_delivery_statuses'));
     }
 
-    private function stockTransferStatuses()
-    {
-        return [
-            'pending' => __('lang_v1.pending'),
-            'in_transit' => __('lang_v1.in_transit'),
-            'completed' => __('restaurant.completed')
-        ];
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -193,6 +184,7 @@ class StockTransferController extends Controller
         }
 
         try {
+        
             $input = $request->except('_token');
             $business_id = $request->session()->get('user.business_id');
 
@@ -203,7 +195,7 @@ class StockTransferController extends Controller
 
             DB::beginTransaction();
 
-            $input_data = $request->only(['location_id', 'ref_no', 'transaction_date', 'additional_notes', 'shipping_charges', 'final_total','assign_delivery']);
+            $input_data = $request->only(['location_id', 'ref_no', 'transaction_date', 'additional_notes', 'shipping_charges', 'final_total','assign_delivery','shipping_details']);
             $status = $request->input('status');
             $user_id = $request->session()->get('user.id');
 
@@ -316,10 +308,18 @@ class StockTransferController extends Controller
                 $delivery_details['transaction_id']=$sell_transfer->id;
                 $delivery_details['delivery_person_id']=$request->input('delivery_person_id');
                 $delivery_details['delivery_status']=$request->input('delivery_status');
+                $delivery_details['shipping_address']=$purchase_transfer->location->city;
+                $delivery_details['shipping_latitude']=$purchase_transfer->location->latitude;
+                $delivery_details['shipping_longitude']=$purchase_transfer->location->longitude;
+                $delivery_details['pickup_address']=$sell_transfer->location->city;
+                $delivery_details['pickup_latitude']=$sell_transfer->location->latitude;
+                $delivery_details['pickup_longitude']=$sell_transfer->location->longitude;
+                $delivery_details['delivery_status']=$request->input('delivery_status');
                 $delivery_details['special_delivery_instructions']=$request->input('special_delivery_instructions');
+                $delivery_details['assigned_by']=$user_id;
                 Delivery::create($delivery_details);
 
-            }
+             }
             $output = ['success' => 1,
                 'msg' => __('lang_v1.stock_transfer_added_successfully')
             ];
@@ -377,7 +377,7 @@ class StockTransferController extends Controller
             $lot_n_exp_enabled = true;
         }
 
-        $statuses = $this->stockTransferStatuses();
+        $statuses  = $this->transactionUtil->stockStatuses();
         return view('stock_transfer.show')
             ->with(compact('sell_transfer', 'location_details', 'lot_n_exp_enabled', 'statuses'));
     }
@@ -562,8 +562,6 @@ class StockTransferController extends Controller
 
         $business_locations = BusinessLocation::forDropdown($business_id);
 
-        $statuses = $this->stockTransferStatuses();
-
         $sell_transfer = Transaction::where('business_id', $business_id)
             ->where('type', 'sell_transfer')
             ->where('status', '!=', 'final')
@@ -598,14 +596,14 @@ class StockTransferController extends Controller
 
             $products[] = $product;
         }
-        $statuses = $this->stockTransferStatuses();
-        $stockstatuses= $this->transactionUtil->stockDeliveryStatuses();
-        $default_delivery_status = null;
-        $delivery_people=User::role('Delivery#'.$business_id)->get();
-        $main_delivery=\App\Delivery::where('transaction_id',$id)->first();
+       
+        $stock_delivery_statuses  = $this->transactionUtil->stockDeliveryStatuses();
+        $statuses  = $this->transactionUtil->stockStatuses();
+        
+        $main_delivery=\App\Delivery::with('delivery_person')->where('transaction_id',$id)->first();
         return view('stock_transfer.edit')
-            ->with(compact('sell_transfer', 'purchase_transfer', 'business_locations', 'statuses', 'products',
-                'statuses','stockstatuses','default_delivery_status','delivery_people','main_delivery'));
+            ->with(compact('sell_transfer', 'purchase_transfer', 'business_locations', 'products',
+                'statuses','stock_delivery_statuses','main_delivery'));
     }
 
     /**
