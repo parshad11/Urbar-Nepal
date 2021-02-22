@@ -239,7 +239,7 @@
 		</div>
 	@endcomponent
 
-	@component('components.widget', ['class' => 'box-primary hide assign_delivery_div', 'title' => __('delivery.assign_delivery')])
+	@component('components.widget', ['class' => 'box-primary hide', 'title' => __('delivery.assign_delivery')])
 
 		<div class="row">
 			<div class="col-md-12 " style="display:flex;justify-content: space-between;">
@@ -444,51 +444,6 @@
                 ignoreReadonly: true,
             });
 
-			$('#assign_delivery').on('ifChecked', function(event){
-				$('div.assign_delivery_div').removeClass('hide');
-   	    	});
-
-			$('#assign_delivery').on('ifUnchecked', function(event){
-				$('div.assign_delivery_div').addClass('hide');
-        	});
-
-			$('delivery_person_id').select2({
-			ajax: {
-				url: '/users/get_delivery_people',
-				method:'get',
-				dataType: 'json',
-				delay: 250,
-				data: function(params) {
-					return {
-						q: params.term, // search term
-						page: params.page,
-					};
-				},
-				processResults: function(data) {
-					console.log(data)
-					return {
-						results: data,
-					};
-				},
-			},
-			minimumInputLength: 1,
-			escapeMarkup: function(m) {
-				return m;
-			},
-			templateResult: function(data) {
-				if (!data.id) {
-					return data.text;
-				}
-				var html = data.text;
-				return html;
-			},
-			language: {
-				noResults: function() {
-					
-				},
-			},
-  		    });
-
 
 			$('#location_id').select2({
 			ajax: {
@@ -515,7 +470,7 @@
 				if (!data.id) {
 					return data.text;
 				}
-				var html = data.text + ' (' + data.location_id + ')';
+				var html = data.text;
 				return html;
 			},
 			}).on('select2:select', function (e) {

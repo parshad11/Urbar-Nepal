@@ -1,11 +1,11 @@
 @extends('layouts.app')
-@section('title', __('lang_v1.calendar'))
+@section('title', __('lang_v1.supplier_calendar'))
 
 @section('content')
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
-    <h1>@lang( 'lang_v1.calendar' )</h1>
+    <h1>@lang( 'lang_v1.supplier_calendar' )</h1>
 </section>
 
 <!-- Main content -->

@@ -150,9 +150,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
 
     Route::resource('users', 'ManageUserController');
 
-    Route::get('/delivery_users', 'ManageUserController@getdeliveryuser')->name('user.getdeliveryuser');
-
-    Route::get('/user/get_delivery_people', 'PurchaseController@getDeliveryPeople');
+    Route::get('/user/get_delivery_people', 'ManageUserController@getDeliveryPeople')->name('user.getdeliverypeople');
 
 
     Route::resource('group-taxes', 'GroupTaxController');
@@ -219,7 +217,6 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     //Business Locations...
     Route::post('business-location/check-location-id', 'BusinessLocationController@checkLocationId');
     Route::resource('business-location', 'BusinessLocationController');
-    Route::get('/location/from-to', 'BusinessLocationController@locationfromto');
 
     //Invoice layouts..
     Route::resource('invoice-layouts', 'InvoiceLayoutController');

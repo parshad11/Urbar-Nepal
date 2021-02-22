@@ -26,7 +26,7 @@
 @endif
 @if(count($business_locations) > 0)
 <div class="row">
-	<div class="col-sm-3">
+	<div class="col-sm-4">
 		<div class="form-group">
 			<div class="input-group">
 				<span class="input-group-addon">
@@ -269,20 +269,23 @@
 
 					</div>
 
-                    <div class="col-sm-3  hide">
-                        <div class="checkbox">
-                            <label>
-                                {!! Form::checkbox('assign_delivery', 1, true,
-                                [  'class' => 'input-icheck' ,'id' => 'assign_delivery' ]); !!}
-                            </label>
-                        </div>
-                    </div>
+                    <div class="col-sm-3">
+             		   <div class="form-group">
+							<div class="checkbox">
+							<br/>
+							<label>
+								{!! Form::checkbox('assign_delivery', 1, false, 
+								[ 'class' => 'input-icheck', 'id' => 'assign_delivery']); !!} {{ __( 'delivery.assign_delivery' ) }}
+							</label>
+							</div>
+                		</div>
+			    	</div>
 				</div>
 			@endcomponent
 
-			@component('components.widget', ['class' => 'box-primary', 'title' => __('delivery.assign_delivery')])
+			
 
-		<div class="row">
+		<!-- <div class="row">
 			<div class="col-md-12 " style="display:flex;justify-content: space-between;">
 
 			<div class=" col-sm-4 ">
@@ -351,8 +354,8 @@
 					</div>
 				</div>
 			</div>
-		</div>
-	@endcomponent
+		</div> -->
+	
 
 			@component('components.widget', ['class' => 'box-primary'])
 				<div class="col-md-4">
@@ -582,7 +585,7 @@
 				if (!data.id) {
 					return data.text;
 				}
-				var html = data.text + ' (' + data.location_id + ')';
+				var html = data.text;
 				return html;
 			},
 			}).on('select2:select', function (e) {
@@ -590,77 +593,6 @@
 				 $('#pickup_address').val(data.business_location_address);
 
 			});
-
-			$('#customer_id').select2({
-        ajax: {
-            url: '/contacts/customers',
-            dataType: 'json',
-            delay: 250,
-            data: function(params) {
-                return {
-                    q: params.term, // search term
-                    page: params.page,
-                };
-            },
-            processResults: function(data) {
-                return {
-                    results: data,
-                };
-            },
-        },
-        templateResult: function (data) {
-            var template = '';
-            if (data.supplier_business_name) {
-                template += data.supplier_business_name + "<br>";
-            }
-            template += data.text + "<br>" + LANG.mobile + ": " + data.mobile;
-
-            if (typeof(data.total_rp) != "undefined") {
-                var rp = data.total_rp ? data.total_rp : 0;
-                template += "<br><i class='fa fa-gift text-success'></i> " + rp;
-            }
-
-            return  template;
-        },
-        minimumInputLength: 1,
-        language: {
-            noResults: function() {
-                var name = $('#customer_id')
-                    .data('select2')
-                    .dropdown.$search.val();
-                return (
-                    '<button type="button" data-name="' +
-                    name +
-                    '" class="btn btn-link add_new_customer"><i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i>&nbsp; ' +
-                    __translate('add_name_as_new_customer', { name: name }) +
-                    '</button>'
-                );
-            },
-        },
-        escapeMarkup: function(markup) {
-            return markup;
-        },
-    });
-    $('#customer_id').on('select2:select', function(e) {
-        var data = e.params.data;
-        if (data.pay_term_number) {
-            $('input#pay_term_number').val(data.pay_term_number);
-        } else {
-            $('input#pay_term_number').val('');
-        }
-
-        if (data.pay_term_type) {
-            $('#pay_term_type').val(data.pay_term_type);
-        } else {
-            $('#pay_term_type').val('');
-        }
-
-        $('#advance_balance_text').text(__currency_trans_from_en(data.balance), true);
-        $('#advance_balance').val(data.balance);
-        $('#shipping_address').val(data.shipping_address);
-        $('#shipping_latitude').val(data.latitude);
-        $('#shipping_longitude').val(data.longitude);
-    });
 
 
     	});

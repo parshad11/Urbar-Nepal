@@ -1098,7 +1098,7 @@ class Util
 
     public function stockDeliveryStatuses()
     {
-        $stockstatuses = [
+        $stockDeliveryStatuses = [
             'received' => __('lang_v1.received'),
             'packed' => __('lang_v1.packed'),
             'shipped' => __('lang_v1.shipped'),
@@ -1106,6 +1106,17 @@ class Util
             'cancelled' => __('restaurant.cancelled')
         ];
 
+        return $stockDeliveryStatuses ;
+    }
+
+    public function stockStatuses()
+    {
+        $stockstatuses = [
+            'pending' => __('stock_adjustment.pending'),
+            'transit' => __('stock_adjustment.transit'),
+            'completed' => __('stock_adjustment.completed'),
+            
+        ];
         return $stockstatuses ;
     }
 

@@ -52,6 +52,7 @@ return [
     'supplier_record_location' => 'Business location where the associated suppliers record need to be tracked.',
 
     'sale_location' => 'Business location from where you want to sell',
+    'task_location' => 'Business location from where you want to assign task',
 
     'sale_discount' => "Set 'Default Sale Discount' for all sales in Business Settings. Click on the edit icon below to add/update discount.",
 

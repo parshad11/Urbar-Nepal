@@ -93,6 +93,11 @@ class User extends Authenticatable
         return $user;
     }
 
+    public function getUserNameAttribute()
+{
+    return $this->surname . ' ' . $this->first_name . ' '. $this->last_name;
+}
+
     /**
      * Gives locations permitted for the logged in user
      *
@@ -326,4 +331,6 @@ class User extends Authenticatable
     {
         return $this->belongsTo(\Modules\Crm\Entities\CrmContact::class, 'crm_contact_id');
     }
+
+
 }

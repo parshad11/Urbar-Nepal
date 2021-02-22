@@ -134,7 +134,7 @@
     $(document).ready(function(e) {
         $('#delivery_person_id').select2({
             ajax: {
-                url: '/delivery_users',
+                url: '/user/get_delivery_people',
                 dataType: 'json',
                 delay: 250,
                 data: function(params) {
@@ -189,7 +189,7 @@
 				if (!data.id) {
 					return data.text;
 				}
-				var html = data.text + ' (' + data.location_id + ')';
+				var html = data.text;
 				return html;
 			},
 			}).on('select2:select', function (e) {

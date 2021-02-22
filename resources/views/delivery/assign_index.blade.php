@@ -23,8 +23,9 @@
                         <th>@lang('messages.action')</th>
                         <th>@lang('lang_v1.type')</th>
                         <th>@lang('messages.date')</th>
-                        <th>@lang('sale.invoice_no')</th>
-                        <th>@lang('sale.location')</th>   
+                        <th>@lang('sale.customer_name')</th>
+                        <th>@lang('sale.location')</th>  
+                        <th>@lang('delivery.shipping_details')</th> 
                         <th>@lang('lang_v1.added_by')</th>
                         <th>@lang('lang_v1.assign_status')</th>
                     </tr>
@@ -64,7 +65,7 @@ $(document).ready( function(){
         serverSide: true,
         aaSorting: [[1, 'desc']],
         "ajax": {
-            "url": "/delivery/create",
+            "url": "/delivery-transaction",
             "data": function ( d ) {
                 if($('#transaction_list_filter_date_range').val()) {
                     var start = $('#transaction_list_filter_date_range').data('daterangepicker').startDate.format('YYYY-MM-DD');
@@ -75,7 +76,8 @@ $(document).ready( function(){
                
 
                 d.location_id = $('#transaction_list_filter_location_id').val();
-                d.assign_status = $('#transaction_list_filter_assign_status').val();
+                d.assign_delivery_status = $('#transaction_list_filter_assign_status').val();
+                d.customer_id = $('#transaction_list_filter_customer_id').val();
                 d.created_by = $('#created_by').val();
                 
                
@@ -87,10 +89,11 @@ $(document).ready( function(){
             { data: 'action', name: 'action', orderable: false, "searchable": false},
             { data: 'type', name: 'type'  },
             { data: 'transaction_date', name: 'transaction_date'  },
+            { data: 'name', name: 'contacts.name'},
             { data: 'business_location', name: 'bl.name'},
-            { data: 'invoice_no', name: 'invoice_no'},
+            { data: 'shipping_details', name: 'shipping_details'},
             { data: 'added_by', name: 'u.first_name'},
-            { data: 'assign_status', name: 'u.first_name'},
+            { data: 'assign_delivery_status', name: 'assign_delivery_status'},
            
         ],
         "fnDrawCallback": function (oSettings) {
@@ -101,7 +104,7 @@ $(document).ready( function(){
         }
     });
 
-    $(document).on('change', '#transaction_list_filter_location_id, #created_by,#transaction_list_filter_assign_status',  function() {
+    $(document).on('change', '#transaction_list_filter_location_id,#transaction_list_filter_customer_id,#created_by,#transaction_list_filter_assign_status',  function() {
         delivery_assign_table.ajax.reload();
     });
 

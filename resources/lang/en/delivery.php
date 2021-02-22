@@ -16,6 +16,7 @@ return [
     'manage_deliveries' => 'Manage deliveries',
     'assign_delivery'=>'Assign Delivery',
     'assign_status'=>'Assign Status',
+    'task_added_success'=>'Task added successfully',
     'all_your_deliveries' => 'All your deliveries',
     'all_deliveries' => 'All Deliveries',
     'delivery' => 'Delivery',
@@ -39,6 +40,7 @@ return [
     'assign_task_to'=>'Assign Task To',
     'latitude'=>'Longitude',
     'longitude'=>'Longitude',
+    'shipping_details'=>'Shipping Details',
     
 
 

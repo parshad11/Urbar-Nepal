@@ -286,7 +286,7 @@ class SellPosController extends Controller
      */
     public function store(Request $request)
     {
-       
+     
         if (!auth()->user()->can('sell.create') && !auth()->user()->can('direct_sell.access')) {
             abort(403, 'Unauthorized action.');
         }
@@ -420,7 +420,12 @@ class SellPosController extends Controller
                     $input['res_waiter_id'] = request()->get('res_waiter_id');
                 }
 
-                $transaction = $this->transactionUtil->createSellTransaction($business_id, $input, $invoice_total, $user_id);
+                $assign_delivery=0;
+                if($input['status']=='final'&& isset($input['assign_delivery'])){
+                    $assign_delivery=1;
+                }
+
+                $transaction = $this->transactionUtil->createSellTransaction($business_id, $input, $invoice_total, $user_id,$assign_delivery);
 
                 $this->transactionUtil->createOrUpdateSellLines($transaction, $input['products'], $input['location_id']);
                 
@@ -499,18 +504,18 @@ class SellPosController extends Controller
                     $this->notificationUtil->autoSendNotification($business_id, 'new_sale', $transaction, $transaction->contact);
                 }
 
-                if($transaction->assign_delivery){
-                    $delivery_details['transaction_id']=$transaction->id;
-                    $delivery_details['delivery_person_id']=$request->input('delivery_person_id');
-                    $delivery_details['delivery_status']=$request->input('delivery_status');
-                    $delivery_details['pickup_address']=$request->input('pickup_address');
-                    $delivery_details['shipping_address']=$request->input('shipping_address');
-                    $delivery_details['shipping_latitude']=$request->input('shipping_latitude');
-                    $delivery_details['shipping_longitude']=$request->input('shipping_longitude');
-                    $delivery_details['special_delivery_instructions']=$request->input('special_delivery_instructions');
-                    Delivery::create($delivery_details);
+                // if($transaction->assign_delivery){
+                //     $delivery_details['transaction_id']=$transaction->id;
+                //     $delivery_details['delivery_person_id']=$request->input('delivery_person_id');
+                //     $delivery_details['delivery_status']=$request->input('delivery_status');
+                //     $delivery_details['pickup_address']=$request->input('pickup_address');
+                //     $delivery_details['shipping_address']=$request->input('shipping_address');
+                //     $delivery_details['shipping_latitude']=$request->input('shipping_latitude');
+                //     $delivery_details['shipping_longitude']=$request->input('shipping_longitude');
+                //     $delivery_details['special_delivery_instructions']=$request->input('special_delivery_instructions');
+                //     Delivery::create($delivery_details);
     
-                }
+                // }
 
                 //Set Module fields
                 if (!empty($input['has_module_data'])) {

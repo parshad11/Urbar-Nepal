@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\BusinessLocation;
+use App\Contact;
 use App\Delivery;
 use App\User;
 use App\Utils\ModuleUtil;
@@ -78,12 +79,18 @@ class DeliveryController extends Controller
                 }
             }
 
+            
+            if (!empty(request()->customer_id)) {
+                $customer_id = request()->customer_id;
+                $transactions->where('contacts.id', $customer_id);
+            }
+
             if (!auth()->user()->can('direct_sell.access') && auth()->user()->can('view_own_sell_only')) {
                 $transactions->where('transactions.created_by', request()->session()->get('user.id')->where('transactions.type','sell'));
             }
 
             if (!auth()->user()->can('purchase.view') && auth()->user()->can('view_own_purchase')) {
-                $transactions->where('transactions.created_by', request()->session()->get('user.id')->whereIn('transactions.type',['purchase','sell_transfer']));
+                $transactions->where('transactions.created_by', request()->session()->get('user.id')->where('transactions.type','purchase'));
             }
 
             if (request()->has('location_id')) {
@@ -105,7 +112,7 @@ class DeliveryController extends Controller
             }
 
             if (!empty(request()->input('assigned_status'))) {
-                $transactions->where('transactions.assigned_status', request()->input('assigned_status'));
+                $transactions->where('transactions.assign_delivery_status', request()->input('assign_delivery_status'));
             }
             
             $transactions->groupBy('transactions.id');
@@ -133,43 +140,26 @@ class DeliveryController extends Controller
                 )
                 ->removeColumn('id')
                 
-                ->editColumn('transaction_date', '{{@format_datetime($transaction_date)}}')
+                ->editColumn('transaction_date', '{{@format_datetime($transaction_date)}}');
         
-                ->editColumn('invoice_no', function ($row) {
-                    $invoice_no = $row->invoice_no;
-                    if (!empty($row->woocommerce_order_id)) {
-                        $invoice_no .= ' <i class="fab fa-wordpress text-primary no-print" title="' . __('lang_v1.synced_from_woocommerce') . '"></i>';
-                    }
-                    if (!empty($row->return_exists)) {
-                        $invoice_no .= ' &nbsp;<small class="label bg-red label-round no-print" title="' . __('lang_v1.some_qty_returned_from_sell') .'"><i class="fas fa-undo"></i></small>';
-                    }
-                    if (!empty($row->is_recurring)) {
-                        $invoice_no .= ' &nbsp;<small class="label bg-red label-round no-print" title="' . __('lang_v1.subscribed_invoice') .'"><i class="fas fa-recycle"></i></small>';
-                    }
+                // ->setRowAttr([
+                //     'data-href' => function ($row) {
+                //         if (auth()->user()->can("sell.view") || auth()->user()->can("view_own_sell_only")) {
+                //             return  action('SellController@show', [$row->id]) ;
+                //         } else {
+                //             return '';
+                //         }
+                //     }]);
 
-                    if (!empty($row->recur_parent_id)) {
-                        $invoice_no .= ' &nbsp;<small class="label bg-info label-round no-print" title="' . __('lang_v1.subscription_invoice') .'"><i class="fas fa-recycle"></i></small>';
-                    }
-
-                    return $invoice_no;
-                })
-                ->setRowAttr([
-                    'data-href' => function ($row) {
-                        if (auth()->user()->can("sell.view") || auth()->user()->can("view_own_sell_only")) {
-                            return  action('SellController@show', [$row->id]) ;
-                        } else {
-                            return '';
-                        }
-                    }]);
-
-            $rawColumns = ['action', 'total_paid', 'total_remaining', 'payment_status', 'invoice_no', 'discount_amount', 'tax_amount', 'total_before_tax', 'shipping_status', 'types_of_service_name', 'payment_methods', 'return_due'];  
+            $rawColumns = ['action','transaction_date'];  
             return $datatable->rawColumns($rawColumns)
                       ->make(true);
         } 
         $business_locations = BusinessLocation::forDropdown($business_id, false);
+        $customers = Contact::customersDropdown($business_id, false);
         $sales_representative = User::forDropdown($business_id, false, false, true);
         $assignStatuses = $this->transactionUtil->delivery_assign_statuses();
-        return view('delivery.assign_index')->with(compact('business_locations','sales_representative','assignStatuses'));
+        return view('delivery.assign_index')->with(compact('business_locations','customers','sales_representative','assignStatuses'));
     }
 
 

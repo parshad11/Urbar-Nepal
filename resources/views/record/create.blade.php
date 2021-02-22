@@ -33,9 +33,9 @@
 			@endif
                     <div class="col-sm-4">
                     <div class="form-group">
-                        {!! Form::label('location_id', __('purchase.business_location').':*') !!}
+                        {!! Form::label('business_location_id', __('purchase.business_location').':*') !!}
                         @show_tooltip(__('tooltip.supplier_record_location'))
-                        {!! Form::select('location_id',[], $default_location, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required'], $bl_attributes); !!}
+                        {!! Form::select('business_location_id',[], $default_location, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required'], $bl_attributes); !!}
                     </div>
                     </div>
                     <div class="clearfix"></div>
@@ -124,7 +124,7 @@
                 minDate: moment()
              });
 
-             $('#location_id').select2({
+             $('#business_location_id').select2({
 			ajax: {
 				url: '/business/get_locations',
 				dataType: 'json',
@@ -149,7 +149,7 @@
 				if (!data.id) {
 					return data.text;
 				}
-				var html = data.text + ' (' + data.location_id + ')';
+				var html = data.text;
 				return html;
 			},
 			}).on('select2:select', function (e) {
