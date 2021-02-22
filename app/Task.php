@@ -41,6 +41,18 @@ class Task extends Model
         return $date;
     }
 
+    public function TaskAssingTo($id){
+        $user=User::findorfail($id);
+        $assign_to=$user->surname.'.'.$user->first_name.' '.$user->last_name;
+        return $assign_to;
+    }
+
+    public function TaskAssingby($id){
+        $user=User::findorfail($id);
+        $assign_by=$user->surname.'.'.$user->first_name.' '.$user->last_name;
+        return $assign_by;
+    }
+
     
     
 

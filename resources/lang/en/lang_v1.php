@@ -1152,6 +1152,7 @@ return [
     'browser_based_printing' => 'Browser Based Printing',
     'configured_printer' => 'Use Configured Receipt Printer',
     'calendar' => 'Calendar',
+    'supplier_calendar' => 'Supplier Calendar',
     'parent_payment' => 'Parent Payment',
     'for_normal_printer' => 'For normal printer',
     'recomended_for_80mm' => 'Recommended for thermal line receipt printer, 80mm paper size',

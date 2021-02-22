@@ -179,7 +179,16 @@ class RecordController extends Controller
      */
     public function show($id)
     {
-
+        if (!(auth()->user()->can('record.view') || auth()->user()->can('record.view_own'))) {
+            abort(403, 'Unauthorized action.');
+        }
+        $record=Record::findorfail($id);
+        $contact=Contact::find($record->contact_id);
+        $business_location=BusinessLocation::find($record->business_id);
+        $unit=Unit::find($record->unit_id);
+        $created_by=User::find($record->created_by);
+        return view('record.detail',compact('record','contact',
+            'business_location','unit','created_by'));
     }
 
     /**
@@ -307,7 +316,7 @@ class RecordController extends Controller
     }
 
     public function view($id){
-        if (!auth()->user()->can('record.view')) {
+        if (!(auth()->user()->can('record.view') || auth()->user()->can('record.view_own'))) {
             abort(403, 'Unauthorized action.');
         }
         $record=Record::findorfail($id);
@@ -315,7 +324,7 @@ class RecordController extends Controller
         $business_location=BusinessLocation::find($record->business_id);
         $unit=Unit::find($record->unit_id);
         $created_by=User::find($record->created_by);
-        return view('record.detail',compact('record','contact',
+        return view('record.partial.detail_module',compact('record','contact',
             'business_location','unit','created_by'));
     }
 }
