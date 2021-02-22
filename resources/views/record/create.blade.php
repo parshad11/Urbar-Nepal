@@ -22,15 +22,15 @@
         @component('components.widget', ['class' => 'box-primary'])
             <div class="box-body">
                 <div class="row">
-                @if(count($business_locations) == 1)
-				@php
-					$default_location = current(array_keys($business_locations->toArray()));
-				@endphp
-			@else
-				@php
-                $default_location = null;
-				@endphp
-			@endif
+                    @if(count($business_locations) == 1)
+                        @php
+                            $default_location = current(array_keys($business_locations->toArray()));
+                        @endphp
+                    @else
+                        @php
+                            $default_location = null;
+                        @endphp
+                    @endif
                     <div class="col-sm-4">
                     <div class="form-group">
                         {!! Form::label('business_location_id', __('purchase.business_location').':*') !!}
@@ -41,49 +41,54 @@
                     <div class="clearfix"></div>
                     <div class="col-sm-4">
                         <div class="form-group">
-                        {!! Form::label('supplier_id', __('purchase.supplier') . ':*') !!}
+                            {!! Form::label('supplier_id', __('purchase.supplier') . ':*') !!}
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="fa fa-user"></i>
                                 </span>
                                 {!! Form::select('contact_id',[], null, ['class' => 'form-control', 'placeholder' => __('messages.please_select'), 'required', 'id' => 'supplier_id']); !!}
                                 <span class="input-group-btn">
-                                <button type="button" class="btn btn-default bg-white btn-flat add_new_supplier" data-name=""><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
+                                <button type="button" class="btn btn-default bg-white btn-flat add_new_supplier"
+                                        data-name=""><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
                                 </span>
                             </div>
-                        </div>
-                        </div>
-
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                        {!! Form::label('item', __('contact.item_name').':*') !!}
-                        {!! Form::text('item', null, ['class' => 'form-control']); !!}
                         </div>
                     </div>
 
                     <div class="col-sm-4">
                         <div class="form-group">
-                        {!! Form::label('quantity', __('contact.quantity').':*') !!}
-                        {!! Form::text('quantity', null, ['class' => 'form-control']); !!}
+                            {!! Form::label('item', __('contact.item_name').':*') !!}
+                            {!! Form::text('item', null, ['class' => 'form-control']); !!}
+                        </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            {!! Form::label('quantity', __('contact.quantity').':*') !!}
+                            {!! Form::text('quantity', null, ['class' => 'form-control']); !!}
                         </div>
                     </div>
                     <div class="clearfix"></div>
 
                     <div class="col-sm-4">
-                    <div class="form-group">
-                        {!! Form::label('unit_id', __('product.unit') . ':*') !!}
-                        <div class="input-group">
-                        {!! Form::select('unit_id', $units,session('business.default_unit'), ['class' => 'form-control select2', 'required']); !!}
-                        <span class="input-group-btn">
-                            <button type="button" @if(!auth()->user()->can('unit.create')) disabled @endif class="btn btn-default bg-white btn-flat btn-modal" data-href="{{action('UnitController@create', ['quick_add' => true])}}" title="@lang('unit.add_unit')" data-container=".view_modal"><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
+                        <div class="form-group">
+                            {!! Form::label('unit_id', __('product.unit') . ':*') !!}
+                            <div class="input-group">
+                                {!! Form::select('unit_id', $units,session('business.default_unit'), ['class' => 'form-control select2', 'required']); !!}
+                                <span class="input-group-btn">
+                            <button type="button" @if(!auth()->user()->can('unit.create')) disabled
+                                    @endif class="btn btn-default bg-white btn-flat btn-modal"
+                                    data-href="{{action('UnitController@create', ['quick_add' => true])}}"
+                                    title="@lang('unit.add_unit')" data-container=".view_modal"><i
+                                        class="fa fa-plus-circle text-primary fa-lg"></i></button>
                         </span>
+                            </div>
                         </div>
-                    </div>
                     </div>
 
                     <div class="col-sm-4">
                         <div class="form-group">
-                        {!! Form::label('date', __('contact.expected_date') . ':*') !!}
+                            {!! Form::label('date', __('contact.expected_date') . ':*') !!}
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="fa fa-calendar"></i>
@@ -95,12 +100,10 @@
 
                     <div class="col-sm-4">
                         <div class="form-group">
-                        {!! Form::label('supplier_location', __('contact.supplier_location') . ':*') !!}
-						{!! Form::text('location', null, ['class' => 'form-control','id'=>'supplier_location']); !!}
+                            {!! Form::label('supplier_location', __('contact.supplier_location') . ':*') !!}
+                            {!! Form::text('location', null, ['class' => 'form-control','id'=>'supplier_location']); !!}
                         </div>
                     </div>
-
-
 
 
                     <div class="col-sm-12">
@@ -108,7 +111,7 @@
                     </div>
                 </div>
             </div>
-            @endcomponent
+        @endcomponent
         {!! Form::close() !!}
 
     </section>
@@ -116,7 +119,7 @@
 @endsection
 @section('javascript')
     <script src="{{ asset('js/purchase.js?v=' . $asset_v) }}"></script>
-	<script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
+    <script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
     <script>
         $(document).ready(function (e) {
             $('#datetimepicker').datepicker({

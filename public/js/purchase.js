@@ -60,10 +60,6 @@ $(document).ready(function() {
         $('#pay_term_type').val(data.pay_term_type);
         $('#advance_balance_text').text(__currency_trans_from_en(data.balance), true);
         $('#advance_balance').val(data.balance);
-        $('#pickup_address').val(data.pickup_address);
-		$('#pickup_latitude').val(data.pickup_longitude);
-		$('#pickup_longitude').val(data.pickup_longitude);
-        $('#supplier_location').val(data.pickup_address);
     });
 
     //Quick add supplier

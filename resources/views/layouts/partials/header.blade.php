@@ -26,7 +26,7 @@
             @endif
             @if ((auth()->user()->can('record.view') || auth()->user()->can('record.view_own')))
                 @if(config('app.env') != 'demo')
-                    <a title="@lang('lang_v1.calendar')" href="{{route('calendar')}}" data-toggle="tooltip"
+                    <a title="@lang('lang_v1.supplier_calendar')" href="{{route('calendar')}}" data-toggle="tooltip"
                        class="btn btn-success btn-flat pull-left m-8 btn-sm mt-10" data-placement="bottom">
                         <strong><i class="fas fa-calendar-alt fa-lg" aria-hidden="true"></i></strong>
                     </a>

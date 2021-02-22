@@ -41,7 +41,7 @@ class DeliveryController extends Controller
 
         }
 
-            return view('delivery.index')->with(compact('business_locations','sales_representative',));
+            return view('delivery.index')->with(compact('business_locations','sales_representative'));
         
      
     }

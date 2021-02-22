@@ -44,8 +44,9 @@
 
     </section>
     @can('task.update')
-    @include('task.partial.update_status_modal')
+        @include('task.partial.update_task_status_modal')
     @endcan
+
     <!-- /.content -->
 @stop
 @section('javascript')
@@ -72,11 +73,10 @@
                 "ajax": {
                     "url": "/task",
                     "data": function (d) {
-                        
+
                     }
                 },
                 columns: [
-                    
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                     {data: 'location_name', name: 'BS.name'},
                     {data: 'assign_to', name: 'u.first_name'},
@@ -121,7 +121,7 @@
                 });
             });
 
-            $(document).on('click', 'a.update_status', function(e) {
+            $(document).on('click', 'a.update_status', function (e) {
                 e.preventDefault();
                 var href = $(this).data('href');
                 var status = $(this).data('status');
@@ -131,7 +131,8 @@
                 $('#update_status_form #update_status').trigger('change');
             });
 
-            $(document).on('submit', '#update_status_form', function(e) {
+
+            $(document).on('submit', '#update_status_form', function (e) {
                 e.preventDefault();
                 $(this)
                     .find('button[type="submit"]')
@@ -139,10 +140,11 @@
                 var data = $(this).serialize();
 
                 $.ajax({
-                    method: 'post',
+                    method: 'put',
                     url: $(this).attr('action'),
                     dataType: 'json',
-                    success: function(result) {
+                    data:data,
+                    success: function (result) {
                         if (result.success == true) {
                             $('div#update_status_modal').modal('hide');
                             toastr.success(result.msg);
@@ -162,10 +164,11 @@
 @section('css')
     <style>
         td {
-            text-transform:capitalize
+            text-transform: capitalize
         }
+
         th {
-            text-transform:capitalize
+            text-transform: capitalize
         }
     </style>
 

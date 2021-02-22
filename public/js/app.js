@@ -1206,7 +1206,7 @@ $(document).ready(function() {
                                 $('div.location_add_modal').modal('hide');
                                 $('div.location_edit_modal').modal('hide');
                                 toastr.success(result.msg);
-                                business_locations.ajax.reload();
+                                business_location_table.ajax.reload();
                             } else {
                                 toastr.error(result.msg);
                             }

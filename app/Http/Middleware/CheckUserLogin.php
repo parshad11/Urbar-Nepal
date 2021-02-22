@@ -15,9 +15,9 @@ class CheckUserLogin
      */
     public function handle($request, Closure $next)
     {
-        if ($request->user()->user_type != 'user') {
-            abort(403, 'Unauthorized action.');
-        }
+//        if ($request->user()->user_type != 'user') {
+//            abort(403, 'Unauthorized action.');
+//        }
 
         return $next($request);
     }
