@@ -63,7 +63,7 @@ $(document).ready(function() {
                 };
             },
         },
-        templateResult: function (data) { 
+        templateResult: function (data) {
             var template = '';
             if (data.supplier_business_name) {
                 template += data.supplier_business_name + "<br>";
@@ -146,7 +146,7 @@ $(document).ready(function() {
                 response: function(event, ui) {
                     if (ui.content.length == 1) {
                         ui.item = ui.content[0];
-                        if ((ui.item.enable_stock == 1 && ui.item.qty_available > 0) || 
+                        if ((ui.item.enable_stock == 1 && ui.item.qty_available > 0) ||
                                 (ui.item.enable_stock == 0)) {
                             $(this)
                                 .data('ui-autocomplete')
@@ -597,7 +597,7 @@ $(document).ready(function() {
         var payment_method_dropdown = $('#payment_rows_div')
             .find('.payment_types_dropdown')
             .first();
-        
+
             payment_method_dropdown.val(pay_method);
             payment_method_dropdown.change();
         if (pay_method == 'card') {
@@ -795,15 +795,11 @@ $(document).ready(function() {
     $('button#posShippingModalUpdate').click(function() {
         //Close modal
         $('div#posShippingModal').modal('hide');
-
         //update shipping details
         $('input#shipping_details').val($('#shipping_details_modal').val());
 
         $('input#assign_delivery').val($('#assign_delivery_modal').val());
 
-        $('input#shipping_address').val($('#shipping_address_modal').val());
-        $('input#shipping_status').val($('#shipping_status_modal').val());
-        $('input#delivered_to').val($('#delivered_to_modal').val());
 
         //Update shipping charges
         __write_number(
@@ -958,7 +954,7 @@ $(document).ready(function() {
         }
 
         if ($(this).attr('id') == 'save-and-print') {
-            $('#is_save_and_print').val(1);           
+            $('#is_save_and_print').val(1);
         } else {
             $('#is_save_and_print').val(0);
         }
@@ -1193,12 +1189,12 @@ $(document).ready(function() {
             suffixKeyCodes: [13], // enter-key expected at the end of a scan
             reactToPaste: true, // Compatibility to built-in scanners in paste-mode (as opposed to keyboard-mode)
             onScan: function(sCode, iQty) {
-                console.log('Scanned: ' + iQty + 'x ' + sCode); 
+                console.log('Scanned: ' + iQty + 'x ' + sCode);
                 $('input#weighing_scale_barcode').val(sCode);
                 $('button#weighing_scale_submit').trigger('click');
             },
             onScanError: function(oDebug) {
-                console.log(oDebug); 
+                console.log(oDebug);
             },
             minLength: 2
             // onKeyDetect: function(iKeyCode){ // output all potentially relevant key events - great for debugging!
@@ -1413,13 +1409,13 @@ function pos_product_row(variation_id = null, purchase_line_id = null, weighing_
         }
 
         //If default price group present
-        if ($('#default_price_group').length > 0 && 
+        if ($('#default_price_group').length > 0 &&
             !price_group) {
             price_group = $('#default_price_group').val();
         }
 
         //If types of service selected give more priority
-        if ($('#types_of_service_price_group').length > 0 && 
+        if ($('#types_of_service_price_group').length > 0 &&
             $('#types_of_service_price_group').val()) {
             price_group = $('#types_of_service_price_group').val();
         }
@@ -1581,9 +1577,9 @@ function calculate_billing_details(price_total) {
 
     //Add packaging charge
     var packing_charge = 0;
-    if ($('#types_of_service_id').length > 0 && 
+    if ($('#types_of_service_id').length > 0 &&
             $('#types_of_service_id').val()) {
-        packing_charge = __calculate_amount($('#packing_charge_type').val(), 
+        packing_charge = __calculate_amount($('#packing_charge_type').val(),
             __read_number($('input#packing_charge')), price_total);
 
         $('#packing_charge_text').text(__currency_trans_from_en(packing_charge, false));
@@ -1714,7 +1710,7 @@ function reset_pos_form(){
 		}, 4000);
 		return true;
 	}
-	
+
 	if(pos_form_obj[0]){
 		pos_form_obj[0].reset();
 	}
@@ -1750,6 +1746,7 @@ function reset_pos_form(){
 	//Reset shipping
 	__write_number($('input#shipping_charges'), $('input#shipping_charges').data('default'));
 	$('input#shipping_details').val($('input#shipping_details').data('default'));
+	$('input#assign_delivery').val($('input#assign_delivery').data('default'));
 
 	if($('input#is_recurring').length > 0){
 		$('input#is_recurring').iCheck('update');
@@ -1992,7 +1989,7 @@ function getCustomerRewardPoints() {
     if ($('#reward_point_enabled').length <= 0) {
         return false;
     }
-    var is_edit = $('form#edit_sell_form').length || 
+    var is_edit = $('form#edit_sell_form').length ||
     $('form#edit_pos_sell_form').length ? true : false;
     if (is_edit && !customer_set) {
         return false;
@@ -2003,7 +2000,7 @@ function getCustomerRewardPoints() {
     $.ajax({
         method: 'POST',
         url: '/sells/pos/get-reward-details',
-        data: { 
+        data: {
             customer_id: customer_id
         },
         dataType: 'json',
@@ -2122,7 +2119,7 @@ $(document).on('change', '#types_of_service_id', function(){
         $.ajax({
             method: 'POST',
             url: '/sells/pos/get-types-of-service-details',
-            data: { 
+            data: {
                 types_of_service_id: types_of_service_id,
                 location_id: location_id
             },
@@ -2141,7 +2138,7 @@ $(document).on('change', '#types_of_service_id', function(){
                 }
                 $('#types_of_service_id').val(types_of_service_id);
                 $('.types_of_service_modal').html(result.modal_html);
-                
+
                 if (prev_price_group != result.price_group_id) {
                     if ($('form#edit_pos_sell_form').length > 0) {
                         $('table#pos_table tbody').html('');
@@ -2182,14 +2179,14 @@ $(document).on('click', '.service_modal_btn', function(e) {
 });
 
 $(document).on('change', '.payment_types_dropdown', function(e) {
-    var default_accounts = $('select#select_location_id').length ? 
+    var default_accounts = $('select#select_location_id').length ?
                 $('select#select_location_id')
                 .find(':selected')
                 .data('default_payment_accounts') : $('#location_id').data('default_payment_accounts');
     var payment_type = $(this).val();
     var payment_row = $(this).closest('.payment_row');
     if (payment_type && payment_type != 'advance') {
-        var default_account = default_accounts && default_accounts[payment_type]['account'] ? 
+        var default_account = default_accounts && default_accounts[payment_type]['account'] ?
             default_accounts[payment_type]['account'] : '';
         var row_index = payment_row.find('.payment_row_index').val();
 
@@ -2200,7 +2197,7 @@ $(document).on('change', '.payment_types_dropdown', function(e) {
         }
     }
 
-    //Validate max amount and disable account if advance 
+    //Validate max amount and disable account if advance
     amount_element = payment_row.find('.payment-amount');
     account_dropdown = payment_row.find('.account-dropdown');
     if (payment_type == 'advance') {
@@ -2219,9 +2216,9 @@ $(document).on('change', '.payment_types_dropdown', function(e) {
     } else {
         amount_element.rules("remove", "max-value");
         if (account_dropdown) {
-            account_dropdown.prop('disabled', false); 
+            account_dropdown.prop('disabled', false);
             account_dropdown.closest('.form-group').removeClass('hide');
-        }    
+        }
     }
 });
 
@@ -2278,7 +2275,7 @@ function validate_discount_field() {
             },
         });
     } else {
-        discount_element.rules("remove", "max-value");      
+        discount_element.rules("remove", "max-value");
     }
     discount_element.trigger('change');
 }
@@ -2286,3 +2283,4 @@ function validate_discount_field() {
 $(document).on('change', '#discount_type_modal, #discount_type', function() {
     validate_discount_field();
 });
+

@@ -32,11 +32,21 @@
                         @endphp
                     @endif
                     <div class="col-sm-4">
+<<<<<<< HEAD
                     <div class="form-group">
                         {!! Form::label('business_location_id', __('purchase.business_location').':*') !!}
                         @show_tooltip(__('tooltip.supplier_record_location'))
                         {!! Form::select('business_location_id',[], $default_location, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required'], $bl_attributes); !!}
                     </div>
+=======
+                        <div class="form-group">
+                            <div class="input-group">
+                                {!! Form::label('location_id', __('purchase.business_location').':*') !!}
+                                @show_tooltip(__('tooltip.supplier_record_location'))
+                                {!! Form::select('location_id',[], $default_location, ['class' => 'form-control', 'placeholder' => __('messages.please_select'), 'required','id'=>'loc_id'], $bl_attributes); !!}
+                            </div>
+                        </div>
+>>>>>>> sanjog
                     </div>
                     <div class="clearfix"></div>
                     <div class="col-sm-4">
@@ -125,6 +135,7 @@
             $('#datetimepicker').datepicker({
                 useCurrent: false,
                 minDate: moment()
+<<<<<<< HEAD
              });
 
              $('#business_location_id').select2({
@@ -159,6 +170,40 @@
 				var data = e.params.data;
 			});
 
+=======
+            });
+            $('#loc_id').select2({
+                ajax: {
+                    url: '/business/get_locations',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            q: params.term, // search term
+                            page: params.page,
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data,
+                        };
+                    },
+                },
+                minimumInputLength: 1,
+                escapeMarkup: function (m) {
+                    return m;
+                },
+                templateResult: function (data) {
+                    if (!data.id) {
+                        return data.text;
+                    }
+                    var html = data.text + ' (' + data.location_id + ')';
+                    return html;
+                },
+            }).on('select2:select', function (e) {
+                var data = e.params.data;
+            });
+>>>>>>> sanjog
         });
     </script>
 @endsection
