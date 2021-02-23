@@ -118,7 +118,7 @@
 			</div>
 			@endcomponent
 
-			@component('components.widget', ['class' => 'box-primary assign_delivery_div'])
+			@component('components.widget', ['class' => 'box-primary hide assign_delivery_div'])
 			<div class="row">
 				<div class="col-md-12 " style="display:flex;justify-content: space-between;">
 						<div class=" col-sm-4 ">
@@ -128,7 +128,7 @@
 						<span class="input-group-addon">
 							<i class="fa fa-user"></i>
 						</span>
-									{!! Form::select('delivery_person_id', [ $main_delivery->delivery_person_id => $main_delivery->delivery_person->user->user_name], $main_delivery->delivery_person_id, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'),'id' => 'delivery_person_id', 'style' => 'width: 100%;' ]); !!}
+									{!! Form::select('delivery_person_id', (isset($main_delivery) ? [ $main_delivery->delivery_person_id => $main_delivery->delivery_person->user->user_name] : [] ), (isset($main_delivery) ? $main_delivery->delivery_person_id : '' ), ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'),'id' => 'delivery_person_id', 'style' => 'width: 100%;' ]); !!}
 								</div>
 							</div>
 						</div>
@@ -142,7 +142,7 @@
 						<div class=" col-sm-4 @if(!empty($default_delivery_status)) hide @endif">
 							<div class="form-group">
 								{!! Form::label('delivery_status', __('delivery.delivery_status') . ':*') !!}
-								{!! Form::select('delivery_status', $stock_delivery_statuses , $main_delivery->delivery_status, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required','style' => 'width: 100%;']); !!}
+								{!! Form::select('delivery_status', $stock_delivery_statuses , (isset($main_delivery) ? $main_delivery->delivery_status : '' ), ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required','style' => 'width: 100%;']); !!}
 							</div>
 						</div>
 				</div>
@@ -152,7 +152,7 @@
 						<div class=" col-sm-4 ">
 							<div class="form-group">
 								{!! Form::label('special_instructions', __('delivery.special_delivery_instructions') . ':') !!}
-								{!! Form::textarea('special_delivery_instructions', $main_delivery->special_delivery_instructions, ['class' => 'form-control','rows'=>3]); !!}
+								{!! Form::textarea('special_delivery_instructions',(isset($main_delivery) ? $main_delivery->special_delivery_instructions  : '' ), ['class' => 'form-control','rows'=>3]); !!}
 							</div>
 						</div>
 						<div class="col-sm-4">
@@ -170,12 +170,12 @@
 					</div>
 				</div>
 			    </div>
-				<div class="row">
+			@endcomponent
+			<div class="row">
 					<div class="col-sm-12">
 						<button type="submit" id="save_stock_transfer" class="btn btn-primary pull-right">@lang('messages.save')</button>
 					</div>
 				</div>
-			@endcomponent
 	{!! Form::close() !!}
 </section>
 @stop
@@ -199,32 +199,34 @@
 				$('div.assign_delivery_div').addClass('hide');
         	});
 
-        $('#delivery_person_id').select2({
+			$('#delivery_person_id').select2({
             ajax: {
-                url: '/deliveryusers',
+                url: '/user/get_delivery_people',
                 dataType: 'json',
                 delay: 250,
-                data: function (params) {
+                data: function(params) {
                     return {
                         q: params.term, // search term
                         page: params.page,
                     };
                 },
-                processResults: function (data) {
+                processResults: function(data) {
+                    console.log(data);
                     return {
                         results: data,
                     };
                 },
             },
             minimumInputLength: 1,
-            escapeMarkup: function (m) {
+            escapeMarkup: function(m) {
                 return m;
             },
-            templateResult: function (data) {
+         
+            templateResult: function(data) {
                 if (!data.id) {
-                    return data.first_name + ' ' + data.last_name;
+                    return data.text;
                 }
-                var html = data.first_name + ' ' + data.last_name;
+                var html = data.text;
                 return html;
             },
         })

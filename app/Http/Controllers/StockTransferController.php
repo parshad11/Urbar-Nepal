@@ -164,10 +164,8 @@ class StockTransferController extends Controller
         $stock_delivery_statuses  = $this->transactionUtil->stockDeliveryStatuses();
         $statuses  = $this->transactionUtil->stockStatuses();
 
-        $delivery_people=User::allDeliveryPersonDropdown($business_id,false);
-
         return view('stock_transfer.create')
-            ->with(compact('business_locations', 'statuses','delivery_people','stock_delivery_statuses'));
+            ->with(compact('business_locations', 'statuses','stock_delivery_statuses'));
     }
 
 
@@ -184,7 +182,6 @@ class StockTransferController extends Controller
         }
 
         try {
-        
             $input = $request->except('_token');
             $business_id = $request->session()->get('user.business_id');
 
@@ -620,6 +617,7 @@ class StockTransferController extends Controller
         }
 
         try {
+        
             $business_id = $request->session()->get('user.business_id');
 
             //Check if subscribed or not
@@ -645,7 +643,9 @@ class StockTransferController extends Controller
 
             DB::beginTransaction();
 
-            $input_data = $request->only(['transaction_date', 'additional_notes', 'shipping_charges', 'final_total']);
+                      
+           
+            $input_data = $request->only(['transaction_date', 'additional_notes', 'shipping_charges', 'final_total','assign_delivery','shipping_details']);
             $status = $request->input('status');
 
             $input_data['final_total'] = $this->productUtil->num_uf($input_data['final_total']);
@@ -709,6 +709,9 @@ class StockTransferController extends Controller
                 }
             }
 
+            if(!isset($input_data['assign_delivery'])){
+                $input_data['assign_delivery']=0;
+            }
             //Create Sell Transfer transaction
             $sell_transfer->update($input_data);
             $sell_transfer->save();
@@ -718,7 +721,7 @@ class StockTransferController extends Controller
 
             $purchase_transfer->update($input_data);
             $purchase_transfer->save();
-
+            $user_id = $request->session()->get('user.id');
             //Sell Product from first location
             if (!empty($sell_lines)) {
                 $this->transactionUtil->createOrUpdateSellLines($sell_transfer, $sell_lines, $sell_transfer->location_id);
@@ -765,13 +768,25 @@ class StockTransferController extends Controller
                 ];
                 $this->transactionUtil->mapPurchaseSell($business, $sell_transfer->sell_lines, 'purchase');
             }
-            if($sell_transfer->assign_delivery){
-                $delivery_details['transaction_id']=$sell_transfer->id;
-                $delivery_details['delivery_person_id']=$request->input('delivery_person_id');
-                $delivery_details['delivery_status']=$request->input('delivery_status');
-                $delivery_details['special_delivery_instructions']=$request->input('special_delivery_instructions');
-                Delivery::where('transaction_id',$sell_transfer->id)->update($delivery_details);
 
+            
+            if($sell_transfer->assign_delivery){
+                Delivery::updateOrCreate(
+                    ['transaction_id'=>$sell_transfer->id],
+                    [
+                    'transaction_id'=>$sell_transfer->id,
+                    'delivery_person_id'=>$request->input('delivery_person_id'),
+                    'delivery_status'=>$request->input('delivery_status'),
+                    'pickup_address'=>$sell_transfer->location->city,
+                    'pickup_latitude'=>$sell_transfer->location->latitude,
+                    'pickup_longitude'=>$sell_transfer->location->longitude,
+                    'shipping_address'=>$purchase_transfer->location->city,
+                    'shipping_latitude'=>$purchase_transfer->location->latitude,
+                    'shipping_longitude'=>$purchase_transfer->location->longitude,
+                    'special_delivery_instructions'=>$request->input('special_delivery_instructions'),
+                    'assigned_by'=>$user_id,
+
+                    ]);
             }
 
             $output = ['success' => 1,

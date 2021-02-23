@@ -87,7 +87,7 @@ $(document).ready( function(){
         },
         columns: [
             { data: 'action', name: 'action', orderable: false, "searchable": false},
-            { data: 'type', name: 'type'  },
+            { data: 'type', name: 'type'},
             { data: 'transaction_date', name: 'transaction_date'  },
             { data: 'name', name: 'contacts.name'},
             { data: 'business_location', name: 'bl.name'},

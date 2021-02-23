@@ -432,7 +432,7 @@
           <div class="col-md-12">
             <div class="checkbox">
               <label>
-                {!! Form::checkbox('permissions[]', 'view_own_purchase', in_array('view_own_purchase', $role_permissions),['class' => 'input-icheck']); !!}
+                {!! Form::checkbox('permissions[]', 'view_own_purchase_only', in_array('view_own_purchase_only', $role_permissions),['class' => 'input-icheck']); !!}
                 {{ __('lang_v1.view_own_purchase') }}
               </label>
             </div>

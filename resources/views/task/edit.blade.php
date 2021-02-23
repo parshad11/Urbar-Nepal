@@ -33,7 +33,7 @@
                             <span class="input-group-addon">
                                 <i class="fa fa-user"></i>
                             </span>
-                                {!! Form::select('delivery_person_id',$delivery_people,$task->delivery_person_id, ['class' => 'form-control', 'placeholder' => __('messages.please_select'), 'required', 'id' => 'delivery_person_id']); !!}
+                                {!! Form::select('delivery_person_id',[$task->delivery_person_id=>$task->delivery_person->user->user_name],$task->delivery_person_id, ['class' => 'form-control', 'placeholder' => __('messages.please_select'), 'required', 'id' => 'delivery_person_id']); !!}
                                 <span class="input-group-btn">
 
                                 </span>

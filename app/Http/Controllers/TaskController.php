@@ -99,7 +99,6 @@ class TaskController extends Controller
                     $status =  $statuses[$row->task_status];
                     $status_color = !empty($this->status_colors[$row->task_status]) ? $this->status_colors[$row->task_status] : 'bg-gray';
                     $status ='<a href="#" class="update_status" data-status="' . $row->task_status . '" data-href="' . action("TaskController@statusupdate", [$row->id]) . '"><span class="label ' . $status_color .'">' . $statuses[$row->task_status] . '</span></a>';
-
                     return $status;
                 })
                 ->removeColumn('id')
@@ -284,7 +283,6 @@ class TaskController extends Controller
         $business_locations = BusinessLocation::forDropdown($business_id);
         $taskTypes = $this->productUtil->taskTypes();
         $taskStatuses = $this->productUtil->taskStatuses();
-        $delivery_people=User::allDeliveryPersonDropdown($business_id,false);
 
         $task = Task::where('business_id', $business_id)
         ->where('id', $id)
@@ -295,7 +293,7 @@ class TaskController extends Controller
         )
         ->first();
        
-        return view('task.edit')->with(compact('task', 'delivery_people','taskStatuses','taskTypes','business_locations'));
+        return view('task.edit')->with(compact('task','taskStatuses','taskTypes','business_locations'));
     }
 
     /**

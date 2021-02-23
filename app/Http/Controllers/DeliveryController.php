@@ -21,7 +21,10 @@ class DeliveryController extends Controller
         
         $this->transactionUtil = $transactionUtil;
         $this->moduleUtil = $moduleUtil;
-       
+        $this->assign_status_colors = [
+            '1' =>  'bg-green',
+            '0' => 'bg-red'
+        ];
     }
 
     /**
@@ -65,6 +68,7 @@ class DeliveryController extends Controller
         }
         
         $business_id = request()->session()->get('user.business_id');
+        $assignStatuses = $this->transactionUtil->delivery_assign_statuses();
         if ($request->ajax()) {
             $transactions = $this->transactionUtil->getListTransactions($business_id);
             $permitted_locations = auth()->user()->permitted_locations();
@@ -110,8 +114,8 @@ class DeliveryController extends Controller
             if (!empty(request()->input('created_by'))) {
                 $transactions->where('transactions.created_by', request()->input('created_by'));
             }
-
-            if (!empty(request()->input('assigned_status'))) {
+           
+            if (!empty(request()->input('assign_delivery_status'))) {
                 $transactions->where('transactions.assign_delivery_status', request()->input('assign_delivery_status'));
             }
             
@@ -140,25 +144,33 @@ class DeliveryController extends Controller
                 )
                 ->removeColumn('id')
                 
-                ->editColumn('transaction_date', '{{@format_datetime($transaction_date)}}');
+                ->editColumn('transaction_date', '{{@format_datetime($transaction_date)}}')
+                ->editColumn('assign_delivery_status', function($row) use($assignStatuses){
+                      $status=$assignStatuses[$row->assign_delivery_status];
+                      $status_color = !empty($this->assign_status_colors[$row->assign_delivery_status]) ? $this->assign_status_colors[$row->assign_delivery_status] : 'bg-gray';
+                      $status ='<span class="label ' . $status_color .'">' . $assignStatuses[$row->assign_delivery_status] . '</span>';
+                      return $status;
+                })
         
-                // ->setRowAttr([
-                //     'data-href' => function ($row) {
-                //         if (auth()->user()->can("sell.view") || auth()->user()->can("view_own_sell_only")) {
-                //             return  action('SellController@show', [$row->id]) ;
-                //         } else {
-                //             return '';
-                //         }
-                //     }]);
+                 ->setRowAttr([
+                    'data-href' => function ($row) {
+                        if ((auth()->user()->can("sell.view") || auth()->user()->can("view_own_sell_only")) && $row->type=='sell') {
+                            return  action('SellController@show', [$row->id]);
+                       } elseif((auth()->user()->can("purchase.view") || auth()->user()->can("view_own_purchase_only")) && $row->type=='purchase') {
+                        return  action('PurchaseController@show', [$row->id]);
+                        }
+                        else{
+                            return '';
+                        }
+                    }]);
 
-            $rawColumns = ['action','transaction_date'];  
+            $rawColumns = ['action','transaction_date','assign_delivery_status'];  
             return $datatable->rawColumns($rawColumns)
                       ->make(true);
         } 
         $business_locations = BusinessLocation::forDropdown($business_id, false);
         $customers = Contact::customersDropdown($business_id, false);
         $sales_representative = User::forDropdown($business_id, false, false, true);
-        $assignStatuses = $this->transactionUtil->delivery_assign_statuses();
         return view('delivery.assign_index')->with(compact('business_locations','customers','sales_representative','assignStatuses'));
     }
 

@@ -115,7 +115,7 @@ class TransactionUtil extends Util
      *
      * @return boolean
      */
-    public function updateSellTransaction($transaction_id, $business_id, $input, $invoice_total, $user_id, $uf_data = true, $change_invoice_number = true)
+    public function updateSellTransaction($transaction_id, $business_id, $input, $invoice_total, $user_id,$assign_delivery,$uf_data = true, $change_invoice_number = true)
     {
         $transaction = $transaction_id;
 
@@ -132,7 +132,7 @@ class TransactionUtil extends Util
             $invoice_no = $this->getInvoiceNumber($business_id, $input['status'], $transaction->location_id, $invoice_scheme_id);
         }
         $final_total = $uf_data ? $this->num_uf($input['final_total']) : $input['final_total'];
-      
+  
         $update_date = [
             'status' => $input['status'],
             'invoice_no' => $invoice_no,
@@ -150,7 +150,7 @@ class TransactionUtil extends Util
             'is_quotation' => isset($input['is_quotation']) ? $input['is_quotation'] : 0,
             'shipping_details' => isset($input['shipping_details']) ? $input['shipping_details'] : null,
             'shipping_charges' => isset($input['shipping_charges']) ? $uf_data ? $this->num_uf($input['shipping_charges']) : $input['shipping_charges'] : 0,
-            'assign_delivery'=>isset($input['assign_delivery'])?$input['assign_delivery']: 1 ,
+            'assign_delivery'=>$assign_delivery,
             'exchange_rate' => !empty($input['exchange_rate']) ?
                                 $uf_data ? $this->num_uf($input['exchange_rate']) : $input['exchange_rate'] : 1,
             'selling_price_group_id' => isset($input['selling_price_group_id']) ? $input['selling_price_group_id'] : null,
@@ -3369,14 +3369,13 @@ class TransactionUtil extends Util
                 $curr_total_payment += $this->num_uf($payment['amount']);
             }
         }
-
         //If not credit sell ignore credit limit check
+
         if ($final_total <= $curr_total_payment) {
             return false;
         }
-
-        $credit_limit = Contact::find($input['contact_id'])->credit_limit;
-
+       
+        $credit_limit = Contact::findOrFail($input['contact_id'])->credit_limit;
         if ($credit_limit == null) {
             return false;
         }
@@ -3393,7 +3392,6 @@ class TransactionUtil extends Util
             DB::raw("SUM(IF(t.type = 'sell', final_total, 0)) as total_invoice"),
             DB::raw("SUM(IF(t.type = 'sell', (SELECT SUM(IF(is_return = 1,-1*amount,amount)) FROM transaction_payments WHERE transaction_payments.transaction_id=t.id), 0)) as invoice_paid")
         )->first();
-
         $total_invoice = !empty($credit_details->total_invoice) ? $credit_details->total_invoice : 0;
         $invoice_paid = !empty($credit_details->invoice_paid) ? $credit_details->invoice_paid : 0;
 
@@ -4294,7 +4292,6 @@ class TransactionUtil extends Util
                     'transactions.type',
                     'contacts.name',
                     'contacts.contact_id',
-                    DB::raw(""),
                     'transactions.assign_delivery_status',
                     'transactions.shipping_details',
                     'bl.name as business_location',

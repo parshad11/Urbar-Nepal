@@ -266,7 +266,6 @@ class PurchaseController extends Controller
             $types['both'] = __('lang_v1.both_supplier_customer');
         }
         $customer_groups = CustomerGroup::forDropdown($business_id);
-        $delivery_people=User::allDeliveryPersonDropdown($business_id,false);
     
         $business_details = $this->businessUtil->getDetails($business_id);
         $shortcuts = json_decode($business_details->keyboard_shortcuts, true);
@@ -279,7 +278,7 @@ class PurchaseController extends Controller
         $accounts = $this->moduleUtil->accountsDropdown($business_id, true);
 
         return view('purchase.create')
-            ->with(compact('taxes', 'orderStatuses','deliveryStatuses','delivery_people','business_locations', 'currency_details', 'default_purchase_status','default_delivery_status', 'customer_groups','delivery_people', 'types', 'shortcuts', 'payment_line', 'payment_types', 'accounts', 'bl_attributes'));
+            ->with(compact('taxes', 'orderStatuses','business_locations', 'currency_details', 'default_purchase_status','default_delivery_status', 'customer_groups', 'types', 'shortcuts', 'payment_line', 'payment_types', 'accounts', 'bl_attributes'));
     }
 
     /**
@@ -526,9 +525,7 @@ class PurchaseController extends Controller
         }
         
         $orderStatuses = $this->productUtil->orderStatuses();
-        $deliveryStatuses = $this->productUtil->deliveryStatuses();
         $business_locations = BusinessLocation::forDropdown($business_id);
-        $delivery_people=User::allDeliveryPersonDropdown($business_id,false);
 
         $default_purchase_status = null;
         if (request()->session()->get('business.enable_purchase_status') != 1) {
@@ -554,9 +551,7 @@ class PurchaseController extends Controller
             ->with(compact(
                 'taxes',
                 'purchase',
-                'delivery_people',
                 'orderStatuses',
-                'deliveryStatuses',
                 'business_locations',
                 'business',
                 'currency_details',
@@ -603,7 +598,9 @@ class PurchaseController extends Controller
                             'additional_notes', 'exchange_rate', 'pay_term_number', 'pay_term_type']);
 
                         
-
+                if(!isset($update_data['assign_delivery'])){
+                    $update_data['assign_delivery']=0;
+                }
             $exchange_rate = $update_data['exchange_rate'];
 
             //Reverse exchage rate and save

@@ -989,7 +989,6 @@ class SellPosController extends Controller
         
         try {
             $input = $request->except('_token');
-            
             //status is send as quotation from edit sales screen.
             $input['is_quotation'] = 0;
             if ($input['status'] == 'quotation') {
@@ -1008,7 +1007,7 @@ class SellPosController extends Controller
                 if ($transaction_before->is_direct_sale == 1) {
                     $is_direct_sale = true;
                 }
-               
+         
                 //Check Customer credit limit
                 $is_credit_limit_exeeded = $this->transactionUtil->isCustomerCreditLimitExeeded($input, $id);
                
@@ -1025,7 +1024,7 @@ class SellPosController extends Controller
                             ->with('status', $output);
                     }
                 }
-               
+                
                 //Check if there is a open register, if no then redirect to Create Register screen.
                 if (!$is_direct_sale && $this->cashRegisterUtil->countOpenedRegister() == 0) {
                     return redirect()->action('CashRegisterController@create');
@@ -1095,11 +1094,15 @@ class SellPosController extends Controller
                 if ($this->transactionUtil->isModuleEnabled('service_staff')) {
                     $input['res_waiter_id'] = request()->get('res_waiter_id');
                 }
-               
+
+                $assign_delivery=0;
+                if($input['status']=='final'&& isset($input['assign_delivery'])){
+                    $assign_delivery=1;
+                }
                 //Begin transaction
                 DB::beginTransaction();
             
-                $transaction = $this->transactionUtil->updateSellTransaction($id, $business_id, $input, $invoice_total, $user_id);
+                $transaction = $this->transactionUtil->updateSellTransaction($id, $business_id, $input, $invoice_total, $user_id,$assign_delivery);
           
                 //Update Sell lines
                 $deleted_lines = $this->transactionUtil->createOrUpdateSellLines($transaction, $input['products'], $input['location_id'], true, $status_before);
@@ -1127,21 +1130,21 @@ class SellPosController extends Controller
                     $this->transactionUtil->updateCustomerRewardPoints($contact_id, $transaction->rp_earned, $rp_earned_before, $transaction->rp_redeemed, $rp_redeemed_before);
                 }
               
-                if($transaction->assign_delivery){
-                    Delivery::updateOrCreate(
-                       ['transaction_id'=>$transaction->id,
-                       'delivery_person_id'=>$request->input('delivery_person_id'),
-                       'delivery_status'=>$request->input('delivery_status'),
-                       'pickup_address'=>$request->input('pickup_address'),
-                       'shipping_address'=>$request->input('shipping_address'),
-                       'shipping_latitude'=>$request->input('shipping_latitude'),
-                       'shipping_longitude'=>$request->input('shipping_longitude'),
-                       'special_delivery_instructions'=>$request->input('special_delivery_instructions')]
+                // if($transaction->assign_delivery){
+                //     Delivery::updateOrCreate(
+                //        ['transaction_id'=>$transaction->id,
+                //        'delivery_person_id'=>$request->input('delivery_person_id'),
+                //        'delivery_status'=>$request->input('delivery_status'),
+                //        'pickup_address'=>$request->input('pickup_address'),
+                //        'shipping_address'=>$request->input('shipping_address'),
+                //        'shipping_latitude'=>$request->input('shipping_latitude'),
+                //        'shipping_longitude'=>$request->input('shipping_longitude'),
+                //        'special_delivery_instructions'=>$request->input('special_delivery_instructions')]
 
-                    );
+                //     );
                    
     
-                }
+                // }
 
                 //Update payment status
                 $this->transactionUtil->updatePaymentStatus($transaction->id, $transaction->final_total);

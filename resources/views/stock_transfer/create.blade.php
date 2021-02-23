@@ -117,7 +117,7 @@
 						<span class="input-group-addon">
 							<i class="fa fa-user"></i>
 						</span>
-									{!! Form::select('delivery_person_id',$delivery_people, null, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'),'id' => 'delivery_person_id', 'style' => 'width: 100%;' ]); !!}
+									{!! Form::select('delivery_person_id',[], null, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'),'id' => 'delivery_person_id', 'style' => 'width: 100%;' ]); !!}
 								</div>
 							</div>
 						</div>
@@ -159,14 +159,12 @@
 					</div>
 				</div>
 			    </div>
+			@endcomponent
 			<div class="row">
 				<div class="col-sm-12">
 					<button type="submit" id="save_stock_transfer" class="btn btn-primary pull-right">@lang('messages.save')</button>
 				</div>
 			</div>
-
-		
-			@endcomponent
 	{!! Form::close() !!}
 </section>
 @stop

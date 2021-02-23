@@ -41,6 +41,8 @@ return [
     'latitude'=>'Longitude',
     'longitude'=>'Longitude',
     'shipping_details'=>'Shipping Details',
+    'assigned'=>'Assigned',
+    'not_assigned'=>'Not Assigned',
     
 
 

@@ -40,7 +40,7 @@ class PermissionsTableSeeder extends Seeder
             ['name' => 'product.update'],
             ['name' => 'product.delete'],
 
-            ['name' => 'view_own_purchase'],
+            ['name' => 'view_own_purchase_only'],
             ['name' => 'purchase.view'],
             ['name' => 'purchase.create'],
             ['name' => 'purchase.update'],
