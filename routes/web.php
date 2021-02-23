@@ -140,7 +140,8 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::get('/sells/pos/get-featured-products/{location_id}', 'SellPosController@getFeaturedProducts');
     Route::resource('pos', 'SellPosController');
 
-    Route::resource('delivery', 'DeliveryController');
+    Route::resource('delivery', 'DeliveryController')->except(['create']);
+    Route::get('delivery/create/{transactionId}', 'DeliveryController@create');
     Route::get('/delivery-transaction', 'DeliveryController@listDeliveryTransaction');
     Route::resource('task', 'TaskController');
     Route::put('/task/statusupdate/{id}', 'TaskController@statusupdate');

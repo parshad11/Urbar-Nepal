@@ -128,8 +128,7 @@ class TaskController extends Controller
         $business_locations = $business_locations['locations'];
         $taskTypes = $this->productUtil->taskTypes();
         $taskStatuses = $this->productUtil->taskStatuses();
-        $delivery_people=User::allDeliveryPersonDropdown($business_id,false);
-        return view('task.create')->with(compact('delivery_people','business_locations','bl_attributes','taskTypes','taskStatuses'));
+        return view('task.create')->with(compact('business_locations','bl_attributes','taskTypes','taskStatuses'));
     }
 
     /**

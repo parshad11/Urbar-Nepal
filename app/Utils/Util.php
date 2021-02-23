@@ -134,11 +134,6 @@ class Util
         return [ 'received' => __('lang_v1.received'), 'pending' => __('lang_v1.pending'), 'ordered' => __('lang_v1.ordered')];
     }
 
-    //Returns all avilable delivery statuses
-    public function deliveryStatuses()
-    {
-        return [ 'ordered' => __('lang_v1.ordered'), 'on review' => __('lang_v1.on_review'),'shipping' => __('lang_v1.shipping'), 'delivered' => __('lang_v1.delivered'), 'canceled' => __('lang_v1.canceled')];
-    }
 
     public function taskTypes()
     {
@@ -1095,6 +1090,18 @@ class Util
         return $assignStatuses;
     }
 
+    public function deliveryStatuses()
+    {
+        $deliveryStatuses = [
+            'received' => __('lang_v1.received'),
+            'packed' => __('lang_v1.packed'),
+            'shipped' => __('lang_v1.shipped'),
+            'delivered' => __('lang_v1.delivered'),
+            'cancelled' => __('restaurant.cancelled')
+        ];
+
+        return $deliveryStatuses ;
+    }
 
     public function stockDeliveryStatuses()
     {

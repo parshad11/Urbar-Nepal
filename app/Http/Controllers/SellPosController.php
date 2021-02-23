@@ -302,7 +302,7 @@ class SellPosController extends Controller
 
         try {
             $input = $request->except('_token');
-
+    
             //Check Customer credit limit
             $is_credit_limit_exeeded = $this->transactionUtil->isCustomerCreditLimitExeeded($input);
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\BusinessLocation;
 use App\Contact;
 use App\Delivery;
+use App\Transaction;
 use App\User;
 use App\Utils\ModuleUtil;
 use App\Utils\TransactionUtil;
@@ -54,9 +55,23 @@ class DeliveryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create($transactionId)
     {
-       
+        if (!auth()->user()->can('assign.delivery')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $business_id = request()->session()->get('user.business_id');
+        $deliveryStatuses  = $this->transactionUtil->deliveryStatuses();
+        $transaction=Transaction::where('business_id', $business_id)
+                                    ->where('id', $transactionId)
+                                    ->with(
+                                        'contact',
+                                        'location',
+                                    )
+                                    ->first();
+         return view('delivery.assign')
+             ->with(compact('transaction', 'deliveryStatuses'));
         
     }
 

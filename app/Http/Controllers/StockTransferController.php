@@ -257,7 +257,7 @@ class StockTransferController extends Controller
             $input_data['location_id'] = $request->input('transfer_location_id');
             $input_data['transfer_parent_id'] = $sell_transfer->id;
             $input_data['status'] = $status == 'completed' ? 'received' : $status;
-
+            $input_data['assign_delivery']=0;
             $purchase_transfer = Transaction::create($input_data);
 
             //Sell Product from first location
@@ -315,8 +315,11 @@ class StockTransferController extends Controller
                 $delivery_details['special_delivery_instructions']=$request->input('special_delivery_instructions');
                 $delivery_details['assigned_by']=$user_id;
                 Delivery::create($delivery_details);
-
+                $sell_transfer->assign_delivery_status=1;
+                $sell_transfer->save();
              }
+
+            
             $output = ['success' => 1,
                 'msg' => __('lang_v1.stock_transfer_added_successfully')
             ];
@@ -718,7 +721,7 @@ class StockTransferController extends Controller
 
             //Create Purchase Transfer at transfer location
             $input_data['status'] = $status == 'completed' ? 'received' : $status;
-
+            $input_data['assign_delivery']=0;
             $purchase_transfer->update($input_data);
             $purchase_transfer->save();
             $user_id = $request->session()->get('user.id');
@@ -787,6 +790,8 @@ class StockTransferController extends Controller
                     'assigned_by'=>$user_id,
 
                     ]);
+                    $sell_transfer->assign_delivery_status=1;
+                    $sell_transfer->save();
             }
 
             $output = ['success' => 1,

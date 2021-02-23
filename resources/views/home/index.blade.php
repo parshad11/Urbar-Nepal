@@ -162,7 +162,7 @@
         @if(!empty($all_locations))
             <div class="row">
                 <div class="col-sm-12">
-                    @component('components.widget', ['class' => 'box-primary', 'title' => __('Supplier Records Current 6 Months')])
+                    @component('components.widget', ['class' => 'box-primary', 'title' => __('Supplier Records For Current 6 Months')])
                         @if (auth()->user()->can('record.view') || auth()->user()->can('record.view_own'))
                             <table class="table table-bordered table-striped" id="record_table">
                                 <thead>
