@@ -21,7 +21,6 @@
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js?v=$asset_v"></script>
 <![endif]-->
 <script src="{{ asset('js/vendor.js?v=' . $asset_v) }}"></script>
-
 @if(file_exists(public_path('js/lang/' . session()->get('user.language', config('app.locale')) . '.js')))
     <script src="{{ asset('js/lang/' . session()->get('user.language', config('app.locale') ) . '.js?v=' . $asset_v) }}"></script>
 @else

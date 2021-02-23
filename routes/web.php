@@ -14,9 +14,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 include_once('install_r.php');
+// Route::middleware(['setData'])->group(function () {
+//     Auth::routes();
+// });
 
 Route::middleware(['setData'])->group(function () {
-    Route::get('/', function () {
+    Route::get('/admin', function () {
         return view('welcome');
     });
 
@@ -96,7 +99,6 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::post('/products/bulk-update', 'ProductController@bulkUpdate');
     Route::post('/products/bulk-update-location', 'ProductController@updateProductLocation');
     Route::get('/products/get-product-to-edit/{product_id}', 'ProductController@getProductToEdit');
-
 
     Route::post('/products/get_sub_categories', 'ProductController@getSubCategories');
     Route::get('/products/get_sub_units', 'ProductController@getSubUnits');
@@ -396,4 +398,48 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone'])
     Route::get('/sells/{transaction_id}/print', 'SellPosController@printInvoice')->name('sell.printInvoice');
     Route::get('/sells/invoice-url/{id}', 'SellPosController@showInvoiceUrl');
     Route::get('/show-notification/{id}', 'HomeController@showNotification');
+});
+
+// Routes for frontCMS
+Route::namespace('Front')->middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 'AdminSidebarMenu', 'CheckUserLogin'])->group(function () {
+    Route::resource('frontcms-settings', 'CmsController');
+
+    // about page
+    Route::get('frontcms/about-settings/create', 'CmsController@createAbout')->name('frontcms_about_form');
+    Route::post('frontcms/about-settings/store', 'CmsController@storeAbout')->name('frontcms_about_store');
+    Route::get('frontcms/about-settings', 'CmsController@editAbout')->name('frontcms_about_edit');
+    Route::post('frontcms/about-settings/update', 'CmsController@updateAbout')->name('frontcms_about_update');
+
+    // team section
+    Route::get('/frontcms/teams', 'CmsController@viewTeam')->name('cms_team');
+    Route::get('/frontcms/teams/create', 'CmsController@createTeam')->name('cms_team_form');
+    Route::post('/frontcms/teams', 'CmsController@storeTeam')->name('cms_team_store');
+    Route::get('/frontcms/teams/{id}/edit', 'CmsController@editTeam')->name('cms_team_edit');
+    Route::put('/frontcms/teams/{id}', 'CmsController@updateTeam')->name('cms_team_update');
+    Route::delete('/frontcms/teams/{id}', 'CmsController@deleteTeam')->name('cms_team_delete');
+
+    // service section
+    Route::get('/frontcms/services', 'CmsController@viewServices')->name('cms_service');
+    Route::get('/frontcms/services/create', 'CmsController@createServices')->name('cms_service_form');
+    Route::post('/frontcms/services', 'CmsController@storeServices')->name('cms_service_store');
+    Route::get('/frontcms/services/{id}/edit', 'CmsController@editServices')->name('cms_service_edit');
+    Route::put('/frontcms/services/{id}', 'CmsController@updateServices')->name('cms_service_update');
+    Route::delete('/frontcms/services/{id}', 'CmsController@deleteServices')->name('cms_service_delete');
+
+    // Blog section
+    Route::get('/frontcms/blogs', 'CmsController@viewBlog')->name('cms_blog');
+    Route::get('/frontcms/blogs/create', 'CmsController@createBlog')->name('cms_blog_form');
+    Route::post('/frontcms/blogs', 'CmsController@storeBlog')->name('cms_blog_store');
+    Route::get('/frontcms/blogs/{id}/edit', 'CmsController@editBlog')->name('cms_blog_edit');
+    Route::put('/frontcms/blogs/{id}', 'CmsController@updateBlog')->name('cms_blog_update');
+    Route::delete('/frontcms/blogs/{id}', 'CmsController@deleteBlog')->name('cms_blog_delete');
+   
+    //Testimonial section 
+    Route::get('/frontcms/testimonial', 'CmsController@viewTestimonial')->name('cms_testimonial');
+    Route::get('/frontcms/testimonial/create', 'CmsController@createTestimonial')->name('cms_testimonial_form');
+    Route::post('/frontcms/testimonial', 'CmsController@storeTestimonial')->name('cms_testimonial_store');
+    Route::get('/frontcms/testimonial/{id}/edit', 'CmsController@editTestimonial')->name('cms_testimonial_edit');
+    Route::put('/frontcms/testimonial/{id}', 'CmsController@updateTestimonial')->name('cms_testimonial_update');
+    Route::delete('/frontcms/testimonial/{id}', 'CmsController@deleteTestimonial')->name('cms_testimonial_delete');
+    
 });
