@@ -4294,13 +4294,11 @@ class TransactionUtil extends Util
                     'transactions.type',
                     'contacts.name',
                     'contacts.contact_id',
-                    DB::raw(""),
                     'transactions.assign_delivery_status',
                     'transactions.shipping_details',
                     'bl.name as business_location',
-                    DB::raw("CONCAT(COALESCE(u.surname, ''),' ',COALESCE(u.first_name, ''),' ',COALESCE(u.last_name,'')) as added_by"),
+                    DB::raw("CONCAT(COALESCE(u.surname, ''),' ',COALESCE(u.first_name, ''),' ',COALESCE(u.last_name,'')) as added_by")
                 );
-
         return $transactions;
     }
 

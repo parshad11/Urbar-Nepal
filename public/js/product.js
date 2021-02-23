@@ -23,7 +23,7 @@ $(document).ready(function() {
         if ($('#expiry_period_type').length) {
             $('#expiry_period_type')
                 .val('')
-                .change();
+                .cdeliveryhange();
             $('#expiry_period_type').attr('disabled', true);
         }
         if ($('#opening_stock_button').length) {

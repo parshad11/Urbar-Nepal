@@ -18,7 +18,7 @@ $(document).ready(function() {
         $(this).data('sub-key', key + 1);
 
         $(tr)
-            .insertAfter($(this).closest('tr'))
+            .insertdeliveryAfter($(this).closest('tr'))
             .find('.os_exp_date')
             .datepicker({
                 autoclose: true,

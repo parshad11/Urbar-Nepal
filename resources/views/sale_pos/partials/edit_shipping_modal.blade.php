@@ -1,5 +1,5 @@
 <!-- Edit Shipping Modal -->
-<div class="modal fade" tabindex="-1" role="dialog" id="posShippingModal">
+<div class="modal fade" id="posShippingModal" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -13,7 +13,7 @@
 							<div class="checkbox">
 								<br/>
 								<label>
-								{!! Form::checkbox('assign_delivery_modal', 1, !empty($transaction->assign_delivery) ? $transaction->assign_delivery: '',	[ 'class' => 'input-icheck']); !!} {{ __( 'delivery.assign_delivery' ) }}
+								{!! Form::checkbox('assign_delivery_modal', 1, !empty($transaction->assign_delivery) ? $transaction->assign_delivery: '',	[ 'class' => 'input-icheck','id'=>'assign_delivery_modal']);  !!} {{ __( 'delivery.assign_delivery' ) }}
 								</label>
 							</div>
 						</div>
@@ -26,12 +26,7 @@
 				        </div>
 				    </div>
 
-				    <div class="col-md-6">
-				        <div class="form-group">
-				            {!! Form::label('shipping_address_modal', __('lang_v1.shipping_address') . ':' ) !!}
-				            {!! Form::textarea('shipping_address_modal',!empty($transaction->shipping_address) ? $transaction->shipping_address : '', ['class' => 'form-control','placeholder' => __('lang_v1.shipping_address') ,'rows' => '4']); !!}
-				        </div>
-				    </div>
+
 
 				    <div class="col-md-6">
 				        <div class="form-group">
@@ -44,21 +39,6 @@
 				            </div>
 				        </div>
 				    </div>
-
-				    <div class="col-md-6">
-				        <div class="form-group">
-				            {!! Form::label('shipping_status_modal', __('lang_v1.shipping_status') . ':' ) !!}
-				            {!! Form::select('shipping_status_modal',$shipping_statuses, !empty($transaction->shipping_status) ? $transaction->shipping_status : null, ['class' => 'form-control','placeholder' => __('messages.please_select')]); !!}
-				        </div>
-				    </div>
-
-				    <div class="col-md-6">
-				        <div class="form-group">
-				            {!! Form::label('delivered_to_modal', __('lang_v1.delivered_to') . ':' ) !!}
-				            {!! Form::text('delivered_to_modal', !empty($transaction->delivered_to) ? $transaction->delivered_to : null, ['class' => 'form-control','placeholder' => __('lang_v1.delivered_to')]); !!}
-				        </div>
-				    </div>
-
 				</div>
 			</div>
 			<div class="modal-footer">
@@ -68,3 +48,4 @@
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+

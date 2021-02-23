@@ -116,7 +116,6 @@ class DeliveryController extends Controller
             }
             
             $transactions->groupBy('transactions.id');
-
             
             $datatable = DataTables::of($transactions)
                 ->addColumn('action', function ($row){
