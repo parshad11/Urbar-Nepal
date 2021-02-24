@@ -110,7 +110,7 @@ class LoginController extends Controller
     {
         $user = \Auth::user();
         if (!$user->can('dashboard.data') && $user->can('sell.create')) {
-            return '/pos/create';
+            return 'pos/create';
         }
 
         if ($user->user_type == 'user_customer') {

@@ -670,6 +670,46 @@ class AdminSidebarMenu
                 $menu->url(action('NotificationTemplateController@index'), __('lang_v1.notification_templates'), ['icon' => 'fa fas fa-envelope', 'active' => request()->segment(1) == 'notification-templates'])->order(85);
             }
 
+            //Fornt CMS Setting
+            if (in_array('frontcms', $enabled_modules) ) {
+                $menu->dropdown(
+                    'FrontCMS',
+                    function ($sub) {
+                        $sub->url(
+                            action('Front\CmsController@index'),
+                            'Homepage Settings',
+                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'frontcms-settings' && request()->segment(2) == 'create']
+                        );
+                        $sub->url(
+                            route('frontcms_about_edit'),
+                            'About Settings',
+                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'frontcms' && request()->segment(2) == 'about-settings']
+                        );
+                        $sub->url(
+                            route('cms_team'),
+                            'Team Setting',
+                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'frontcms' && request()->segment(2) == 'teams']
+                        );
+                        $sub->url(
+                            route('cms_service'),
+                            'Services Setting',
+                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'frontcms' && request()->segment(2) == 'services']
+                        );
+                        $sub->url(
+                            route('cms_blog'),
+                            'Blog Setting',
+                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'frontcms' && request()->segment(2) == 'blogs']
+                        );
+                        $sub->url(
+                            route('cms_testimonial'),
+                            'Testimonial Setting',
+                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'frontcms' && request()->segment(2) == 'testimonial']
+                        );
+                    },
+                    ['icon' => 'fa fas fa-house-damage', 'id' => 'tour_step6']
+                )->order(90);
+            }
+
             //Settings Dropdown
             if (auth()->user()->can('business_settings.access') ||
                 auth()->user()->can('barcode_settings.access') ||
@@ -749,6 +789,7 @@ class AdminSidebarMenu
                     ['icon' => 'fa fas fa-cog', 'id' => 'tour_step3']
                 )->order(95);
             }
+
         });
         
         //Add menus from modules

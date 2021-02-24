@@ -15,7 +15,7 @@
 				<input type="hidden" id="default_customer_balance" name="default_customer_balance"
 				value="{{$transaction->contact->balance}}" >
 				{!! Form::select('contact_id', 
-					[], null, ['class' => 'form-control mousetrap', 'id' => 'customer_id', 'placeholder' => 'Enter Customer name / phone', 'required', 'style' => 'width: 100%;','disabled']); !!}
+					[], null, ['class' => 'form-control mousetrap', 'id' => 'customer_id', 'placeholder' => 'Enter Customer name / phone', 'required', 'style' => 'width: 100%;']); !!}
 				
 			</div>
 		</div>
