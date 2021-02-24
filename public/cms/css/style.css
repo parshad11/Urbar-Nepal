@@ -282,12 +282,13 @@ input:-moz-placeholder {
   transform: perspective(1px) translateZ(0);
   box-shadow: 0 0 1px rgba(0, 0, 0, 0);
   position: relative;
-  background: #3C4767;
+  background: #D83D28;
   -webkit-transition-property: color;
   transition-property: color;
   -webkit-transition-duration: 0.3s;
   transition-duration: 0.3s;
   overflow: hidden;
+  padding: 10px 20px;
 }
 .theme-btn:before {
   content: "";
@@ -666,7 +667,7 @@ input:-moz-placeholder {
 }
 .header-navbar .navbar-default .navbar-nav>.active>a,
 .header-navbar .navbar-default .navbar-nav>li>a:hover {
-    color: #4A9E4A;
+    color: #D83D28;
     background-color: transparent;
 }
 .header-navbar .navbar-default .navbar-nav>li>a:focus,
@@ -733,7 +734,7 @@ input:-moz-placeholder {
 
 /* NavBar Fixed CSS */
 .scroll-to-fixed-fixed {
-    background: #3C4767;
+    background: #2393D1;
     top: 0;
     width: 100% !important;
     z-index: 9999 !important;
