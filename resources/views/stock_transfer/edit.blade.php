@@ -11,8 +11,7 @@
 <!-- Main content -->
 <section class="content no-print">
 	{!! Form::open(['url' => action('StockTransferController@update', [$sell_transfer->id]), 'method' => 'put', 'id' => 'stock_transfer_form' ]) !!}
-	<div class="box box-solid">
-		<div class="box-body">
+	@component('components.widget', ['class' => 'box-primary'])
 			<div class="row">
 				<div class="col-sm-4">
 					<div class="form-group">
@@ -38,27 +37,23 @@
 					</div>
 				</div>
 				<div class="clearfix"></div>
-				<div class="col-sm-6">
+				<div class="col-sm-4">
 					<div class="form-group">
 						{!! Form::label('location_id', __('lang_v1.location_from').':*') !!}
 						{!! Form::select('location_id', $business_locations, $sell_transfer->location_id, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'id' => 'location_id', 'disabled']); !!}
 					</div>
 				</div>
-				<div class="col-sm-6">
+				<div class="col-sm-4">
 					<div class="form-group">
 						{!! Form::label('transfer_location_id', __('lang_v1.location_to').':*') !!}
 						{!! Form::select('transfer_location_id', $business_locations, $purchase_transfer->location_id, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'id' => 'transfer_location_id', 'disabled']); !!}
 					</div>
 				</div>
-				
+
 			</div>
-		</div>
-	</div> <!--box end-->
-	<div class="box box-solid">
-		<div class="box-header">
-        	<h3 class="box-title">{{ __('stock_adjustment.search_products') }}</h3>
-       	</div>
-		<div class="box-body">
+			@endcomponent
+
+			@component('components.widget', ['class' => 'box-primary','title'=>'Search Products'])
 			<div class="row">
 				<div class="col-sm-8 col-sm-offset-2">
 					<div class="form-group">
@@ -74,11 +69,11 @@
 			<div class="row">
 				<div class="col-sm-10 col-sm-offset-1">
 					<div class="table-responsive">
-					<table class="table table-bordered table-striped table-condensed" 
+					<table class="table table-bordered table-striped table-condensed"
 					id="stock_adjustment_product_table">
 						<thead>
 							<tr>
-								<th class="col-sm-4 text-center">	
+								<th class="col-sm-4 text-center">
 									@lang('sale.product')
 								</th>
 								<th class="col-sm-3 text-center">
@@ -111,33 +106,76 @@
 					<input type="hidden" id="total_amount" name="final_total" value="{{$subtotal}}">
 					</div>
 				</div>
-			</div>
-		</div>
-	</div> <!--box end-->
-	<div class="box box-solid">
-		<div class="box-body">
-			<div class="row">
-				<div class="col-sm-4">
-					<div class="form-group">
-							{!! Form::label('shipping_charges', __('lang_v1.shipping_charges') . ':') !!}
-							{!! Form::text('shipping_charges', @num_format($sell_transfer->shipping_charges), ['class' => 'form-control input_number', 'placeholder' => __('lang_v1.shipping_charges')]); !!}
-					</div>
-				</div>
-				<div class="col-sm-4">
-					<div class="form-group">
-						{!! Form::label('additional_notes',__('purchase.additional_notes')) !!}
-						{!! Form::textarea('additional_notes', $sell_transfer->additional_notes, ['class' => 'form-control', 'rows' => 3]); !!}
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-sm-12">
-					<button type="submit" id="save_stock_transfer" class="btn btn-primary pull-right">@lang('messages.save')</button>
-				</div>
-			</div>
 
-		</div>
-	</div> <!--box end-->
+				<div class="col-sm-3">
+				<div class="checkbox">
+					<label>
+						{!! Form::checkbox('assign_delivery', 1, $sell_transfer->assign_delivery,
+                        [  'class' => 'input-icheck' ,'id' => 'assign_delivery' ]); !!}{{ __( 'delivery.assign_delivery' ) }}
+					</label>
+				</div>
+				</div>
+			</div>
+			@endcomponent
+
+			@component('components.widget', ['class' => 'box-primary hide assign_delivery_div'])
+			<div class="row">
+				<div class="col-md-12 " style="display:flex;justify-content: space-between;">
+						<div class=" col-sm-4 ">
+							<div class="form-group">
+								{!! Form::label('delivery_person_id', __('delivery.delivery_person') . ':*') !!}
+								<div class="input-group">
+						<span class="input-group-addon">
+							<i class="fa fa-user"></i>
+						</span>
+									{!! Form::select('delivery_person_id', (isset($main_delivery) ? [ $main_delivery->delivery_person_id => $main_delivery->delivery_person->user->user_name] : [] ), (isset($main_delivery) ? $main_delivery->delivery_person_id : '' ), ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'),'id' => 'delivery_person_id', 'style' => 'width: 100%;' ]); !!}
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-4">
+						<div class="form-group">
+							{!! Form::label('shipping_charges', __('lang_v1.shipping_charges') . ':') !!}
+							{!! Form::text('shipping_charges', $sell_transfer->shipping_charges, ['class' => 'form-control input_number', 'placeholder' => __('lang_v1.shipping_charges')]); !!}
+						</div>
+						</div>
+					
+						<div class=" col-sm-4 @if(!empty($default_delivery_status)) hide @endif">
+							<div class="form-group">
+								{!! Form::label('delivery_status', __('delivery.delivery_status') . ':*') !!}
+								{!! Form::select('delivery_status', $stock_delivery_statuses , (isset($main_delivery) ? $main_delivery->delivery_status : '' ), ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required','style' => 'width: 100%;']); !!}
+							</div>
+						</div>
+				</div>
+				<br>
+				<div class="row">
+					<div class="col-md-12" style="display:flex;justify-content: space-between;">
+						<div class=" col-sm-4 ">
+							<div class="form-group">
+								{!! Form::label('special_instructions', __('delivery.special_delivery_instructions') . ':') !!}
+								{!! Form::textarea('special_delivery_instructions',(isset($main_delivery) ? $main_delivery->special_delivery_instructions  : '' ), ['class' => 'form-control','rows'=>3]); !!}
+							</div>
+						</div>
+						<div class="col-sm-4">
+						<div class="form-group">
+						{!! Form::label('shipping_details', __( 'purchase.shipping_details' ) . ':') !!}
+						{!! Form::text('shipping_details', $sell_transfer->shipping_details, ['class' => 'form-control']); !!}
+						</div>	
+						</div>
+						<div class="col-sm-4">
+						<div class="form-group">
+							{!! Form::label('additional_notes',__('purchase.additional_notes')) !!}
+							{!! Form::textarea('additional_notes', $sell_transfer->additional_notes, ['class' => 'form-control', 'rows' => 3]); !!}
+						</div>
+						</div>
+					</div>
+				</div>
+			    </div>
+			@endcomponent
+			<div class="row">
+					<div class="col-sm-12">
+						<button type="submit" id="save_stock_transfer" class="btn btn-primary pull-right">@lang('messages.save')</button>
+					</div>
+				</div>
 	{!! Form::close() !!}
 </section>
 @stop
@@ -145,5 +183,53 @@
 	<script src="{{ asset('js/stock_transfer.js?v=' . $asset_v) }}"></script>
 	<script type="text/javascript">
 		__page_leave_confirmation('#stock_transfer_form');
+	</script>
+	<script>
+        $(document).ready(function (e) {
+
+		if($('#assign_delivery').is(':checked')) {
+				$('div.assign_delivery_div').removeClass('hide');
+        }
+
+        $('#assign_delivery').on('ifChecked', function(event){
+				$('div.assign_delivery_div').removeClass('hide');
+   	    	});
+
+		$('#assign_delivery').on('ifUnchecked', function(event){
+				$('div.assign_delivery_div').addClass('hide');
+        	});
+
+			$('#delivery_person_id').select2({
+            ajax: {
+                url: '/user/get_delivery_people',
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        q: params.term, // search term
+                        page: params.page,
+                    };
+                },
+                processResults: function(data) {
+                    console.log(data);
+                    return {
+                        results: data,
+                    };
+                },
+            },
+            minimumInputLength: 1,
+            escapeMarkup: function(m) {
+                return m;
+            },
+         
+            templateResult: function(data) {
+                if (!data.id) {
+                    return data.text;
+                }
+                var html = data.text;
+                return html;
+            },
+        })
+        });
 	</script>
 @endsection

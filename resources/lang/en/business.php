@@ -76,6 +76,8 @@ return [
     'lifo' => 'LIFO (Last In First Out)',
     'business_locations' => 'Business Locations',
     'business_location' => 'Business Location',
+    'business_latitude' => 'Business Latitude',
+    'business_longitude' => 'Business Longitude',
     'manage_your_business_locations' => 'Manage your business locations',
     'all_your_business_locations' => 'All your business locations',
     'add_business_location' => 'Add a new business location',
@@ -106,4 +108,6 @@ return [
     'tax_number2' => 'Tax Number 2',
     'is_active' => 'Active',
     'created_by' => 'Created By',
+    'latitude'=>'Latitude',
+    'longitude'=>'Longitude',
 ];

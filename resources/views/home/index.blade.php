@@ -159,6 +159,33 @@
           		</div>
           	</div>
         @endif
+        @if(!empty($all_locations))
+            <div class="row">
+                <div class="col-sm-12">
+                    @component('components.widget', ['class' => 'box-primary', 'title' => __('Supplier Records For Current 6 Months')])
+                        @if (auth()->user()->can('record.view') || auth()->user()->can('record.view_own'))
+                            <table class="table table-bordered table-striped" id="record_table">
+                                <thead>
+                                <tr>
+                                    <th>@lang('purchase.business_location')</th>
+                                    <th>@lang('purchase.supplier')</th>
+                                    <th>Item Name</th>
+                                    <th>Quantity</th>
+                                    <th>Unit</th>
+                                    <th>Expected Collection Date</th>
+                                    <th>Supplier Location</th>
+                                    <th>@lang('lang_v1.added_by')</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        @endif
+                    @endcomponent
+                </div>
+            </div>
+        @endif
       	<!-- sales chart end -->
         @if(!empty($widgets['after_sales_current_fy']))
             @foreach($widgets['after_sales_current_fy'] as $widget)
@@ -267,5 +294,30 @@
         {!! $sells_chart_1->script() !!}
         {!! $sells_chart_2->script() !!}
     @endif
+
+    <script type="text/javascript">
+        record_table = $('#record_table').DataTable({
+            processing: true,
+            serverSide: true,
+            "ajax": {
+                "url": "/home",
+                "data": function (d) {
+                }
+            },
+            columns: [
+                {data: 'location_name', name: 'BS.name'},
+                {data: 'name', name: 'contacts.name'},
+                {data: 'item', name: 'item'},
+                {data: 'quantity', name: 'quantity'},
+                {data: 'unit', name: 'units.actual_name',orderable: false},
+                {data: 'expected_collection_date', name: 'expected_collection_date'},
+                {data: 'location', name: 'location'},
+                {data: 'added_by', name: 'u.first_name'},
+            ],
+            "fnDrawCallback": function (oSettings) {
+                __currency_convert_recursively($('#record_table'));
+            }
+        });
+    </script>
 @endsection
 

@@ -61,6 +61,7 @@
                     </span>
                     <i class="fa fa-caret-down"></i>
                   </button>
+
                 </div>
             </div>
         </div>
@@ -143,7 +144,7 @@
 <!-- /.content -->
 @stop
 @section('javascript')
-<script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
+    <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
 
 <script type="text/javascript">
     $(document).ready( function() {
@@ -379,7 +380,7 @@
                         url: url,
                         dataType: 'html',
                         success: function(result) {
-                           $('#profit_by_day').html(result); 
+                           $('#profit_by_day').html(result);
                             profit_by_days_table = $('#profit_by_day_table').DataTable({
                                     "searching": false,
                                     'paging': false,
@@ -396,5 +397,6 @@
         });
     });
 </script>
+
 
 @endsection

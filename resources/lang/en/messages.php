@@ -12,6 +12,7 @@ return [
     */
 
     'add' => 'Add',
+    'assign_delivery' => 'Assign Delivery',
     'edit' => 'Edit',
     'save' => 'Save',
     'update' => 'Update',
@@ -44,4 +45,5 @@ return [
     'price' => 'Price',
     'activate' => 'Activate',
     'deactivate' => 'Deactivate',
+    'see_all'=>'See All'
 ];

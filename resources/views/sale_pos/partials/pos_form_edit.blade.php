@@ -8,17 +8,15 @@
 				<span class="input-group-addon">
 					<i class="fa fa-user"></i>
 				</span>
-				<input type="hidden" id="default_customer_id" 
-				value="{{ $transaction->contact->id }}" >
-				<input type="hidden" id="default_customer_name" 
+				<input type="hidden" id="default_customer_id" name="default_customer_id" 
+				value="{{ $transaction->contact_id }}" >
+				<input type="hidden" id="default_customer_name" name="default_customer_name" 
 				value="{{ $transaction->contact->name }}" >
-				<input type="hidden" id="default_customer_balance" 
+				<input type="hidden" id="default_customer_balance" name="default_customer_balance"
 				value="{{$transaction->contact->balance}}" >
 				{!! Form::select('contact_id', 
 					[], null, ['class' => 'form-control mousetrap', 'id' => 'customer_id', 'placeholder' => 'Enter Customer name / phone', 'required', 'style' => 'width: 100%;']); !!}
-				<span class="input-group-btn">
-					<button type="button" class="btn btn-default bg-white btn-flat add_new_customer" data-name=""  @if(!auth()->user()->can('customer.create')) disabled @endif><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
-				</span>
+				
 			</div>
 		</div>
 	</div>

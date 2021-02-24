@@ -184,12 +184,68 @@
           <div class="col-md-12">
             <div class="checkbox">
               <label>
-                {!! Form::checkbox('permissions[]', 'supplier.delete', in_array('supplier.delete', $role_permissions), 
+                {!! Form::checkbox('permissions[]', 'supplier.delete', in_array('supplier.delete', $role_permissions),
                 [ 'class' => 'input-icheck']); !!} {{ __( 'role.supplier.delete' ) }}
               </label>
             </div>
           </div>
         </div>
+        </div>
+        <hr>
+    {{--in_array('record.view', $role_permissions)--}}
+        <div class="row check_group">
+            <div class="col-md-1">
+                <h4>@lang( 'contact.supplier_record' )</h4>
+            </div>
+            <div class="col-md-2">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" class="check_all input-icheck"> {{ __( 'role.select_all' ) }}
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="col-md-12">
+                    <div class="checkbox">
+                        <label>
+                            {!! Form::checkbox('permissions[]', 'record.view_own', in_array('record.view', $role_permissions),
+                            [ 'class' => 'input-icheck']); !!} {{ __( 'role.record.own.view' ) }}
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="checkbox">
+                        <label>
+                            {!! Form::checkbox('permissions[]', 'record.view', in_array('record.view', $role_permissions),
+                            [ 'class' => 'input-icheck']); !!} {{ __( 'role.record.view' ) }}
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="checkbox">
+                        <label>
+                            {!! Form::checkbox('permissions[]', 'record.create', in_array('record.view', $role_permissions),
+                            [ 'class' => 'input-icheck']); !!} {{ __( 'role.record.create' ) }}
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="checkbox">
+                        <label>
+                            {!! Form::checkbox('permissions[]', 'record.update', in_array('record.view', $role_permissions),
+                            [ 'class' => 'input-icheck']); !!} {{ __( 'role.record.update' ) }}
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="checkbox">
+                        <label>
+                            {!! Form::checkbox('permissions[]', 'record.delete', in_array('record.view', $role_permissions),
+                            [ 'class' => 'input-icheck']); !!} {{ __( 'role.record.delete' ) }}
+                        </label>
+                    </div>
+                </div>
+            </div>
         </div>
         <hr>
         <div class="row check_group">
@@ -376,7 +432,7 @@
           <div class="col-md-12">
             <div class="checkbox">
               <label>
-                {!! Form::checkbox('permissions[]', 'view_own_purchase', in_array('view_own_purchase', $role_permissions),['class' => 'input-icheck']); !!}
+                {!! Form::checkbox('permissions[]', 'view_own_purchase_only', in_array('view_own_purchase_only', $role_permissions),['class' => 'input-icheck']); !!}
                 {{ __('lang_v1.view_own_purchase') }}
               </label>
             </div>
@@ -761,6 +817,101 @@
               <label>
                 {!! Form::checkbox('permissions[]', 'category.delete', in_array('category.delete', $role_permissions), 
                 [ 'class' => 'input-icheck']); !!} {{ __( 'role.category.delete' ) }}
+              </label>
+            </div>
+          </div>
+        </div>
+        </div>
+        <hr>
+        <div class="row check_group">
+        <div class="col-md-1">
+          <h4>@lang( 'delivery.delivery' )</h4>
+        </div>
+        <div class="col-md-2">
+          <div class="checkbox">
+              <label>
+                <input type="checkbox" class="check_all input-icheck" > {{ __( 'role.select_all' ) }}
+              </label>
+            </div>
+        </div>
+        <div class="col-md-9">
+          <div class="col-md-12">
+            <div class="checkbox">
+              <label>
+                {!! Form::checkbox('permissions[]', 'view_own_delivery', in_array('view_own_delivery', $role_permissions),
+                [ 'class' => 'input-icheck']); !!} {{ __( 'role.view.own.delivery' ) }}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="checkbox">
+              <label>
+                {!! Form::checkbox('permissions[]', 'delivery.view', in_array('delivery.view', $role_permissions),
+                [ 'class' => 'input-icheck']); !!} {{ __( 'role.delivery.view' ) }}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="checkbox">
+              <label>
+                {!! Form::checkbox('permissions[]', 'delivery.create', in_array('delivery.create', $role_permissions),
+                [ 'class' => 'input-icheck']); !!} {{ __( 'role.delivery.create' ) }}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="checkbox">
+              <label>
+                {!! Form::checkbox('permissions[]', 'delivery.update', in_array('delivery.update', $role_permissions),
+                [ 'class' => 'input-icheck']); !!} {{ __( 'role.delivery.update' ) }}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="checkbox">
+              <label>
+                {!! Form::checkbox('permissions[]', 'delivery.delete', in_array('delivery.delete', $role_permissions),
+                [ 'class' => 'input-icheck']); !!} {{ __( 'role.delivery.delete' ) }}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="checkbox">
+              <label>
+                {!! Form::checkbox('permissions[]', 'view_own_task', in_array('view_own_task', $role_permissions),
+                [ 'class' => 'input-icheck']); !!} {{ __( 'role.view.own.task' ) }}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="checkbox">
+              <label>
+                {!! Form::checkbox('permissions[]', 'task.view', in_array('task.view', $role_permissions),
+                [ 'class' => 'input-icheck']); !!} {{ __( 'role.task.view' ) }}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="checkbox">
+              <label>
+                {!! Form::checkbox('permissions[]', 'task.assign', in_array('task.assign', $role_permissions),
+                [ 'class' => 'input-icheck']); !!} {{ __( 'role.task.create' ) }}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="checkbox">
+              <label>
+                {!! Form::checkbox('permissions[]', 'task.update', in_array('task.update', $role_permissions),
+                [ 'class' => 'input-icheck']); !!} {{ __( 'role.task.update' ) }}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="checkbox">
+              <label>
+                {!! Form::checkbox('permissions[]', 'task.delete', in_array('task.delete', $role_permissions),
+                [ 'class' => 'input-icheck']); !!} {{ __( 'role.task.delete' ) }}
               </label>
             </div>
           </div>

@@ -7,6 +7,8 @@ use App\Business;
 use App\BusinessLocation;
 use App\Contact;
 use App\CustomerGroup;
+use App\Delivery;
+use App\DeliveryPerson;
 use App\Product;
 use App\PurchaseLine;
 use App\TaxRate;
@@ -61,6 +63,7 @@ class PurchaseController extends Controller
             abort(403, 'Unauthorized action.');
         }
         $business_id = request()->session()->get('user.business_id');
+        
         if (request()->ajax()) {
             $purchases = $this->transactionUtil->getListPurchases($business_id);
 
@@ -235,6 +238,7 @@ class PurchaseController extends Controller
                         ->ExcludeForTaxGroup()
                         ->get();
         $orderStatuses = $this->productUtil->orderStatuses();
+        $deliveryStatuses = $this->productUtil->deliveryStatuses();
         $business_locations = BusinessLocation::forDropdown($business_id, false, true);
         $bl_attributes = $business_locations['attributes'];
         $business_locations = $business_locations['locations'];
@@ -244,6 +248,11 @@ class PurchaseController extends Controller
         $default_purchase_status = null;
         if (request()->session()->get('business.enable_purchase_status') != 1) {
             $default_purchase_status = 'received';
+        }
+
+        $default_delivery_status = null;
+        if (request()->session()->get('business.enable_delivery_status') != 1) {
+            $default_delivery_status = 'received';
         }
 
         $types = [];
@@ -257,18 +266,19 @@ class PurchaseController extends Controller
             $types['both'] = __('lang_v1.both_supplier_customer');
         }
         $customer_groups = CustomerGroup::forDropdown($business_id);
-
+    
         $business_details = $this->businessUtil->getDetails($business_id);
         $shortcuts = json_decode($business_details->keyboard_shortcuts, true);
 
         $payment_line = $this->dummyPaymentLine;
         $payment_types = $this->productUtil->payment_types(null, true);
 
+
         //Accounts
         $accounts = $this->moduleUtil->accountsDropdown($business_id, true);
 
         return view('purchase.create')
-            ->with(compact('taxes', 'orderStatuses', 'business_locations', 'currency_details', 'default_purchase_status', 'customer_groups', 'types', 'shortcuts', 'payment_line', 'payment_types', 'accounts', 'bl_attributes'));
+            ->with(compact('taxes', 'orderStatuses','business_locations', 'currency_details', 'default_purchase_status','default_delivery_status', 'customer_groups', 'types', 'shortcuts', 'payment_line', 'payment_types', 'accounts', 'bl_attributes'));
     }
 
     /**
@@ -291,7 +301,7 @@ class PurchaseController extends Controller
                 return $this->moduleUtil->expiredResponse(action('PurchaseController@index'));
             }
 
-            $transaction_data = $request->only([ 'ref_no', 'status', 'contact_id', 'transaction_date', 'total_before_tax', 'location_id','discount_type', 'discount_amount','tax_id', 'tax_amount', 'shipping_details', 'shipping_charges', 'final_total', 'additional_notes', 'exchange_rate', 'pay_term_number', 'pay_term_type']);
+            $transaction_data = $request->only([ 'ref_no', 'status','assign_delivery','contact_id', 'transaction_date', 'total_before_tax', 'location_id','discount_type', 'discount_amount','tax_id', 'tax_amount', 'shipping_details', 'shipping_charges', 'final_total', 'additional_notes', 'exchange_rate', 'pay_term_number', 'pay_term_type']);
 
             $exchange_rate = $transaction_data['exchange_rate'];
 
@@ -351,9 +361,21 @@ class PurchaseController extends Controller
             if (empty($transaction_data['ref_no'])) {
                 $transaction_data['ref_no'] = $this->productUtil->generateReferenceNumber($transaction_data['type'], $ref_count);
             }
-
-            $transaction = Transaction::create($transaction_data);
             
+            $transaction = Transaction::create($transaction_data);
+
+            // if($transaction->assign_delivery){
+            //     $delivery_details['transaction_id']=$transaction->id;
+            //     $delivery_details['delivery_person_id']=$request->input('delivery_person_id');
+            //     $delivery_details['delivery_status']=$request->input('delivery_status');
+            //     $delivery_details['pickup_address']=$request->input('pickup_address');
+            //     $delivery_details['pickup_latitude']=$request->input('pickup_latitude');
+            //     $delivery_details['pickup_longitude']=$request->input('pickup_longitude');
+            //     $delivery_details['shipping_address']=$request->input('shipping_address');
+            //     $delivery_details['special_delivery_instructions']=$request->input('special_delivery_instructions');
+            //     Delivery::create($delivery_details);
+
+            // }
             $purchase_lines = [];
             $purchases = $request->input('purchases');
 
@@ -492,7 +514,9 @@ class PurchaseController extends Controller
                         'purchase_lines.sub_unit'
                     )
                     ->first();
-        
+
+    
+       
         foreach ($purchase->purchase_lines as $key => $value) {
             if (!empty($value->sub_unit_id)) {
                 $formated_purchase_line = $this->productUtil->changePurchaseLineUnit($value, $business_id);
@@ -501,7 +525,6 @@ class PurchaseController extends Controller
         }
         
         $orderStatuses = $this->productUtil->orderStatuses();
-
         $business_locations = BusinessLocation::forDropdown($business_id);
 
         $default_purchase_status = null;
@@ -553,8 +576,8 @@ class PurchaseController extends Controller
         }
 
         try {
+            
             $transaction = Transaction::findOrFail($id);
-
             //Validate document size
             $request->validate([
                 'document' => 'file|max:'. (config('constants.document_size_limit') / 1000)
@@ -567,13 +590,17 @@ class PurchaseController extends Controller
 
             $currency_details = $this->transactionUtil->purchaseCurrencyDetails($business_id);
 
-            $update_data = $request->only([ 'ref_no', 'status', 'contact_id',
+            $update_data = $request->only([ 'ref_no', 'status', 'contact_id','assign_delivery',
                             'transaction_date', 'total_before_tax',
                             'discount_type', 'discount_amount', 'tax_id',
                             'tax_amount', 'shipping_details',
                             'shipping_charges', 'final_total',
                             'additional_notes', 'exchange_rate', 'pay_term_number', 'pay_term_type']);
 
+                        
+                if(!isset($update_data['assign_delivery'])){
+                    $update_data['assign_delivery']=0;
+                }
             $exchange_rate = $update_data['exchange_rate'];
 
             //Reverse exchage rate and save
@@ -605,9 +632,23 @@ class PurchaseController extends Controller
             }
 
             DB::beginTransaction();
-
+        
             //update transaction
             $transaction->update($update_data);
+
+            // if($transaction->assign_delivery){
+            //     $delivery_details['delivery_person_id']=$request->input('delivery_person_id');
+            //     $delivery_details['delivery_status']=$request->input('delivery_status');
+            //     $delivery_details['pickup_address']=$request->input('pickup_address');
+            //     $delivery_details['pickup_latitude']=$request->input('pickup_latitude');
+            //     $delivery_details['pickup_longitude']=$request->input('pickup_longitude');
+            //     $delivery_details['shipping_address']=$request->input('shipping_address');
+            //     $delivery_details['special_delivery_instructions']=$request->input('special_delivery_instructions');
+            //     $delivery=Delivery::where('transaction_id',$transaction->id)->first();
+             
+            //     $delivery->update($delivery_details);
+
+            // }
 
             //Update transaction payment status
             $this->transactionUtil->updatePaymentStatus($transaction->id);
@@ -747,23 +788,30 @@ class PurchaseController extends Controller
 
             $query = Contact::where('business_id', $business_id)
                             ->active();
-
+                   
             $selected_contacts = User::isSelectedContacts($user_id);
             if ($selected_contacts) {
                 $query->join('user_contact_access AS uca', 'contacts.id', 'uca.contact_id')
                 ->where('uca.user_id', $user_id);
             }
+           
             $suppliers = $query->where(function ($query) use ($term) {
                 $query->where('name', 'like', '%' . $term .'%')
                                 ->orWhere('supplier_business_name', 'like', '%' . $term .'%')
                                 ->orWhere('contacts.contact_id', 'like', '%' . $term .'%');
             })
-                        ->select('contacts.id', 'name as text', 'supplier_business_name as business_name', 'contact_id', 'contacts.pay_term_type', 'contacts.pay_term_number', 'contacts.balance')
+                        ->select('contacts.id', 'name as text', 'supplier_business_name as business_name', 'contact_id', 'contacts.pay_term_type', 'contacts.pay_term_number', 'contacts.balance','contacts.shipping_address as pickup_address','contacts.latitude as pickup_latitude','contacts.longitude as pickup_longitude')
                         ->onlySuppliers()
                         ->get();
+                        
             return json_encode($suppliers);
         }
     }
+
+   
+
+   
+
 
     /**
      * Retrieves products list.

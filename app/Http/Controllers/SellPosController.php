@@ -33,6 +33,7 @@ use App\BusinessLocation;
 use App\Category;
 use App\Contact;
 use App\CustomerGroup;
+use App\Delivery;
 use App\Media;
 use App\Product;
 use App\SellingPriceGroup;
@@ -301,7 +302,7 @@ class SellPosController extends Controller
 
         try {
             $input = $request->except('_token');
-
+    
             //Check Customer credit limit
             $is_credit_limit_exeeded = $this->transactionUtil->isCustomerCreditLimitExeeded($input);
 
@@ -418,7 +419,12 @@ class SellPosController extends Controller
                     $input['res_waiter_id'] = request()->get('res_waiter_id');
                 }
 
-                $transaction = $this->transactionUtil->createSellTransaction($business_id, $input, $invoice_total, $user_id);
+                $assign_delivery=0;
+                if($input['status']=='final'&& isset($input['assign_delivery'])){
+                    $assign_delivery=1;
+                }
+
+                $transaction = $this->transactionUtil->createSellTransaction($business_id, $input, $invoice_total, $user_id,$assign_delivery);
 
                 $this->transactionUtil->createOrUpdateSellLines($transaction, $input['products'], $input['location_id']);
                 
@@ -435,6 +441,8 @@ class SellPosController extends Controller
                 if (!$transaction->is_suspend && !empty($input['payment']) && !$is_credit_sale) {
                     $this->transactionUtil->createOrUpdatePaymentLines($transaction, $input['payment']);
                 }
+
+
 
                 //Check for final and do some processing.
                 if ($input['status'] == 'final') {
@@ -494,6 +502,19 @@ class SellPosController extends Controller
                     //Auto send notification
                     $this->notificationUtil->autoSendNotification($business_id, 'new_sale', $transaction, $transaction->contact);
                 }
+
+                // if($transaction->assign_delivery){
+                //     $delivery_details['transaction_id']=$transaction->id;
+                //     $delivery_details['delivery_person_id']=$request->input('delivery_person_id');
+                //     $delivery_details['delivery_status']=$request->input('delivery_status');
+                //     $delivery_details['pickup_address']=$request->input('pickup_address');
+                //     $delivery_details['shipping_address']=$request->input('shipping_address');
+                //     $delivery_details['shipping_latitude']=$request->input('shipping_latitude');
+                //     $delivery_details['shipping_longitude']=$request->input('shipping_longitude');
+                //     $delivery_details['special_delivery_instructions']=$request->input('special_delivery_instructions');
+                //     Delivery::create($delivery_details);
+    
+                // }
 
                 //Set Module fields
                 if (!empty($input['has_module_data'])) {
@@ -677,6 +698,7 @@ class SellPosController extends Controller
      */
     public function edit($id)
     {
+  
         $business_id = request()->session()->get('user.business_id');
 
         if (!(auth()->user()->can('superadmin') || auth()->user()->can('sell.update') || ($this->moduleUtil->hasThePermissionInSubscription($business_id, 'repair_module') && auth()->user()->can('repair.update')))) {
@@ -959,13 +981,13 @@ class SellPosController extends Controller
      */
     public function update(Request $request, $id)
     {
+        
         if (!auth()->user()->can('sell.update') && !auth()->user()->can('direct_sell.access')) {
             abort(403, 'Unauthorized action.');
         }
         
         try {
             $input = $request->except('_token');
-
             //status is send as quotation from edit sales screen.
             $input['is_quotation'] = 0;
             if ($input['status'] == 'quotation') {
@@ -984,10 +1006,10 @@ class SellPosController extends Controller
                 if ($transaction_before->is_direct_sale == 1) {
                     $is_direct_sale = true;
                 }
-
+         
                 //Check Customer credit limit
                 $is_credit_limit_exeeded = $this->transactionUtil->isCustomerCreditLimitExeeded($input, $id);
-
+               
                 if ($is_credit_limit_exeeded !== false) {
                     $credit_limit_amount = $this->transactionUtil->num_f($is_credit_limit_exeeded, true);
                     $output = ['success' => 0,
@@ -1001,7 +1023,7 @@ class SellPosController extends Controller
                             ->with('status', $output);
                     }
                 }
-
+                
                 //Check if there is a open register, if no then redirect to Create Register screen.
                 if (!$is_direct_sale && $this->cashRegisterUtil->countOpenedRegister() == 0) {
                     return redirect()->action('CashRegisterController@create');
@@ -1029,10 +1051,10 @@ class SellPosController extends Controller
                     $input['exchange_rate'] = 1;
                 }
 
-                //Customer group details
-                $contact_id = $request->get('contact_id', null);
-                $cg = $this->contactUtil->getCustomerGroup($business_id, $contact_id);
-                $input['customer_group_id'] = (empty($cg) || empty($cg->id)) ? null : $cg->id;
+                // Customer group details
+                 $contact_id = $request->get('contact_id', null);
+                 $cg = $this->contactUtil->getCustomerGroup($business_id, $contact_id);
+                 $input['customer_group_id'] = (empty($cg) || empty($cg->id)) ? null : $cg->id;
                 
                 //set selling price group id
                 $price_group_id = $request->has('price_group') ? $request->input('price_group') : null;
@@ -1072,11 +1094,15 @@ class SellPosController extends Controller
                     $input['res_waiter_id'] = request()->get('res_waiter_id');
                 }
 
+                $assign_delivery=0;
+                if($input['status']=='final'&& isset($input['assign_delivery'])){
+                    $assign_delivery=1;
+                }
                 //Begin transaction
                 DB::beginTransaction();
-
-                $transaction = $this->transactionUtil->updateSellTransaction($id, $business_id, $input, $invoice_total, $user_id);
-
+            
+                $transaction = $this->transactionUtil->updateSellTransaction($id, $business_id, $input, $invoice_total, $user_id,$assign_delivery);
+          
                 //Update Sell lines
                 $deleted_lines = $this->transactionUtil->createOrUpdateSellLines($transaction, $input['products'], $input['location_id'], true, $status_before);
 
@@ -1102,6 +1128,22 @@ class SellPosController extends Controller
                 if ($request->session()->get('business.enable_rp') == 1) {
                     $this->transactionUtil->updateCustomerRewardPoints($contact_id, $transaction->rp_earned, $rp_earned_before, $transaction->rp_redeemed, $rp_redeemed_before);
                 }
+              
+                // if($transaction->assign_delivery){
+                //     Delivery::updateOrCreate(
+                //        ['transaction_id'=>$transaction->id,
+                //        'delivery_person_id'=>$request->input('delivery_person_id'),
+                //        'delivery_status'=>$request->input('delivery_status'),
+                //        'pickup_address'=>$request->input('pickup_address'),
+                //        'shipping_address'=>$request->input('shipping_address'),
+                //        'shipping_latitude'=>$request->input('shipping_latitude'),
+                //        'shipping_longitude'=>$request->input('shipping_longitude'),
+                //        'special_delivery_instructions'=>$request->input('special_delivery_instructions')]
+
+                //     );
+                   
+    
+                // }
 
                 //Update payment status
                 $this->transactionUtil->updatePaymentStatus($transaction->id, $transaction->final_total);

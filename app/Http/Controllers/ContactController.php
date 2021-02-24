@@ -96,7 +96,7 @@ class ContactController extends Controller
         $contact = $this->contactUtil->getContactQuery($business_id, 'supplier');
 
         return Datatables::of($contact)
-            ->addColumn('address', '{{implode(", ", array_filter([$address_line_1, $address_line_2, $city, $state, $country, $zip_code]))}}')
+            ->addColumn('address', '{{implode(", ", array_filter([$address_line_1, $address_line_2, $city, $state, $country, $zip_code,$latitude,$longitude]))}}')
             ->addColumn(
                 'due',
                 '<span class="display_currency contact_due" data-orig-value="{{$total_purchase - $purchase_paid}}" data-currency_symbol=true data-highlight=false>{{$total_purchase - $purchase_paid }}</span>'
@@ -231,6 +231,8 @@ class ContactController extends Controller
                     ->orWhere('state', 'like', "%{$keyword}%")
                     ->orWhere('country', 'like', "%{$keyword}%")
                     ->orWhere('zip_code', 'like', "%{$keyword}%")
+                    ->orWhere('latitude', 'like', "%{$keyword}%")
+                    ->orWhere('longitude', 'like', "%{$keyword}%")
                     ->orWhereRaw("CONCAT(COALESCE(address_line_1, ''), ', ', COALESCE(address_line_2, ''), ', ', COALESCE(city, ''), ', ', COALESCE(state, ''), ', ', COALESCE(country, '') ) like ?", ["%{$keyword}%"]);
                 });
             })
@@ -442,8 +444,9 @@ class ContactController extends Controller
         }
 
         $customer_groups = CustomerGroup::forDropdown($business_id);
+       
         $selected_type = request()->type;
-
+        
         return view('contact.create')
             ->with(compact('types', 'customer_groups', 'selected_type'));
     }
@@ -456,6 +459,7 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
+        
         if (!auth()->user()->can('supplier.create') && !auth()->user()->can('customer.create') && !auth()->user()->can('customer.view_own') && !auth()->user()->can('supplier.view_own')) {
             abort(403, 'Unauthorized action.');
         }
@@ -468,7 +472,7 @@ class ContactController extends Controller
             }
 
             $input = $request->only(['type', 'supplier_business_name',
-                'prefix', 'first_name', 'middle_name', 'last_name', 'tax_number', 'pay_term_number', 'pay_term_type', 'mobile', 'landline', 'alternate_number', 'city', 'state', 'country', 'address_line_1', 'address_line_2', 'customer_group_id', 'zip_code', 'contact_id', 'custom_field1', 'custom_field2', 'custom_field3', 'custom_field4', 'custom_field5', 'custom_field6', 'custom_field7', 'custom_field8', 'custom_field9', 'custom_field10', 'email', 'shipping_address', 'position', 'dob']);
+                'prefix', 'first_name', 'middle_name', 'last_name', 'tax_number', 'pay_term_number', 'pay_term_type', 'mobile', 'landline', 'alternate_number', 'city', 'state', 'country', 'address_line_1', 'address_line_2', 'customer_group_id', 'zip_code','latitude','longitude','contact_id', 'custom_field1', 'custom_field2', 'custom_field3', 'custom_field4', 'custom_field5', 'custom_field6', 'custom_field7', 'custom_field8', 'custom_field9', 'custom_field10', 'email', 'shipping_address', 'position', 'dob']);
             $input['name'] = implode(' ', [$input['prefix'], $input['first_name'], $input['middle_name'], $input['last_name']]);
 
             if (!empty($input['dob'])) {
@@ -595,7 +599,7 @@ class ContactController extends Controller
 
         if (request()->ajax()) {
             try {
-                $input = $request->only(['type', 'supplier_business_name', 'prefix', 'first_name', 'middle_name', 'last_name', 'tax_number', 'pay_term_number', 'pay_term_type', 'mobile', 'address_line_1', 'address_line_2', 'zip_code', 'dob', 'alternate_number', 'city', 'state', 'country', 'landline', 'customer_group_id', 'contact_id', 'custom_field1', 'custom_field2', 'custom_field3', 'custom_field4', 'custom_field5', 'custom_field6', 'custom_field7', 'custom_field8', 'custom_field9', 'custom_field10', 'email', 'shipping_address', 'position']);
+                $input = $request->only(['type', 'supplier_business_name', 'prefix', 'first_name', 'middle_name', 'last_name', 'tax_number', 'pay_term_number', 'pay_term_type', 'mobile', 'address_line_1', 'address_line_2', 'zip_code','latitude','longitude', 'dob', 'alternate_number', 'city', 'state', 'country', 'landline', 'customer_group_id', 'contact_id', 'custom_field1', 'custom_field2', 'custom_field3', 'custom_field4', 'custom_field5', 'custom_field6', 'custom_field7', 'custom_field8', 'custom_field9', 'custom_field10', 'email', 'shipping_address', 'position']);
 
                 $input['name'] = implode(' ', [$input['prefix'], $input['first_name'], $input['middle_name'], $input['last_name']]);
 
@@ -714,7 +718,10 @@ class ContactController extends Controller
                 'pay_term_number',
                 'pay_term_type',
                 'balance',
-                'supplier_business_name'
+                'supplier_business_name',
+                'shipping_address',
+                'latitude',
+                'longitude'
             )
                     ->onlyCustomers();
 

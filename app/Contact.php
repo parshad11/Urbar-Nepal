@@ -263,4 +263,6 @@ class Contact extends Authenticatable
 
         return $address;
     }
+
+
 }

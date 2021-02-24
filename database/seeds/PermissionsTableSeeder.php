@@ -24,6 +24,12 @@ class PermissionsTableSeeder extends Seeder
             ['name' => 'supplier.update'],
             ['name' => 'supplier.delete'],
 
+            ['name' => 'record.view_own'],
+            ['name' => 'record.view'],
+            ['name' => 'record.create'],
+            ['name' => 'record.update'],
+            ['name' => 'record.delete'],
+
             ['name' => 'customer.view'],
             ['name' => 'customer.create'],
             ['name' => 'customer.update'],
@@ -34,6 +40,7 @@ class PermissionsTableSeeder extends Seeder
             ['name' => 'product.update'],
             ['name' => 'product.delete'],
 
+            ['name' => 'view_own_purchase_only'],
             ['name' => 'purchase.view'],
             ['name' => 'purchase.create'],
             ['name' => 'purchase.update'],
@@ -43,6 +50,18 @@ class PermissionsTableSeeder extends Seeder
             ['name' => 'sell.create'],
             ['name' => 'sell.update'],
             ['name' => 'sell.delete'],
+
+            ['name' => 'delivery.view'],
+            ['name' => 'delivery.assign'],
+            ['name' => 'delivery.update'],
+            ['name' => 'delivery.delete'],
+            ['name' => 'view_own_delivery'],
+            ['name' => 'task.view'],
+            ['name' => 'task.assign'],
+            ['name' => 'task.update'],
+            ['name' => 'task.delete'],
+            ['name' => 'view_own_task'],
+
 
             ['name' => 'purchase_n_sell_report.view'],
             ['name' => 'contacts_report.view'],
@@ -77,6 +96,7 @@ class PermissionsTableSeeder extends Seeder
             ['name' => 'category.update'],
             ['name' => 'category.delete'],
             ['name' => 'expense.access'],
+
 
             ['name' => 'access_all_locations'],
             ['name' => 'dashboard.data'],

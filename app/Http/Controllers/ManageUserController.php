@@ -4,17 +4,21 @@ namespace App\Http\Controllers;
 
 use App\BusinessLocation;
 use App\Contact;
+use App\Delivery;
+use App\DeliveryPerson;
 use App\System;
 use App\User;
 use App\Utils\ModuleUtil;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB as FacadesDB;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\Facades\DataTables;
 
 class ManageUserController extends Controller
 {
+    protected $moduleUtil;
     /**
      * Constructor
      *
@@ -42,11 +46,9 @@ class ManageUserController extends Controller
             $user_id = request()->session()->get('user.id');
 
             $users = User::where('business_id', $business_id)
-                        ->user()
                         ->where('is_cmmsn_agnt', 0)
                         ->select(['id', 'username',
                             DB::raw("CONCAT(COALESCE(surname, ''), ' ', COALESCE(first_name, ''), ' ', COALESCE(last_name, '')) as full_name"), 'email', 'allow_login']);
-
             return Datatables::of($users)
                 ->editColumn('username', '{{$username}} @if(empty($allow_login)) <span class="label bg-gray">@lang("lang_v1.login_not_allowed")</span>@endif')
                 ->addColumn(
@@ -77,7 +79,7 @@ class ManageUserController extends Controller
                 ->rawColumns(['action', 'username'])
                 ->make(true);
         }
-
+       
         return view('manage_user.index');
     }
 
@@ -136,7 +138,11 @@ class ManageUserController extends Controller
             
             $user_details['status'] = !empty($request->input('is_active')) ? 'active' : 'inactive';
 
-            $user_details['user_type'] = 'user';
+            $role_id = $request->input('role');
+            $role = Role::findOrFail($role_id);
+   
+            $user_role= explode( '#',$role->name);
+            $user_details['user_type']=strtolower($user_role[0]);
 
             if (empty($request->input('allow_login'))) {
                 unset($user_details['username']);
@@ -188,10 +194,13 @@ class ManageUserController extends Controller
 
             //Create the user
             $user = User::create($user_details);
-
-            $role_id = $request->input('role');
-            $role = Role::findOrFail($role_id);
             $user->assignRole($role->name);
+            if($user->user_type=='delivery'){
+                $delivery_person_detail['user_id']=$user->id;
+                $delivery_person_detail['join_date']=$user->created_at;
+                $delivery_person_detail= DeliveryPerson::create($delivery_person_detail);
+                
+            }
 
             //Grant Location permissions
             $this->giveLocationPermissions($user, $request);
@@ -354,8 +363,19 @@ class ManageUserController extends Controller
             $user = User::where('business_id', $business_id)
                           ->findOrFail($id);
 
-            $user->update($user_data);
             $role_id = $request->input('role');
+            $role = Role::findOrFail($role_id);
+            $user_role= explode( '#',$role->name);
+            $user_data['user_type']=strtolower($user_role[0]);
+            $user->update($user_data);
+
+            if($user->user_type=='delivery'){
+                $delivery_person_detail['user_id']=$user->id;
+                $delivery_person_detail['join_date']=$user->created_at;
+                $delivery_person_detail= DeliveryPerson::updateOrCreate($delivery_person_detail);
+                
+            }
+            
             $user_role = $user->roles->first();
             $previous_role = !empty($user_role->id) ? $user_role->id : 0;
             if ($previous_role != $role_id) {
@@ -366,6 +386,7 @@ class ManageUserController extends Controller
                 $role = Role::findOrFail($role_id);
                 $user->assignRole($role->name);
             }
+
 
             //Grant Location permissions
             $this->giveLocationPermissions($user, $request);
@@ -428,6 +449,8 @@ class ManageUserController extends Controller
             return $output;
         }
     }
+    
+  
 
     private function getUsernameExtension()
     {
@@ -504,6 +527,32 @@ class ManageUserController extends Controller
 
                 $user->revokePermissionTo($revoke_permissions);
             }
+        }
+    }
+
+    public function getDeliveryPeople(){
+        if (request()->ajax()) {
+            $term = request()->q;
+            if (empty($term)) {
+                return json_encode([]);
+            }
+            
+            $business_id = request()->session()->get('user.business_id');
+            $user_id = request()->session()->get('user.id');
+
+          
+            $deliveryPeople = DeliveryPerson::join('users','delivery_people.user_id','=','users.id')
+            // with('user')->whereHas('user',function ($query) use ($term) {
+            //     $query ->where('first_name', 'like', '%' . $term .'%')
+            //           ->orWhere('last_name', 'like', '%' . $term .'%');
+            //                     // ->orWhere('supplier_business_name', 'like', '%' . $term .'%')
+            //                     //  ->orWhere('users.contact_id', 'like', '%' . $term .'%');
+            // })
+            ->where('users.first_name', 'like', '%' . $term .'%')
+            ->orWhere('users.last_name', 'like', '%' . $term .'%')
+             ->select('delivery_people.id', DB::raw("CONCAT(COALESCE(users.surname, ''),' ',COALESCE(users.first_name, ''),' ',COALESCE(users.last_name,'')) as text"))
+            ->get();
+            return json_encode($deliveryPeople);
         }
     }
 }

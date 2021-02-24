@@ -403,6 +403,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+    
         if (!auth()->user()->can('product.create')) {
             abort(403, 'Unauthorized action.');
         }

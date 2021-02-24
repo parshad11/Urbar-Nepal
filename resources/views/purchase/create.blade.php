@@ -29,9 +29,9 @@
 						<span class="input-group-addon">
 							<i class="fa fa-user"></i>
 						</span>
-						{!! Form::select('contact_id', [], null, ['class' => 'form-control', 'placeholder' => __('messages.please_select'), 'required', 'id' => 'supplier_id']); !!}
+						{!! Form::select('contact_id',[], null, ['class' => 'form-control', 'placeholder' => __('messages.please_select'), 'required', 'id' => 'supplier_id']); !!}
 						<span class="input-group-btn">
-							<button type="button" class="btn btn-default bg-white btn-flat add_new_supplier" data-name=""><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
+						<button type="button" class="btn btn-default bg-white btn-flat add_new_supplier" data-name=""><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
 						</span>
 					</div>
 				</div>
@@ -76,7 +76,7 @@
 				<div class="form-group">
 					{!! Form::label('location_id', __('purchase.business_location').':*') !!}
 					@show_tooltip(__('tooltip.purchase_location'))
-					{!! Form::select('location_id', $business_locations, $default_location, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required'], $bl_attributes); !!}
+					{!! Form::select('location_id',[], $default_location, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required'], $bl_attributes); !!}
 				</div>
 			</div>
 
@@ -121,10 +121,15 @@
                     	@lang('purchase.max_file_size', ['size' => (config('constants.document_size_limit') / 1000000)])
                     	@includeIf('components.document_help_text')
                     </p>
-                </div>
+                </div>    
             </div>
+
+			<div class="clearfix"></div>
+			
 		</div>
-	@endcomponent
+		
+
+		@endcomponent
 
 	@component('components.widget', ['class' => 'box-primary'])
 		<div class="row">
@@ -218,9 +223,22 @@
 				</div>
 
 				<input type="hidden" id="row_count" value="0">
+
+				<div class="col-sm-3">
+                <div class="form-group">
+					<div class="checkbox">
+					<br/>
+					<label>
+						{!! Form::checkbox('assign_delivery', 1, false, 
+						[ 'class' => 'input-icheck', 'id' => 'assign_delivery']); !!} {{ __( 'delivery.assign_delivery' ) }}
+					</label>
+					</div>
+                </div>
+            </div>
 			</div>
 		</div>
 	@endcomponent
+
 
 	@component('components.widget', ['class' => 'box-primary'])
 		<div class="row">
@@ -309,13 +327,14 @@
 	@endcomponent
 
 	@component('components.widget', ['class' => 'box-primary', 'title' => __('purchase.add_payment')])
-		<div class="box-body payment_row">
+		<div class="payment_row">
 			<div class="row">
 				<div class="col-md-12">
 					<strong>@lang('lang_v1.advance_balance'):</strong> <span id="advance_balance_text">0</span>
 					{!! Form::hidden('advance_balance', null, ['id' => 'advance_balance', 'data-error-msg' => __('lang_v1.required_advance_balance_not_available')]); !!}
 				</div>
 			</div>
+			<br>
 			@include('sale_pos.partials.payment_row_form', ['row_index' => 0, 'show_date' => true])
 			<hr>
 			<div class="row">
@@ -344,15 +363,53 @@
 
 @section('javascript')
 	<script src="{{ asset('js/purchase.js?v=' . $asset_v) }}"></script>
-	<script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
+	<script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script> 
+	
 	<script type="text/javascript">
 		$(document).ready( function(){
-      		__page_leave_confirmation('#add_purchase_form');
+			__page_leave_confirmation('#add_purchase_form');
       		$('.paid_on').datetimepicker({
                 format: moment_date_format + ' ' + moment_time_format,
                 ignoreReadonly: true,
             });
+
+
+			$('#location_id').select2({
+			ajax: {
+				url: '/business/get_locations',
+				dataType: 'json',
+				delay: 250,
+				data: function(params) {
+					return {
+						q: params.term, // search term
+						page: params.page,
+					};
+				},
+				processResults: function(data) {
+					return {
+						results: data,
+					};
+				},
+			},
+			minimumInputLength: 1,
+			escapeMarkup: function(m) {
+				return m;
+			},
+			templateResult: function(data) {
+				if (!data.id) {
+					return data.text;
+				}
+				var html = data.text;
+				return html;
+			},
+			}).on('select2:select', function (e) {
+				var data = e.params.data;
+				 $('#shipping_address').val(data.business_location_address);
+		
+			});
+
     	});
+
     	$(document).on('change', '.payment_types_dropdown, #location_id', function(e) {
 		    var default_accounts = $('select#location_id').length ? 
 		                $('select#location_id')

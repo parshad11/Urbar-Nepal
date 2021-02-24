@@ -12,6 +12,7 @@ use App\TransactionSellLine;
 use App\Unit;
 use App\User;
 use App\VariationLocationDetails;
+use Carbon\Carbon;
 use Automattic\WooCommerce\HttpClient\Request;
 use DB;
 use GuzzleHttp\Client;
@@ -134,6 +135,16 @@ class Util
         return ['received' => __('lang_v1.received'), 'pending' => __('lang_v1.pending'), 'ordered' => __('lang_v1.ordered')];
     }
 
+
+    public function taskTypes()
+    {
+        return [ 'delivery' => __('delivery.delivery'), 'pick up' => __('delivery.pick_up')];
+    }
+
+    public function taskStatuses()
+    {
+        return [ 'received' => __('lang_v1.received'), 'on process' => __('lang_v1.on_process'), 'completed' => __('lang_v1.completed'), 'cancelled' => __('lang_v1.cancelled')];
+    }
     /**
      * Defines available Payment Types
      *
@@ -235,7 +246,7 @@ class Util
             $mysql_format = 'Y-m-d H:i:s';
         }
 
-        return !empty($date_format) ? \Carbon::createFromFormat($date_format, $date)->format($mysql_format) : null;
+        return !empty($date_format) ? Carbon::createFromFormat($date_format, $date)->format($mysql_format) : null;
     }
 
     /**
@@ -250,7 +261,7 @@ class Util
         if (session('business.time_format') == 12) {
             $time_format = 'h:i A';
         }
-        return !empty($time_format) ? \Carbon::createFromFormat($time_format, $time)->format('H:i') : null;
+        return !empty($time_format) ? Carbon::createFromFormat($time_format, $time)->format('H:i') : null;
     }
 
     /**
@@ -972,7 +983,7 @@ class Util
         $user = User::findOrFail($user_id);
 
         $roles = $user->getRoleNames();
-
+        
         $role_name = '';
 
         if (!empty($roles[0])) {
@@ -1093,6 +1104,53 @@ class Util
         ];
 
         return $statuses;
+    }
+
+    public function delivery_assign_statuses()
+    {
+        $assignStatuses = [
+            '1' => __('delivery.assigned'),
+            '0' => __('delivery.not_assigned'),
+        ];
+
+        return $assignStatuses;
+    }
+
+    public function deliveryStatuses()
+    {
+        $deliveryStatuses = [
+            'received' => __('lang_v1.received'),
+            'packed' => __('lang_v1.packed'),
+            'shipped' => __('lang_v1.shipped'),
+            'delivered' => __('lang_v1.delivered'),
+            'cancelled' => __('restaurant.cancelled')
+        ];
+
+        return $deliveryStatuses ;
+    }
+
+    public function stockDeliveryStatuses()
+    {
+        $stockDeliveryStatuses = [
+            'received' => __('lang_v1.received'),
+            'packed' => __('lang_v1.packed'),
+            'shipped' => __('lang_v1.shipped'),
+            'delivered' => __('lang_v1.delivered'),
+            'cancelled' => __('restaurant.cancelled')
+        ];
+
+        return $stockDeliveryStatuses ;
+    }
+
+    public function stockStatuses()
+    {
+        $stockstatuses = [
+            'pending' => __('stock_adjustment.pending'),
+            'transit' => __('stock_adjustment.transit'),
+            'completed' => __('stock_adjustment.completed'),
+            
+        ];
+        return $stockstatuses ;
     }
 
     /**

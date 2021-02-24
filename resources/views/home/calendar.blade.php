@@ -1,11 +1,11 @@
 @extends('layouts.app')
-@section('title', __('lang_v1.calendar'))
+@section('title', __('lang_v1.supplier_calendar'))
 
 @section('content')
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
-    <h1>@lang( 'lang_v1.calendar' )</h1>
+    <h1>@lang( 'lang_v1.supplier_calendar' )</h1>
 </section>
 
 <!-- Main content -->
@@ -15,31 +15,21 @@
             <div class="box box-solid">
                 <div class="box-body">
                     <div class="row">
-                        @if(!empty($users))
+                        @if(!empty($supplier))
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    {!! Form::label('user_id', __('role.user') . ':') !!}
-                                    {!! Form::select('user_id', $users, auth()->user()->id, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select')]); !!}
+                                    {!! Form::label('supplier_id', __('Supplier') . ':') !!}
+                                    {!! Form::select('supplier_id', $supplier, null, ['class' => 'form-control select2', 'placeholder' => __('messages.see_all')]); !!}
                                 </div>
                             </div>
                         @endif
                         <div class="col-md-12">
                             <div class="form-group">
                                 {!! Form::label('location_id', __('sale.location') . ':') !!}
-                                {!! Form::select('location_id', $all_locations, null, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select')]); !!}
+                                {!! Form::select('location_id', $all_locations, null, ['class' => 'form-control select2', 'placeholder' => __('messages.see_all')]); !!}
                             </div>
                         </div>
                         <div class="clearfix"></div>
-                        @foreach($event_types as $key => $value)
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label>
-                                      {!! Form::checkbox('events', $key, true, 
-                                      [ 'class' => 'input-icheck event_check']); !!} <span style="color: {{$value['color']}}">{{ $value['label'] }}</span>
-                                    </label>
-                            </div>
-                        </div>
-                        @endforeach
                         @if(Module::has('Essentials'))
                         <div class="col-md-12">
                             <button class="btn btn-block btn-success btn-modal" 
@@ -78,7 +68,6 @@
             $.each($("input[name='events']:checked"), function(){
                 events.push($(this).val());
             });
-
             $('#calendar').fullCalendar({
                 header: {
                     left: 'prev,next,today',
@@ -108,7 +97,8 @@
             });
         });
 
-        $(document).on('change', '#user_id, #location_id', function(){
+        $(document).on('change', '#supplier_id, #location_id', function(){
+            console.log('success');
             reload_calendar();
         });
 
@@ -121,8 +111,8 @@
             if($('select#location_id').length) {
                 data.location_id = $('select#location_id').val();
             }
-            if($('select#user_id').length) {
-                data.user_id = $('select#user_id').val();
+            if($('select#supplier_id').length) {
+                data.supplier_id = $('select#supplier_id').val();
             }
 
             var events = [];

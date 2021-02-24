@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -47,6 +49,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::post('/test-sms', 'BusinessController@testSmsConfiguration');
     Route::get('/business/settings', 'BusinessController@getBusinessSettings')->name('business.getBusinessSettings');
     Route::post('/business/update', 'BusinessController@postBusinessSettings')->name('business.postBusinessSettings');
+    Route::get('/business/get_locations', 'BusinessController@getBusinessLocations')->name('business.getBusinessLocations');
     Route::get('/user/profile', 'UserController@getProfile')->name('user.getProfile');
     Route::post('/user/update', 'UserController@updateProfile')->name('user.updateProfile');
     Route::post('/user/update-password', 'UserController@updatePassword')->name('user.updatePassword');
@@ -70,6 +73,11 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::post('/contacts/check-contact-id', 'ContactController@checkContactId');
     Route::get('/contacts/customers', 'ContactController@getCustomers');
     Route::resource('contacts', 'ContactController');
+
+    /*supplier detail*/
+    Route::resource('records', 'RecordController');
+    route::get('/supplier/detail', 'RecordController@getallsupplier');
+    Route::get('/record/view/{id}', 'RecordController@view');
 
     Route::get('taxonomies-ajax-index-page', 'TaxonomyController@getTaxonomyIndexPage');
     Route::resource('taxonomies', 'TaxonomyController');
@@ -134,9 +142,19 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::get('/sells/pos/get-featured-products/{location_id}', 'SellPosController@getFeaturedProducts');
     Route::resource('pos', 'SellPosController');
 
+    Route::resource('delivery', 'DeliveryController')->except(['create']);
+    Route::get('delivery/create/{transactionId}', 'DeliveryController@create');
+    Route::get('/delivery-transaction', 'DeliveryController@listDeliveryTransaction');
+    Route::resource('task', 'TaskController');
+    Route::put('/task/statusupdate/{id}', 'TaskController@statusupdate');
+    Route::get('/active/work', 'TaskController@getActiveWork');
+
     Route::resource('roles', 'RoleController');
 
     Route::resource('users', 'ManageUserController');
+
+    Route::get('/user/get_delivery_people', 'ManageUserController@getDeliveryPeople')->name('user.getdeliverypeople');
+
 
     Route::resource('group-taxes', 'GroupTaxController');
 
