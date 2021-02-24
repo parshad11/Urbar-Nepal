@@ -16,10 +16,11 @@ class DeliveryController extends Controller
     protected $moduleUtil;
     protected $transactionUtil;
 
-    public function __construct( TransactionUtil $transactionUtil, ModuleUtil $moduleUtil)
+    public function __construct( TransactionUtil $transactionUtil, ModuleUtil $moduleUtil,Delivery $delivery)
     {
         
         $this->transactionUtil = $transactionUtil;
+        $this->delivery = $delivery;
         $this->moduleUtil = $moduleUtil;
         $this->assign_status_colors = [
             '1' =>  'bg-green',
@@ -40,13 +41,43 @@ class DeliveryController extends Controller
 
         $business_id = request()->session()->get('user.business_id');
         if ($request->ajax()) {
-            //
-
+            $delivery=$this->delivery->all();
+//            dd($delivery);
+            return Datatables::of($delivery)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    $html = '<div class="btn-group">
+                    <button type="button" class="btn btn-info dropdown-toggle btn-xs"
+                        data-toggle="dropdown" aria-expanded="false">' .
+                        __("messages.actions") .
+                        '<span class="caret"></span><span class="sr-only">Toggle Dropdown
+                        </span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-left" role="menu">';
+                    if (auth()->user()->can("delivery.view")) {
+                        $html .= '<li><a href="#" data-href="' . action('DeliveryController@show', [$row->id]) . '" class="btn-modal" data-container=".view_modal"><i class="fas fa-eye" aria-hidden="true"></i>' . __("messages.view") . '</a></li>';
+                    }
+                    if (auth()->user()->can('delivery.update')) {
+                        $html .=  '<li><a href="' . action('DeliveryController@edit', [$row->id]) . '"><i class="fas fa-edit"></i> ' . __("messages.edit") . '</a></li>';
+                    }
+                    if (auth()->user()->can('delivery.delete')) {
+                        $html .= '<li><a href="' . action('DeliveryController@destroy', [$row->id]) . '" class="delete-task"><i class="fas fa-trash"></i> ' . __("messages.delete") . '</a></li>';
+                    }
+                    $html .=  '</ul></div>';
+                    return $html;
+                })
+                ->addColumn('delivery_person',function ($row){
+                    $delivery_person=$this->moduleUtil->getDeliveryUser($row->delivery_person_id);
+                    return $delivery_person;
+                })
+                ->removeColumn('id')
+                ->rawColumns(['action', 'task_status'])
+                ->make(true);
+//
+        } else {
+            return view('delivery.index');
         }
 
-            return view('delivery.index')->with(compact('business_locations','sales_representative'));
-        
-     
     }
 
     /**
@@ -191,10 +222,14 @@ class DeliveryController extends Controller
      * @param  \App\Delivery  $delivery
      * @return \Illuminate\Http\Response
      */
-    public function show(Delivery $delivery)
+    public function show($id)
     {
-        //
+        $delivery=Delivery::findorfail($id);
+        $delivery_person=$this->moduleUtil->getDeliveryUser($delivery->delivery_person_id);
+        return view('delivery.partials.delivery_show',compact('delivery','delivery_person'));
     }
+
+
 
     /**
      * Show the form for editing the specified resource.

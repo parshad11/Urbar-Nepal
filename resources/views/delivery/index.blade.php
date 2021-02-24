@@ -1,205 +1,131 @@
 @extends('layouts.app')
-@section('title', __( 'delivery.deliveries))
-
+@section('title','Delivery')
 @section('content')
 
-<!-- Content Header (Page header) -->
-<section class="content-header no-print">
-        <h1>@lang( 'delivery.deliveries' )
-            <small>@lang( 'delivery.manage_deliveries')</small>
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>Delivery
+            <small>Manage Delivery</small>
         </h1>
-</section>
+    </section>
 
-<!-- Main content -->
-<section class="content no-print">
-    @component('components.filters', ['title' => __('report.filters')])
-        @include('delivery.partials.delivery_list_filters')
-    @endcomponent
-    @component('components.widget', ['class' => 'box-primary', 'title' => __( 'lang_v1.all_sales')])
-        @can('delivery.create')
-            @slot('tool')
-                <div class="box-tools">
-                    <a class="btn btn-block btn-primary" href="{{action('DeliveryController@create')}}">
-                    <i class="fa fa-plus"></i> @lang('messages.add')</a>
-                </div>
-            @endslot
-        @endcan
-        @if(auth()->user()->can('delivery.view') ||  auth()->user()->can('view_own_delivery'))
-            <table class="table table-bordered table-striped ajax_view" id="delivery_table">
-                <thead>
+    <!-- Main content -->
+    <section class="content">
+        @component('components.widget', ['class' => 'box-primary', 'title' => 'All Delivery'])
+            {{--@can('delivery.create')--}}
+                {{--@slot('tool')--}}
+                    {{--<div class="box-tools">--}}
+                        {{--<a class="btn btn-block btn-primary"--}}
+                           {{--href="{{action('TaskController@create')}}">--}}
+                            {{--<i class="fa fa-plus"></i> @lang( 'messages.add' )</a>--}}
+                    {{--</div>--}}
+                {{--@endslot--}}
+            {{--@endcan--}}
+            @if (auth()->user()->can('task.view') || auth()->user()->can('view_own_task'))
+                <table class="table table-bordered table-striped" id="delivery_table">
+                    <thead>
                     <tr>
-                        <th>@lang('messages.action')</th>
-                        <th>@lang('lang_v1.type')</th>
-                        <th>@lang('messages.date')</th>
-                        <th>@lang('sale.location')</th>
-                        <th>@lang('sale.invoice_no')</th>
-                        <th>@lang('lang_v1.assign_status')</th>
-                        
-
-                        <th>@lang('sale.customer_name')</th>
-                        <th>@lang('lang_v1.type')</th>
-                       
-                        <th>@lang('sale.payment_status')</th>
-                        <th>@lang('lang_v1.payment_method')</th>
-                        <th>@lang('sale.total_amount')</th>
-                        <th>@lang('sale.total_paid')</th>
-                        <th>@lang('lang_v1.sell_due')</th>
-                        <th>@lang('lang_v1.sell_return_due')</th>
-                        <th>@lang('lang_v1.shipping_status')</th>
-                        <th>@lang('lang_v1.total_items')</th>
-                      
-                        <th>@lang('lang_v1.added_by')</th>
-                        <th>@lang('sale.sell_note')</th>
-                        <th>@lang('sale.staff_note')</th>
-                        <th>@lang('sale.shipping_details')</th>
+                        <th>Action</th>
+                        <th>delivery Person</th>
+                        <th>delivery status</th>
+                        <th>Start date</th>
+                        <th>End date</th>
+                        <th>deliver to</th>
                     </tr>
-                </thead>
-                <tbody>
-                </tbody>
-                
-            </table>
-        @endif
-    @endcomponent
-</section>
-<!-- /.content -->
-<div class="modal fade payment_modal" tabindex="-1" role="dialog" 
-    aria-labelledby="gridSystemModalLabel">
-</div>
+                    </thead>
+                    <tbody>
 
-<div class="modal fade edit_payment_modal" tabindex="-1" role="dialog" 
-    aria-labelledby="gridSystemModalLabel">
-</div>
+                    </tbody>
+                </table>
+            @endcan
+        @endcomponent
 
-<!-- This will be printed -->
-<!-- <section class="invoice print_section" id="receipt_section">
-</section> -->
+    </section>
 
+
+    <!-- /.content -->
 @stop
-
 @section('javascript')
-<script type="text/javascript">
-$(document).ready( function(){
-    //Date range as a button
-    $('#sell_list_filter_date_range').daterangepicker(
-        dateRangeSettings,
-        function (start, end) {
-            $('#sell_list_filter_date_range').val(start.format(moment_date_format) + ' ~ ' + end.format(moment_date_format));
-            sell_table.ajax.reload();
-        }
-    );
-    $('#sell_list_filter_date_range').on('cancel.daterangepicker', function(ev, picker) {
-        $('#sell_list_filter_date_range').val('');
-        sell_table.ajax.reload();
-    });
+    <script type="text/javascript">
+        @if(Session::has('success'))
+        toastr.success("{{Session::get('success')}}")
 
-    sell_table = $('#sell_table').DataTable({
-        processing: true,
-        serverSide: true,
-        aaSorting: [[1, 'desc']],
-        "ajax": {
-            "url": "/sells",
-            "data": function ( d ) {
-                if($('#sell_list_filter_date_range').val()) {
-                    var start = $('#sell_list_filter_date_range').data('daterangepicker').startDate.format('YYYY-MM-DD');
-                    var end = $('#sell_list_filter_date_range').data('daterangepicker').endDate.format('YYYY-MM-DD');
-                    d.start_date = start;
-                    d.end_date = end;
-                }
-                d.is_direct_sale = 1;
+        @endif
 
-                d.location_id = $('#sell_list_filter_location_id').val();
-                d.customer_id = $('#sell_list_filter_customer_id').val();
-                d.payment_status = $('#sell_list_filter_payment_status').val();
-                d.created_by = $('#created_by').val();
-                d.sales_cmsn_agnt = $('#sales_cmsn_agnt').val();
-                d.service_staffs = $('#service_staffs').val();
+        @if(Session::has('delete'))
+        toastr.info("{{Session::get('delete')}}")
+        @endif
 
-                if($('#shipping_status').length) {
-                    d.shipping_status = $('#shipping_status').val();
-                }
-                
-                @if($is_woocommerce)
-                    if($('#synced_from_woocommerce').is(':checked')) {
-                        d.only_woocommerce_sells = 1;
+        @if(Session::has('Error'))
+        toastr.error("{{Session::get('Error')}}")
+        @endif
+    </script>
+    <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            delivery_table = $('#delivery_table').DataTable({
+                processing: true,
+                serverSide: true,
+                "ajax": {
+                    "url": "/delivery",
+                    "data": function (d) {
+
                     }
-                @endif
+                },
+                columns: [
+                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                    {data: 'delivery_person', name: 'delivery_person'},
+                    {data: 'delivery_status', name: 'delivery_status'},
+                    {data: 'delivery_started_at', name: 'delivery_started_at'},
+                    {data: 'delivered_ended_at', name: 'delivered_ended_at'},
+                    {data: 'delivered_to', name: 'delivered_to'},
+                ],
 
-                if($('#only_subscriptions').is(':checked')) {
-                    d.only_subscriptions = 1;
+                "fnDrawCallback": function (oSettings) {
+                    __currency_convert_recursively($('#delivery_table'));
                 }
+            });
+            $(document).on('click', 'a.delete-task', function (e) {
+                e.preventDefault();
+                swal({
+                    title: LANG.sure,
+                    text: LANG.confirm_delete_task,
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                }).then((willDelete) => {
+                    if (willDelete) {
+                        var href = $(this).attr('href');
+                        var data = $(this).serialize();
 
-                d = __datatable_ajax_callback(d);
-            }
-        },
-        scrollY:        "75vh",
-        scrollX:        true,
-        scrollCollapse: true,
-        columns: [
-            { data: 'action', name: 'action', orderable: false, "searchable": false},
-            { data: 'transaction_date', name: 'transaction_date'  },
-            { data: 'invoice_no', name: 'invoice_no'},
-            { data: 'name', name: 'contacts.name'},
-            { data: 'mobile', name: 'contacts.mobile'},
-            { data: 'business_location', name: 'bl.name'},
-            { data: 'payment_status', name: 'payment_status'},
-            { data: 'payment_methods', orderable: false, "searchable": false},
-            { data: 'final_total', name: 'final_total'},
-            { data: 'total_paid', name: 'total_paid', "searchable": false},
-            { data: 'total_remaining', name: 'total_remaining'},
-            { data: 'return_due', orderable: false, "searchable": false},
-            { data: 'shipping_status', name: 'shipping_status'},
-            { data: 'total_items', name: 'total_items', "searchable": false},
-            { data: 'types_of_service_name', name: 'tos.name', @if(empty($is_types_service_enabled)) visible: false @endif},
-            { data: 'service_custom_field_1', name: 'service_custom_field_1', @if(empty($is_types_service_enabled)) visible: false @endif},
-            { data: 'added_by', name: 'u.first_name'},
-            { data: 'additional_notes', name: 'additional_notes'},
-            { data: 'staff_note', name: 'staff_note'},
-            { data: 'shipping_details', name: 'shipping_details'},
-            { data: 'table_name', name: 'tables.name', @if(empty($is_tables_enabled)) visible: false @endif },
-            { data: 'waiter', name: 'ss.first_name', @if(empty($is_service_staff_enabled)) visible: false @endif },
-        ],
-        "fnDrawCallback": function (oSettings) {
-            __currency_convert_recursively($('#sell_table'));
-        },
-        "footerCallback": function ( row, data, start, end, display ) {
-            var footer_sale_total = 0;
-            var footer_total_paid = 0;
-            var footer_total_remaining = 0;
-            var footer_total_sell_return_due = 0;
-            for (var r in data){
-                footer_sale_total += $(data[r].final_total).data('orig-value') ? parseFloat($(data[r].final_total).data('orig-value')) : 0;
-                footer_total_paid += $(data[r].total_paid).data('orig-value') ? parseFloat($(data[r].total_paid).data('orig-value')) : 0;
-                footer_total_remaining += $(data[r].total_remaining).data('orig-value') ? parseFloat($(data[r].total_remaining).data('orig-value')) : 0;
-                footer_total_sell_return_due += $(data[r].return_due).data('orig-value') ? parseFloat($(data[r].return_due).data('orig-value')) : 0;
-            }
-
-            $('.footer_total_sell_return_due').html(__currency_trans_from_en(footer_total_sell_return_due));
-            $('.footer_total_remaining').html(__currency_trans_from_en(footer_total_remaining));
-            $('.footer_total_paid').html(__currency_trans_from_en(footer_total_paid));
-            $('.footer_sale_total').html(__currency_trans_from_en(footer_sale_total));
-
-            $('.footer_payment_status_count').html(__count_status(data, 'payment_status'));
-            $('.service_type_count').html(__count_status(data, 'types_of_service_name'));
-            $('.payment_method_count').html(__count_status(data, 'payment_methods'));
-        },
-        createdRow: function( row, data, dataIndex ) {
-            $( row ).find('td:eq(6)').attr('class', 'clickable_td');
+                        $.ajax({
+                            method: "DELETE",
+                            url: href,
+                            dataType: "json",
+                            success: function (result) {
+                                if (result.success == true) {
+                                    toastr.success(result.msg);
+                                    delivery_table.ajax.reload();
+                                } else {
+                                    toastr.error(result.msg);
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        })
+    </script>
+@endsection
+@section('css')
+    <style>
+        td {
+            text-transform: capitalize
         }
-    });
 
-    $(document).on('change', '#sell_list_filter_location_id, #sell_list_filter_customer_id, #sell_list_filter_payment_status, #created_by, #sales_cmsn_agnt, #service_staffs, #shipping_status',  function() {
-        sell_table.ajax.reload();
-    });
-    @if($is_woocommerce)
-        $('#synced_from_woocommerce').on('ifChanged', function(event){
-            sell_table.ajax.reload();
-        });
-    @endif
+        th {
+            text-transform: capitalize
+        }
+    </style>
 
-    $('#only_subscriptions').on('ifChanged', function(event){
-        sell_table.ajax.reload();
-    });
-});
-</script>
-<script src="{{ asset('js/payment.js?v=' . $asset_v) }}"></script>
 @endsection
