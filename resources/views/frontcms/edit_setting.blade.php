@@ -25,7 +25,7 @@
             </div>
             <div class="col-md-10">
                 <div id="logo">                                      
-                    @if ($setting->logo_image != null)
+                    @if ($setting->logo_image != null && file_exists(public_path().'/uploads/img/home/'.$setting->logo_image))
                         <div class="col-md-3 col-sm-4 col-xs-6">
                             <div class="img-upload-preview">
                                 <img src="{{ asset('uploads/img/home/'.$setting->logo_image) }}" alt="" class="img-responsive">
@@ -75,13 +75,15 @@
                        $banner_images = explode(',', $setting->banner_images);
                     @endphp
                         @foreach ($banner_images as $banner_image)
-                        <div class="col-md-3 col-sm-4 col-xs-6">
-                            <div class="img-upload-preview" style="margin-bottom: 10px;">
-                                <img src="{{ asset('uploads/img/home/'.$banner_image) }}" alt="" class="img-responsive">
-                                <input type="hidden" name="previous_banner_images[]" value="{{ $banner_image }}">
-                                <button type="button" class="btn btn-danger close-btn remove-files"><i class="fa fa-times"></i></button>
+                            @if(file_exists(public_path().'/uploads/img/home/'.$banner_image))
+                            <div class="col-md-3 col-sm-4 col-xs-6">
+                                <div class="img-upload-preview" style="margin-bottom: 10px;">
+                                    <img src="{{ asset('uploads/img/home/'.$banner_image) }}" alt="" class="img-responsive">
+                                    <input type="hidden" name="previous_banner_images[]" value="{{ $banner_image }}">
+                                    <button type="button" class="btn btn-danger close-btn remove-files"><i class="fa fa-times"></i></button>
+                                </div>
                             </div>
-                        </div>
+                            @endif
                         @endforeach
                     @endif
                 </div>
@@ -103,9 +105,7 @@
                         <input type="text" class="form-control" name="why_title[]" value="Agriculture Leader" placeholder="Agriculture Leader" readonly>
                     </div>
                     <div class="col-md-9">
-                        <textarea name="why_description[]" id="" cols="30" rows="5" class="form-control" style="resize: none;">
-                            {{$why_us['Agriculture Leader']}}
-                        </textarea>
+                        <textarea name="why_description[]" id="" cols="30" rows="5" class="form-control" style="resize: none;">{{$why_us['Agriculture Leader']}}</textarea>
                     </div>
                 </div>
                 <div class="row" style="margin-bottom: 10px;">
@@ -113,9 +113,7 @@
                         <input type="text" class="form-control" name="why_title[]" value="Quality Standards" placeholder="Quality Standards" readonly>
                     </div>
                     <div class="col-md-9">
-                        <textarea name="why_description[]" id="" cols="30" rows="5" class="form-control" style="resize: none;">
-                            {{$why_us['Quality Standards']}}
-                        </textarea>
+                        <textarea name="why_description[]" id="" cols="30" rows="5" class="form-control" style="resize: none;">{{$why_us['Quality Standards']}}</textarea>
                     </div>
                 </div>
                 <div class="row">
@@ -123,9 +121,7 @@
                         <input type="text" class="form-control" name="why_title[]" value="Organic Service" placeholder="Organic Service" readonly>
                     </div>
                     <div class="col-md-9">
-                        <textarea name="why_description[]" id="" cols="30" rows="5" class="form-control" style="resize: none;">
-                            {{$why_us['Organic Service']}}
-                        </textarea>
+                        <textarea name="why_description[]" id="" cols="30" rows="5" class="form-control" style="resize: none;">{{$why_us['Organic Service']}}</textarea>
                     </div>
                 </div>
             </div>
@@ -155,9 +151,7 @@
                         </div>
                     </div>
                     <div class="col-md-12">
-                        <textarea name="welcome_description" id="welcome_description" cols="30" rows="5" class="form-control" placeholder="Welcome  Description Here...">
-                            {{$setting->welcome_description}}
-                        </textarea>
+                        <textarea name="welcome_description" id="welcome_description" cols="30" rows="5" class="form-control" placeholder="Welcome  Description Here...">{{$setting->welcome_description}}</textarea>
                     </div>
                 </div>
             </div>
@@ -210,9 +204,7 @@
                         <input type="text" name="faq[]" class="form-control" value="{{$key}}" placeholder="Question...?">
                     </div>
                     <div class="col-md-6">
-                        <textarea name="faq_ans[]" id="" cols="30" rows="5" class="form-control" placeholder="Answer..." style="resize: none;">
-                            {{$value}}
-                        </textarea>
+                        <textarea name="faq_ans[]" id="" cols="30" rows="5" class="form-control" placeholder="Answer..." style="resize: none;">{{$value}}</textarea>
                     </div>
                 </div>
                 @else
@@ -221,9 +213,7 @@
                         <input type="text" name="faq[]" value="{{$key}}" class="form-control" placeholder="Question...?">
                     </div>
                     <div class="col-md-6">
-                        <textarea name="faq_ans[]" id="" cols="30" rows="5" class="form-control" placeholder="Answer..." style="resize: none;">
-                            {{$value}}
-                        </textarea>
+                        <textarea name="faq_ans[]" id="" cols="30" rows="5" class="form-control" placeholder="Answer..." style="resize: none;">{{$value}}</textarea>
                     </div>
                     <a href="javascript:void(0);" class="col-md-1 btn btn-sm btn-success faq_add_btn"><i class="fa fa-plus"></i>&nbsp;Add</a>
                 </div>
