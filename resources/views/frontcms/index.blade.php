@@ -23,7 +23,7 @@
         <div class="slider-content">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2">
+                    <div class="col-sm-6 col-sm-offset-3">
                         <div class="slider-col slider-ontext">
                             <h1>Start your business with <span>freshktm<span></h1>
                             <h3 class="cd-headline clip">

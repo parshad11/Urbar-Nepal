@@ -407,7 +407,7 @@ class CmsController extends Controller
 
     public function createServices()
     {
-        return view('frontcms.service.form');
+        return view('frontcms.service.service_form');
     }
 
     public function storeServices(Request $request)
