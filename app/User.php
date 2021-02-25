@@ -94,9 +94,9 @@ class User extends Authenticatable
     }
 
     public function getUserNameAttribute()
-{
-    return $this->surname . ' ' . $this->first_name . ' '. $this->last_name;
-}
+    {
+        return $this->surname . ' ' . $this->first_name . ' '. $this->last_name;
+    }
 
     /**
      * Gives locations permitted for the logged in user
