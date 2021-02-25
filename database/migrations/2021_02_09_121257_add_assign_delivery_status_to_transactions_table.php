@@ -29,7 +29,7 @@ class AddAssignDeliveryStatusToTransactionsTable extends Migration
         Schema::table('transactions', function (Blueprint $table) {
             $table->dropColumn('assign_delivery');
             $table->dropColumn('assign_delivery_status');
-           
+
         });
     }
 }
