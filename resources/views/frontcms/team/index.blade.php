@@ -25,7 +25,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                      @if(isset($teams) && $teams != null)
+                      @if(isset($teams) && count($teams) > 0)
                         @foreach ($teams as $key => $value)
                             <tr>
                                 <td>{{$key+1}}</td>
@@ -44,7 +44,7 @@
                         @endforeach
                       @else
                       <tr>
-                        <td colspan="6">No Data Found</td>
+                        <td colspan="6">No Record Found</td>
                       </tr>
                       @endif
                 </tbody>

@@ -70,7 +70,9 @@ class CmsController extends Controller
      */
     public function store(Request $request)
     {
-        $data['logo_image'] = $this->util->uploadHomeFile($request->logo_image[0], config('constants.product_img_path') . '/home');
+        if ($request->hasFile('logo_image')) {
+            $data['logo_image'] = $this->util->uploadHomeFile($request->logo_image[0], config('constants.product_img_path') . '/home');
+        }
         $data['address'] = $request->address;
         $data['phone'] = $request->phone;
         $data['email'] = $request->email;
@@ -87,20 +89,32 @@ class CmsController extends Controller
         // $data['why_choose_us'] = http_build_query(array_combine($request->why_title, $request->why_description),'',',');
         $data['why_choose_us'] = json_encode(array_combine($request->why_title, $request->why_description));
 
-        $data['welcome_image'] = $this->util->uploadHomeFile($request->welcome_image[0], config('constants.product_img_path') . '/home');
+        if ($request->hasFile('welcome_image')) {
+            $data['welcome_image'] = $this->util->uploadHomeFile($request->welcome_image[0], config('constants.product_img_path') . '/home');
+        }
         $data['welcome_description'] = $request->welcome_description;
 
-        $data['vdo_image'] = $this->util->uploadHomeFile($request->vdo_image[0], config('constants.product_img_path') . '/home');
+        if ($request->hasFile('vdo_image')) {
+            $data['vdo_image'] = $this->util->uploadHomeFile($request->vdo_image[0], config('constants.product_img_path') . '/home');
+        }
         $data['vdo_link'] = $request->video_link;
 
         $data['faqs'] = json_encode(array_combine($request->faq, $request->faq_ans));
         $data['social_links'] = json_encode(array_combine($request->site, $request->sitelink));
 
-        $data['call_section_image'] = $this->util->uploadHomeFile($request->call_section_image[0], config('constants.product_img_path') . '/home');
-        $data['counter_section_image'] = $this->util->uploadHomeFile($request->counter_section_image[0], config('constants.product_img_path') . '/home');
-        $data['quote_background_image'] = $this->util->uploadHomeFile($request->quote_back_image[0], config('constants.product_img_path') . '/home');
-        $data['quote_front_image'] = $this->util->uploadHomeFile($request->quote_front_image[0], config('constants.product_img_path') . '/home');
 
+        if ($request->hasFile('call_section_image')) {
+            $data['call_section_image'] = $this->util->uploadHomeFile($request->call_section_image[0], config('constants.product_img_path') . '/home');
+        }
+        if ($request->hasFile('counter_section_image')) {
+            $data['counter_section_image'] = $this->util->uploadHomeFile($request->counter_section_image[0], config('constants.product_img_path') . '/home');
+        }
+        if ($request->hasFile('quote_back_image')) {
+            $data['quote_background_image'] = $this->util->uploadHomeFile($request->quote_back_image[0], config('constants.product_img_path') . '/home');
+        }
+        if ($request->hasFile('quote_front_image')) {
+            $data['quote_front_image'] = $this->util->uploadHomeFile($request->quote_front_image[0], config('constants.product_img_path') . '/home');
+        }
         $client_photos = array();
         if ($request->hasFile('client_images')) {
             foreach ($request->client_images as $key => $photo) {
@@ -116,9 +130,9 @@ class CmsController extends Controller
         if ($status) {
             $output = [
                 'success' => 1,
-                'msg' => __('product.product_added_success')
+                'msg' => 'Settings Added Successfully!'
             ];
-            return redirect()->route('frontcms-settings.create')->with('status', $output);
+            return redirect()->route('frontcms-settings.index')->with('status', $output);
         }
     }
 
@@ -238,9 +252,9 @@ class CmsController extends Controller
         if ($status) {
             $output = [
                 'success' => 1,
-                'msg' => "Product Updated Successfully"
+                'msg' => "Settings Updated Successfully"
             ];
-            return redirect()->route('frontcms-settings.create')->with('status', $output);
+            return redirect()->route('frontcms-settings.index')->with('status', $output);
         }
     }
 
@@ -262,13 +276,20 @@ class CmsController extends Controller
 
     public function storeAbout(Request $request)
     {
+
+        if ($request->hasFile('banner_image')) {
         $data['banner_image'] = $this->util->uploadHomeFile($request->banner_image[0], config('constants.product_img_path') . '/home/about');
+        }
         $data['what_sub_title'] = $request->what_sub_title;
         $data['what_description'] = $request->what_description;
+        if ($request->hasFile('banner_image')) {
         $data['what_image'] = $this->util->uploadHomeFile($request->what_image[0], config('constants.product_img_path') . '/home/about');
+        }
         $data['why_sub_title'] = $request->why_sub_title;
         $data['why_description'] = $request->why_description;
+        if ($request->hasFile('banner_image')) {
         $data['why_image'] = $this->util->uploadHomeFile($request->why_image[0], config('constants.product_img_path') . '/home/about');
+        }
         $data['why_short_points'] = json_encode($request->why_short_points);
         $data['added_by'] = $request->session()->get('user.id');
         $this->about->fill($data);
@@ -278,7 +299,7 @@ class CmsController extends Controller
                 'success' => 1,
                 'msg' => 'About Settings Added Successfuly'
             ];
-            return redirect()->route('frontcms_about_form')->with('status', $output);
+            return redirect()->route('frontcms_about_edit')->with('status', $output);
         }
     }
 
@@ -435,7 +456,7 @@ class CmsController extends Controller
     public function viewBlog()
     {
         $services = $this->service->get();
-        return view('frontcms.service.index')->with('services', $services);
+        return view('frontcms.blog.index')->with('services', $services);
     }
 
     public function createBlog()

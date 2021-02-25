@@ -15,14 +15,14 @@ class CreateFrontAboutsTable extends Migration
     {
         Schema::create('front_abouts', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('banner_image');
+            $table->string('banner_image')->nullable();
             $table->string('what_sub_title')->nullable();
-            $table->string('what_description');
-            $table->string('what_image');
+            $table->string('what_description')->nullable();
+            $table->string('what_image')->nullable();
             $table->string('why_sub_title')->nullable();
-            $table->string('why_description');
+            $table->string('why_description')->nullable();
             $table->string('why_short_points')->nullable();
-            $table->string('why_image');
+            $table->string('why_image')->nullable();
             $table->string('added_by');
             $table->timestamps();
         });
