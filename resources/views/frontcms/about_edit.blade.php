@@ -53,9 +53,7 @@
             </div>
             <div class="row" style="margin-bottom: 10px;">
                 <div class="col-md-12" style="padding:0 10px 0 0;">
-                    <textarea name="what_description" class="form-control" cols="30" rows="10" style="resize: none;" required placeholder="Description ...">
-                        {{ isset($about_info->what_description) ? $about_info->what_description : '' }}
-                    </textarea>
+                    <textarea name="what_description" class="form-control" cols="30" rows="10" style="resize: none;" required placeholder="Description ...">{{ isset($about_info->what_description) ? $about_info->what_description : '' }}</textarea>
                     {{-- <input type="text" name="phone" class="form-control" placeholder="Contact Number/Phone...?" required> --}}
                 </div>
             </div>
@@ -92,9 +90,7 @@
             </div>
             <div class="row" style="margin-bottom: 10px;">
                 <div class="col-md-12" style="padding:0 10px 0 0;">
-                    <textarea name="why_description" class="form-control" cols="30" rows="10" style="resize: none;" required placeholder="Description ...">
-                        {{ isset($about_info->why_description) ? $about_info->why_description : '' }}
-                    </textarea>
+                    <textarea name="why_description" class="form-control" cols="30" rows="10" style="resize: none;" required placeholder="Description ...">{{ isset($about_info->why_description) ? $about_info->why_description : '' }}</textarea>
                     {{-- <input type="text" name="phone" class="form-control" placeholder="Contact Number/Phone...?" required> --}}
                 </div>
             </div>

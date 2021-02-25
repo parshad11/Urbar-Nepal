@@ -282,12 +282,13 @@ input:-moz-placeholder {
   transform: perspective(1px) translateZ(0);
   box-shadow: 0 0 1px rgba(0, 0, 0, 0);
   position: relative;
-  background: #3C4767;
+  background: #D83D28;
   -webkit-transition-property: color;
   transition-property: color;
   -webkit-transition-duration: 0.3s;
   transition-duration: 0.3s;
   overflow: hidden;
+  padding: 10px 20px;
 }
 .theme-btn:before {
   content: "";
@@ -381,7 +382,7 @@ input:-moz-placeholder {
     width: 100%;
     height: 100%;
     z-index: 0;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.5);
 }
 .overlay-white {
     position: relative;
@@ -666,7 +667,7 @@ input:-moz-placeholder {
 }
 .header-navbar .navbar-default .navbar-nav>.active>a,
 .header-navbar .navbar-default .navbar-nav>li>a:hover {
-    color: #4A9E4A;
+    color: #bbffaf;
     background-color: transparent;
 }
 .header-navbar .navbar-default .navbar-nav>li>a:focus,
@@ -733,7 +734,7 @@ input:-moz-placeholder {
 
 /* NavBar Fixed CSS */
 .scroll-to-fixed-fixed {
-    background: #3C4767;
+    background: #2393D1;
     top: 0;
     width: 100% !important;
     z-index: 9999 !important;
@@ -823,8 +824,8 @@ input:-moz-placeholder {
 }
 .slider-ontext h1 {
     color: #2d2d2d;
-    font-size: 65px;
-    margin-bottom: 30px;
+    font-size: 36px;    
+    margin-bottom: 20px;
     padding: 20px 20px;
     background-color: rgba(255,255,255,0.7);
     border-radius: 5px;
@@ -841,7 +842,7 @@ input:-moz-placeholder {
     font-weight: normal;
 }
 .slider-ontext .slider-buttons {
-    margin-top: 30px;
+    margin-top: 20px;
 }
 .slider-ontext .slider-buttons .theme-btn {
     margin-top: 10px;
@@ -2109,7 +2110,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     position: relative;
 }
 .request-area.overlay-black:before {
-    background-color: rgba(130, 180, 64, 0.8);
+    background-color: rgb(96 147 78 / 60%);
 }
 .request-col {
     margin-bottom: 0;
@@ -2117,7 +2118,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
 .request-col .form-control {
     color: #ffffff;
     border: none;
-    background: rgba(60, 71, 103, 0.6);
+    background: rgb(44 154 206 / 51%);;
     border-radius: 5px;
 }
 .request-title h2 {
@@ -3053,7 +3054,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
 *****-----*****-----*****-----*****/
 .our-footer {
     padding: 100px 0 70px;
-    background: #3c4767;
+    background: #31708f;
     position: relative;
 }
 .our-footer-col {
@@ -3152,7 +3153,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
     transition: all 0.3s ease-in-out;
 }
 .our-footer-col form .form-control {
-    background: #4f5a7a;
+    background: #2c9ace7a;
     border-color: transparent;
     border-top-left-radius: 30px;
     border-bottom-left-radius: 30px;
@@ -3200,7 +3201,7 @@ clip-path: polygon(0% 15%, 15% 15%, 15% 0%, 85% 0%, 85% 15%, 100% 15%, 100% 85%,
 /* COPY RIGHT CSS START */
 .copyright {
     padding: 15px 15px;
-    background-color: #4F5A7A;
+    background-color: #337ab7;
     position: relative;
 }
 .copyright-col p {

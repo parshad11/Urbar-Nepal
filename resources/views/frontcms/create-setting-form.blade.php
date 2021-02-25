@@ -5,6 +5,7 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>Home Page Settings</h1>
+    <small><b>Note*:</b>Every Field should be filled properly</small>
     {{-- <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
         <li class="active">Here</li>
