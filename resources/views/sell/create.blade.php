@@ -174,7 +174,7 @@
 					<div class="@if(!empty($commission_agent)) col-sm-3 @else col-sm-4 @endif">
 						<div class="form-group">
 							{!! Form::label('status', __('sale.status') . ':*') !!}
-							{!! Form::select('status', ['final' => __('sale.final'), 'draft' => __('sale.draft'), 'quotation' => __('lang_v1.quotation')], null, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required']); !!}
+							{!! Form::select('status', ['final' => __('sale.final'), 'draft' => __('sale.draft'), 'quotation' => __('lang_v1.quotation')], null, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required','id'=>'sell_status']); !!}
 						</div>
 					</div>
 				@endif
@@ -269,7 +269,7 @@
 
 					</div>
 
-                    <div class="col-sm-3">
+                    <div class="col-sm-3 hide assign_delivery_div">
              		   <div class="form-group">
 							<div class="checkbox">
 							<br/>
@@ -485,6 +485,16 @@
                 format: moment_date_format + ' ' + moment_time_format,
                 ignoreReadonly: true,
             });
+
+			$( "#sell_status" ).change(function() {
+        if(this.value == 'final'){
+            $('div.assign_delivery_div').removeClass( "hide" );
+        }
+        else{
+            $('div.assign_delivery_div').addClass("hide");
+           
+        }
+        });
 
 			$('#select_location_id').select2({
 			ajax: {
