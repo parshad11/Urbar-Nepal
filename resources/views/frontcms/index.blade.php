@@ -56,7 +56,7 @@
                 <div class="section-title">
                     <h2>why choose us</h2>
                     <div class="title-border"></div> 
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                    <p>A leading platform providing high quality organic ingredients.</p>
                 </div>
             </div>
             <div class="col-md-4 col-sm-6 col-xs-6 fw600">
@@ -155,7 +155,7 @@
                 <div class="section-title">
                     <h2>our Services</h2>
                     <div class="title-border"></div> 
-                    <p>Sed pellentesque, ligula at lacinia molestie sapien consequat</p>
+                    <p>Facilitate consumers with highly experienced fresh value chain management services.</p>
                 </div>
             </div>
         </div>

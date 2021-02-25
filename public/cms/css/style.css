@@ -423,7 +423,7 @@ input:-moz-placeholder {
     margin: 0 auto;
     margin-bottom: 10px;
     position: relative;
-    background: #4A9E4A
+    background: #4A9E4A;
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     -ms-border-radius: 50%;
