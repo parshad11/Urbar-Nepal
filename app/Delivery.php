@@ -11,6 +11,7 @@ class Delivery extends Model
     use Notifiable;
 
 
+
     /**
      * The attributes that aren't mass assignable.
      *

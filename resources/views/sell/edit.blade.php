@@ -139,7 +139,7 @@
 				<div class="@if(!empty($commission_agent)) col-sm-3 @else col-sm-4 @endif">
 					<div class="form-group">
 						{!! Form::label('status', __('sale.status') . ':*') !!}
-						{!! Form::select('status', ['final' => __('sale.final'), 'draft' => __('sale.draft'), 'quotation' => __('lang_v1.quotation')], $status, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required']); !!}
+						{!! Form::select('status', ['final' => __('sale.final'), 'draft' => __('sale.draft'), 'quotation' => __('lang_v1.quotation')], $status, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required','id'=>'sell_status']); !!}
 					</div>
 				</div>
 				@if($transaction->status == 'draft')
@@ -236,7 +236,7 @@
 						</tr>
 					</table>
 					</div>
-					<div class="col-sm-3 ">
+					<div class="col-sm-3 assign_delivery_div">
 					<div class="checkbox">
 					<label>
 						{!! Form::checkbox('assign_delivery', 1, $transaction->assign_delivery, 
@@ -404,6 +404,23 @@
 	<script src="{{ asset('js/pos.js?v=' . $asset_v) }}"></script>
 	<script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
 	<script src="{{ asset('js/opening_stock.js?v=' . $asset_v) }}"></script>
+
+	<script type="text/javascript">
+    	$(document).ready( function(){
+
+			$( "#sell_status" ).change(function() {
+        if(this.value == 'final'){
+            $('div.assign_delivery_div').removeClass( "hide" );
+        }
+        else{
+            $('div.assign_delivery_div').addClass("hide");
+           
+        }
+        });
+
+    });
+    </script>
+
 	<!-- Call restaurant module if defined -->
     @if(in_array('tables' ,$enabled_modules) || in_array('modifiers' ,$enabled_modules) || in_array('service_staff' ,$enabled_modules))
     	<script src="{{ asset('js/restaurant.js?v=' . $asset_v) }}"></script>

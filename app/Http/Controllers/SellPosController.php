@@ -987,6 +987,7 @@ class SellPosController extends Controller
         }
         
         try {
+            dd($request->all());
             $input = $request->except('_token');
             //status is send as quotation from edit sales screen.
             $input['is_quotation'] = 0;
@@ -1097,6 +1098,13 @@ class SellPosController extends Controller
                 $assign_delivery=0;
                 if($input['status']=='final'&& isset($input['assign_delivery'])){
                     $assign_delivery=1;
+                }
+
+                if($assign_delivery=0){
+                    $delivery = Delivery::where('transaction_id', $id)
+                    ->firstOrFail();
+                    $delivery->delete();
+
                 }
                 //Begin transaction
                 DB::beginTransaction();
