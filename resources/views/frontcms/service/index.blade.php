@@ -4,7 +4,7 @@
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
-    <h1>service Members</h1>
+    <h1>service Setting</h1>
 </section>
 
 <!-- Main content -->
@@ -44,7 +44,7 @@
                         @endforeach
                       @else
                       <tr>
-                        <td colspan="6">No Data Found</td>
+                        <td colspan="6">No Record Found</td>
                       </tr>
                       @endif
                 </tbody>

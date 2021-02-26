@@ -88,6 +88,7 @@ class BusinessLocation extends Model
         }
     }
 
+   
     public function price_group()
     {
         return $this->belongsTo(\App\SellingPriceGroup::class, 'selling_price_group_id');
@@ -140,7 +141,7 @@ class BusinessLocation extends Model
     {
         $location = $this;
         $address = $location->landmark . ', ' .$location->city . 
-        ', ' . $location->state . '<br>' . $location->country . ', ' . $location->zip_code;
+        ', ' . $location->state . ', ' . $location->country . ', ' . $location->zip_code;
 
         return $address;
     }

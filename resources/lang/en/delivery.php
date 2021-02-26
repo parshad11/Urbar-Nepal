@@ -47,6 +47,7 @@ return [
     'shipping_details'=>'Shipping Details',
     'assigned'=>'Assigned',
     'not_assigned'=>'Not Assigned',
+    'delivered_to'=>'Delivered To',
     
 
 
