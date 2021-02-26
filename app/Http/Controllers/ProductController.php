@@ -58,6 +58,7 @@ class ProductController extends Controller
      */
     public function index()
     {
+        // dd('test');
         if (!auth()->user()->can('product.view') && !auth()->user()->can('product.create')) {
             abort(403, 'Unauthorized action.');
         }

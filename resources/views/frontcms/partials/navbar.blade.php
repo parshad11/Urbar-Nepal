@@ -23,7 +23,7 @@
                                         <li class="{{ Request::segment(1) == 'about-us' ? 'active' : ''}}">
                                             <a href="{{ route('front_about') }}" >About</a>
                                         </li>
-                                        <li><a href="#">Shop</a></li>
+                                        <li><a href="{{route('shop')}}">Shop</a></li>
                                         <li><a href="{{route('blog')}}">Blog</a></li>
                                         <li class="dropdown">
                                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Pages <i class="fa fa-angle-down" aria-hidden="true"></i></a>
