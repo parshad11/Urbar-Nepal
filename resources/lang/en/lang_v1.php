@@ -1200,7 +1200,7 @@ return [
     'type'=>'Type',
     'assign_status'=>'Assign Status',
     'assigned_by'=>'Assigned By',
-    'all_transactions'=>'All Transactions',
+    'all_transactions_for_delivery'=>'All Transactions For Delivery',
     'assigned'=>'Assigned',
     'not_assigned'=>'Not Assigned',
 

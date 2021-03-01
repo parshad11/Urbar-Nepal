@@ -144,7 +144,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
 
     Route::resource('delivery', 'DeliveryController')->except(['create']);
     Route::get('delivery/{transactionId}/create/', 'DeliveryController@create');
-    Route::get('/delivery-transaction', 'DeliveryController@listDeliveryTransaction');
+    Route::get('/delivery-transaction', 'DeliveryController@listDeliveryTransaction')->name('delivery.transactions');
     Route::resource('task', 'TaskController');
     Route::put('/task/statusupdate/{id}', 'TaskController@statusupdate');
     Route::get('/active/work', 'TaskController@getActiveWork');

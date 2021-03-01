@@ -294,6 +294,7 @@ class PurchaseController extends Controller
         }
 
         try {
+           
             $business_id = $request->session()->get('user.business_id');
 
             //Check if subscribed or not
@@ -364,18 +365,6 @@ class PurchaseController extends Controller
             
             $transaction = Transaction::create($transaction_data);
 
-            // if($transaction->assign_delivery){
-            //     $delivery_details['transaction_id']=$transaction->id;
-            //     $delivery_details['delivery_person_id']=$request->input('delivery_person_id');
-            //     $delivery_details['delivery_status']=$request->input('delivery_status');
-            //     $delivery_details['pickup_address']=$request->input('pickup_address');
-            //     $delivery_details['pickup_latitude']=$request->input('pickup_latitude');
-            //     $delivery_details['pickup_longitude']=$request->input('pickup_longitude');
-            //     $delivery_details['shipping_address']=$request->input('shipping_address');
-            //     $delivery_details['special_delivery_instructions']=$request->input('special_delivery_instructions');
-            //     Delivery::create($delivery_details);
-
-            // }
             $purchase_lines = [];
             $purchases = $request->input('purchases');
 
@@ -576,7 +565,7 @@ class PurchaseController extends Controller
         }
 
         try {
-            
+        
             $transaction = Transaction::findOrFail($id);
             //Validate document size
             $request->validate([
@@ -636,19 +625,11 @@ class PurchaseController extends Controller
             //update transaction
             $transaction->update($update_data);
 
-            // if($transaction->assign_delivery){
-            //     $delivery_details['delivery_person_id']=$request->input('delivery_person_id');
-            //     $delivery_details['delivery_status']=$request->input('delivery_status');
-            //     $delivery_details['pickup_address']=$request->input('pickup_address');
-            //     $delivery_details['pickup_latitude']=$request->input('pickup_latitude');
-            //     $delivery_details['pickup_longitude']=$request->input('pickup_longitude');
-            //     $delivery_details['shipping_address']=$request->input('shipping_address');
-            //     $delivery_details['special_delivery_instructions']=$request->input('special_delivery_instructions');
-            //     $delivery=Delivery::where('transaction_id',$transaction->id)->first();
-             
-            //     $delivery->update($delivery_details);
-
-            // }
+            if($transaction->assign_delivery==0){
+                $delivery = Delivery::where('transaction_id', $id)
+                ->firstOrFail();
+                $delivery->delete();
+            }
 
             //Update transaction payment status
             $this->transactionUtil->updatePaymentStatus($transaction->id);

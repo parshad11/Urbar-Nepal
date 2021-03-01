@@ -36,6 +36,7 @@
         @endif
 
 				<div class="row">
+                <input type="hidden" id="transaction_id" value="{{ $transaction->id }}" name="transaction_id">
 				<div class="col-md-12 " style="display:flex;justify-content: space-between;">
 						<div class=" col-sm-4 ">
 							<div class="form-group">

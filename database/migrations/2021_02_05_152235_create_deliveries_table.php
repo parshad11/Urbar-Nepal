@@ -28,7 +28,7 @@ class CreateDeliveriesTable extends Migration
             $table->string('pickup_longitude')->nullable();
             $table->string('special_delivery_instructions')->nullable();
             $table->dateTime('delivery_started_at')->nullable();
-            $table->dateTime('delivered_ended_at')->nullable();
+            $table->dateTime('delivery_ended_at')->nullable();
             $table->string('delivered_to')->nullable();
             $table->integer('assigned_by')->unsigned();
             $table->foreign('assigned_by')->references('id')->on('users')->onDelete('cascade');

@@ -503,19 +503,6 @@ class SellPosController extends Controller
                     $this->notificationUtil->autoSendNotification($business_id, 'new_sale', $transaction, $transaction->contact);
                 }
 
-                // if($transaction->assign_delivery){
-                //     $delivery_details['transaction_id']=$transaction->id;
-                //     $delivery_details['delivery_person_id']=$request->input('delivery_person_id');
-                //     $delivery_details['delivery_status']=$request->input('delivery_status');
-                //     $delivery_details['pickup_address']=$request->input('pickup_address');
-                //     $delivery_details['shipping_address']=$request->input('shipping_address');
-                //     $delivery_details['shipping_latitude']=$request->input('shipping_latitude');
-                //     $delivery_details['shipping_longitude']=$request->input('shipping_longitude');
-                //     $delivery_details['special_delivery_instructions']=$request->input('special_delivery_instructions');
-                //     Delivery::create($delivery_details);
-    
-                // }
-
                 //Set Module fields
                 if (!empty($input['has_module_data'])) {
                     $this->moduleUtil->getModuleData('after_sale_saved', ['transaction' => $transaction, 'input' => $input]);
@@ -987,7 +974,7 @@ class SellPosController extends Controller
         }
         
         try {
-            dd($request->all());
+        
             $input = $request->except('_token');
             //status is send as quotation from edit sales screen.
             $input['is_quotation'] = 0;
@@ -1099,8 +1086,8 @@ class SellPosController extends Controller
                 if($input['status']=='final'&& isset($input['assign_delivery'])){
                     $assign_delivery=1;
                 }
-
-                if($assign_delivery=0){
+                
+                if($assign_delivery==0){
                     $delivery = Delivery::where('transaction_id', $id)
                     ->firstOrFail();
                     $delivery->delete();

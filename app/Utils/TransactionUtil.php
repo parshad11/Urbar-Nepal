@@ -7,6 +7,7 @@ use App\Business;
 use App\BusinessLocation;
 use App\Contact;
 use App\Currency;
+use App\Delivery;
 use App\Events\TransactionPaymentAdded;
 use App\Events\TransactionPaymentDeleted;
 use App\Events\TransactionPaymentUpdated;
@@ -4268,7 +4269,7 @@ class TransactionUtil extends Util
 
      /**
     * common function to get
-    * list sell
+    * list transactions
     * @param int $business_id
     *
     * @return object
@@ -4285,7 +4286,8 @@ class TransactionUtil extends Util
                 )
                 ->where('transactions.business_id', $business_id)
                 ->where('assign_delivery', 1)
-                ->whereIn('transactions.status', ['received','final'])
+                ->whereIn('transactions.type', ['purchase','sell'])
+                ->whereIn('transactions.status', ['ordered','pending','final'])
                 ->select(
                     'transactions.id',
                     'transactions.transaction_date',
@@ -4299,6 +4301,43 @@ class TransactionUtil extends Util
                 );
         return $transactions;
     }
+
+      /**
+    * common function to get
+    * list deliveries
+    * @param int $business_id
+    *
+    * @return object
+    */
+    public function getDeliveries($business_id)
+    {
+        $deliveries = Delivery::
+        leftJoin('transactions', 'deliveries.transaction_id', '=', 'transactions.id')
+                ->leftJoin('delivery_people as dp', 'deliveries.delivery_person_id', '=', 'dp.id')
+                ->leftJoin('users as r', 'dp.user_id', '=', 'r.id')
+                ->leftJoin('users as u', 'deliveries.assigned_by', '=', 'u.id')
+                ->join(
+                    'business_locations AS bl',
+                    'transactions.location_id',
+                    '=',
+                    'bl.id'
+                )
+                ->where('transactions.business_id', $business_id)
+                ->select(
+                    'deliveries.id',
+                    DB::raw("CONCAT(COALESCE(r.surname, ''),' ',COALESCE(r.first_name, ''),' ',COALESCE(r.last_name,'')) as delivery_person"),
+                    'bl.name as business_location',
+                    'deliveries.delivery_status',
+                    'deliveries.shipping_address', 
+                    'deliveries.pickup_address',
+                    'deliveries.delivery_started_at',
+                    'deliveries.delivery_ended_at',
+                    'deliveries.delivered_to',
+                    DB::raw("CONCAT(COALESCE(u.surname, ''),' ',COALESCE(u.first_name, ''),' ',COALESCE(u.last_name,'')) as assigned_by")
+                );
+        return $deliveries;
+    }
+
 
     /**
      * Function to get ledger details

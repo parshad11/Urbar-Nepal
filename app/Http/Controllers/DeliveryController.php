@@ -10,6 +10,7 @@ use App\User;
 use App\Utils\ModuleUtil;
 use App\Utils\TransactionUtil;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
 class DeliveryController extends Controller
@@ -40,11 +41,46 @@ class DeliveryController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
+           
         $business_id = request()->session()->get('user.business_id');
+        $deliveryStatuses = $this->transactionUtil->deliveryStatuses();
+    
         if ($request->ajax()) {
-            $delivery=$this->delivery->all();
-//            dd($delivery);
-            return Datatables::of($delivery)
+           
+            $deliveries = $this->transactionUtil->getDeliveries($business_id);
+
+            if (request()->has('assigned_by')) {
+                $assigned_by = request()->get('assigned_by');
+                if (!empty($created_by)) {
+                    $deliveries->where('deliveries.assigned_by', $assigned_by);
+                }
+            }
+
+            if (!empty(request()->delivery_person_id)) {
+                $delivery_person_id = request()->delivery_person_id;
+                $deliveries->where('deliveries_person_id', $delivery_person_id);
+            }
+
+            if (request()->has('location_id')) {
+                $location_id = request()->get('location_id');
+                if (!empty($location_id)) {
+                    $deliveries->where('transactions.location_id', $location_id);
+                }
+            }
+
+            if (!empty(request()->start_date) && !empty(request()->end_date)) {
+                $start = request()->start_date;
+                $end =  request()->end_date;
+                $deliveries->whereDate('deliveries.created_at', '>=', $start)
+                            ->whereDate('deliveries.created_at', '<=', $end);
+            }
+
+           
+            if (!empty(request()->input('delivery_status'))) {
+                $deliveries->where('deliveries.delivery_status', request()->input('delivery_status'));
+            }
+
+            return Datatables::of($deliveries)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $html = '<div class="btn-group">
@@ -67,16 +103,14 @@ class DeliveryController extends Controller
                     $html .=  '</ul></div>';
                     return $html;
                 })
-                ->addColumn('delivery_person',function ($row){
-                    $delivery_person=$this->moduleUtil->getDeliveryUser($row->delivery_person_id);
-                    return $delivery_person;
-                })
                 ->removeColumn('id')
-                ->rawColumns(['action', 'task_status'])
+                ->rawColumns(['action'])
                 ->make(true);
 //
         } else {
-            return view('delivery.index');
+            $sales_representative = User::forDropdown($business_id, false, false, true);
+            $business_locations = BusinessLocation::forDropdown($business_id, false);
+            return view('delivery.index')->with(compact('deliveryStatuses','business_locations','sales_representative'));
         }
 
     }
@@ -228,7 +262,51 @@ class DeliveryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if (!auth()->user()->can('delivery.create')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        try {
+            $input = $request->except('_token');
+
+            $business_id = $request->session()->get('user.business_id');
+            $user_id = $request->session()->get('user.id');
+            DB::beginTransaction();
+                $delivery=Delivery::create([
+                    'transaction_id' => $input['transaction_id'],
+                    'delivery_person_id' => $input['delivery_person_id'],
+                    'delivery_status' => $input['delivery_status'],
+                    'shipping_address' => $input['shipping_address'],
+                    'shipping_latitude' => $input['shipping_latitude'],
+                    'shipping_longitude' => $input['shipping_longitude'],
+                    'pickup_address' => $input['pickup_address'],
+                    'pickup_latitude' => $input['pickup_latitude'],
+                    'pickup_longitude' => $input['pickup_longitude'],
+                    'delivered_to' => $input['delivered_to'],
+                    'assigned_by' => $user_id,
+                    'special_delivery_instructions' => $input['special_delivery_instructions'],
+                ]);
+                if(isset($delivery)){
+                   $transaction=Transaction::findOrFail($input['transaction_id']);
+                   $transaction->assign_delivery_status=1;
+                   $transaction->save();
+                 }
+            DB::commit();
+
+            $output = ['success' => 1,
+                            'msg' => __('delivery.delivery_assign_success')
+                        ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            
+            $output = ['success' => 0,
+                            'msg' => __('messages.something_went_wrong')
+                        ];
+        }
+
+        return redirect('delivery-transaction')->with('status', $output);
+
     }
 
     /**

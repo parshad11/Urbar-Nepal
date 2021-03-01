@@ -1,12 +1,11 @@
 @extends('layouts.app')
-@section('title', __( 'delivery.deliveries'))
+@section('title', __( 'delivery.delivery_transaction'))
 
 @section('content')
 
 <!-- Content Header (Page header) -->
 <section class="content-header no-print">
-        <h1>@lang( 'delivery.deliveries' )
-            <small>@lang( 'delivery.manage_deliveries')</small>
+        <h1>@lang( 'delivery.delivery_transaction' )
         </h1>
 </section>
 
@@ -15,7 +14,7 @@
     @component('components.filters', ['title' => __('report.filters')])
         @include('delivery.partials.transaction_list_filters')
     @endcomponent
-    @component('components.widget', ['class' => 'box-primary', 'title' => __( 'lang_v1.all_transactions')])
+    @component('components.widget', ['class' => 'box-primary', 'title' => __( 'lang_v1.all_transactions_for_delivery')])
         @if(auth()->user()->can('purchase.view') ||  auth()->user()->can('view_own_purchase') ||auth()->user()->can('direct_sell.access')||auth()->user()->can('sell.view')||auth()->user()->can('view_own_sell_only'))
             <table class="table table-bordered table-striped ajax_view" id="delivery_assign_table">
                 <thead>
