@@ -20,4 +20,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-route::post('/login','api\LoginController@login')->name('delivery.login');
+route::post('/login','Api\LoginController@login')->name('delivery.login');
