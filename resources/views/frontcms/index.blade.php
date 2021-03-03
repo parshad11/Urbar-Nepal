@@ -81,14 +81,14 @@
                             <div class="main-banner">
                                 <img src="{{ asset('cms/images/main-banner.jpg')}}" alt="" srcset="">
                             </div>
-                            {{-- <h1>Start your business with <span>freshktm<span></h1>
+                            {{-- <h1>Start your business with <span>freshktm<span></h1> --}}
                             <h3 class="cd-headline clip">
                                 <span class="cd-words-wrapper">
                                     <b class="is-visible">We are very experienced</b>
                                     <b>we are very trusted</b>
                                     <b>Be happy with us</b>
                                 </span>
-                            </h3> --}}
+                            </h3>
                             <div class="slider-buttons">
                                 <a class="btn btn-default theme-btn btn-hover" href="#">Shop Now</a>
                                 <a class="btn btn-default theme-btn btn-hover" href="contact.html">Become a Partner</a>
