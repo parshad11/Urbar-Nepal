@@ -840,6 +840,7 @@ input:-moz-placeholder {
     color: #f3f3f3;
     font-size: 24px;
     margin-bottom: 0;
+    margin-top: 10px;
     font-weight: normal;
 }
 .slider-ontext .slider-buttons {
