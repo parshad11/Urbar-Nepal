@@ -395,7 +395,7 @@
                         @foreach ($client_images as $client_image)
                         <div class="col-md-3 col-sm-4 col-xs-6">
                             <div class="img-upload-preview" style="margin-bottom: 10px;">
-                                <img src="{{ asset('uploads/img/home/'.$client_image) }}" alt="" class="img-responsive">
+                                <img src="{{ asset('uploads/img/home/client/'.$client_image) }}" alt="" class="img-responsive">
                                 <input type="hidden" name="previous_client_images[]" value="{{ $client_image }}">
                                 <button type="button" class="btn btn-danger close-btn remove-files"><i class="fa fa-times"></i></button>
                             </div>
