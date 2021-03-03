@@ -24,6 +24,72 @@
     <link href="{{ asset('cms/css/responsive.css') }}" rel="stylesheet">
 
     @yield('styles')
+    <style>
+        /* MOBILE NAV */
+        .navbar-header .logo-main {
+            display: none;
+        }
+
+        .navbar-header .contact {
+            display: none;
+        }
+
+
+        @media only screen and (max-width: 767px) {
+            .my-search-box{
+                display: none;
+            }
+
+            .header-topbar {
+                display: none;
+            }
+
+            .header-middle {
+                display: none;
+            }
+
+            .navbar-header .logo-main {
+                display: block;
+                position: absolute;
+                width: 35%;
+                height: auto;
+                padding: 2%;
+                left: -10%;
+            }
+
+            .navbar-header .contact {
+                width: 100%;
+                text-align: center;
+                position: absolute;
+                padding: 3%;
+                display: block;
+                left: 0;
+                right: 0;
+
+            }
+
+            .navbar-header .contact a {
+                color: #ffffff;
+
+            }
+
+            .navbar-header button{
+                right: 0;
+                position: absolute;
+                
+            }
+
+            .navbar-collapse{
+                margin-top: 15%;
+            }
+
+        }
+
+        /* MAIN BANNER IMAGE */
+        .main-banner {
+            width: 100%;
+        }
+    </style>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

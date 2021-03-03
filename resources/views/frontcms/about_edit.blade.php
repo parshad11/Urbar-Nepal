@@ -1,21 +1,24 @@
 @extends('layouts.app')
 @section('title','About Us')
+@section('css')
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+<style>
+.ck-editor__editable_inline {
+    min-height: 300px;
+}
+</style>
+@endsection
 @section('content')
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>About Page Settings</h1>
-    {{-- <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-        <li class="active">Here</li>
-    </ol> --}}
 </section>
 
 <!-- Main content -->
 <section class="content">
 <form action="{{ route('frontcms_about_update')}}" class="form" method="POST" enctype="multipart/form-data">
     @csrf
-    {{-- @method("PUT") --}}
     <input type="hidden" name="setting_id" value="{{ $about_info->id }}">
     {{-- Banner image --}}
     @component('components.widget', ['class' => 'box-primary'])
@@ -26,7 +29,7 @@
             </div>
             <div class="col-md-10">
                 <div id="banner">                    
-                    @if ($about_info->banner_image != null)
+                    @if (isset($about_info) && $about_info->banner_image != null)
                         <div class="col-md-3 col-sm-4 col-xs-6">
                             <div class="img-upload-preview">
                                 <img src="{{ asset('uploads/img/home/about/'.$about_info->banner_image) }}" alt="" class="img-responsive">
@@ -39,22 +42,21 @@
             </div>
         </div>
     @endcomponent
-    {{-- About Section First --}}
+    {{-- Mission and Vision --}}
     @component('components.widget', ['class' => 'box-primary'])
     <div class="row form-group">
         <div class="col-md-2">
-            <label for="what_we_do" class="control-label">What We Do :</label>
+            <label for="mission_vision" class="control-label">Mission and Vision :</label>
         </div>
         <div class="col-md-10">
-            <div class="row" style="margin-bottom: 10px;">
+            {{-- <div class="row" style="margin-bottom: 10px;">
                 <div class="col-md-12" style="padding:0 10px 0 0;">
                     <input type="text" name="what_sub_title" value="{{ isset($about_info->what_sub_title) ? $about_info->what_sub_title : '' }}" class="form-control" placeholder="Sub Heading">
                 </div>
-            </div>
+            </div> --}}
             <div class="row" style="margin-bottom: 10px;">
                 <div class="col-md-12" style="padding:0 10px 0 0;">
-                    <textarea name="what_description" class="form-control" cols="30" rows="10" style="resize: none;" required placeholder="Description ...">{{ isset($about_info->what_description) ? $about_info->what_description : '' }}</textarea>
-                    {{-- <input type="text" name="phone" class="form-control" placeholder="Contact Number/Phone...?" required> --}}
+                    <textarea name="what_description" id="editor" required>{!! isset($about_info->what_description) ? $about_info->what_description : '' !!}</textarea>
                 </div>
             </div>
             <div class="row">
@@ -76,24 +78,51 @@
         </div>
     </div>
     @endcomponent
-    {{-- About Section Second --}}
+    {{-- Philosophy Section --}}
     @component('components.widget', ['class' => 'box-primary'])
     <div class="row form-group">
         <div class="col-md-2">
-            <label for="why_us" class="control-label">Why Choose Us :</label>
+            <label for="why_us" class="control-label">Philosophy :</label>
         </div>
         <div class="col-md-10">
-            <div class="row" style="margin-bottom: 10px;">
+            {{-- <div class="row" style="margin-bottom: 10px;">
                 <div class="col-md-12" style="padding:0 10px 0 0;">
                     <input type="text" name="why_sub_title" value="{{ isset($about_info->why_sub_title) ? $about_info->why_sub_title : '' }}" class="form-control" placeholder="Sub Heading">
                 </div>
-            </div>
+            </div> --}}
             <div class="row" style="margin-bottom: 10px;">
                 <div class="col-md-12" style="padding:0 10px 0 0;">
-                    <textarea name="why_description" class="form-control" cols="30" rows="10" style="resize: none;" required placeholder="Description ...">{{ isset($about_info->why_description) ? $about_info->why_description : '' }}</textarea>
-                    {{-- <input type="text" name="phone" class="form-control" placeholder="Contact Number/Phone...?" required> --}}
+                    <textarea name="why_description" class="form-control" cols="30" rows="10" style="resize: none;" required placeholder="Philosophy Summary ...">{{ isset($about_info->why_description) ? $about_info->why_description : '' }}</textarea>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-md-12 points_content_wrapper">
+                    <label for="philosophy" class="control-label">Philosophy Notes:</label>
+                    <div class="row" style="margin-bottom: 10px">
+                        @if(isset($about_info) && !empty($about_info))
+                            @php
+                                $why_lists = json_decode($about_info->why_short_points, true);
+                                $count = count($why_lists);
+                            @endphp
+                            @for($i=0; $i < $count-1 ; $i++)                                
+                            <div class="col-md-10" style="padding-left: 0;margin-bottom:10px;">
+                                <input type="text" name="why_short_points[]" value="{{ $why_lists[$i] }}" class="form-control" placeholder="Philosophy Notes...">
+                            </div>
+                            @endfor
+                            <div class="col-md-10" style="padding-left: 0;">
+                                <input type="text" name="why_short_points[]" value="{{ $why_lists[$count-1] }}" class="form-control" placeholder="Philosophy Notes...">
+                            </div>
+                        @else
+                        <div class="col-md-10" style="padding-left: 0;">
+                            <input type="text" name="why_short_points[]" class="form-control" placeholder="Philosophy Notes...">
+                        </div>
+                        @endif
+                        <a href="javascript:void(0);" class="col-md-1 btn btn-sm btn-success points_add_btn"><i class="fa fa-plus"></i>&nbsp;Add</a>
+                    </div>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col-12" style="padding:0 10px 0 0;">
                     <label for="why_image" class="control-label"><small>Image Dimension: 600*630</small></label>
@@ -108,31 +137,6 @@
                             </div>
                         @endif
 
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12 points_content_wrapper">
-                    <div class="row" style="margin-bottom: 10px">
-                        @if(isset($about_info) && !empty($about_info))
-                            @php
-                                $why_lists = json_decode($about_info->why_short_points, true);
-                                $count = count($why_lists);
-                            @endphp
-                            @for($i=0; $i < $count-1 ; $i++)                                
-                            <div class="col-md-10" style="padding-left: 0;margin-bottom:10px;">
-                                <input type="text" name="why_short_points[]" value="{{ $why_lists[$i] }}" class="form-control" placeholder="Short Points...(Optional)">
-                            </div>
-                            @endfor
-                            <div class="col-md-10" style="padding-left: 0;">
-                                <input type="text" name="why_short_points[]" value="{{ $why_lists[$count-1] }}" class="form-control" placeholder="Short Points...(Optional)">
-                            </div>
-                        @else
-                        <div class="col-md-10" style="padding-left: 0;">
-                            <input type="text" name="why_short_points[]" class="form-control" placeholder="Short Points...(Optional)">
-                        </div>
-                        @endif
-                        <a href="javascript:void(0);" class="col-md-1 btn btn-sm btn-success points_add_btn"><i class="fa fa-plus"></i>&nbsp;Add</a>
                     </div>
                 </div>
             </div>
@@ -156,9 +160,13 @@
 @endsection
 @section('javascript')
     <script src="{{ asset('cms/spartan/dist/js/spartan-multi-image-picker-min.js') }}"></script>
+    <!-- summernote js -->
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
     <script>
          $(document).ready(function(){
-
+            $('#editor').summernote({
+                height: 150,
+            });
             $("#banner").spartanMultiImagePicker({
                 fieldName:        'banner_image[]',
                 maxCount:         1,
@@ -213,7 +221,7 @@
     </script>
     <script>
         $(document).ready(function() {
-            // points Add/Remove
+            // Philosophy Notes Add/Remove
             var wrapper = $(".points_content_wrapper");
             var add_button = $(".points_add_btn");
 
@@ -224,7 +232,7 @@
                 $(wrapper).append(`
                     <div class="row" style="margin-bottom: 10px">
                         <div class="col-md-10" style="padding-left: 0;">
-                            <input type="text" name="why_short_points[]"class="form-control" placeholder="Short Points...?">
+                            <input type="text" name="why_short_points[]"class="form-control" placeholder="Philosophy Notes...">
                         </div>
                         <a href="javascript:void(0);" class="col-md-1 btn btn-sm btn-danger points_remove_btn"><i class="fa fa-minus"></i>&nbsp;Remove</a>
                     </div>`);

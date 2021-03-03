@@ -1,6 +1,14 @@
 @extends('layouts.app')
-@section('title', __('product.add_new_product'))
+@section('title', 'Edit Home Settings')
 @section('content')
+@section('css')
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+<style>
+.ck-editor__editable_inline {
+    min-height: 300px;
+}
+</style>
+@endsection
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
@@ -75,10 +83,10 @@
                        $banner_images = explode(',', $setting->banner_images);
                     @endphp
                         @foreach ($banner_images as $banner_image)
-                            @if(file_exists(public_path().'/uploads/img/home/'.$banner_image))
+                            @if(file_exists(public_path().'/uploads/img/home/banner/'.$banner_image))
                             <div class="col-md-3 col-sm-4 col-xs-6">
                                 <div class="img-upload-preview" style="margin-bottom: 10px;">
-                                    <img src="{{ asset('uploads/img/home/'.$banner_image) }}" alt="" class="img-responsive">
+                                    <img src="{{ asset('uploads/img/home/banner/'.$banner_image) }}" alt="" class="img-responsive">
                                     <input type="hidden" name="previous_banner_images[]" value="{{ $banner_image }}">
                                     <button type="button" class="btn btn-danger close-btn remove-files"><i class="fa fa-times"></i></button>
                                 </div>
@@ -92,38 +100,40 @@
     @endcomponent
     {{-- Why Choose Us --}}
     @component('components.widget', ['class' => 'box-primary'])
-        @php
-            $why_us = json_decode($setting->why_choose_us, true);
-        @endphp
         <div class="row form-group">
             <div class="col-md-2">
                 <label for="choose_us" class="control-label">Why Choose US :</label>
             </div>
             <div class="col-md-10">
+                @if($setting->why_choose_us != null)
+                @php
+                    $why_us = json_decode($setting->why_choose_us, true);
+                @endphp
                 <div class="row" style="margin-bottom: 10px;">
                     <div class="col-md-3">
-                        <input type="text" class="form-control" name="why_title[]" value="Agriculture Leader" placeholder="Agriculture Leader" readonly>
+                        <input type="text" class="form-control" name="why_title[]" value="Benifits for Farmers" placeholder="Benifits for Farmers" readonly>
                     </div>
                     <div class="col-md-9">
-                        <textarea name="why_description[]" id="" cols="30" rows="5" class="form-control" style="resize: none;">{{$why_us['Agriculture Leader']}}</textarea>
+                        <textarea name="why_description[]" id="" cols="30" rows="5" class="form-control" style="resize: none;">{{$why_us['Benifits for Farmers']}}</textarea>
                     </div>
                 </div>
                 <div class="row" style="margin-bottom: 10px;">
                     <div class="col-md-3">
-                        <input type="text" class="form-control" name="why_title[]" value="Quality Standards" placeholder="Quality Standards" readonly>
+                        <input type="text" class="form-control" name="why_title[]" value="Benifits for Retailers" placeholder="Benifits for Retailers" readonly>
                     </div>
                     <div class="col-md-9">
-                        <textarea name="why_description[]" id="" cols="30" rows="5" class="form-control" style="resize: none;">{{$why_us['Quality Standards']}}</textarea>
+                        <textarea name="why_description[]" id="" cols="30" rows="5" class="form-control" style="resize: none;">{{$why_us['Benifits for Retailers']}}</textarea>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-3">
-                        <input type="text" class="form-control" name="why_title[]" value="Organic Service" placeholder="Organic Service" readonly>
+                        <input type="text" class="form-control" name="why_title[]" value="Saving for Consumers" placeholder="Saving for Consumers" readonly>
                     </div>
                     <div class="col-md-9">
-                        <textarea name="why_description[]" id="" cols="30" rows="5" class="form-control" style="resize: none;">{{$why_us['Organic Service']}}</textarea>
+                        <textarea name="why_description[]" id="" cols="30" rows="5" class="form-control" style="resize: none;">{{$why_us['Saving for Consumers']}}</textarea>
                     </div>
                 </div>
+                @endif
             </div>
         </div>
     @endcomponent
@@ -151,7 +161,7 @@
                         </div>
                     </div>
                     <div class="col-md-12">
-                        <textarea name="welcome_description" id="welcome_description" cols="30" rows="5" class="form-control" placeholder="Welcome  Description Here...">{{$setting->welcome_description}}</textarea>
+                        <textarea name="welcome_description" id="editor">{!!$setting->welcome_description!!}</textarea>
                     </div>
                 </div>
             </div>
@@ -193,6 +203,7 @@
                 <label for="choose_us" class="control-label">Faq Section :</label>
             </div>
             <div class="col-md-10 faq_content_wrapper">
+                @if ($setting->faqs != null)
                 @php
                     $faqs = json_decode($setting->faqs, true);
                     $last = array_key_last($faqs);
@@ -219,6 +230,7 @@
                 </div>
                 @endif
                 @endforeach
+                @endif
             </div>
         </div>
     @endcomponent
@@ -269,7 +281,7 @@
     @endcomponent
 
     {{-- google Map link --}}
-    @component('components.widget', ['class' => 'box-primary'])
+    {{-- @component('components.widget', ['class' => 'box-primary'])
         <div class="row form-group">
             <div class="col-md-2">
                 <label class="control-label">{{__('Google Map Link :')}} </label><br>
@@ -278,7 +290,7 @@
                     <input type="url" name="google_map_link" class="form-control" value="{{$setting->google_map_link}}" placeholder="Google Map Url...?" required>
             </div>
         </div>
-    @endcomponent
+    @endcomponent --}}
     {{-- call section image --}}
     @component('components.widget', ['class' => 'box-primary'])
         <div class="row form-group">
@@ -412,9 +424,13 @@
 @endsection
 @section('javascript')
     <script src="{{ asset('cms/spartan/dist/js/spartan-multi-image-picker-min.js') }}"></script>
+    <!-- summernote js -->
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
     <script>
          $(document).ready(function(){
-
+            $('#editor').summernote({
+                height: 150,
+            });
             $("#logo").spartanMultiImagePicker({
                 fieldName:        'logo_image[]',
                 maxCount:         1,

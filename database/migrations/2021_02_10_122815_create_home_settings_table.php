@@ -20,7 +20,7 @@ class CreateHomeSettingsTable extends Migration
             $table->string('phone');
             $table->string('email');
             $table->string('banner_images')->nullable();
-            $table->string('why_choose_us')->nullable();
+            $table->longText('why_choose_us')->nullable();
             $table->string('welcome_image')->nullable();
             $table->text('welcome_description')->nullable();
             $table->string('vdo_image')->nullable();

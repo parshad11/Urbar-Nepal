@@ -416,6 +416,7 @@ input:-moz-placeholder {
 }
 .section-title p {
     font-weight: bold;
+    font-size: 24px;
 }
 .section-title .title-border {
     width: 15px;
@@ -423,7 +424,7 @@ input:-moz-placeholder {
     margin: 0 auto;
     margin-bottom: 10px;
     position: relative;
-    background: #4A9E4A
+    background: #4A9E4A;
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     -ms-border-radius: 50%;
@@ -585,7 +586,7 @@ input:-moz-placeholder {
 
 /* Header Middle */
 .header-middle {
-    padding: 30px 0;
+    padding: 20px 0;
 }
 .header-middle .main-logo img {
     width: 175px;
