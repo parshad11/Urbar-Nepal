@@ -5,7 +5,9 @@
 @section('content')
 <!-- Page heading Start -->
 <section class="page-heading-area jarallax overlay-black" id="water-animation">
+    @if(isset($about_info))
     <img class="jarallax-img" src="{{asset('uploads/img/home/about/'.$about_info->banner_image)}}" alt="">
+    @endif
     <div class="container">
         <div class="row">
             <div class="col-md-12 text-center">
@@ -22,6 +24,7 @@
 <section class="team-area">
     <div class="container">
         <div class="row">
+            @if(count($teams) > 0)
             @foreach($teams as $team)
             <div class="col-md-3 col-sm-6 col-xs-6 fw600">
                 <div class="our-team">
@@ -40,6 +43,7 @@
                 </div>
             </div>
             @endforeach
+            @endif
         </div>
         <nav class="pagination-outer" aria-label="Page navigation">
             <ul class="pagination">

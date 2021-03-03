@@ -416,6 +416,7 @@ input:-moz-placeholder {
 }
 .section-title p {
     font-weight: bold;
+    font-size: 24px;
 }
 .section-title .title-border {
     width: 15px;
@@ -585,7 +586,7 @@ input:-moz-placeholder {
 
 /* Header Middle */
 .header-middle {
-    padding: 30px 0;
+    padding: 20px 0;
 }
 .header-middle .main-logo img {
     width: 175px;

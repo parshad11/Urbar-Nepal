@@ -1,15 +1,19 @@
 @extends('layouts.app')
-@section('title', __('product.add_new_product'))
+@section('title', 'Add Home Setting')
 @section('content')
+@section('css')
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+<style>
+.ck-editor__editable_inline {
+    min-height: 300px;
+}
+</style>
+@endsection
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>Home Page Settings</h1>
     <small><b>Note*:</b>Every Field should be filled properly</small>
-    {{-- <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-        <li class="active">Here</li>
-    </ol> --}}
 </section>
 
 <!-- Main content -->
@@ -76,7 +80,7 @@
             <div class="col-md-10">
                 <div class="row" style="margin-bottom: 10px;">
                     <div class="col-md-3">
-                        <input type="text" class="form-control" name="why_title[]" value="Agriculture Leader" placeholder="Agriculture Leader" readonly>
+                        <input type="text" class="form-control" name="why_title[]" value="Benifits for Farmers" placeholder="Benifits for Farmers" readonly>
                     </div>
                     <div class="col-md-9">
                         <textarea name="why_description[]" id="" cols="30" rows="5" class="form-control" style="resize: none;"></textarea>
@@ -84,7 +88,7 @@
                 </div>
                 <div class="row" style="margin-bottom: 10px;">
                     <div class="col-md-3">
-                        <input type="text" class="form-control" name="why_title[]" value="Quality Standards" placeholder="Quality Standards" readonly>
+                        <input type="text" class="form-control" name="why_title[]" value="Benifits for Retailers" placeholder="Benifits for Retailers" readonly>
                     </div>
                     <div class="col-md-9">
                         <textarea name="why_description[]" id="" cols="30" rows="5" class="form-control" style="resize: none;"></textarea>
@@ -92,7 +96,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-3">
-                        <input type="text" class="form-control" name="why_title[]" value="Organic Service" placeholder="Organic Service" readonly>
+                        <input type="text" class="form-control" name="why_title[]" value="Saving for Consumers" placeholder="Saving for Consumers" readonly>
                     </div>
                     <div class="col-md-9">
                         <textarea name="why_description[]" id="" cols="30" rows="5" class="form-control" style="resize: none;"></textarea>
@@ -116,7 +120,7 @@
                         </div>
                     </div>
                     <div class="col-md-12">
-                        <textarea name="welcome_description" id="welcome_description" cols="30" rows="5" class="form-control" placeholder="Welcome  Description Here..."></textarea>
+                        <textarea name="welcome_description" id="editor"></textarea>
                     </div>
                 </div>
             </div>
@@ -163,6 +167,7 @@
         </div>
     @endcomponent
 
+    {{-- Socail Links --}}
     @component('components.widget', ['class' => 'box-primary'])
         <div class="row form-group">
             <div class="col-md-2">
@@ -206,7 +211,7 @@
     @endcomponent
 
     {{-- google Map link --}}
-    @component('components.widget', ['class' => 'box-primary'])
+    {{-- @component('components.widget', ['class' => 'box-primary'])
         <div class="row form-group">
             <div class="col-md-2">
                 <label class="control-label">{{__('Google Map Link :')}} </label><br>
@@ -215,7 +220,7 @@
                     <input type="url" name="google_map_link" class="form-control" placeholder="Google Map Url...?" required>
             </div>
         </div>
-    @endcomponent
+    @endcomponent --}}
     {{-- call section image --}}
     @component('components.widget', ['class' => 'box-primary'])
         <div class="row form-group">
@@ -302,8 +307,13 @@
 @endsection
 @section('javascript')
     <script src="{{ asset('cms/spartan/dist/js/spartan-multi-image-picker-min.js') }}"></script>
+    <!-- summernote js -->
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
     <script>
          $(document).ready(function(){
+            $('#editor').summernote({
+                height: 150,
+            });
 
             $("#logo").spartanMultiImagePicker({
                 fieldName:        'logo_image[]',

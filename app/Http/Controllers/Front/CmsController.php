@@ -80,7 +80,7 @@ class CmsController extends Controller
         $banner_photos = array();
         if ($request->hasFile('banner_images')) {
             foreach ($request->banner_images as $key => $photo) {
-                $banner = $this->util->uploadHomeFile($photo, config('constants.product_img_path') . '/home');
+                $banner = $this->util->uploadHomeFile($photo, config('constants.product_img_path') . '/home/banner');
                 array_push($banner_photos, $banner);
             }
         }
@@ -118,7 +118,7 @@ class CmsController extends Controller
         $client_photos = array();
         if ($request->hasFile('client_images')) {
             foreach ($request->client_images as $key => $photo) {
-                $banner = $this->util->uploadHomeFile($photo, config('constants.product_img_path') . '/home');
+                $banner = $this->util->uploadHomeFile($photo, config('constants.product_img_path') . '/home/client');
                 array_push($client_photos, $banner);
             }
         }
@@ -185,7 +185,7 @@ class CmsController extends Controller
         }
         if ($request->hasFile('banner_images')) {
             foreach ($request->banner_images as $key => $photo) {
-                $banner = $this->util->uploadHomeFile($photo, config('constants.product_img_path') . '/home');
+                $banner = $this->util->uploadHomeFile($photo, config('constants.product_img_path') . '/home/banner');
                 array_push($banner_photos, $banner);
             }
         }
