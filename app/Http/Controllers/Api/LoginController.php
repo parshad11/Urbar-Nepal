@@ -33,6 +33,7 @@ class LoginController extends Controller
         $token->expires_at = Carbon::now()->addWeeks(100);
         $token->save();
         return response()->json([
+            'status'=> 'ok',
             'access_token' => $tokenResult->accessToken,
             'token_type' => 'Bearer',
             'expires_at' => Carbon::parse(
