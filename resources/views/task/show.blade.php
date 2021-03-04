@@ -1,23 +1,23 @@
 @extends('layouts.app')
 
-@section('title', __( 'delivery.view_delivery' ))
+@section('title', __( 'delivery.view_task' ))
 
 @section('content')
     <!-- Main content -->
     <section class="content">
         <div class="row">
             <div class="col-md-4">
-                <h3>@lang( 'delivery.view_delivery' )</h3>
+                <h3>@lang( 'delivery.view_task' )</h3>
             </div>
         </div>
         <br>
         <div class="row">
-        
+           
             <div class="col-md-12">
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs nav-justified">
                         <li class="active">
-                            <a href="#task_details_tab" data-toggle="tab" aria-expanded="true"><i class="fas fa-info-circle" aria-hidden="true"></i> @lang( 'delivery.delivery_details')</a>
+                            <a href="#task_details_tab" data-toggle="tab" aria-expanded="true"><i class="fas fa-info-circle" aria-hidden="true"></i> @lang( 'delivery.task_details')</a>
                         </li>
                         
                         <li>
@@ -36,8 +36,8 @@
                                  <div class="col-md-3">
                                     <strong>@lang('delivery.business_location'):</strong><br>
                                     <p class="well well-sm no-shadow bg-gray">
-                                        @if($delivery->transaction->location_id)
-                                        {{ $delivery->transaction->location->name }}
+                                        @if($task->location_id)
+                                        {{ $task->location->name }}
                                         @else
                                         --
                                         @endif
@@ -46,20 +46,20 @@
                                 <div class="clearfix"></div>
                              
                                     <div class="col-md-4">
-                                    <strong>@lang('lang_v1.type'):</strong><br>
+                                    <strong>@lang('delivery.task_title'):</strong><br>
                                     <p class="well well-sm no-shadow bg-gray">
-                                        @if($delivery->transaction_id)
-                                        {{ $delivery->transaction->type}}
+                                        @if($task->title)
+                                        {{ $task->title }}
                                         @else
                                         --
                                         @endif
                                     </p>
                                     </div>
                                     <div class="col-md-3 ">
-                                    <strong>@lang('delivery.payment_status'):</strong><br>
+                                    <strong>@lang('delivery.task_type'):</strong><br>
                                     <p class="well well-sm no-shadow bg-gray">
-                                        @if($delivery->transaction_id)
-                                        {{ $delivery->transaction->payment_status}}
+                                        @if($task->task_type)
+                                        {{ $task->task_type}}
                                         @else
                                         --
                                         @endif
@@ -68,10 +68,10 @@
                                     </div>
 
                                     <div class="col-md-3 pull-right">
-                                    <strong>@lang('delivery.delivery_status'):</strong><br>
+                                    <strong>@lang('delivery.task_status'):</strong><br>
                                     <p class="well well-sm no-shadow bg-gray">
-                                        @if($delivery->delivery_status)
-                                        {{ $delivery->delivery_status }}
+                                        @if($task->task_status)
+                                        {{ $task->task_status }}
                                         @else
                                         --
                                         @endif
@@ -82,20 +82,20 @@
                                     <div class="clearfix"></div>
 
                                     <div class="col-md-4">
-                                    <strong>@lang('delivery.delivery_started_at'):</strong><br>
+                                    <strong>@lang('delivery.task_started_at'):</strong><br>
                                     <p class="well well-sm no-shadow bg-gray ">
-                                        @if($delivery->delivery_started_at)
-                                        {{ $delivery->delivery_started_at }}
+                                        @if($task->started_at)
+                                        {{ $task->started_at }}
                                         @else
                                         --
                                         @endif
                                     </p>
                                     </div>
                                     <div class="col-md-4">
-                                    <strong>@lang('delivery.delivery_ended_at'):</strong><br>
+                                    <strong>@lang('delivery.task_ended_at'):</strong><br>
                                     <p class="well well-sm no-shadow bg-gray ">
-                                        @if($delivery->delivery_ended_at)
-                                        {{ $delivery->delivery_ended_at }}
+                                        @if($task->ended_at)
+                                        {{ $task->ended_at }}
                                         @else
                                         --
                                         @endif
@@ -103,10 +103,10 @@
                                     </div>
 
                                     <div class="col-md-4">
-                                    <strong>@lang('delivery.delivered_to'):</strong><br>
+                                    <strong>@lang('delivery.assigned_by'):</strong><br>
                                     <p class="well well-sm no-shadow bg-gray ">
-                                        @if($delivery->delivered_to)
-                                        {{ $delivery->delivered_to }}
+                                        @if($task->assigned_by)
+                                        {{ $task->record_staff->user_name }}
                                         @else
                                         --
                                         @endif
@@ -114,25 +114,30 @@
                                     </div>
 
                                     <div class="clearfix"></div>
+
+                                    <div class="col-md-6">
+                                    <strong>@lang('delivery.description'):</strong><br>
+                                    <p class="well well-sm no-shadow bg-gray">
+                                        @if($task->description)
+                                        {{ $task->description }}
+                                        @else
+                                        --
+                                        @endif
+                                    </p>
+                                    </div>
+
                                     <div class="col-md-6">
                                     <strong>@lang('delivery.special_instructions'):</strong><br>
                                     <p class="well well-sm no-shadow bg-gray">
-                                        @if($delivery->special_delivery_instructions)
-                                        {{ $delivery->special_delivery_instructions }}
+                                        @if($task->special_instructions)
+                                        {{ $task->special_instructions }}
                                         @else
                                         --
                                         @endif
                                     </p>
                                     </div>   
-                                    <div class="col-md-4 pull-right">
-                                    <strong>@lang('delivery.assigned_by'):</strong><br>
-                                    <p class="well well-sm no-shadow bg-gray ">
-                                        @if($delivery->assigned_by)
-                                        {{ $delivery->record_staff->user_name }}
-                                        @else
-                                        --
-                                        @endif
-                                    </p>
+                                    <div class="col-md-12"   style="display:flex;justify-content: space-between;">
+
                                     </div>
 
                             </div>
@@ -141,10 +146,10 @@
                             <div class="row">
                             <div class="col-md-12"   style="display:flex;justify-content: space-between;">
                                     <div class="col-md-4">
-                                    <strong>@lang('delivery.shipping_address'):</strong><br>
+                                    <strong>@lang('delivery.task_address'):</strong><br>
                                     <p class="well well-sm no-shadow bg-gray">
-                                    @if($delivery->shipping_address)
-                                        {{ $delivery->shipping_address }}
+                                        @if($task->task_address)
+                                        {{ $task->task_address }}
                                         @else
                                         --
                                         @endif
@@ -153,31 +158,13 @@
 
                                     <div class="col-md-8">
                                     <strong>@lang('delivery.location_view'):</strong><br>
-                                    <div id="mapid" style="height:180px"></div>
-
-                                    </div>   
-                            </div>
-                            <div class="col-md-12"   style="display:flex;justify-content: space-between;">
-                                    <div class="col-md-4">
-                                    <strong>@lang('delivery.pickup_address'):</strong><br>
-                                    <p class="well well-sm no-shadow bg-gray">
-                                    @if($delivery->pickup_address)
-                                        {{ $delivery->pickup_address }}
-                                        @else
-                                        --
-                                        @endif
-                                    </p>
+                                    <div id='map'>
+                                    
                                     </div>
 
-                                    <div class="col-md-6 pull-right">
-                                    <strong>@lang('delivery.location_view'):</strong><br>
-                                    <input type="hidden" id="pickup_latitude" value="{{ $delivery->pickup_latitude }}" name="pickup_latitude">
-                                    <input type="hidden" id="pickup_longitude" value="{{ $delivery->pickup_longitude }}" name="pickup_longitude">
-                                    <div id="pickupmap"></div>
-
-                                    </div>   
+                                    </div>
                             </div>
-                            </div>       
+                            </div>
                         </div>
 
                         <div class="tab-pane" id="delivery_person_tab">
@@ -186,35 +173,35 @@
                        
                             @php
                             if(isset($task->delivery_person->user->media->display_url)) {
-                                $img_src = $delivery->delivery_person->user->media->display_url;
+                                $img_src = $task->delivery_person->user->media->display_url;
                             } else {
-                                $img_src = 'https://ui-avatars.com/api/?name='.$delivery->delivery_person->user->first_name;
+                                $img_src = 'https://ui-avatars.com/api/?name='.$task->delivery_person->user->first_name;
                             }
                             @endphp
 
                         <img class="profile-user-img img-responsive img-circle" src="{{$img_src}}" alt="User profile picture">
 
                         <h3 class="profile-username text-center">
-                            {{$delivery->delivery_person->user->user_name}}
+                            {{$task->delivery_person->user->user_name}}
                         </h3>
 
                         <p class="text-muted text-center" title="@lang('user.role')">
-                            {{$delivery->delivery_person->user->role_name}}
+                            {{$task->delivery_person->user->role_name}}
                         </p>
 
                         <ul class="list-group list-group-unbordered text-center">
                             <li class="list-group-item">
                                 <b>@lang( 'business.contact_number' )</b>
-                                <a>{{$delivery->delivery_person->user->contact_number}}</a>
+                                <a>{{$task->delivery_person->user->contact_number}}</a>
                             </li>
                             <li class="list-group-item">
                                 <b>@lang( 'business.email' )</b>
-                                <a>{{$delivery->delivery_person->user->email}}</a>
+                                <a>{{$task->delivery_person->user->email}}</a>
                             </li>
 
                             <li class="list-group-item">
                                 <b>{{ __('lang_v1.status_for_user') }}</b>
-                                @if($delivery->delivery_person->user->status == 'active')
+                                @if($task->delivery_person->user->status == 'active')
                                     <span class="label label-success pull-right">
                                         @lang('business.is_active')
                                     </span>
@@ -226,14 +213,15 @@
                             </li>
                         </ul>
                             
-                                <a href="#" class="btn btn-primary btn-block">
+                                <a href="{{action('TaskController@edit', [$task->delivery_person_id])}}" class="btn btn-primary btn-block">
                                     <i class="fas fa-thumbtack"></i>
                                     @lang("messages.track")
                                 </a>
                            
                             
                         </div>
-                        </div>
+                    <!-- /.box-body -->
+                </div>
                         </div>
                     </div>
                 </div>
@@ -244,7 +232,7 @@
 @section('javascript')
     <!-- document & note.js -->
     @include('documents_and_notes.document_and_note_js')
-
+    <script src="{{ asset('js/map.js?v=' . $asset_v) }}"></script>
     <script type="text/javascript">
         $(document).ready( function(){
             $('#user_id').change( function() {
@@ -253,12 +241,21 @@
                 }
             });
         });
+        
+mapboxgl.accessToken = 'pk.eyJ1IjoicHJhbW9kbGFtc2FsIiwiYSI6ImNqenp2d25xZjIyZnozbG1saXJvdzY4encifQ.JnhenWIopEkt6RAp5ukfCA';
 
-        const map = L.map('pickupmap').setView([27.6833306, 85.416665], 13);
-        const attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
-        const tileUrl='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-        const tiles=L.tileLayer(tileUrl,{attribution});
-        tiles.addTo(map)
-        const marker=L.marker([27.6833306, 85.416665]).addTo(map);
+const map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/streets-v11',
+    center:[85.416665, 27.6833306],
+    zoom:13
+});
+
+var marker = new mapboxgl.Marker()
+.setLngLat([30.5, 50.5])
+.addTo(map);
+
+map.addControl(new mapboxgl.NavigationControl());
     </script>
+ 
 @endsection

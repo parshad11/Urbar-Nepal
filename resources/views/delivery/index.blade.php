@@ -20,6 +20,7 @@
                     <thead>
                     <tr>
                         <th>Action</th>
+                        <th>Transaction Type</th>
                         <th>Delivery Person</th>
                         <th>Delivery Status</th>
                         <th>Shipping  Address</th>
@@ -38,6 +39,10 @@
         @endcomponent
 
     </section>
+
+    @can('delivery.update')
+        @include('delivery.partials.update_delivery_status_modal')
+    @endcan
 
 
     <!-- /.content -->
@@ -84,9 +89,9 @@
                         d.start_date = start;
                         d.end_date = end;
                     }
-                        d.location_id = $('#delivery_list_filter_location_id').val();
+                        d.location_id = $('#location_id').val();
                         d.delivery_status = $('#delivery_list_filter_delivery_status').val();
-                        d.delivery_person_id = $('#delivery_list_filter_delivery_person_id').val();
+                        d.delivery_person_id = $('#delivery_person_id').val();
                         d.assigned_by = $('#assigned_by').val();
                 
                
@@ -96,6 +101,7 @@
                 },
                 columns: [
                     {data: 'action', name: 'action', orderable: false, searchable: false},
+                    {data: 'type', name: 'transactions.type'},
                     {data: 'delivery_person', name: 'r.first_name'},
                     {data: 'delivery_status', name: 'delivery_status'},
                     {data: 'shipping_address', name: 'shipping_address'},
@@ -108,11 +114,44 @@
 
                 "fnDrawCallback": function (oSettings) {
                     __currency_convert_recursively($('#delivery_table'));
-                }
+                },
+                createdRow: function( row, data, dataIndex ) {
+            $( row ).find('td:eq(6)').attr('class', 'clickable_td');
+        }
             });
           
             $(document).on('change','#assigned_by,#delivery_list_filter_delivery_status',  function() {
              delivery_table.ajax.reload();
+            });
+
+            $(document).on('click', 'a.delete-delivery', function (e) {
+                e.preventDefault();
+                swal({
+                    title: LANG.sure,
+                    text: LANG.confirm_delete_delivery,
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                }).then((willDelete) => {
+                    if (willDelete) {
+                        var href = $(this).attr('href');
+                        var data = $(this).serialize();
+
+                        $.ajax({
+                            method: "DELETE",
+                            url: href,
+                            dataType: "json",
+                            success: function (result) {
+                                if (result.success == true) {
+                                    toastr.success(result.msg);
+                                    delivery_table.ajax.reload();
+                                } else {
+                                    toastr.error(result.msg);
+                                }
+                            }
+                        });
+                    }
+                });
             });
 
             $('#location_id').select2({
@@ -181,11 +220,52 @@
             },
         }).on('select2:select', function (e) {
                 delivery_table.ajax.reload();
-
 			});
+
+            $(document).on('click', 'a.update_status', function (e) {
+                e.preventDefault();
+                if($(this).data('status')=='delivered'){
+                    return;
+                }
+                var href = $(this).data('href');
+                var status = $(this).data('status');
+                $('#update_status_modal').modal('show');
+                $('#update_status_form').attr('action', href);
+                $('#update_status_form #update_status').val(status);
+                $('#update_status_form #update_status').trigger('change');
+            });
+
+
+            $(document).on('submit', '#update_status_form', function (e) {
+                e.preventDefault();
+                $(this)
+                    .find('button[type="submit"]')
+                    .attr('disabled', true);
+                var data = $(this).serialize();
+
+                $.ajax({
+                    method: 'put',
+                    url: $(this).attr('action'),
+                    dataType: 'json',
+                    data:data,
+                    success: function (result) {
+                        if (result.success == true) {
+                            $('div#update_status_modal').modal('hide');
+                            toastr.success(result.msg);
+                            delivery_table.ajax.reload();
+                        } else {
+                            toastr.error(result.msg);
+                        }
+                        $('#update_status_form')
+                            .find('button[type="submit"]')
+                            .attr('disabled', false);
+                    },
+                });
+            });
 
     });
     </script>
+    <script src="{{ asset('js/payment.js?v=' . $asset_v) }}"></script>
 @endsection
 @section('css')
     <style>

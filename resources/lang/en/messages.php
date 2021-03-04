@@ -45,5 +45,6 @@ return [
     'price' => 'Price',
     'activate' => 'Activate',
     'deactivate' => 'Deactivate',
-    'see_all'=>'See All'
+    'see_all'=>'See All',
+    'track'=>'Track'
 ];

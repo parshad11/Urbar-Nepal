@@ -1203,5 +1203,6 @@ return [
     'all_transactions_for_delivery'=>'All Transactions For Delivery',
     'assigned'=>'Assigned',
     'not_assigned'=>'Not Assigned',
+    'upload_front_cms'=>'Upload Front CMS',
 
 ];

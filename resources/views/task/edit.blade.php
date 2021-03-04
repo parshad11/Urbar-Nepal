@@ -47,10 +47,19 @@
                             {!! Form::select('task_type', $taskTypes, $task->task_type, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required']); !!}
                         </div>
                     </div>
+                    @if($task->task_status=='completed')
+                        @php
+                        $disabled=true;
+                        @endphp
+                      @else
+                        @php
+                        $disabled=false;
+                        @endphp
+                      @endif	
                     <div class="col-sm-4 ">
                         <div class="form-group">
                             {!! Form::label('task_status', __('delivery.task_status') . ':*') !!}
-                            {!! Form::select('task_status', $taskStatuses, $task->task_status, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required']); !!}
+                            {!! Form::select('task_status', $taskStatuses, $task->task_status,($disabled)? ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required',"disabled"=>"disabled"]:['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required']); !!}
                         </div>
                     </div>
                     <div class="clearfix"></div>

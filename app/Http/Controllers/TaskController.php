@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\BusinessLocation;
+use App\DeliveryPerson;
 use App\Task;
 use Illuminate\Http\Request;
 use App\User;
@@ -43,13 +44,29 @@ class TaskController extends Controller
         if (!auth()->user()->can('task.view') && !auth()->user()->can('view_own_task')) {
             abort(403, 'Unauthorized action.');
         }
+        $taskTypes = $this->productUtil->taskTypes();
+        $business_id = request()->session()->get('user.business_id');
         $statuses = $this->productUtil->taskStatuses();
+
         if ($request->ajax()) {
             $business_id = request()->session()->get('user.business_id');
             $tasks = $this->recordUtil->getListTasks($business_id);
+
             $permitted_locations = auth()->user()->permitted_locations();
             if ($permitted_locations != 'all') {
                 $tasks->whereIn('tasks.location_id', $permitted_locations);
+            }
+
+            if (request()->has('assigned_by')) {
+                $assigned_by = request()->get('assigned_by');
+                if (!empty($created_by)) {
+                    $tasks->where('tasks.assigned_by', $assigned_by);
+                }
+            }
+
+            if (!empty(request()->delivery_person_id)) {
+                $delivery_person_id = request()->delivery_person_id;
+                $tasks->where('delivery_person_id', $delivery_person_id);
             }
 
             if (!empty(request()->location_id)) {
@@ -57,21 +74,33 @@ class TaskController extends Controller
             }
 
             if (!empty(request()->task_status)) {
-                $tasks->where('tasks.task_status', request()->status);
+                $tasks->where('tasks.task_status', request()->task_status);
             }
             
+            if (!empty(request()->task_type)) {
+                $tasks->where('tasks.task_type', request()->task_type);
+            }
+            
+           
             if (!empty(request()->start_date) && !empty(request()->end_date)) {
                 $start = request()->start_date;
                 $end =  request()->end_date;
-                $tasks->whereDate('tasks.started_at', '>=', $start)
-                            ->whereDate('tasks.started_at', '<=', $end);
+                $tasks->whereDate('tasks.created_at', '>=', $start)
+                            ->whereDate('tasks.created_at', '<=', $end);
             }
 
+            if (auth()->user()->can('task.view')) {
+                $delivery_person=DeliveryPerson::where('user_id', request()->session()->get('user.id'))->first();
+                if(isset($delivery_person)){
+                    $tasks->where('tasks.delivery_person_id', $delivery_person->id);
+                }
+            }
+            
             if (!auth()->user()->can('task.view') && auth()->user()->can('view_own_task')) {
                 $tasks->where('tasks.assigned_by', request()->session()->get('user.id'));
             }
-           
-            return Datatables::of($tasks)
+         
+            $datatable= Datatables::of($tasks)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $html = '<div class="btn-group">
@@ -83,17 +112,18 @@ class TaskController extends Controller
                     </button>
                     <ul class="dropdown-menu dropdown-menu-left" role="menu">';
                     if (auth()->user()->can("task.view")) {
-                        $html .= '<li><a href="#" data-href="' . action('TaskController@show', [$row->id]) . '" class="btn-modal" data-container=".view_modal"><i class="fas fa-eye" aria-hidden="true"></i>' . __("messages.view") . '</a></li>';
+                        $html .= '<li><a href="' . action("TaskController@show", [$row->id]) . '"><i class="fas fa-eye" aria-hidden="true"></i>' . __("messages.view") . '</a></li>';
                     }
                     if (auth()->user()->can('task.update')) {
                         $html .=  '<li><a href="' . action('TaskController@edit', [$row->id]) . '"><i class="fas fa-edit"></i> ' . __("messages.edit") . '</a></li>';
                     }
                     if (auth()->user()->can('task.delete')) {
-                        $html .= '<li><a href="' . action('TaskController@destroy', [$row->id]) . '" class="delete-task"><i class="fas fa-trash"></i> ' . __("messages.delete") . '</a></li>';
+                        $html .= '<li><a href="' . action("TaskController@destroy", [$row->id]) . '" class="delete-task"><i class="fas fa-trash"></i> ' . __("messages.delete") . '</a></li>';
                     }
                     $html .=  '</ul></div>';
                     return $html;
                 })
+                ->removeColumn('id')
                 ->editColumn('task_status', function($row) use($statuses) {
                     $row->task_status = $row->task_status == 'final' ? 'completed' : $row->task_status;
                     $status =  $statuses[$row->task_status];
@@ -101,12 +131,22 @@ class TaskController extends Controller
                     $status ='<a href="#" class="update_status" data-status="' . $row->task_status . '" data-href="' . action("TaskController@statusupdate", [$row->id]) . '"><span class="label ' . $status_color .'">' . $statuses[$row->task_status] . '</span></a>';
                     return $status;
                 })
-                ->removeColumn('id')
-                ->rawColumns(['action', 'task_status'])
-                ->make(true);
+                ->setRowAttr([
+                    'data-href' => function ($row) {
+                        if (auth()->user()->can("task.view") || auth()->user()->can("view_own_task")) {
+                            return  action('TaskController@show', [$row->id]) ;
+                        } else {
+                            return '';
+                        }
+                    }]);
+                    $rawColumns = ['action', 'task_status'];  
+                    return $datatable->rawColumns($rawColumns)
+                              ->make(true); 
 
         } else {
-            return view('task.index')->with(compact('statuses'));
+            $sales_representative = User::forDropdown($business_id, false, false, true);
+            $business_locations = BusinessLocation::forDropdown($business_id, false);
+            return view('task.index')->with(compact('statuses','business_locations','sales_representative','taskTypes'));
         }
 
     }
@@ -162,6 +202,27 @@ class TaskController extends Controller
         DB::beginTransaction(); 
         
         $task = Task::create($task_details);
+        if($task->task_status=='received'){
+            $task->started_at=null;
+            $task->ended_at=null;
+            $task->save();
+        }
+        if( $task->task_status=='on process'){
+            $started_at=now();
+            $task->started_at=$started_at;
+            $task->save();
+        }
+        if($task->task_status=='completed'){
+            $ended_at=now();
+            $task->ended_at=$ended_at;
+            $task->save();
+        }
+        if($task->task_status=='cancelled'){
+            $task->started_at=null;
+            $task->ended_at=null;
+            $task->save();
+            
+        }
         
         DB::commit();
         $output = ['success' => 1,
@@ -178,78 +239,7 @@ class TaskController extends Controller
         return redirect('task')->with('status',$output);
     }
 
-    public function getActiveWork(Request $request)
-    {
-        if (!auth()->user()->can('task.view') && !auth()->user()->can('view_own_task')) {
-            abort(403, 'Unauthorized action.');
-        }
-        $statuses = $this->productUtil->taskStatuses();
-        if ($request->ajax()) {
-            $business_id = request()->session()->get('user.business_id');
-            $tasks = $this->recordUtil->getListTasks($business_id);
-            $permitted_locations = auth()->user()->permitted_locations();
-            if ($permitted_locations != 'all') {
-                $tasks->whereIn('tasks.location_id', $permitted_locations);
-            }
-
-            if (!empty(request()->location_id)) {
-                $tasks->where('tasks.location_id', request()->location_id);
-            }
-
-            if (!empty(request()->task_status)) {
-                $tasks->where('tasks.task_status', request()->status);
-            }
-
-            if (!empty(request()->start_date) && !empty(request()->end_date)) {
-                $start = request()->start_date;
-                $end =  request()->end_date;
-                $tasks->whereDate('tasks.started_at', '>=', $start)
-                    ->whereDate('tasks.started_at', '<=', $end);
-            }
-
-            if (!auth()->user()->can('task.view') && auth()->user()->can('view_own_task')) {
-                $tasks->where('tasks.assigned_by', request()->session()->get('user.id'));
-            }
-
-            return Datatables::of($tasks)
-                ->addIndexColumn()
-                ->addColumn('action', function ($row) {
-                    $html = '<div class="btn-group">
-                    <button type="button" class="btn btn-info dropdown-toggle btn-xs" 
-                        data-toggle="dropdown" aria-expanded="false">' .
-                        __("messages.actions") .
-                        '<span class="caret"></span><span class="sr-only">Toggle Dropdown
-                        </span>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-left" role="menu">';
-                    if (auth()->user()->can("task.view")) {
-                        $html .= '<li><a href="#" data-href="' . action('TaskController@show', [$row->id]) . '" class="btn-modal" data-container=".view_modal"><i class="fas fa-eye" aria-hidden="true"></i>' . __("messages.view") . '</a></li>';
-                    }
-                    if (auth()->user()->can('task.update')) {
-                        $html .=  '<li><a href="' . action('TaskController@edit', [$row->id]) . '"><i class="fas fa-edit"></i> ' . __("messages.edit") . '</a></li>';
-                    }
-                    if (auth()->user()->can('task.delete')) {
-                        $html .= '<li><a href="' . action('TaskController@destroy', [$row->id]) . '" class="delete-task"><i class="fas fa-trash"></i> ' . __("messages.delete") . '</a></li>';
-                    }
-                    $html .=  '</ul></div>';
-                    return $html;
-                })
-                ->editColumn('task_status', function($row) use($statuses) {
-                    $row->task_status = $row->task_status == 'final' ? 'completed' : $row->task_status;
-                    $status =  $statuses[$row->task_status];
-                    $status_color = !empty($this->status_colors[$row->task_status]) ? $this->status_colors[$row->task_status] : 'bg-gray';
-                    $status ='<a href="#" class="update_status" data-status="' . $row->task_status . '" data-href="' . action("TaskController@statusupdate", [$row->id]) . '"><span class="label ' . $status_color .'">' . $statuses[$row->task_status] . '</span></a>';
-
-                    return $status;
-                })
-                ->removeColumn('id')
-                ->rawColumns(['action', 'task_status'])
-                ->make(true);
-
-        } else {
-            return view('task.receivedtask')->with(compact('statuses'));
-        }
-    }
+    
 
 
     /**
@@ -260,11 +250,9 @@ class TaskController extends Controller
      */
     public function show($id)
     {
-        $task=Task::findorfail($id);
-        $assign_to=$this->task->TaskAssingTo($task->delivery_person_id);
-        $assign_by=$this->task->TaskAssingby($task->assigned_by);
+        $task=Task::with('delivery_person')->findorfail($id);
         $business_location=BusinessLocation::findorfail($task->business_id)->name;
-        return view('task.partial.show',compact('task','assign_to','assign_by','business_location'));
+        return view('task.show',compact('task','business_location'));
     }
 
     /**
@@ -307,37 +295,102 @@ class TaskController extends Controller
         if (!auth()->user()->can('task.update')) {
             abort(403, 'Unauthorized action.');
         }
+
+        try {
+           
         $task = Task::findorfail($id);
-        $data = $request->validate([
-            'delivery_person_id' => 'required|integer',
-            'location_id' => 'required',
-            'title' => 'required|',
-            'task_latitude' => ['required','regex:/^[-]?(([0-8]?[0-9])\.(\d+))|(90(\.0+)?)$/'],
-            'task_longitude' => ['required','regex:/^[-]?((((1[0-7][0-9])|([0-9]?[0-9]))\.(\d+))|180(\.0+)?)$/'],
-            'task_status' => 'required',
-            'task_type' => 'required',
-        ]);
-        $task->fill($data);
-        $success = $task->save();
-        if ($success) {
-            return redirect()->route('task.index')->with('success', 'Task updated successfully');
-        } else {
-            return redirect()->route('task.index')->with('error', 'Sorry! there is an error while updating task');
+        if($task->task_status=='completed'){
+            $completed_status_set=1;
         }
+        else if($task->task_status=='on process'){
+            $on_process_status_set=1;
+        }
+        $task_data = $request->only(['location_id','delivery_person_id','title','task_latitude','task_longitude','task_address','task_status','task_type','special_instructions','description']);
+
+        DB::beginTransaction(); 
+
+        $task = $task->update($task_data);
+
+        if($task->task_status=='received'){
+            $task->started_at=null;
+            $task->ended_at=null;
+            $task->save();
+        }
+        if(!isset($on_process_status_set) && $task->task_status=='on process'){
+            $started_at=now();
+            $task->started_at=$started_at;
+            $task->save();
+        }
+        if(!isset($completed_status_set) && $task->task_status=='completed'){
+            $ended_at=now();
+            $task->ended_at=$ended_at;
+            $task->save();
+        }
+        if($task->task_status=='cancelled'){
+            $task->started_at=null;
+            $task->ended_at=null;
+            $task->save();
+            
+        }
+        DB::commit();
+
+        $output = ['success' => 1,
+        'msg' => __('delivery.task_updated_success')
+        ];
+        }
+        catch (\Exception $e) {
+            DB::rollBack();
+           \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            $output = ['success' => 0,
+               'msg' => __("messages.something_went_wrong")
+           ];
+          
+       }
+       return redirect('task')->with('status',$output);
 
     }
+    
     public function statusupdate(Request $request, $id){
         if (!auth()->user()->can('task.update')) {
             abort(403, 'Unauthorized action.');
         }
         try {
         $task = Task::findorfail($id);
-        $data=$request->validate([
+        if($task->task_status=='completed'){
+            $completed_status_set=1;
+        }
+        else if($task->task_status=='on process'){
+            $on_process_status_set=1;
+        }
+       $request->validate([
             'task_status' => 'required',
         ]);
+
         DB::beginTransaction();
         $update_data['task_status'] = $request->input('task_status');
         $task->update($update_data);
+        
+        if($task->task_status=='received'){
+            $task->started_at=null;
+            $task->ended_at=null;
+            $task->save();
+        }
+        if(!isset($on_process_status_set) && $task->task_status=='on process'){
+            $started_at=now();
+            $task->started_at=$started_at;
+            $task->save();
+        }
+        if(!isset($completed_status_set) && $task->task_status=='completed'){
+            $ended_at=now();
+            $task->ended_at=$ended_at;
+            $task->save();
+        }
+        if($task->task_status=='cancelled'){
+            $task->started_at=null;
+            $task->ended_at=null;
+            $task->save();
+            
+        }
         DB::commit();
 
         $output = ['success' => 1,

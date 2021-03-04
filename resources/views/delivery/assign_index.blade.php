@@ -84,6 +84,9 @@ $(document).ready( function(){
                 d = __datatable_ajax_callback(d);
             }
         },
+        scrollY:        "75vh",
+        scrollX:        true,
+        scrollCollapse: true,
         columns: [
             { data: 'action', name: 'action', orderable: false, "searchable": false},
             { data: 'type', name: 'type'},

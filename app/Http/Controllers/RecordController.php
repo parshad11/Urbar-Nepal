@@ -237,14 +237,6 @@ class RecordController extends Controller
         try {
             $record=Record::findOrFail($id);
             $record_data = $request->only(['item','expected_collection_date','location','quantity','unit_id']);
-            $request->validate([
-            'item' => 'required',
-            'expected_collection_date'=>'required',
-            'location' => 'required',
-            'quantity'=>'required',
-            'unit_id'=>'required',
-           
-        ]);
 
         $record_data['expected_collection_date']=$this->moduleUtil->uf_date($record_data['expected_collection_date']);
 

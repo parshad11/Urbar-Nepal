@@ -1,42 +1,35 @@
 @extends('layouts.app')
-@section('title', __('Task'))
+@section('title', __('delivery.current_work'))
 @section('content')
 
     <!-- Content Header (Page header) -->
     <section class="content-header">
-        <h1>@lang( 'Task' )
-            <small>@lang( 'Manage Task' )</small>
+        <h1>@lang( 'delivery.current_work' )
+            <small>@lang( 'All Currently Active Work' )</small>
         </h1>
     </section>
 
     <!-- Main content -->
     <section class="content">
-        @component('components.widget', ['class' => 'box-primary', 'title' => __( 'All Task' )])
-            @can('task.create')
-                @slot('tool')
-                    <div class="box-tools">
-                        <a class="btn btn-block btn-primary"
-                           href="{{action('TaskController@create')}}">
-                            <i class="fa fa-plus"></i> @lang( 'messages.add' )</a>
-                    </div>
-                @endslot
-            @endcan
-            @if (auth()->user()->can('task.view') || auth()->user()->can('view_own_task'))
+        @component('components.filters', ['title' => __('report.filters')])
+            @include('delivery.partials.delivery_list_filters')
+        @endcomponent
+        @component('components.widget', ['class' => 'box-primary', 'title' => __( 'All Current Work' )])
+            @if (auth()->user()->can('task.view') || auth()->user()->can('view_own_task') || auth()->user()->can('delivery.view') || auth()->user()->can('view_own_delivery'))
                 <table class="table table-bordered table-striped" id="task_table">
                     <thead>
                     <tr>
                         <th>Action</th>
                         <th>@lang('purchase.business_location')</th>
                         <th>Assigned To</th>
-                        <th>Task Type</th>
-                        <th>Title</th>
-                        <th>Task Status</th>
-                        <th>Task Address</th>
+                        <th>Work Type</th>
+                        <th>Status</th>
+                        <th>Started At</th>
+                        <th>Ended At</th>
                         <th>Assigned_by</th>
                     </tr>
                     </thead>
                     <tbody>
-
                     </tbody>
                 </table>
             @endcan
@@ -71,19 +64,19 @@
                 processing: true,
                 serverSide: true,
                 "ajax": {
-                    "url": "/task",
+                    "url": "/active/work",
                     "data": function (d) {
 
                     }
                 },
                 columns: [
                     {data: 'action', name: 'action', orderable: false, searchable: false},
-                    {data: 'location_name', name: 'BS.name'},
-                    {data: 'assign_to', name: 'u.first_name'},
-                    {data: 'task_type', name: 'task_type'},
-                    {data: 'title', name: 'title'},
-                    {data: 'task_status', name: 'task_status'},
-                    {data: 'task_address', name: 'task_address'},
+                    {data: 'business_location', name: 'bl.name'},
+                    {data: 'assigned_to', name: 'u.first_name'},
+                    {data: 'type', name: 'type'},
+                    {data: 'status', name: 'status'},
+                    {data: 'started_at', name: 'started_at'},
+                    {data: 'ended_at', name: 'ended_at'},
                     {data: 'assigned_by', name: 'u.first_name'},
                 ],
 

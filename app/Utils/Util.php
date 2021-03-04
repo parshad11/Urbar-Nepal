@@ -1109,8 +1109,8 @@ class Util
     public function delivery_assign_statuses()
     {
         $assignStatuses = [
-            '1' => __('delivery.assigned'),
-            '0' => __('delivery.not_assigned'),
+            'assigned' => __('delivery.assigned'),
+            'not assigned' => __('delivery.not_assigned'),
         ];
 
         return $assignStatuses;

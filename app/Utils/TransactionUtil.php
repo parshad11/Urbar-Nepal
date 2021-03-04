@@ -16,6 +16,7 @@ use App\InvoiceScheme;
 use App\Product;
 use App\PurchaseLine;
 use App\Restaurant\ResTable;
+use App\Task;
 use App\TaxRate;
 use App\Transaction;
 use App\TransactionPayment;
@@ -4311,8 +4312,7 @@ class TransactionUtil extends Util
     */
     public function getDeliveries($business_id)
     {
-        $deliveries = Delivery::
-        leftJoin('transactions', 'deliveries.transaction_id', '=', 'transactions.id')
+        $deliveries = Delivery::leftJoin('transactions', 'deliveries.transaction_id', '=', 'transactions.id')
                 ->leftJoin('delivery_people as dp', 'deliveries.delivery_person_id', '=', 'dp.id')
                 ->leftJoin('users as r', 'dp.user_id', '=', 'r.id')
                 ->leftJoin('users as u', 'deliveries.assigned_by', '=', 'u.id')
@@ -4325,8 +4325,10 @@ class TransactionUtil extends Util
                 ->where('transactions.business_id', $business_id)
                 ->select(
                     'deliveries.id',
+                    'deliveries.delivery_person_id',
                     DB::raw("CONCAT(COALESCE(r.surname, ''),' ',COALESCE(r.first_name, ''),' ',COALESCE(r.last_name,'')) as delivery_person"),
                     'bl.name as business_location',
+                    'transactions.type',
                     'deliveries.delivery_status',
                     'deliveries.shipping_address', 
                     'deliveries.pickup_address',
@@ -4337,6 +4339,65 @@ class TransactionUtil extends Util
                 );
         return $deliveries;
     }
+
+    /**
+    * common function to get
+    * list record
+    * @param int $business_id
+    *
+    * @return object
+    */
+    public function getCurrentWork($business_id)
+    {
+        $currentDelivery = Delivery::leftJoin('transactions', 'deliveries.transaction_id', '=', 'transactions.id')
+                ->leftJoin('delivery_people as dp', 'deliveries.delivery_person_id', '=', 'dp.id')
+                ->leftJoin('users as r', 'dp.user_id', '=', 'r.id')
+                ->leftJoin('users as u', 'deliveries.assigned_by', '=', 'u.id')
+                ->join(
+                    'business_locations AS bl',
+                    'transactions.location_id',
+                    '=',
+                    'bl.id'
+                )
+                ->where('transactions.business_id', $business_id)
+                ->whereIn('deliveries.delivery_status',['received','packed','shipped'])
+                ->select(
+                    'deliveries.id as id',
+                    DB::raw("CONCAT(COALESCE(r.surname, ''),' ',COALESCE(r.first_name, ''),' ',COALESCE(r.last_name,'')) as assigned_to"),
+                    'bl.name as business_location',
+                    'transactions.type as type',
+                    'deliveries.delivery_status as status',
+                    'deliveries.delivery_started_at as started_at',
+                    'deliveries.delivery_ended_at as ended_at',
+                    DB::raw("CONCAT(COALESCE(u.surname, ''),' ',COALESCE(u.first_name, ''),' ',COALESCE(u.last_name,'')) as assigned_by")
+        );
+    
+        
+        $currentTask= Task::leftJoin('users as u', 'tasks.assigned_by', '=', 'u.id')
+                      ->leftJoin('delivery_people as d', 'tasks.delivery_person_id', '=', 'd.id')
+                      ->leftJoin('users as r', 'd.user_id', '=', 'r.id')
+                      ->join(
+                        'business_locations AS bl',
+                        'tasks.location_id',
+                        '=',
+                        'bl.id'
+                    )
+                    ->whereIn('tasks.task_status',['received','on process'])
+                    ->where('tasks.business_id', $business_id)
+                    ->select(
+                        'tasks.id as id',
+                        DB::raw("CONCAT(COALESCE(r.surname, ''),' ',COALESCE(r.first_name, ''),' ',COALESCE(r.last_name,'')) as assigned_to"),
+                        'bl.name as business_location', 
+                        'tasks.task_type as type',
+                        'tasks.task_status as status',
+                        'tasks.started_at',
+                        'tasks.ended_at',
+                        DB::raw("CONCAT(COALESCE(u.surname, ''),' ',COALESCE(u.first_name, ''),' ',COALESCE(u.last_name,'')) as assigned_by")
+                       
+                    );
+         $currentWorks=  $currentDelivery->unionAll($currentTask);
+        return $currentWorks;
+        }
 
 
     /**
