@@ -63,7 +63,7 @@
               </div>
             </div>
             
-            @if($purchase->status=='received')
+              @if($purchase->status=='received')
                         @php
                         $disabled=true;
                         @endphp
@@ -71,7 +71,7 @@
                         @php
                         $disabled=false;
                         @endphp
-                      @endif
+              @endif
             <div class="col-sm-3 @if(!empty($default_purchase_status)) hide @endif">
               <div class="form-group">
                 {!! Form::label('status', __('purchase.purchase_status') . ':*') !!}

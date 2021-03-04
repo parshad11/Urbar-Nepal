@@ -4,6 +4,8 @@
 	<link rel="stylesheet" href="{{ asset('css/rtl.css?v='.$asset_v) }}">
 @endif
 
+<link href='https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.css' rel='stylesheet' />
+
 @yield('css')
 
 <!-- app css -->
@@ -19,6 +21,10 @@
 	</style>
 @endif
 <style type="text/css">
+	#map{
+		width: 400px; 
+		height: 300px;
+	}
 	/*
 	* Pattern lock css
 	* Pattern direction

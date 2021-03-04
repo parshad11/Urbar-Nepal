@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\BusinessLocation;
 use App\Contact;
 use App\Delivery;
+use App\DeliveryPerson;
 use App\Transaction;
 use App\User;
 use App\Utils\ModuleUtil;
@@ -25,9 +26,18 @@ class DeliveryController extends Controller
         $this->delivery = $delivery;
         $this->moduleUtil = $moduleUtil;
         $this->assign_status_colors = [
-            '1' =>  'bg-green',
-            '0' => 'bg-red'
+            'assigned' =>  'bg-green',
+            'not assigned' => 'bg-red'
         ];
+
+        $this->status_colors = [
+            'received' => 'bg-purple',
+            'packed' => 'bg-blue',
+            'shipped' => 'bg-yellow',
+            'delivered' => 'bg-green',
+            'cancelled' => 'bg-red',
+        ];
+
     }
 
     /**
@@ -58,7 +68,7 @@ class DeliveryController extends Controller
 
             if (!empty(request()->delivery_person_id)) {
                 $delivery_person_id = request()->delivery_person_id;
-                $deliveries->where('deliveries_person_id', $delivery_person_id);
+                $deliveries->where('delivery_person_id', $delivery_person_id);
             }
 
             if (request()->has('location_id')) {
@@ -80,6 +90,20 @@ class DeliveryController extends Controller
                 $deliveries->where('deliveries.delivery_status', request()->input('delivery_status'));
             }
 
+            if (auth()->user()->can('delivery.view')) {
+                $delivery_person=DeliveryPerson::where('user_id', request()->session()->get('user.id'))->first();
+                if(isset($delivery_person)){
+                    $deliveries->where('deliveries.delivery_person_id', $delivery_person->id);
+                }
+            }
+
+            if (!auth()->user()->can('delivery.view') && auth()->user()->can('view_own_delivery')) {
+                $deliveries->where('deliveries.assigned_by', request()->session()->get('user.id'));
+            }
+
+
+            $deliveries->groupBy('deliveries.id');
+
             return Datatables::of($deliveries)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
@@ -92,19 +116,33 @@ class DeliveryController extends Controller
                     </button>
                     <ul class="dropdown-menu dropdown-menu-left" role="menu">';
                     if (auth()->user()->can("delivery.view")) {
-                        $html .= '<li><a href="#" data-href="' . action('DeliveryController@show', [$row->id]) . '" class="btn-modal" data-container=".view_modal"><i class="fas fa-eye" aria-hidden="true"></i>' . __("messages.view") . '</a></li>';
+                        $html .= '<li><a href="' . action("DeliveryController@show", [$row->id]) . '"><i class="fas fa-eye" aria-hidden="true"></i>' . __("messages.view") . '</a></li>';
                     }
                     if (auth()->user()->can('delivery.update')) {
-                        $html .=  '<li><a href="' . action('DeliveryController@edit', [$row->id]) . '"><i class="fas fa-edit"></i> ' . __("messages.edit") . '</a></li>';
+                        $html .=  '<li><a href="' . action("DeliveryController@edit", [$row->id]) . '"><i class="fas fa-edit"></i> ' . __("messages.edit") . '</a></li>';
                     }
                     if (auth()->user()->can('delivery.delete')) {
-                        $html .= '<li><a href="' . action('DeliveryController@destroy', [$row->id]) . '" class="delete-task"><i class="fas fa-trash"></i> ' . __("messages.delete") . '</a></li>';
+                        $html .= '<li><a href="' . action("DeliveryController@destroy", [$row->id]) . '" class="delete-delivery"><i class="fas fa-trash"></i> ' . __("messages.delete") . '</a></li>';
                     }
                     $html .=  '</ul></div>';
                     return $html;
                 })
                 ->removeColumn('id')
-                ->rawColumns(['action'])
+                ->editColumn('delivery_status', function($row) use($deliveryStatuses){
+                    $status=$deliveryStatuses[$row->delivery_status];
+                    $status_color = !empty($this->status_colors[$row->delivery_status]) ? $this->status_colors[$row->delivery_status] : 'bg-gray';
+                    $status ='<a href="#" class="update_status" data-status="' . $row->delivery_status . '" data-href="' . action("DeliveryController@statusupdate", [$row->id]) . '"><span class="label ' . $status_color .'">' . $deliveryStatuses[$row->delivery_status] . '</span>';
+                    return $status;
+              })
+              ->setRowAttr([
+                'data-href' => function ($row) {
+                    if (auth()->user()->can("delivery.view") || auth()->user()->can("view_own_delivery")) {
+                        return  action('DeliveryController@show', [$row->id]) ;
+                    } else {
+                        return '';
+                    }
+                }])
+                ->rawColumns(['action','delivery_status'])
                 ->make(true);
 //
         } else {
@@ -196,7 +234,13 @@ class DeliveryController extends Controller
             }
            
             if (!empty(request()->input('assign_delivery_status'))) {
-                $transactions->where('transactions.assign_delivery_status', request()->input('assign_delivery_status'));
+                if(request()->input('assign_delivery_status')=='assigned'){
+                $assign_status=1;
+                }
+                else{
+                    $assign_status=0;
+                }
+                $transactions->where('transactions.assign_delivery_status', $assign_status);
             }
             
             $transactions->groupBy('transactions.id');
@@ -225,9 +269,15 @@ class DeliveryController extends Controller
                 
                 ->editColumn('transaction_date', '{{@format_datetime($transaction_date)}}')
                 ->editColumn('assign_delivery_status', function($row) use($assignStatuses){
-                      $status=$assignStatuses[$row->assign_delivery_status];
-                      $status_color = !empty($this->assign_status_colors[$row->assign_delivery_status]) ? $this->assign_status_colors[$row->assign_delivery_status] : 'bg-gray';
-                      $status ='<span class="label ' . $status_color .'">' . $assignStatuses[$row->assign_delivery_status] . '</span>';
+                    if($row->assign_delivery_status==1){
+                        $assign_status='assigned';
+                        }
+                        else{
+                            $assign_status='not assigned';
+                        }
+                      $status=$assignStatuses[$assign_status];
+                      $status_color = !empty($this->assign_status_colors[$assign_status]) ? $this->assign_status_colors[$assign_status] : 'bg-gray';
+                      $status ='<span class="label ' . $status_color .'">' . $assignStatuses[$assign_status] . '</span>';
                       return $status;
                 })
         
@@ -251,6 +301,96 @@ class DeliveryController extends Controller
         $customers = Contact::customersDropdown($business_id, false);
         $sales_representative = User::forDropdown($business_id, false, false, true);
         return view('delivery.assign_index')->with(compact('business_locations','customers','sales_representative','assignStatuses'));
+    }
+
+
+    public function getActiveWork(Request $request)
+    {
+        if (!auth()->user()->can('task.view') && !auth()->user()->can('view_own_task') && !auth()->user()->can('delivery.view') && !auth()->user()->can('view_own_delivery')) {
+            abort(403, 'Unauthorized action.');
+        }
+        $business_id = request()->session()->get('user.business_id');
+        $deliveryStatuses = $this->transactionUtil->deliveryStatuses();
+        $statuses = $this->transactionUtil->taskStatuses();
+        if ($request->ajax()) {
+        
+            $business_id = request()->session()->get('user.business_id');
+            $currentWorks = $this->transactionUtil->getCurrentWork($business_id);
+
+            $permitted_locations = auth()->user()->permitted_locations();
+            if ($permitted_locations != 'all') {
+                $currentWorks->whereIn('tasks.location_id', $permitted_locations);
+            }
+
+            if (!empty(request()->location_id)) {
+                $currentWorks->where('tasks.location_id', request()->location_id);
+            }
+            
+
+            if (!empty(request()->task_status)) {
+                $currentWorks->where('tasks.task_status', request()->status);
+            }
+
+            if (!empty(request()->start_date) && !empty(request()->end_date)) {
+                $start = request()->start_date;
+                $end =  request()->end_date;
+                $currentWorks->whereDate('tasks.created_at', '>=', $start)
+                    ->whereDate('tasks.created_at', '<=', $end);
+            }
+
+            if (!auth()->user()->can('task.view') && auth()->user()->can('view_own_task') && !auth()->user()->can('delivery.view') && auth()->user()->can('view_own_delivery')) {
+                $currentWorks->where('tasks.assigned_by', request()->session()->get('user.id'))->orWhere('delivery.assigned_by', request()->session()->get('user.id'));
+            }
+
+            return Datatables::of($currentWorks)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    $html = '<div class="btn-group">
+                    <button type="button" class="btn btn-info dropdown-toggle btn-xs" 
+                        data-toggle="dropdown" aria-expanded="false">' .
+                        __("messages.actions") .
+                        '<span class="caret"></span><span class="sr-only">Toggle Dropdown
+                        </span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-left" role="menu">';
+                    if (auth()->user()->can("task.view")) {
+                        if($row->type=='delivery'||$row->type=='pick up'){
+                            $controller='TaskController';
+                        }
+                        else{
+                            $controller='DeliveryController';
+                        }
+                        $html .= '<li><a href="' . action($controller.'@show', [$row->id]) . '"><i class="fas fa-eye" aria-hidden="true"></i>' . __("messages.view") . '</a></li>';
+                    }
+                    if (auth()->user()->can('task.update')) {
+                        $html .=  '<li><a href="' . action($controller.'@edit', [$row->id]) . '"><i class="fas fa-edit"></i> ' . __("messages.edit") . '</a></li>';
+                    }
+                    if (auth()->user()->can('task.delete')) {
+                        $html .= '<li><a href="' . action($controller.'@destroy', [$row->id]) . '" class="delete-task"><i class="fas fa-trash"></i> ' . __("messages.delete") . '</a></li>';
+                    }
+                    $html .=  '</ul></div>';
+                    return $html;
+                })
+                ->editColumn('type', function($row) use($statuses) {
+                   if($row->type =='delivery'||$row->type =='pickup'){
+                        return 'task';
+                   }
+                   else {
+                    return $row->type;
+                   }
+                   
+                })
+               
+                ->removeColumn('id')
+                ->rawColumns(['action'])
+                ->make(true);
+
+        } else {
+            $business_locations = BusinessLocation::forDropdown($business_id, false);
+            $customers = Contact::customersDropdown($business_id, false);
+            $sales_representative = User::forDropdown($business_id, false, false, true);
+            return view('delivery.currentwork')->with(compact('statuses','business_locations','customers','sales_representative','deliveryStatuses'));
+        }
     }
 
 
@@ -290,7 +430,35 @@ class DeliveryController extends Controller
                    $transaction=Transaction::findOrFail($input['transaction_id']);
                    $transaction->assign_delivery_status=1;
                    $transaction->save();
+                   }
+                
+
+                if($delivery->delivery_status=='received'){
+                $delivery->delivery_started_at=null;
+                $delivery->delivery_ended_at=null;
+                $delivery->save();
                  }
+                if($delivery->delivery_status=='packed'){
+                    $delivery->delivery_started_at=null;
+                    $delivery->delivery_ended_at=null;
+                    $delivery->save();
+                }
+                if($delivery->delivery_status=='shipped'){
+                    $delivery_started_at=now();
+                    $delivery->delivery_started_at=$delivery_started_at;
+                    $delivery->save();
+                }
+                if($delivery->delivery_status=='delivered'){
+                    $delivery_ended_at=now();
+                    $delivery->delivery_ended_at=$delivery_ended_at;
+                    $delivery->save();
+                }
+                if($delivery->delivery_status=='cancelled'){
+                    $delivery->delivery_started_at=null;
+                    $delivery->delivery_ended_at=null;
+                    $delivery->save();
+                    
+                }
             DB::commit();
 
             $output = ['success' => 1,
@@ -309,6 +477,7 @@ class DeliveryController extends Controller
 
     }
 
+
     /**
      * Display the specified resource.
      *
@@ -317,9 +486,9 @@ class DeliveryController extends Controller
      */
     public function show($id)
     {
-        $delivery=Delivery::findorfail($id);
+        $delivery=Delivery::with(['delivery_person','transaction','record_staff'])->findorfail($id);
         $delivery_person=$this->moduleUtil->getDeliveryUser($delivery->delivery_person_id);
-        return view('delivery.partials.delivery_show',compact('delivery','delivery_person'));
+        return view('delivery.show',compact('delivery','delivery_person'));
     }
 
 
@@ -330,9 +499,18 @@ class DeliveryController extends Controller
      * @param  \App\Delivery  $delivery
      * @return \Illuminate\Http\Response
      */
-    public function edit(Delivery $delivery)
+    public function edit($id)
     {
-        //
+        if (!auth()->user()->can('delivery.update')) {
+            abort(403, 'Unauthorized action.');
+        }
+        $business_id = request()->session()->get('user.business_id');
+        $business_locations = BusinessLocation::forDropdown($business_id);
+        $deliveryStatuses = $this->transactionUtil->deliveryStatuses();
+
+        $delivery = Delivery::with('transaction','record_staff')->where('id', $id)->first();
+       
+        return view('delivery.edit')->with(compact('delivery','deliveryStatuses'));
     }
 
     /**
@@ -342,9 +520,135 @@ class DeliveryController extends Controller
      * @param  \App\Delivery  $delivery
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Delivery $delivery)
+    public function update(Request $request, $id)
     {
-        //
+        if (!auth()->user()->can('delivery.update')) {
+            abort(403, 'Unauthorized action.');
+        }
+        try {
+         
+            $delivery=Delivery::findOrFail($id);
+
+            if($delivery->delivery_status=='delivered'){
+                $delivered_status_set=1;
+            }
+            else if($delivery->delivery_status=='shipped'){
+                $shipped_status_set=1;
+            }
+            
+         
+            $transaction_id =$request['transaction_id'];   
+
+            $delivery_data = $request->only(['delivery_person_id','delivery_status','shipping_address','shipping_latitude','shipping_longitude','pickup_address','pickup_latitude', 'pickup_longitude','special_delivery_instructions','delivered_to']);
+          
+            
+            DB::beginTransaction(); 
+
+            $delivery->update($delivery_data);
+  
+            if($delivery->delivery_status=='received'){
+                $delivery->delivery_started_at=null;
+                $delivery->delivery_ended_at=null;
+                $delivery->save();
+            }
+            if($delivery->delivery_status=='packed'){
+                $delivery->delivery_started_at=null;
+                $delivery->delivery_ended_at=null;
+                $delivery->save();
+            }
+            if(!isset($shipped_status_set) && $delivery->delivery_status=='shipped'){
+                $delivery_started_at=now();
+                $delivery->delivery_started_at=$delivery_started_at;
+                $delivery->save();
+            }
+            if(!isset($delivered_status_set) && $delivery->delivery_status=='delivered'){
+                $delivery_ended_at=now();
+                $delivery->delivery_ended_at=$delivery_ended_at;
+                $delivery->save();
+            }
+            if($delivery->delivery_status=='cancelled'){
+                $delivery->delivery_started_at=null;
+                $delivery->delivery_ended_at=null;
+                $delivery->save();
+                
+            }
+            DB::commit();
+        
+            $output = ['success' => 1,
+            'msg' => __('contact.record_updated_success')
+            ];
+        } catch (\Exception $e) {
+             DB::rollBack();
+            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+             $output = ['success' => 0,
+                'msg' => __("messages.something_went_wrong")
+            ];
+           
+        }
+        return redirect('delivery')->with('status',$output);
+    }
+
+    public function statusupdate(Request $request, $id){
+        if (!auth()->user()->can('delivery.update')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        try {
+        $delivery = Delivery::with('transaction')->findorfail($id);
+        if($delivery->delivery_status=='delivered'){
+            $delivered_status_set=1;
+        }
+        else if($delivery->delivery_status=='shipped'){
+            $shipped_status_set=1;
+        }
+  
+        $data=$request->validate([
+            'delivery_status' => 'required',
+        ]);
+
+        DB::beginTransaction();
+        $update_data['delivery_status'] = $request->input('delivery_status');
+        $delivery->update($update_data);
+        if($delivery->delivery_status=='received'){
+            $delivery->delivery_started_at=null;
+            $delivery->delivery_ended_at=null;
+            $delivery->save();
+        }
+        if($delivery->delivery_status=='packed'){
+            $delivery->delivery_started_at=null;
+            $delivery->delivery_ended_at=null;
+            $delivery->save();
+        }
+        if(!isset($shipped_status_set) && $delivery->delivery_status=='shipped'){
+            $delivery_started_at=now();
+            $delivery->delivery_started_at=$delivery_started_at;
+            $delivery->save();
+        }
+        if(!isset($delivered_status_set) && $delivery->delivery_status=='delivered'){
+            $delivery_ended_at=now();
+            $delivery->delivery_ended_at=$delivery_ended_at;
+            $delivery->save();
+        }
+        if($delivery->delivery_status=='cancelled'){
+            $delivery->delivery_started_at=null;
+            $delivery->delivery_ended_at=null;
+            $delivery->save();
+            
+        }
+        DB::commit();
+
+        $output = ['success' => 1,
+            'msg' => __('Delivery status updated succesfully')
+        ];
+        } catch (\Exception $e) {
+        DB::rollBack();
+        \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+        
+        $output = ['success' => 0,
+                        'msg' => $e->getMessage()
+                    ];
+        }
+        return $output;
     }
 
     /**
@@ -353,8 +657,36 @@ class DeliveryController extends Controller
      * @param  \App\Delivery  $delivery
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Delivery $delivery)
+    public function destroy($id)
     {
-        //
+        if (!auth()->user()->can('delivery.delete')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        if (request()->ajax()) {
+            try {
+                DB::beginTransaction();
+                $delivery = Delivery::with('transaction')->findorfail($id);
+                $transaction=$delivery->transaction;
+                $delivery->delete();
+                $transaction->assign_delivery_status=0;
+                $transaction->save();
+                
+                DB::commit();
+                $output = ['success' => true,
+                    'msg' => __("delivery deleted sucessfully")
+                ];
+
+            } catch (\Exception $e) {
+                DB::rollBack();
+                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+                $output = ['success' => false,
+                    'msg' => __("something went wrong")
+                ];
+            }
+            return $output;
+        }
     }
+    
 }

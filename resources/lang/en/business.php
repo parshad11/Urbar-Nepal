@@ -110,4 +110,5 @@ return [
     'created_by' => 'Created By',
     'latitude'=>'Latitude',
     'longitude'=>'Longitude',
+    'contact_number'=>'Contact Number',
 ];

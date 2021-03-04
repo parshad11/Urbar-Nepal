@@ -30,9 +30,14 @@ class Delivery extends Model
         return $this->belongsTo(Transaction::class,'transaction_id');
     }
 
-   
+    public function delivery_person(){
+        return $this->belongsTo(DeliveryPerson::class,'delivery_person_id');
+    }
 
-
+    public function record_staff()
+    {
+        return $this->belongsTo(\App\User::class, 'assigned_by');
+    }
 
     
 }

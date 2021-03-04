@@ -39,12 +39,12 @@
 
                         <ul class="list-group list-group-unbordered">
                             <li class="list-group-item">
-                                <b>@lang( 'business.username' )</b>
-                                <a class="pull-right">{{$user->username}}</a>
+                                <b>@lang( 'business.username')</b><br/>
+                                <a>{{$user->username}}</a>
                             </li>
                             <li class="list-group-item">
-                                <b>@lang( 'business.email' )</b>
-                                <a class="pull-right">{{$user->email}}</a>
+                                <b>@lang( 'business.email' )</b><br/>
+                                <a>{{$user->email}}</a>
                             </li>
                             <li class="list-group-item">
                                 <b>{{ __('lang_v1.status_for_user') }}</b>

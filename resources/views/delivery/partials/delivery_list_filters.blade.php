@@ -1,3 +1,4 @@
+@can('business_settings.access')
 @if(empty($only) || in_array('delivery_list_filter_location_id', $only))
 <div class="col-md-3">
     <div class="form-group">
@@ -7,6 +8,7 @@
     </div>
 </div>
 @endif
+@endcan
 @if(empty($only) || in_array('delivery_list_filter_delivery_status', $only))
 <div class="col-md-3">
     <div class="form-group">
@@ -15,6 +17,7 @@
     </div>
 </div>
 @endif
+@can('view_own_delivery')
 @if(empty($only) || in_array('delivery_list_filter_delivery_person_id', $only))
 <div class="col-md-3">
     <div class="form-group">
@@ -23,6 +26,8 @@
     </div>
 </div>
 @endif
+@endcan
+
 @if(empty($only) || in_array('delivery_list_filter_date_range', $only))
 <div class="col-md-3">
     <div class="form-group">
@@ -31,6 +36,8 @@
     </div>
 </div>
 @endif
+
+@can('user.view')
 @if((empty($only) || in_array('assigned_by', $only)) && !empty($sales_representative))
 <div class="col-md-3">
     <div class="form-group">
@@ -39,4 +46,5 @@
     </div>
 </div>
 @endif
+@endcan
 

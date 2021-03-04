@@ -362,6 +362,9 @@ class ManageUserController extends Controller
 
             $user = User::where('business_id', $business_id)
                           ->findOrFail($id);
+            if($user->user_type=='delivery'){
+                $delivery_role_status=1;
+            }
 
             $role_id = $request->input('role');
             $role = Role::findOrFail($role_id);
@@ -375,6 +378,12 @@ class ManageUserController extends Controller
                 $delivery_person_detail= DeliveryPerson::updateOrCreate($delivery_person_detail);
                 
             }
+         
+          
+            if(isset($delivery_role_status) && $user->user_type!='delivery'){
+                $delivery_person=DeliveryPerson::where('user_id',$user->id);
+                $delivery_person->delete();
+            }
             
             $user_role = $user->roles->first();
             $previous_role = !empty($user_role->id) ? $user_role->id : 0;
@@ -386,7 +395,8 @@ class ManageUserController extends Controller
                 $role = Role::findOrFail($role_id);
                 $user->assignRole($role->name);
             }
-
+            // dump(isset($delivery_role_status));
+            // dd($user->user_type);
 
             //Grant Location permissions
             $this->giveLocationPermissions($user, $request);

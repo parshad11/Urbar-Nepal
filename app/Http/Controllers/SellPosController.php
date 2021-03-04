@@ -1124,21 +1124,7 @@ class SellPosController extends Controller
                     $this->transactionUtil->updateCustomerRewardPoints($contact_id, $transaction->rp_earned, $rp_earned_before, $transaction->rp_redeemed, $rp_redeemed_before);
                 }
               
-                // if($transaction->assign_delivery){
-                //     Delivery::updateOrCreate(
-                //        ['transaction_id'=>$transaction->id,
-                //        'delivery_person_id'=>$request->input('delivery_person_id'),
-                //        'delivery_status'=>$request->input('delivery_status'),
-                //        'pickup_address'=>$request->input('pickup_address'),
-                //        'shipping_address'=>$request->input('shipping_address'),
-                //        'shipping_latitude'=>$request->input('shipping_latitude'),
-                //        'shipping_longitude'=>$request->input('shipping_longitude'),
-                //        'special_delivery_instructions'=>$request->input('special_delivery_instructions')]
-
-                //     );
-                   
-    
-                // }
+               
 
                 //Update payment status
                 $this->transactionUtil->updatePaymentStatus($transaction->id, $transaction->final_total);

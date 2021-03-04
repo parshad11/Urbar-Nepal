@@ -29,8 +29,8 @@ class CreateTasksTable extends Migration
             $table->string('task_address')->nullable();
             $table->string('task_latitude');
             $table->string('task_longitude');
-            $table->date('started_at')->nullable();
-            $table->date('ended_at')->nullable();
+            $table->datetime('started_at')->nullable();
+            $table->datetime('ended_at')->nullable();
             $table->integer('assigned_by')->unsigned();
             $table->foreign('assigned_by')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();

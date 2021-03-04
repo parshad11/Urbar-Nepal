@@ -15,6 +15,8 @@ class CreateDeliveriesTable extends Migration
     {
         Schema::create('deliveries', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->integer('business_id')->unsigned();
+            $table->foreign('business_id')->references('id')->on('business')->onDelete('cascade');
             $table->integer('transaction_id')->unsigned();
             $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
             $table->bigInteger('delivery_person_id')->unsigned();
