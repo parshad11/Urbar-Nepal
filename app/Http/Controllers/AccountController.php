@@ -23,7 +23,7 @@ class AccountController extends Controller
      * @param Util $commonUtil
      * @return void
      */
-    public function __construct(Util $commonUtil)
+                 public function __construct(Util $commonUtil)
     {
         $this->commonUtil = $commonUtil;
     }
