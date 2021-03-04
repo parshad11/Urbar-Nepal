@@ -25,6 +25,14 @@
 		width: 400px; 
 		height: 300px;
 	}
+	#pickup_map{
+		width: 400px; 
+		height: 300px;
+	}
+	#shipping_map{
+		width: 400px; 
+		height: 300px;
+	}
 	/*
 	* Pattern lock css
 	* Pattern direction

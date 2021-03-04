@@ -153,9 +153,12 @@
 
                                     <div class="col-md-8">
                                     <strong>@lang('delivery.location_view'):</strong><br>
-                                    <div id="mapid" style="height:180px"></div>
-
-                                    </div>   
+                                    <input type="hidden" id="shipping_latitude" value="{{ $delivery->shipping_latitude }}" name="shipping_latitude">
+                                    <input type="hidden" id="shipping_longitude" value="{{ $delivery->shipping_longitude }}" name="shipping_longitude">
+                                    <div id='shipping_map'>
+                                    
+                                    </div> 
+                                    </div>
                             </div>
                             <div class="col-md-12"   style="display:flex;justify-content: space-between;">
                                     <div class="col-md-4">
@@ -169,16 +172,17 @@
                                     </p>
                                     </div>
 
-                                    <div class="col-md-6 pull-right">
+                                    <div class="col-md-8 pull-right">
                                     <strong>@lang('delivery.location_view'):</strong><br>
                                     <input type="hidden" id="pickup_latitude" value="{{ $delivery->pickup_latitude }}" name="pickup_latitude">
                                     <input type="hidden" id="pickup_longitude" value="{{ $delivery->pickup_longitude }}" name="pickup_longitude">
-                                    <div id="pickupmap"></div>
-
-                                    </div>   
-                            </div>
+                                    <div id='pickup_map'>
+                                    
+                                    </div> 
+                                    </div>
                             </div>       
                         </div>
+                         </div>
 
                         <div class="tab-pane" id="delivery_person_tab">
                         <div class="box box-primary">
@@ -244,7 +248,7 @@
 @section('javascript')
     <!-- document & note.js -->
     @include('documents_and_notes.document_and_note_js')
-
+   
     <script type="text/javascript">
         $(document).ready( function(){
             $('#user_id').change( function() {
@@ -254,11 +258,36 @@
             });
         });
 
-        const map = L.map('pickupmap').setView([27.6833306, 85.416665], 13);
-        const attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
-        const tileUrl='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-        const tiles=L.tileLayer(tileUrl,{attribution});
-        tiles.addTo(map)
-        const marker=L.marker([27.6833306, 85.416665]).addTo(map);
+        mapboxgl.accessToken = 'pk.eyJ1IjoicHJhbW9kbGFtc2FsIiwiYSI6ImNqenp2d25xZjIyZnozbG1saXJvdzY4encifQ.JnhenWIopEkt6RAp5ukfCA';
+        const delivery_pickup_latitude=$('input#pickup_latitude').val();
+        const delivery_pickup_longitude=$('input#pickup_longitude').val();
+        const delivery_shipping_latitude=$('input#shipping_latitude').val();
+        const delivery_shipping_longitude=$('input#shipping_longitude').val();
+
+        const delivery_pickup_map = new mapboxgl.Map({
+            container: 'pickup_map',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center:[delivery_pickup_longitude, delivery_pickup_latitude],
+            zoom:13
+        });
+
+        var marker = new mapboxgl.Marker()
+        .setLngLat([delivery_pickup_longitude, delivery_pickup_latitude])
+        .addTo(delivery_pickup_map);
+
+        delivery_pickup_map.addControl(new mapboxgl.NavigationControl());
+
+        
+        const delivery_shipping_map = new mapboxgl.Map({
+            container: 'shipping_map',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center:[delivery_shipping_longitude, delivery_shipping_latitude],
+            zoom:13
+        });
+
+        var marker = new mapboxgl.Marker()
+        .setLngLat([delivery_shipping_longitude, delivery_shipping_latitude])
+        .addTo(delivery_shipping_map);
+
     </script>
 @endsection

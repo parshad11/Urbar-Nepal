@@ -158,6 +158,8 @@
 
                                     <div class="col-md-8">
                                     <strong>@lang('delivery.location_view'):</strong><br>
+                                    <input type="hidden" id="task_latitude" value="{{ $task->task_latitude }}" name="task_latitude">
+                                    <input type="hidden" id="task_longitude" value="{{ $task->task_longitude }}" name="task_longitude">
                                     <div id='map'>
                                     
                                     </div>
@@ -241,21 +243,7 @@
                 }
             });
         });
-        
-mapboxgl.accessToken = 'pk.eyJ1IjoicHJhbW9kbGFtc2FsIiwiYSI6ImNqenp2d25xZjIyZnozbG1saXJvdzY4encifQ.JnhenWIopEkt6RAp5ukfCA';
 
-const map = new mapboxgl.Map({
-    container: 'map',
-    style: 'mapbox://styles/mapbox/streets-v11',
-    center:[85.416665, 27.6833306],
-    zoom:13
-});
-
-var marker = new mapboxgl.Marker()
-.setLngLat([30.5, 50.5])
-.addTo(map);
-
-map.addControl(new mapboxgl.NavigationControl());
     </script>
  
 @endsection

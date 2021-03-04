@@ -309,7 +309,7 @@ class TaskController extends Controller
 
         DB::beginTransaction(); 
 
-        $task = $task->update($task_data);
+        $task->update($task_data);
 
         if($task->task_status=='received'){
             $task->started_at=null;
