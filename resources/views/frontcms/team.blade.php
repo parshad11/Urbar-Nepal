@@ -8,16 +8,6 @@
     @if(isset($about_info))
     <img class="jarallax-img" src="{{asset('uploads/img/home/about/'.$about_info->banner_image)}}" alt="">
     @endif
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <div class="page-heading-col border-hover">
-                    <h2>Our Team</h2>
-                    <p><a href="{{ route('front_dashboard') }}">Home</a> / <a href="{{route('teams')}}">Team</a></p>
-                </div>
-            </div>
-        </div>
-    </div>
 </section>
 
 <!-- Team Start -->

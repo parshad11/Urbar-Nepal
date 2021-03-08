@@ -4,7 +4,7 @@
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
-    <h1>Blog Setting</h1>
+    <h1>Blogs</h1>
 </section>
 
 <!-- Main content -->
@@ -17,28 +17,24 @@
                 <thead class="thead-light">
                   <tr>
                     <th>S.N</th>
-                    <th>Name</th>
                     <th>Title</th>
-                    <th>Image</th>
+                    <th>Summary</th>
+                    <th>Category</th>
                     <th>Status</th>
                     <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                      @if(isset($services) && count($services) > 0)
-                        @foreach ($services as $key => $value)
+                      @if(isset($blogs) && count($blogs) > 0)
+                        @foreach ($blogs as $key => $value)
                             <tr>
-                                <td>{{$key+1}}</td>
+                                <td>{{$key+$blogs->firstItem()}}</td>
                                 <td>{{ $value->title }}</td>
                                 <td>{{ $value->summary }}</td>
-                                <td>
-                                    @if (isset($value->service_image) && !empty($value->service_image) && file_exists(public_path().'/uploads/img/home/services/'.$value->service_image))
-                                        <img src="{{ asset('uploads/img/home/services/'.$value->service_image) }}" alt="" width="150px">                        
-                                    @endif
-                                </td>
+                                <td>{{ $value->category->title}}</td>
                                 <td><span class="badge label label-{{ $value->status == 'active' ? 'success' : 'danger'}}">{{ $value->status == 'active' ? 'Active' : 'Inactive'}}</span></td>
                                 <td>
-                                    <a href="{{ route('cms_service_edit',$value->id) }}" class="btn btn-sm btn-border-success"><i class="fa fa-paper-plane"></i>&nbsp;Edit</a>
+                                    <a href="{{ route('cms_blog_edit',$value->id) }}" class="btn btn-sm btn-border-success"><i class="fa fa-paper-plane"></i>&nbsp;Edit</a>
                                 </td>
                             </tr>
                         @endforeach
@@ -49,6 +45,7 @@
                       @endif
                 </tbody>
               </table> 
+              {{$blogs->links()}}
         </div>
     </div>
 </section>

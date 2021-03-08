@@ -5,7 +5,7 @@
             <div class="col-md-12">
                 <div class="my-nav-row">
                     <div class="row">
-                        <div class="col-md-9 col-sm-12 col-xs-12">
+                        <div class="col-md-10">
                             <nav class="navbar navbar-default">
 
                                 <div class="navbar-header d-flex">
@@ -49,7 +49,7 @@
                                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">About Us&nbsp;<i class="fa fa-angle-down" aria-hidden="true"></i></a>
                                             <ul class="dropdown-menu">
                                                 <li><a href="{{route('front_about')}}">About</a></li>
-                                                <li><a href="{{route('teams')}}">Mission and Vision</a></li>
+                                                <li><a href="{{route('front_about')}}">Mission and Vision</a></li>
                                                 <li><a href="{{route('teams')}}">Our Team</a></li>
                                                 <li><a href="{{route('faqs')}}">Faqs</a></li>
                                              
@@ -60,26 +60,25 @@
                                         {{-- <li class="{{ Request::segment(1) == 'about-us' ? 'active' : ''}}">
                                             <a href="{{ route('front_about') }}" >About</a>
                                         </li> --}}
-                                        <li><a href="#">Buy/Sell</a></li>
-                                        <li><a href="#">Careers</a></li>
-                                        <li><a href="#">News</a></li>
-                                        <li><a href="{{route('blog')}}">Blog</a></li>
-                                        {{-- <li><a href="{{ route('contact')}}">Contact</a></li> --}}
+                                        <li class="{{ Request::segment(1) == 'buy-sell' ? 'active' : ''}}"><a href="{{route('buy_sell')}}">Buy/Sell</a></li>
+                                        <li class="{{ Request::segment(1) == 'careers' ? 'active' : ''}}"><a href="{{route('careers')}}">Careers</a></li>
+                                        <li class="{{ Request::segment(1) == 'blog' ? 'active' : ''}}"><a href="{{route('blog')}}">Blog</a></li>
                                         {{-- <li><a href="javascript:;">Login / Register</a></li> --}}
                                     </ul>
                                 </div>
                             </nav>
                         </div>
-                        <div class="col-md-3 col-sm-12 col-xs-12">
-                            <div class="my-search-box">
-                                <form method="post">
+                        <div class="col-md-2 quote_div">
+                            <div class="quote-box">
+                                {{-- <form method="post">
                                     <div class="input-group">
                                         <input placeholder="Search Here....." class="form-control" name="search-field" type="text">
                                         <span class="input-group-btn">
                                       <button type="submit" class="btn"><i class="fa fa-search"></i></button>
                                       </span>
                                     </div>
-                                </form>
+                                </form> --}}
+                                <a href="#quote" id="">Contact Us</a>
                             </div>
                         </div>
                     </div>
