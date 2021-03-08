@@ -1,5 +1,8 @@
 @extends('layouts.app')
 @section('title','Blog Setting')
+@section('css')
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+@endsection
 @section('content')
 
 <!-- Content Header (Page header) -->
@@ -25,6 +28,28 @@
                 </div>
             </div>
             <div class="row" style="margin-bottom: 10px;">
+                <div class="col-md-4" style="padding:0 10px 0 0;">
+                    <label for="category"class="control-label">Select Category :</label>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<i class="fa fa-sitemap"></i>
+						</span>
+                        <select name="category_id" id="" class="form-control" required>
+                            <option value="">-- Select Any Category --</option>
+                            @if(isset($categories) && count($categories) > 0)
+                            @foreach ($categories as $item)
+                                <option value="{{$item->id}}">{{$item->title}}</option>
+                            @endforeach
+                            @endif
+                        </select>
+						<span class="input-group-btn">
+                            <a href="{{ route('cms_blogcat') }}" class="btn btn-default bg-white btn-flat"><i class="fa fa-plus-circle text-primary fa-lg"></i></a>
+                            {{-- <a href="{{ route('cms_blogcat_form') }}" class="btn btn-default bg-white btn-flat" data-toggle="modal" data-target="#categoryModal"><i class="fa fa-plus-circle text-primary fa-lg"></i></a> --}}
+						</span>
+					</div>
+				</div>
+            </div>
+            <div class="row" style="margin-bottom: 10px;">
                 <div class="col-md-12" style="padding:0 10px 0 0;">
                     <label for="title" class="control-label">Title :</label>
                     <input type="text" name="title" class="form-control" placeholder="Blog Title..." required>
@@ -39,7 +64,7 @@
             <div class="row" style="margin-bottom: 10px;">
                 <div class="col-md-12" style="padding:0 10px 0 0;">
                     <label for="blog_description" class="control-label">Description :</label>
-                    <textarea name="description" class="form-control" id="blog_description" cols="20" rows="10" style="resize: none;" placeholder="Blog Description..."></textarea>
+                    <textarea name="description" class="form-control" id="editor" required></textarea>
                 </div>
             </div>
         </div>
@@ -54,16 +79,27 @@
         </div>
     </div>
 
-
+    {{-- <div class="row">
+        <div class="col-sm-12">
+            <button type="button" class="btn btn-default bg-white btn-flat" data-toggle="modal" data-target="#categoryModal"><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
+        </div>
+    </div> --}}
 </form>  
 </section>
 <!-- /.content -->
-
+<div class="modal fade" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
+	@include('frontcms.blog.category_form')
+</div>
 @endsection
 @section('javascript')
     <script src="{{ asset('cms/spartan/dist/js/spartan-multi-image-picker-min.js') }}"></script>
+    <!-- summernote js -->
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
     <script>
          $(document).ready(function(){
+            $('#editor').summernote({
+                height: 150,
+            });
 
             $("#blog_img").spartanMultiImagePicker({
                 fieldName:        'blog_image[]',

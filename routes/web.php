@@ -410,7 +410,7 @@ Route::namespace('Front')->middleware(['setData', 'auth', 'SetSessionData', 'lan
     Route::get('frontcms/about-settings/create', 'CmsController@createAbout')->name('frontcms_about_form');
     Route::post('frontcms/about-settings/store', 'CmsController@storeAbout')->name('frontcms_about_store');
     Route::get('frontcms/about-settings', 'CmsController@editAbout')->name('frontcms_about_edit');
-    Route::post('frontcms/about-settings/update', 'CmsController@updateAbout')->name('frontcms_about_update');
+    Route::post('frontcms/about-settings/update/{id}', 'CmsController@updateAbout')->name('frontcms_about_update');
 
     // team section
     Route::get('/frontcms/teams', 'CmsController@viewTeam')->name('cms_team');
@@ -435,6 +435,13 @@ Route::namespace('Front')->middleware(['setData', 'auth', 'SetSessionData', 'lan
     Route::get('/frontcms/blogs/{id}/edit', 'CmsController@editBlog')->name('cms_blog_edit');
     Route::put('/frontcms/blogs/{id}', 'CmsController@updateBlog')->name('cms_blog_update');
     Route::delete('/frontcms/blogs/{id}', 'CmsController@deleteBlog')->name('cms_blog_delete');
+    // Blog Category section
+    Route::get('/frontcms/blogs-category', 'CmsController@viewBlogCat')->name('cms_blogcat');
+    Route::get('/frontcms/blogs-category/create', 'CmsController@createBlogCat')->name('cms_blogcat_form');
+    Route::post('/frontcms/blogs-category', 'CmsController@storeBlogCat')->name('cms_blogcat_store');
+    Route::get('/frontcms/blogs-category/{id}/edit', 'CmsController@editBlogCat')->name('cms_blogcat_edit');
+    Route::put('/frontcms/blogs-category/{id}', 'CmsController@updateBlogCat')->name('cms_blogcat_update');
+    Route::delete('/frontcms/blogs-category/{id}', 'CmsController@deleteBlogCat')->name('cms_blogcat_delete');
    
     //Testimonial section 
     Route::get('/frontcms/testimonial', 'CmsController@viewTestimonial')->name('cms_testimonial');
@@ -443,5 +450,19 @@ Route::namespace('Front')->middleware(['setData', 'auth', 'SetSessionData', 'lan
     Route::get('/frontcms/testimonial/{id}/edit', 'CmsController@editTestimonial')->name('cms_testimonial_edit');
     Route::put('/frontcms/testimonial/{id}', 'CmsController@updateTestimonial')->name('cms_testimonial_update');
     Route::delete('/frontcms/testimonial/{id}', 'CmsController@deleteTestimonial')->name('cms_testimonial_delete');
-    
+
+    //Pages Section
+    Route::get('/frontcms/pages', 'CmsController@viewPages')->name('cms_pages');
+    Route::get('/frontcms/pages/create', 'CmsController@createPages')->name('cms_pages_form');
+    Route::post('/frontcms/pages', 'CmsController@storePages')->name('cms_pages_store');
+    Route::get('/frontcms/pages/{id}/edit', 'CmsController@editPages')->name('cms_pages_edit');
+    Route::put('/frontcms/pages/{id}', 'CmsController@updatePages')->name('cms_pages_update');
+    Route::delete('/frontcms/pages/{id}/destroy', 'CmsController@deletePages')->name('cms_pages_delete');
+    //Career Section
+    Route::get('/frontcms/career', 'CmsController@viewCareer')->name('cms_career');
+    Route::get('/frontcms/career/create', 'CmsController@createCareer')->name('cms_career_form');
+    Route::post('/frontcms/career', 'CmsController@storeCareer')->name('cms_career_store');
+    Route::get('/frontcms/career/{id}/edit', 'CmsController@editCareer')->name('cms_career_edit');
+    Route::put('/frontcms/career/{id}', 'CmsController@updateCareer')->name('cms_career_update');
+    Route::delete('/frontcms/career/{id}/destroy', 'CmsController@deleteCareer')->name('cms_career_delete');
 });

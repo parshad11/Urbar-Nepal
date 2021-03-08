@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Front;
 
 use App\Front\Blog;
+use App\Front\BlogCategory;
+use App\Front\Career;
 use App\Front\Faq;
 use App\Front\FrontAbout;
 use App\Front\HomeSetting;
+use App\Front\PageSetting;
 use App\Front\Service;
 use App\Front\Team;
 use App\Front\Testimonial;
@@ -19,23 +22,23 @@ class FrontendController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
     public function index()
     {
         $home_settings = HomeSetting::first();
         $teams = Team::where('status', 'active')->get();
         $service = Service::where('status', 'active')->get();
-        $blogs = Blog::take(4)->get();
+        $blogs = Blog::where('status', 'active')->take(4)->get();
         $testimonials = Testimonial::where('status', 'active')->get();
-        // dd($testimonials);
-        // $home_setting = json_decode($home_settings->why_choose_us, true);
-        // dd($home_setting['Agriculture Leader']);
-        // $home_setting = explode(',',str_replace('+', ' ', $home_settings->why_choose_us));
-        // foreach($home_setting as $key => $value){
-        //     list($k, $v) = explode('=', $value);
-        //     $result[ $k ] = $v;
-        // }
+         /*dd($testimonials);
+         $home_setting = json_decode($home_settings->why_choose_us, true);
+         dd($home_setting['Agriculture Leader']);
+         $home_setting = explode(',',str_replace('+', ' ', $home_settings->why_choose_us));
+         foreach($home_setting as $key => $value){
+             list($k, $v) = explode('=', $value);
+             $result[ $k ] = $v;
+         }*/
         return view('frontcms.index')->with('home_setting',$home_settings)
                                     ->with('team_members', $teams)
                                     ->with('services', $service)
@@ -52,18 +55,22 @@ class FrontendController extends Controller
     }
     public function getBlog(){
         $about_details = FrontAbout::first();
-        $blogs = Blog::get();
+        $categories = BlogCategory::with('news')->orderBy('id', 'desc')->get();
+        $blogs = Blog::with('category')->orderBy('id', 'desc')->where('status', 'active')->get();
         return view('frontcms.blog')
         ->with('about_info', $about_details)
+        ->with('categories', $categories)
         ->with('blogs', $blogs);
     }
     public function getSingleBlog($slug){
         $about_details = FrontAbout::select('banner_image')->first();
+        $categories = BlogCategory::with('news')->orderBy('id', 'desc')->get();
         $blog_single = Blog::where('slug',$slug)->first();
         $blogs = Blog::orderBy('created_at','desc')->take(5)->get();
         return view('frontcms.blog_single')
         ->with('about_info', $about_details)
         ->with('blog_single', $blog_single)
+        ->with('categories', $categories)
         ->with('blogs', $blogs);
     }
     public function getTeam(){
@@ -89,6 +96,18 @@ class FrontendController extends Controller
         return view('frontcms.contact')
         ->with('about_info', $about_details)
         ->with('contact', $home_settings);
+    }
+
+    public function getBuyOrSell(){
+        return view('frontcms.buysell');
+    }
+    public function getCareers(){
+        $careers = Career::orderBy('id', 'desc')->where('status', 'active')->get();
+        return view('frontcms.careers')->with('careers', $careers);
+    }
+    public function getPages($slug){
+        $page_info = PageSetting::where('slug', $slug)->get();
+        return view('frontcms.page')->with('page_info', $page_info);
     }
 
     /**

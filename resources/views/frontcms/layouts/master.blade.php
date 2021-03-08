@@ -84,10 +84,34 @@
             }
 
         }
+        @media only screen and (max-width: 991px) {
+            .col-md-2.quote_div{
+                display: none!important;
+            }        
+        }
 
         /* MAIN BANNER IMAGE */
         .main-banner {
             width: 100%;
+        }
+
+        /* APPs LINK */
+        .apps-link-main {
+            text-align: center;
+        }
+
+        .apps-link {
+            display: flex;
+        }
+
+        .apps-link a {
+            width: 25%;
+            margin: auto;
+        }
+        @media (max-width: 768px){
+            .col-md-2.col-sm-12.col-xs-12.full-wd480.appstore{
+                display: none;
+            }
         }
     </style>
 

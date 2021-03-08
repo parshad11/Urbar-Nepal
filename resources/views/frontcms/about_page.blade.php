@@ -11,21 +11,9 @@
   <!-- Page heading Start -->
   <section class="page-heading-area jarallax overlay-black" id="water-animation">
     @if(isset($about_info))
-    @if (isset($about_info->banner_image) && !empty($about_info->banner_image) && file_exists(public_path().'/uploads/img/home/about/'.$about_info->banner_image))
         {{-- <img src="{{ asset('uploads/img/home/about/'.$about_info->banner_image) }}" alt=""> --}}
         <img class="jarallax-img" src="{{ asset('uploads/img/home/about/'.$about_info->banner_image) }}" alt="">                        
     @endif
-    @endif
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <div class="page-heading-col border-hover">
-                    <h2>About Us</h2>
-                    <p><a href="{{ route('front_dashboard') }}">Home</a> / <a href="{{ route('front_about') }}">About</a></p>
-                </div>
-            </div>
-        </div>
-    </div>
 </section>
 
 <!-- Inner About Start -->
