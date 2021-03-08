@@ -13,7 +13,8 @@ use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable;
+    use Notifiable;
+    use HasApiTokens;
     use SoftDeletes;
     use HasRoles;
     use HasApiTokens;
