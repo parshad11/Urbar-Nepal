@@ -8,8 +8,15 @@ const task_map = new mapboxgl.Map({
     center:[task_longitude, task_latitude],
     zoom:13
 });
-var marker = new mapboxgl.Marker()
+var marker = new mapboxgl.Marker({
+
+})
 .setLngLat([task_longitude, task_latitude])
 .addTo(task_map);
 task_map.addControl(new mapboxgl.NavigationControl());
+
+
+
+
+
 

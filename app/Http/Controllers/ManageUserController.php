@@ -254,6 +254,32 @@ class ManageUserController extends Controller
         return view('manage_user.show')->with(compact('user', 'view_partials', 'users'));
     }
 
+    public function getStaff(){
+        if (request()->ajax()) {
+            $term = request()->q;
+            if (empty($term)) {
+                return json_encode([]);
+            }
+
+            $business_id = request()->session()->get('user.business_id');
+         
+
+            $query = User::where('business_id', $business_id)->active();
+                   
+            
+           
+            $users = $query->where(function ($query) use ($term) {
+                $query->where('users.first_name', 'like', '%' . $term .'%')
+                      ->orWhere('users.last_name', 'like', '%' . $term .'%');
+                     
+                
+            })
+            ->select('users.id', DB::raw("CONCAT(COALESCE(users.surname, ''),' ',COALESCE(users.first_name, ''),' ',COALESCE(users.last_name,'')) as text"))
+            ->get();  
+            return json_encode($users);
+        }
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -552,12 +578,6 @@ class ManageUserController extends Controller
 
           
             $deliveryPeople = DeliveryPerson::join('users','delivery_people.user_id','=','users.id')
-            // with('user')->whereHas('user',function ($query) use ($term) {
-            //     $query ->where('first_name', 'like', '%' . $term .'%')
-            //           ->orWhere('last_name', 'like', '%' . $term .'%');
-            //                     // ->orWhere('supplier_business_name', 'like', '%' . $term .'%')
-            //                     //  ->orWhere('users.contact_id', 'like', '%' . $term .'%');
-            // })
             ->where('users.first_name', 'like', '%' . $term .'%')
             ->orWhere('users.last_name', 'like', '%' . $term .'%')
              ->select('delivery_people.id', DB::raw("CONCAT(COALESCE(users.surname, ''),' ',COALESCE(users.first_name, ''),' ',COALESCE(users.last_name,'')) as text"))

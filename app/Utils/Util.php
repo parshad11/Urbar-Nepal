@@ -141,6 +141,11 @@ class Util
         return [ 'delivery' => __('delivery.delivery'), 'pick up' => __('delivery.pick_up')];
     }
 
+    public function workTypes()
+    {
+        return [ 'task' => __('delivery.task'), 'sell' => __('delivery.sell'),'sell_transfer' => __('delivery.sell_transfer'),'purchase' => __('delivery.purchase')];
+    }
+
     public function taskStatuses()
     {
         return [ 'received' => __('lang_v1.received'), 'on process' => __('lang_v1.on_process'), 'completed' => __('lang_v1.completed'), 'cancelled' => __('lang_v1.cancelled')];

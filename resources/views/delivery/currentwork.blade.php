@@ -11,12 +11,12 @@
 
     <!-- Main content -->
     <section class="content">
-        @component('components.filters', ['title' => __('report.filters')])
-            @include('delivery.partials.delivery_list_filters')
-        @endcomponent
+        <!-- @component('components.filters', ['title' => __('report.filters')])
+            @include('delivery.partials.currentwork_list_filters')
+        @endcomponent -->
         @component('components.widget', ['class' => 'box-primary', 'title' => __( 'All Current Work' )])
             @if (auth()->user()->can('task.view') || auth()->user()->can('view_own_task') || auth()->user()->can('delivery.view') || auth()->user()->can('view_own_delivery'))
-                <table class="table table-bordered table-striped" id="task_table">
+                <table class="table table-bordered table-striped" id="currentwork_table">
                     <thead>
                     <tr>
                         <th>Action</th>
@@ -34,11 +34,7 @@
                 </table>
             @endcan
         @endcomponent
-
     </section>
-    @can('task.update')
-        @include('task.partial.update_task_status_modal')
-    @endcan
 
     <!-- /.content -->
 @stop
@@ -60,14 +56,41 @@
     <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            task_table = $('#task_table').DataTable({
+            $('#currentwork_list_filter_date_range').daterangepicker(
+              dateRangeSettings,
+            function (start, end) {
+                $('#currentwork_list_filter_date_range').val(start.format(moment_date_format) + ' ~ ' + end.format(moment_date_format));
+                currentwork_table.ajax.reload();
+            });
+            $('#currentwork_list_filter_date_range').on('cancel.daterangepicker', function(ev, picker) {
+                $('#currentwork_list_filter_date_range').val('');
+                currentwork_table.ajax.reload();
+            });
+
+            currentwork_table = $('#currentwork_table').DataTable({
                 processing: true,
                 serverSide: true,
                 "ajax": {
                     "url": "/active/work",
                     "data": function (d) {
-
+                        if($('#currentwork_list_filter_date_range').val()) {
+                    var start = $('#currentwork_list_filter_date_range').data('daterangepicker').startDate.format('YYYY-MM-DD');
+                    var end = $('#currentwork_list_filter_date_range').data('daterangepicker').endDate.format('YYYY-MM-DD');
+                    d.start_date = start;
+                    d.end_date = end;
                     }
+               
+
+                    d.location_id = $('#location_id').val();
+                    d.work_type = $('#currentwork_list_filter_work_type').val();
+                    d.work_status = $('#currentwork_list_filter_status').val();
+                    d.delivery_person_id = $('#delivery_person_id').val();
+                    d.assigned_by = $('#assigned_by').val();
+                    
+               
+
+                d = __datatable_ajax_callback(d);
+                }
                 },
                 columns: [
                     {data: 'action', name: 'action', orderable: false, searchable: false},
@@ -81,10 +104,15 @@
                 ],
 
                 "fnDrawCallback": function (oSettings) {
-                    __currency_convert_recursively($('#task_table'));
-                }
+                    __currency_convert_recursively($('#currentwork_table'));
+                },
             });
-            $(document).on('click', 'a.delete-task', function (e) {
+
+            $(document).on('change','#assigned_by,#currentwork_list_filter_status,#currentwork_list_filter_work_type',  function() {
+             currentwork_table.ajax.reload();
+            });
+
+            $(document).on('click', 'a.delete-work', function (e) {
                 e.preventDefault();
                 swal({
                     title: LANG.sure,
@@ -104,7 +132,7 @@
                             success: function (result) {
                                 if (result.success == true) {
                                     toastr.success(result.msg);
-                                    task_table.ajax.reload();
+                                    currentwork_table.ajax.reload();
                                 } else {
                                     toastr.error(result.msg);
                                 }
@@ -114,43 +142,74 @@
                 });
             });
 
-            $(document).on('click', 'a.update_status', function (e) {
-                e.preventDefault();
-                var href = $(this).data('href');
-                var status = $(this).data('status');
-                $('#update_status_modal').modal('show');
-                $('#update_status_form').attr('action', href);
-                $('#update_status_form #update_status').val(status);
-                $('#update_status_form #update_status').trigger('change');
-            });
 
+            $('#location_id').select2({
+			ajax: {
+				url: '/business/get_locations',
+				dataType: 'json',
+				delay: 250,
+				data: function(params) {
+					return {
+						q: params.term, // search term
+						page: params.page,
+					};
+				},
+				processResults: function(data) {
+					return {
+						results: data,
+					};
+				},
+			},
+			minimumInputLength: 1,
+			escapeMarkup: function(m) {
+				return m;
+			},
+			templateResult: function(data) {
+				if (!data.id) {
+					return data.text;
+				}
+				var html = data.text;
+				return html;
+			},
+			}).on('select2:select', function (e) {
+                currentwork_table.ajax.reload();
 
-            $(document).on('submit', '#update_status_form', function (e) {
-                e.preventDefault();
-                $(this)
-                    .find('button[type="submit"]')
-                    .attr('disabled', true);
-                var data = $(this).serialize();
+			});
 
-                $.ajax({
-                    method: 'put',
-                    url: $(this).attr('action'),
-                    dataType: 'json',
-                    data:data,
-                    success: function (result) {
-                        if (result.success == true) {
-                            $('div#update_status_modal').modal('hide');
-                            toastr.success(result.msg);
-                            task_table.ajax.reload();
-                        } else {
-                            toastr.error(result.msg);
-                        }
-                        $('#update_status_form')
-                            .find('button[type="submit"]')
-                            .attr('disabled', false);
-                    },
-                });
-            });
+    
+            $('#delivery_person_id').select2({
+            ajax: {
+                url: '/user/get_delivery_people',
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        q: params.term, // search term
+                        page: params.page,
+                    };
+                },
+                processResults: function(data) {
+                    console.log(data);
+                    return {
+                        results: data,
+                    };
+                },
+            },
+            minimumInputLength: 1,
+            escapeMarkup: function(m) {
+                return m;
+            },
+         
+            templateResult: function(data) {
+                if (!data.id) {
+                    return data.text;
+                }
+                var html = data.text;
+                return html;
+            },
+        }).on('select2:select', function (e) {
+                currentwork_table.ajax.reload();
+			});
         })
     </script>
 @endsection

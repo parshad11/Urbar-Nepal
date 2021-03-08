@@ -78,6 +78,20 @@ class NotificationTemplate extends Model
         ];
     }
 
+    public static function deliveryNotifications()
+    {
+        return [
+            'task_received' => [
+                'name' => __('lang_v1.task_received'),
+                'extra_tags' => ['{business_name}', '{business_logo}','{delivery_person_name}','{view_button}']
+            ],
+            'delivery_received' => [
+                'name' => __('lang_v1.delivery_received'),
+                'extra_tags' => ['{business_name}', '{business_logo}','{delivery_person_name}','{view_button}']
+            ],
+        ];
+    }
+
     public static function supplierNotifications()
     {
         return [
