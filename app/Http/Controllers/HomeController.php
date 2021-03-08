@@ -217,40 +217,29 @@ class HomeController extends Controller
         }
 
         if ($request->ajax()) {
-            $today = Carbon::today();
-            $dateafter15days = Carbon::today()->addDays(15);
+            $today = Carbon::now();
+            $dateStartOfYear = $today->copy()->startOfYear();
+            $dateOfSixMonths = $dateStartOfYear->addMonth(6);
+            $dateOfEndOfYear = $today->copy()->endOfYear();
+           
+            if($today->between($dateStartOfYear,$dateOfSixMonths)){
+                $endPeriod=$dateOfSixMonths;
+            }
+            else {
+                $endPeriod=$dateOfEndOfYear;
+            }
+      
+
             if (auth()->user()->can('record.view') && auth()->user()->can('record.view_own')) {
-                $records = $this->recordUtil->getListRecords($business_id)->whereBetween('expected_collection_date', [$today, $dateafter15days])->get();
-            } elseif (!auth()->user()->can('record.view') && auth()->user()->can('record.view_own')) {
-                $records = $this->recordUtil->getListRecords($business_id)->whereBetween('expected_collection_date', [$today, $dateafter15days])
-                    ->where('records.contact_id', auth()->user()->id);
+                $records = $this->recordUtil->getListRecords($business_id)->whereBetween('expected_collection_date', [$today, $endPeriod]);
+            } 
+            elseif (!auth()->user()->can('record.view') && auth()->user()->can('record.view_own')) {
+                $records = $this->recordUtil->getListRecords($business_id)->whereBetween('expected_collection_date', [$today, $endPeriod])
+                    ->where('records.created_by', auth()->user()->id);
             }
             $permitted_locations = auth()->user()->permitted_locations();
             if ($permitted_locations != 'all') {
                 $records->whereIn('records.location_id', $permitted_locations);
-            }
-
-            if (!empty(request()->supplier_id)) {
-                $records->where('contacts.id', request()->supplier_id);
-            }
-
-            if (!empty(request()->location_id)) {
-                $records->where('records.location_id', request()->location_id);
-            }
-
-            $start_date = $request->start_date;
-            $end_date = $request->end_date;
-
-            $location = $request->location;
-
-            if (!empty($start_date) && !empty($end_date || !empty($request->location))) {
-                $records->whereBetween('expected_collection_date', [$start_date, $end_date]);
-            }
-            if (!empty($request->location)) {
-                $records->where('location', 'like', '%' . $location . '%');
-            }
-            if (!empty($start_date) && !empty($end_date && !empty($request->location))) {
-                $records->whereBetween('expected_collection_date', [$start_date, $end_date])->where('location', 'like', '%' . $location . '%');
             }
 
             return Datatables::of($records)

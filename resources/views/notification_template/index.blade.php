@@ -39,6 +39,14 @@
             @endcomponent
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            @component('components.widget', ['class' => 'box-primary', 'title' => __('lang_v1.delivery_notification') . ':'])
+                @include('notification_template.partials.tabs', ['templates' => $delivery_notifications])
+            @endcomponent
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-12">
             <button type="submit" class="btn btn-danger pull-right">@lang('messages.save')</button>

@@ -781,7 +781,7 @@ class PurchaseController extends Controller
                                 ->orWhere('supplier_business_name', 'like', '%' . $term .'%')
                                 ->orWhere('contacts.contact_id', 'like', '%' . $term .'%');
             })
-                        ->select('contacts.id', 'name as text', 'supplier_business_name as business_name', 'contact_id', 'contacts.pay_term_type', 'contacts.pay_term_number', 'contacts.balance','contacts.shipping_address as pickup_address','contacts.latitude as pickup_latitude','contacts.longitude as pickup_longitude')
+                        ->select('contacts.id', 'name as text', 'supplier_business_name as business_name', 'contact_id', 'contacts.pay_term_type', 'contacts.pay_term_number', 'contacts.balance','contacts.shipping_address as supplier_address','contacts.latitude as pickup_latitude','contacts.longitude as pickup_longitude')
                         ->onlySuppliers()
                         ->get();
                         

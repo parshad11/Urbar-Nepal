@@ -12,6 +12,10 @@ return [
     */
 
     'deliveries' => 'Deliveries',
+    'task' => 'Task',
+    'sell' => 'Sell',
+    'sell_transfer' => 'Sell Transfer',
+    'purchase' => 'Purchase',
     'delivery_person'=>'Delivery Person',
     'manage_deliveries' => 'Manage deliveries',
     'assign_delivery'=>'Assign Delivery',
@@ -42,7 +46,9 @@ return [
     'task_ended_at'=>'Task Ended At',
     'delivery_ended_at'=>'Delivery Ended At',
     'task_type'=>'Task Type',
+    'work_type'=>'Work Type',
     'task_status'=>'Task Status',
+    'status'=>'Status',
     'edit_task'=>'Edit Task',
     'task_status'=>'Task Status',
     'task_title'=>'Task Title',
@@ -50,7 +56,7 @@ return [
     'description'=>'Description',
     'special_instructions'=>'Special Instructions',
     'assign_task_to'=>'Assign Task To',
-    'latitude'=>'Longitude',
+    'latitude'=>'Latitude',
     'longitude'=>'Longitude',
     'shipping_details'=>'Shipping Details',
     'assigned'=>'Assigned',
@@ -68,7 +74,6 @@ return [
     'delivery_person_details'=>'Delivery Person Details',
     'location_details'=>'Location Details',
     'business_location'=>'Business Location',
-    
-
+    'added_by'=>'Added By',
 
 ];

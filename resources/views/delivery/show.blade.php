@@ -151,15 +151,17 @@
                                     </p>
                                     </div>
 
-                                    <div class="col-md-8">
+                                    <div class="col-md-8 pull-right">
                                     <strong>@lang('delivery.location_view'):</strong><br>
-                                    <input type="hidden" id="shipping_latitude" value="{{ $delivery->shipping_latitude }}" name="shipping_latitude">
-                                    <input type="hidden" id="shipping_longitude" value="{{ $delivery->shipping_longitude }}" name="shipping_longitude">
-                                    <div id='shipping_map'>
+                                    <input type="hidden" id="pickup_latitude" value="{{ $delivery->pickup_latitude }}" name="pickup_latitude">
+                                    <input type="hidden" id="pickup_longitude" value="{{ $delivery->pickup_longitude }}" name="pickup_longitude">
+                                    <div id='pickup_map'>
                                     
                                     </div> 
                                     </div>
+
                             </div>
+                            <br/>
                             <div class="col-md-12"   style="display:flex;justify-content: space-between;">
                                     <div class="col-md-4">
                                     <strong>@lang('delivery.pickup_address'):</strong><br>
@@ -172,11 +174,11 @@
                                     </p>
                                     </div>
 
-                                    <div class="col-md-8 pull-right">
+                                    <div class="col-md-8">
                                     <strong>@lang('delivery.location_view'):</strong><br>
-                                    <input type="hidden" id="pickup_latitude" value="{{ $delivery->pickup_latitude }}" name="pickup_latitude">
-                                    <input type="hidden" id="pickup_longitude" value="{{ $delivery->pickup_longitude }}" name="pickup_longitude">
-                                    <div id='pickup_map'>
+                                    <input type="hidden" id="shipping_latitude" value="{{ $delivery->shipping_latitude }}" name="shipping_latitude">
+                                    <input type="hidden" id="shipping_longitude" value="{{ $delivery->shipping_longitude }}" name="shipping_longitude">
+                                    <div id='shipping_map'>
                                     
                                     </div> 
                                     </div>
@@ -288,6 +290,8 @@
         var marker = new mapboxgl.Marker()
         .setLngLat([delivery_shipping_longitude, delivery_shipping_latitude])
         .addTo(delivery_shipping_map);
+
+        delivery_shipping_map.addControl(new mapboxgl.NavigationControl());
 
     </script>
 @endsection
