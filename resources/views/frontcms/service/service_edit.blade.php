@@ -23,14 +23,14 @@
                 <label for="service_image" class="control-label">Image Dimension :400*280</label>
                 <div id="service">
                     @if (isset($service_info->service_image) && !empty($service_info->service_image) && file_exists(public_path().'/uploads/img/home/services/'.$service_info->service_image))
-                        <div class="col-md-3 col-sm-4 col-xs-6">
-                            <div class="img-upload-preview">
-                                <img src="{{ asset('uploads/img/home/services/'.$service_info->service_image) }}" alt="" class="img-responsive">
-                                <input type="hidden" name="previous_service_image" value="{{ $service_info->service_image }}">
-                                <button type="button" class="btn btn-danger close-btn remove-files"><i class="fa fa-times"></i></button>
-                            </div>
+                    <div class="col-md-3 col-sm-4 col-xs-6">
+                        <div class="img-upload-preview">
+                            <img src="{{ asset('uploads/img/home/services/'.$service_info->service_image) }}" alt="" class="img-responsive">
+                            <input type="hidden" name="previous_service_image" value="{{ $service_info->service_image }}">
+                            <button type="button" class="btn btn-danger close-btn remove-files"><i class="fa fa-times"></i></button>
                         </div>
-                        @endif
+                    </div>
+                    @endif
                 </div>
             </div>
             <div class="row" style="margin-bottom: 10px;">

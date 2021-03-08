@@ -705,6 +705,16 @@ class AdminSidebarMenu
                             'Testimonial Setting',
                             ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'frontcms' && request()->segment(2) == 'testimonial']
                         );
+                        $sub->url(
+                            route('cms_career'),
+                            'Careers Setting',
+                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'frontcms' && request()->segment(2) == 'career']
+                        );
+                        $sub->url(
+                            route('cms_pages'),
+                            'Pages Setting',
+                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'frontcms' && request()->segment(2) == 'pages']
+                        );
                     },
                     ['icon' => 'fa fas fa-house-damage', 'id' => 'tour_step6']
                 )->order(90);
