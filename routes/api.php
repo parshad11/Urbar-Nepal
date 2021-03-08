@@ -23,3 +23,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 route::post('/login','Api\LoginController@login')->name('delivery.login');
 route::get('/delivery','Api\DeliveryController@index')->middleware('auth:api');
 route::put('/delivery/{id}','Api\DeliveryController@update')->middleware('auth:api');
+route::get('/delivery-people','Api\DeliveryPersonController@GetAllDeliveryPeople')->middleware('auth:api');

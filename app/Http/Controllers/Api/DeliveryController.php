@@ -24,7 +24,10 @@ class DeliveryController extends Controller
         elseif(auth()->user()->user_type=='admin' || auth()->user()->user_type=='Admin'){
             $delivery = Delivery::all();
         }
-        return $delivery;
+
+        return response()->json([
+            'data'=>$delivery
+        ]);
     }
 
     public function update(Request $request,$id){
@@ -44,7 +47,7 @@ class DeliveryController extends Controller
         $success=$delivery->save();
 
         return response()->json([
-            $delivery,
+            'data'=>$delivery
         ]);
     }
 }
