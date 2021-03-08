@@ -172,7 +172,7 @@ class CmsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        dd($request->all());
+        // dd($request->all());
         $this->setting = $this->setting->find($id);
         // dd($this->setting);
         $data['logo_image'] = $request->previous_logo_image;

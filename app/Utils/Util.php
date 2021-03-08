@@ -1200,7 +1200,8 @@ class Util
         $notifications_data = [];
         foreach ($notifications as $notification) {
             $data = $notification->data;
-            if (in_array($notification->type, [\App\Notifications\RecurringInvoiceNotification::class, \App\Notifications\RecurringExpenseNotification::class])) {
+            if (in_array($notification->type, [\App\Notifications\RecurringInvoiceNotification::class, \App\Notifications\RecurringExpenseNotification::class
+            ,\App\Notifications\DeliveryNotification::class,])) {
                 $msg = '';
                 $icon_class = '';
                 $link = '';
@@ -1230,7 +1231,13 @@ class Util
                     $icon_class = "fas fa-recycle bg-green";
                     $link = action('ExpenseController@index');
                 }
-
+                else if($notification->type ==
+                    \App\Notifications\DeliveryNotification::class
+                ){
+                    $msg =$data['message'];
+                    $icon_class = "fas fa-recycle bg-green";
+                    $link = action('DeliveryController@index');
+                }
                 $notifications_data[] = [
                     'msg' => $msg,
                     'icon_class' => $icon_class,
@@ -1238,7 +1245,9 @@ class Util
                     'read_at' => $notification->read_at,
                     'created_at' => $notification->created_at->diffForHumans()
                 ];
-            } else {
+
+            }
+            else {
                 $moduleUtil = new \App\Utils\ModuleUtil;
                 $module_notification_data = $moduleUtil->getModuleData('parse_notification', $notification);
                 if (!empty($module_notification_data)) {
@@ -1250,7 +1259,6 @@ class Util
                 }
             }
         }
-
         return $notifications_data;
     }
 
