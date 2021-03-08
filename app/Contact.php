@@ -62,6 +62,15 @@ class Contact extends Authenticatable
         return $query;
     }
 
+    public function routeNotificationForMail()
+    {
+        // Return email address only...
+        return $this->email;
+
+        // Return email address and name...
+        return [$this->email => $this->name];
+    }
+
     /**
      * Get all of the contacts's notes & documents.
      */

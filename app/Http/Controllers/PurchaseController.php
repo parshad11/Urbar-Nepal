@@ -9,6 +9,8 @@ use App\Contact;
 use App\CustomerGroup;
 use App\Delivery;
 use App\DeliveryPerson;
+use App\Notifications\SupplierNotification;
+use App\NotificationTemplate;
 use App\Product;
 use App\PurchaseLine;
 use App\TaxRate;
@@ -22,6 +24,8 @@ use App\Utils\TransactionUtil;
 
 use App\Variation;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -325,7 +329,7 @@ class PurchaseController extends Controller
             $enable_product_editing = $request->session()->get('business.enable_editing_product_from_purchase');
 
             //Update business exchange rate.
-            Business::update_business($business_id, ['p_exchange_rate' => ($transaction_data['exchange_rate'])]);
+             Business::update_business($business_id, ['p_exchange_rate' => ($transaction_data['exchange_rate'])]);
 
             $currency_details = $this->transactionUtil->purchaseCurrencyDetails($business_id);
 
@@ -378,7 +382,12 @@ class PurchaseController extends Controller
 
             //Adjust stock over selling if found
             $this->productUtil->adjustStockOverSelling($transaction);
-            
+
+            $notificationInfo=NotificationTemplate::getTemplate($business_id,'new_order');
+            $business= Business::where('id', $business_id)->first();
+            $notificationInfo['email_settings']=$business->email_settings;
+            $transaction->contact->notify(new SupplierNotification($notificationInfo));
+
             DB::commit();
             
             $output = ['success' => 1,
