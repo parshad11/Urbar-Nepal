@@ -6,7 +6,7 @@
 <!-- Page heading Start -->
 <section class="page-heading-area overlay-black" id="water-animation">
     @isset($about_info)
-    <img class="jarallax-img" src="{{asset('uploads/img/home/about/'.$about_info->banner_image)}}" alt="">
+    <img class="jarallax-img"  src="{{asset('uploads/img/home/about/'.$about_info->banner_image)}}" alt="">
     @endisset
 </section>
 

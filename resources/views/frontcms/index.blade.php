@@ -268,9 +268,9 @@
                 <div class="col-lg-6 col-md-12">
                     <div class="about-col">
                         <h2>Welcome to <span>Freshktm</span></h2>
-                        <h4>More than 12 years of experience</h4>
+                        <h4>B to B Fresh Produce Supply Chain</h4>
                         @if(isset($home_setting))
-                            <p>{!! substr($home_setting->welcome_description, 0, 600) !!}</p>
+                            <p>{!! substr($home_setting->welcome_description, 0, 1200) !!}</p>
                         @endif
                         <span><a class="btn btn-default theme-btn btn-hover" href="#" role="button" data-toggle="modal"
                            data-target="#exampleModal">Read More</a>
@@ -313,7 +313,7 @@
             <div class="row">
                 <div class="col-md-12 text-center">
                     <div class="section-title">
-                        <h2>Our Values</h2>
+                        <h2>Our Values : FINEST</h2>
                         <div class="title-border"></div>
                         <p>Revolutionizing Farmers and Food in Nepal through Business Approaches</p>
                     </div>
@@ -329,8 +329,8 @@
                             <div class="value features-content">
                                 <h3 class="title">NO FOOD LOSS</h3>
                                 <p class="description">
-                                    About 40% of the food loss occurs before products reach the market from the farm. 
-                                    We design the fresh produce value chain to reduce this post-harvets fruits and vegetables loss in Nepal.
+                                    Post harvest fresh produce loss is about 40% in Nepal.
+                                    We design the supply chain to reduce the post-harvest fruits and vegetable loss in Nepal.
                                 </p>
                             </div>
                         </div>
@@ -346,8 +346,8 @@
                             <div class="value features-content">
                                 <h3 class="title">INNOVATION</h3>
                                 <p class="description">
-                                    We provide our farmers opportunities to produce quality products and are part of our family.
-                                    We respect the efforts of our farmers for providing food to our table.
+                                    We Think that the challenges in fresh produce supply chain and its productivity can be converted
+                                    into opportunities by using innovative digital technology.
                                 </p>
                             </div>
                         </div>
@@ -363,8 +363,8 @@
                             <div class="value features-content">
                                 <h3 class="title">NUTRITION</h3>
                                 <p class="description">
-                                    We aim to make an active contribution  to provide nutritious supply of agricultural products.
-                                    Our team is dedicated to ensure the quality of the produce and nutritional values.
+                                    We aim to make an active contribution  to provide nutritious food.
+                                    We are dedicated to solve the nutrition problem in Nepal through our product.
                                 </p>
                             </div>
                         </div>
@@ -397,8 +397,8 @@
                             <div class="value features-content">
                                 <h3 class="title">SUSTAINABILITY</h3>
                                 <p class="description">
-                                    We provide more than expected opportunities to our farmers for discovering and learning new way of 
-                                    farming and enhance the pleasure to be a farmer with the increment in their incomes.
+                                    We provide more than expected opportunities to our farmers for discovering and learning.
+                                    Also, Enhance pleasure to be a farmer with more incomes.
                                 </p>
                             </div>
                         </div>
@@ -415,8 +415,8 @@
                             <div class="value features-content">
                                 <h3 class="title">TRACEABILITY</h3>
                                 <p class="description">
-                                    We guarantee the safety of our products by only selling food that we ourselves would be happy to give to our children.
-                                    We Perform regular ,random sampling lab test of every farm produce and only test qualified produce are supplied to market.
+                                    We guarantee the safety of product and ensure the tracking of our product at
+                                    every stage like harvest, warehousing, distribution and sales.
                                 </p>
                             </div>
                         </div>
@@ -491,7 +491,7 @@
                 <div class="col-md-3 col-sm-6 col-xs-6 fw600">
                     <div class="counter">
                         <div class="counter-content">
-                            <span class="count">2082</span>
+                            <span class="count">000</span>
                         </div>
                         <h3 class="title">Happy Farmers</h3>
                     </div>
@@ -499,7 +499,7 @@
                 <div class="col-md-3 col-sm-6 col-xs-6 fw600">
                     <div class="counter">
                         <div class="counter-content">
-                            <span class="count">1920</span>
+                            <span class="count">000</span>
                         </div>
                         <h3 class="title">Happy Clients</h3>
                     </div>
@@ -507,7 +507,7 @@
                 <div class="col-md-3 col-sm-6 col-xs-6 fw600">
                     <div class="counter">
                         <div class="counter-content">
-                            <span class="count">380</span>
+                            <span class="count">000</span>
                         </div>
                         <h3 class="title">our staff</h3>
                     </div>
@@ -515,7 +515,7 @@
                 <div class="col-md-3 col-sm-6 col-xs-6 fw600">
                     <div class="counter">
                         <div class="counter-content">
-                            <span class="count">188</span>
+                            <span class="count">000</span>
                         </div>
                         <h3 class="title">Win Awards</h3>
                     </div>
@@ -563,7 +563,7 @@
     @endif
 
     <!-- Request Start -->
-    <section class="request-area jarallax overlay-black quote" id="water-animation-three quote">
+    <section class="request-area jarallax overlay-black quote" id="water-animation-three">
         <img class="jarallax-img"
              src="{{ isset($home_setting) ? asset('uploads/img/home/'.$home_setting->quote_background_image) : '' }}"
              alt="">

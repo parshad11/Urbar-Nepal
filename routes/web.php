@@ -409,7 +409,7 @@ Route::namespace('Front')->middleware(['setData', 'auth', 'SetSessionData', 'lan
     Route::get('frontcms/about-settings/create', 'CmsController@createAbout')->name('frontcms_about_form');
     Route::post('frontcms/about-settings/store', 'CmsController@storeAbout')->name('frontcms_about_store');
     Route::get('frontcms/about-settings', 'CmsController@editAbout')->name('frontcms_about_edit');
-    Route::post('frontcms/about-settings/update/{id}', 'CmsController@updateAbout')->name('frontcms_about_update');
+    Route::post('frontcms/about-settings/update/', 'CmsController@updateAbout')->name('frontcms_about_update');
 
     // team section
     Route::get('/frontcms/teams', 'CmsController@viewTeam')->name('cms_team');
