@@ -117,7 +117,7 @@
       <div class="overlay-text text-center">
         <h2>Better Food, Better Life</h2>
 
-        <h1> Let's Go in The Revolution</h1>
+        <h1> Let's Join the Revolution</h1>
         <a class="btn btn-success" href="#buysell-nav">JOIN NOW</a>
       </div>
     </div>
@@ -127,7 +127,7 @@
   <section class="buysell-txt" id="buysell-nav">
     <p>
       <b>FreshKTM</b> works with the most dedicated farmers around Nepal, We support farmers to make their farm as a
-      fines growing area ensuring the best quality produce for our end consumers.
+      finest growing area ensuring the best quality produce for our end consumers.
     </p>
 
     <div class="buysell-nav-section row">

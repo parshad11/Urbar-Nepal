@@ -56,7 +56,7 @@ class FrontendController extends Controller
     public function getBlog(){
         $about_details = FrontAbout::first();
         $categories = BlogCategory::with('news')->orderBy('id', 'desc')->get();
-        $blogs = Blog::with('category')->orderBy('id', 'desc')->where('status', 'active')->get();
+        $blogs = Blog::with('category')->orderBy('id', 'desc')->where('status', 'active')->paginate(4);
         return view('frontcms.blog')
         ->with('about_info', $about_details)
         ->with('categories', $categories)
@@ -75,7 +75,7 @@ class FrontendController extends Controller
     }
     public function getTeam(){
         $about_details = FrontAbout::first();
-        $teams = Team::where('status', 'active')->get();
+        $teams = Team::where('status', 'active')->paginate(4);
         return view('frontcms.team')
         ->with('about_info', $about_details)
         ->with('teams', $teams);

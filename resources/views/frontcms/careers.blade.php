@@ -196,7 +196,7 @@
     <br> <br><br>
     <div class="col-md-10 col-sm-12">
       <p>Find your new challenge from the career path mention above. For any queries mail us at <a
-          href="mailto:freshktm@gmail.com">freshktm@gmail.com</a></p>
+          href="mailto:info@freshktm.com">info@freshktm.com</a></p>
     </div>
   </section>
 
