@@ -76,7 +76,7 @@
             .navbar-header button{
                 right: 0;
                 position: absolute;
-                
+
             }
 
             .navbar-collapse{
@@ -87,7 +87,7 @@
         @media only screen and (max-width: 991px) {
             .col-md-2.quote_div{
                 display: none!important;
-            }        
+            }
         }
 
         /* MAIN BANNER IMAGE */

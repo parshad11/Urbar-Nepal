@@ -64,7 +64,7 @@
                         </div>
                         <div class="col-md-2 quote_div">
                             <div class="quote-box">
-                                <a href="#quote" id="scroll">Contact Us</a>
+                                <a href="#quote" id="get_quote">Contact Us</a>
                             </div>
                         </div>
                     </div>
