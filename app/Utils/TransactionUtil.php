@@ -4364,11 +4364,13 @@ class TransactionUtil extends Util
                 ->select(
                     'deliveries.id as id',
                     DB::raw("CONCAT(COALESCE(r.surname, ''),' ',COALESCE(r.first_name, ''),' ',COALESCE(r.last_name,'')) as assigned_to"),
+                    'transactions.location_id as location_id',
                     'bl.name as business_location',
                     'transactions.type as type',
                     'deliveries.delivery_status as status',
                     'deliveries.delivery_started_at as started_at',
                     'deliveries.delivery_ended_at as ended_at',
+                    'deliveries.created_at as created_at',
                     DB::raw("CONCAT(COALESCE(u.surname, ''),' ',COALESCE(u.first_name, ''),' ',COALESCE(u.last_name,'')) as assigned_by")
         );
     
@@ -4387,11 +4389,13 @@ class TransactionUtil extends Util
                     ->select(
                         'tasks.id as id',
                         DB::raw("CONCAT(COALESCE(r.surname, ''),' ',COALESCE(r.first_name, ''),' ',COALESCE(r.last_name,'')) as assigned_to"),
+                        'tasks.location_id as location_id',
                         'bl.name as business_location', 
                         'tasks.task_type as type',
                         'tasks.task_status as status',
                         'tasks.started_at',
                         'tasks.ended_at',
+                        'tasks.created_at as created_at',
                         DB::raw("CONCAT(COALESCE(u.surname, ''),' ',COALESCE(u.first_name, ''),' ',COALESCE(u.last_name,'')) as assigned_by")
                        
                     );

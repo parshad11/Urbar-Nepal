@@ -153,6 +153,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::resource('roles', 'RoleController');
 
     Route::resource('users', 'ManageUserController');
+    Route::get('user/getstaff', 'ManageUserController@getStaff');
 
     Route::get('/user/get_delivery_people', 'ManageUserController@getDeliveryPeople')->name('user.getdeliverypeople');
 

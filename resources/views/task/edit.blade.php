@@ -98,9 +98,7 @@
                             </div>
 
                             <div class="form-group">
-                                <p>Please open this link to choose pickup location's latitude and longitude: <a
-                                            href="https://www.mapcoordinates.net/en" target="_blank">https://www.mapcoordinates.net/en </a>
-                                </p>
+                            <span><a target="_blank" href="https://www.mapcoordinates.net/en" class="btn-sm btn-primary">Click here</a> to find latitude and longitude</span>
                             </div>
                         </div>
                         <div class="col-sm-4 ">

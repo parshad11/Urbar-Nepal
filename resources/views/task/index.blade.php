@@ -44,7 +44,7 @@
 
                     </tbody>
                 </table>
-            @endcan
+            @endif
         @endcomponent
 
     </section>

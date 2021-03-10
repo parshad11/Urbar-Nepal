@@ -60,6 +60,7 @@ $(document).ready(function() {
         $('#pay_term_type').val(data.pay_term_type);
         $('#advance_balance_text').text(__currency_trans_from_en(data.balance), true);
         $('#advance_balance').val(data.balance);
+        $('#supplier_location').val(data.supplier_address);
     });
 
     //Quick add supplier

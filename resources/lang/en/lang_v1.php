@@ -1204,5 +1204,8 @@ return [
     'assigned'=>'Assigned',
     'not_assigned'=>'Not Assigned',
     'upload_front_cms'=>'Upload Front CMS',
+    'delivery_notification'=>'Delivery Notification',
+    'task_received'=>'Task Received',
+    'delivery_received'=>'Delivery Received',
 
 ];

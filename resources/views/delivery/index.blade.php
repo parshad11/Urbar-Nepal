@@ -117,7 +117,7 @@
                 },
                 createdRow: function( row, data, dataIndex ) {
             $( row ).find('td:eq(6)').attr('class', 'clickable_td');
-        }
+            }
             });
           
             $(document).on('change','#assigned_by,#delivery_list_filter_delivery_status',  function() {

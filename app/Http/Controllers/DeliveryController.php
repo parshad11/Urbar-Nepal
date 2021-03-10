@@ -166,16 +166,18 @@ class DeliveryController extends Controller
         }
 
         $business_id = request()->session()->get('user.business_id');
-        $deliveryStatuses = $this->transactionUtil->deliveryStatuses();
-        $transaction = Transaction::where('business_id', $business_id)
-            ->where('id', $transactionId)
-            ->with(
-                'contact',
-                'location'
-            )
-            ->first();
-        return view('delivery.assign')
-            ->with(compact('transaction', 'deliveryStatuses'));
+
+        $deliveryStatuses  = $this->transactionUtil->deliveryStatuses();
+        $transaction=Transaction::where('business_id', $business_id)
+                                    ->where('id', $transactionId)
+                                    ->with(
+                                        'contact',
+                                        'location'
+                                    )
+                                    ->first();
+         return view('delivery.assign')
+             ->with(compact('transaction', 'deliveryStatuses'));
+        
 
     }
 
@@ -307,35 +309,52 @@ class DeliveryController extends Controller
         }
         $business_id = request()->session()->get('user.business_id');
         $deliveryStatuses = $this->transactionUtil->deliveryStatuses();
-        $statuses = $this->transactionUtil->taskStatuses();
+        $taskStatuses = $this->transactionUtil->taskStatuses();
+        $statuses=array_merge($deliveryStatuses,$taskStatuses);
+        unset($statuses['cancelled'],$statuses['delivered'],$statuses['completed']);
+        $workTypes = $this->transactionUtil->workTypes();
         if ($request->ajax()) {
 
             $business_id = request()->session()->get('user.business_id');
             $currentWorks = $this->transactionUtil->getCurrentWork($business_id);
-
             $permitted_locations = auth()->user()->permitted_locations();
             if ($permitted_locations != 'all') {
-                $currentWorks->whereIn('tasks.location_id', $permitted_locations);
+                $currentWorks->whereIn('deliveries.location_id', $permitted_locations);
             }
-
+       
             if (!empty(request()->location_id)) {
-                $currentWorks->where('tasks.location_id', request()->location_id);
+                $currentWorks->where('location_id', request()->location_id);
             }
 
 
-            if (!empty(request()->task_status)) {
-                $currentWorks->where('tasks.task_status', request()->status);
+            if (!empty(request()->work_status)) {
+                $currentWorks->where('deliveries.delivery_status', request()->work_status);
+            }
+           
+            if (!empty(request()->work_type)) {
+                $currentWorks->where('transactions.type', request()->work_type);
+            }
+
+            if (!empty(request()->delivery_person_id)) {
+                $delivery_person_id = request()->delivery_person_id;
+                $currentWorks->where('deliveries.delivery_person_id', $delivery_person_id);
             }
 
             if (!empty(request()->start_date) && !empty(request()->end_date)) {
                 $start = request()->start_date;
-                $end = request()->end_date;
-                $currentWorks->whereDate('tasks.created_at', '>=', $start)
-                    ->whereDate('tasks.created_at', '<=', $end);
-            }
 
+                $end =  request()->end_date;
+                $currentWorks->where('deliveries.created_at', '>=', $start)
+                    ->where('deliveries.created_at', '<=', $end);
+            }
+            if (auth()->user()->can('task.view') && auth()->user()->can('delivery.view')) {
+                $delivery_person=DeliveryPerson::where('user_id',request()->session()->get('user.id'))->first();
+                if(isset($delivery_person)){
+                $currentWorks->where('deliveries.delivery_person_id', $delivery_person->id);
+                }
+            } 
             if (!auth()->user()->can('task.view') && auth()->user()->can('view_own_task') && !auth()->user()->can('delivery.view') && auth()->user()->can('view_own_delivery')) {
-                $currentWorks->where('tasks.assigned_by', request()->session()->get('user.id'))->orWhere('delivery.assigned_by', request()->session()->get('user.id'));
+                $currentWorks->where('deliveries.assigned_by', request()->session()->get('user.id'));
             }
 
             return Datatables::of($currentWorks)
@@ -361,13 +380,16 @@ class DeliveryController extends Controller
                         $html .= '<li><a href="' . action($controller . '@edit', [$row->id]) . '"><i class="fas fa-edit"></i> ' . __("messages.edit") . '</a></li>';
                     }
                     if (auth()->user()->can('task.delete')) {
-                        $html .= '<li><a href="' . action($controller . '@destroy', [$row->id]) . '" class="delete-task"><i class="fas fa-trash"></i> ' . __("messages.delete") . '</a></li>';
+
+                        $html .= '<li><a href="' . action($controller.'@destroy', [$row->id]) . '" class="delete-work"><i class="fas fa-trash"></i> ' . __("messages.delete") . '</a></li>';
                     }
                     $html .= '</ul></div>';
                     return $html;
                 })
-                ->editColumn('type', function ($row) use ($statuses) {
-                    if ($row->type == 'delivery' || $row->type == 'pickup') {
+
+                ->editColumn('type', function($row) {
+                   if($row->type =='delivery'||$row->type =='pickup'){
+
                         return 'task';
                     } else {
                         return $row->type;
@@ -382,7 +404,9 @@ class DeliveryController extends Controller
             $business_locations = BusinessLocation::forDropdown($business_id, false);
             $customers = Contact::customersDropdown($business_id, false);
             $sales_representative = User::forDropdown($business_id, false, false, true);
-            return view('delivery.currentwork')->with(compact('statuses', 'business_locations', 'customers', 'sales_representative', 'deliveryStatuses'));
+
+            return view('delivery.currentwork')->with(compact('statuses','taskStatuses','business_locations','customers','sales_representative','deliveryStatuses','workTypes'));
+
         }
     }
 
