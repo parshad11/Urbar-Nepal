@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateBlogsTable extends Migration
+class CreatePageSettingsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,13 @@ class CreateBlogsTable extends Migration
      */
     public function up()
     {
-        Schema::create('blogs', function (Blueprint $table) {
+        Schema::create('page_settings', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('title');
             $table->string('slug')->unique();
-            $table->integer('category_id')->nullable();
-            $table->text('summary')->nullable();
-            $table->longText('description')->nullable();
-            $table->string('image')->nullable();
-            $table->enum('status',['active','inactive'])->default('active');
-            $table->tinyInteger('added_by');
+            $table->longText('body');
+            $table->integer('added_by');
+            $table->enum('status',['active', 'inactive'])->default('active');
             $table->timestamps();
         });
     }
@@ -34,6 +31,6 @@ class CreateBlogsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('blogs');
+        Schema::dropIfExists('page_settings');
     }
 }
