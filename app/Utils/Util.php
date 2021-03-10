@@ -1237,7 +1237,7 @@ class Util
                     \App\Notifications\DeliveryNotification::class
                 ){
                     $msg =$data['message'];
-                    $icon_class = "fas fa-recycle bg-green";
+                    $icon_class = "fa fa-tasks bg-green";
                     $link = action('DeliveryController@index');
                 }
                 else if($notification->type ==

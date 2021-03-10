@@ -171,7 +171,7 @@ class DeliveryController extends Controller
                                     ->where('id', $transactionId)
                                     ->with(
                                         'contact',
-                                        'location',
+                                        'location'
                                     )
                                     ->first();
          return view('delivery.assign')

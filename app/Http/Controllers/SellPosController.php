@@ -24,6 +24,7 @@
  * @copyright  2018 The Web Fosters
  * @license    As attached in zip file.
  */
+
 namespace App\Http\Controllers;
 
 use App\Account;
@@ -425,12 +426,13 @@ class SellPosController extends Controller
                 if($input['status']=='final'&& isset($input['assign_delivery'])){
                     $assign_delivery=1;
                 }
-
+            
                 $transaction = $this->transactionUtil->createSellTransaction($business_id, $input, $invoice_total, $user_id,$assign_delivery);
                
 
                 $this->transactionUtil->createOrUpdateSellLines($transaction, $input['products'], $input['location_id']);
                 
+              
                 
                 if (!$is_direct_sale) {
                     //Add change return
@@ -446,7 +448,7 @@ class SellPosController extends Controller
                     $this->transactionUtil->createOrUpdatePaymentLines($transaction, $input['payment']);
                 }
 
-
+                
 
                 //Check for final and do some processing.
                 if ($input['status'] == 'final') {
@@ -489,7 +491,7 @@ class SellPosController extends Controller
                         $redeemed = !empty($input['rp_redeemed']) ? $input['rp_redeemed'] : 0;
                         $this->transactionUtil->updateCustomerRewardPoints($contact_id, $transaction->rp_earned, 0, $redeemed);
                     }
-                
+                    
 
                     //Allocate the quantity from purchase and add mapping of
                     //purchase & sell lines in
@@ -503,9 +505,10 @@ class SellPosController extends Controller
                                     'pos_settings' => $pos_settings
                                 ];
                     $this->transactionUtil->mapPurchaseSell($business, $transaction->sell_lines, 'purchase');
-                 
+                
                     //Auto send notification
                     $this->notificationUtil->autoSendNotification($business_id, 'new_sale', $transaction, $transaction->contact);
+
                 }
                 
                 //Set Module fields
@@ -1094,8 +1097,10 @@ class SellPosController extends Controller
                 
                 if($assign_delivery==0){
                     $delivery = Delivery::where('transaction_id', $id)
-                    ->firstOrFail();
-                    $delivery->delete();
+                    ->first();
+                    if ($delivery) {
+						$delivery->delete();
+					}
 
                 }
                 //Begin transaction

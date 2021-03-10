@@ -46,6 +46,7 @@ class TransactionUtil extends Util
         $invoice_no = !empty($input['invoice_no']) ? $input['invoice_no'] : $this->getInvoiceNumber($business_id, $input['status'], $input['location_id'], $invoice_scheme_id);
 
         $final_total = $uf_data ? $this->num_uf($input['final_total']) : $input['final_total'];
+        
         $transaction = Transaction::create([
             'business_id' => $business_id,
             'location_id' => $input['location_id'],
@@ -102,7 +103,7 @@ class TransactionUtil extends Util
             'res_table_id' => !empty($input['res_table_id']) ? $input['res_table_id'] : null,
             'res_waiter_id' => !empty($input['res_waiter_id']) ? $input['res_waiter_id'] : null,
         ]);
-
+    
         return $transaction;
     }
 

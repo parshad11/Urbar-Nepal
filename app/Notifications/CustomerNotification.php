@@ -40,7 +40,7 @@ class CustomerNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail','database'];
+        return ['mail'];
     }
 
     /**
@@ -80,7 +80,7 @@ class CustomerNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'message'=>'Thank you for doing business with us',
+                //
         ];
     }
 }
