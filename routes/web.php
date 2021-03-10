@@ -465,18 +465,3 @@ Route::namespace('Front')->middleware(['setData', 'auth', 'SetSessionData', 'lan
     Route::delete('/frontcms/career/{id}/destroy', 'CmsController@deleteCareer')->name('cms_career_delete');
 });
 
-// Routes for Ecommerce
-Route::namespace('Ecommerce')->middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 'AdminSidebarMenu', 'CheckUserLogin'])->group(function () {
-    
-
-    // Blog section
-    Route::get('/ecommerce/shops', 'ShopController@viewShop')->name('shop');
-    Route::get('/ecommerce/product/{slug}', 'ShopController@product')->name('product_single');
-    // Route::get('/frontcms/blogs/create', 'CmsController@createBlog')->name('cms_blog_form');
-    // Route::post('/frontcms/blogs', 'CmsController@storeBlog')->name('cms_blog_store');
-    // Route::get('/frontcms/blogs/{id}/edit', 'CmsController@editBlog')->name('cms_blog_edit');
-    // Route::put('/frontcms/blogs/{id}', 'CmsController@updateBlog')->name('cms_blog_update');
-    // Route::delete('/frontcms/blogs/{id}', 'CmsController@deleteBlog')->name('cms_blog_delete');
-   
-
-});

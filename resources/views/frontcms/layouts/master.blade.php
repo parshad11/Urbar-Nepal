@@ -19,7 +19,6 @@
 
     <!-- Custom CSS -->
     <link href="{{ asset('cms/css/style.css') }}" rel="stylesheet">
-    <link href="{{ asset('cms/css/app.min.css') }}" rel="stylesheet">
 
     <!-- Responsive CSS -->
     <link href="{{ asset('cms/css/responsive.css') }}" rel="stylesheet">

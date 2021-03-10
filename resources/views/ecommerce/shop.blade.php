@@ -3,7 +3,7 @@
 @section('styles')
 
 {{-- <link href="https://fonts.googleapis.com/css?family=Karla|Rubik" rel="stylesheet"> --}}
-<link rel="stylesheet" href="{{ asset('/ecom/app.min.css') }}">
+<link rel="stylesheet" href="{{ asset('ecom/app.min.css') }}">
 
 @endsection
 @section('scripts')
@@ -25,7 +25,7 @@
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"></script>
-<script src="{{ asset('/ecom/app.min.js') }}"></script>
+<script src="{{ asset('ecom/app.min.js') }}"></script>
  
 @endsection
 @section('content')
