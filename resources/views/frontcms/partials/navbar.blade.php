@@ -54,17 +54,6 @@
                                              
                                             </ul>
                                         </li>
-
-                                        {{-- <li><a href="{{route('teams')}}">Our Team</a></li> --}}
-                                        {{-- <li class="{{ Request::segment(1) == 'about-us' ? 'active' : ''}}">
-                                            <a href="{{ route('front_about') }}" >About</a>
-                                        </li> --}}
-                                        <li><a href="{{route('shop')}}">Buy/Sell</a></li>
-                                        <li><a href="#">Careers</a></li>
-                                        <li><a href="#">News</a></li>
-                                        <li><a href="{{route('blog')}}">Blog</a></li>
-                                        {{-- <li><a href="{{ route('contact')}}">Contact</a></li> --}}
-                                        {{-- <li><a href="javascript:;">Login / Register</a></li> --}}
                                         <li class="{{ Request::segment(1) == 'buy-sell' ? 'active' : ''}}"><a href="{{route('buy_sell')}}">Buy/Sell</a></li>
                                         <li class="{{ Request::segment(1) == 'careers' ? 'active' : ''}}"><a href="{{route('careers')}}">Careers</a></li>
                                         <li class="{{ Request::segment(1) == 'blog' ? 'active' : ''}}"><a href="{{route('blog')}}">Blog</a></li>
@@ -74,7 +63,7 @@
                         </div>
                         <div class="col-md-2 quote_div">
                             <div class="quote-box">
-                                <a href="#quote" id="scroll">Contact Us</a>
+                                <a href="#quote" id="get_quote">Contact Us</a>
                             </div>
                         </div>
                     </div>

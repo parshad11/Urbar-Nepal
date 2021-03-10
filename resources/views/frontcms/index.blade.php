@@ -158,8 +158,8 @@
                                     </span>
                                 </h3>
                                 <div class="slider-buttons">
-                                    <a class="btn btn-default theme-btn btn-hover" href="#">Shop Now</a>
-                                    <a class="btn btn-default theme-btn btn-hover" href="contact.html">Become a
+                                    <a class="btn btn-default theme-btn btn-hover" href="#quote" id="get_contact">Shop Now</a>
+                                    <a class="btn btn-default theme-btn btn-hover" href="#quote" id="get_contact">Become a
                                         Partner</a>
                                 </div>
                             </div>
@@ -563,7 +563,7 @@
     @endif
 
     <!-- Request Start -->
-    <section class="request-area jarallax overlay-black quote" id="water-animation-three">
+    <section class="request-area jarallax overlay-black quote" id="contact_us">
         <img class="jarallax-img"
              src="{{ isset($home_setting) ? asset('uploads/img/home/'.$home_setting->quote_background_image) : '' }}"
              alt="">
