@@ -299,16 +299,18 @@
 	.blog-sidebar-area-two .sidebar-search  {
 		margin-top: 0;
 	}
-
-
-
 	
 }
-
-
-
 @media only screen and (max-width:767px) {
-	.page-heading-area{
+	.my-nav-row {
+		background: #7dd0f4;
+	}
+	.scroll-to-fixed-fixed {
+		background: #7dd0f4;
+	}
+	.page-heading-area {
+		width: 100%;
+		height: 350px;
 	}
 	.center767 {
 		float: none;
@@ -764,6 +766,10 @@
 }
 
 @media only screen and (max-width:375px) {
+	.page-heading-area {
+		width: 100%;
+		height: 300px;
+	}
 	.news-item h4 a {
 	    font-size: 12px;
 	}

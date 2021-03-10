@@ -52,9 +52,16 @@
     // wow animation script
     // new WOW().init();
 
-    $("#scroll").on('click', function (){
+    $("#buysell-nav,#careers").on('click', function (){
         $('html, body').animate({
-            scrollTop: $(".quote").offset().top
+            scrollTop: $(".sell-buy,.career-section").offset().top
+        }, 1000);
+    });
+
+    $("#scroll,#get_quote,#get_contact,#buysell-nav").on('click', function (){
+        // console.log('test');
+        $('html, body').animate({
+            scrollTop: $(".quote,.sell-buy").offset().top
         }, 2000);
     });
 
