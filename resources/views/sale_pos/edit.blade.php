@@ -65,10 +65,10 @@
 	@include('sale_pos.partials.mobile_product_suggestions')
 @endif
 <!-- /.content -->
-<div class="modal fade register_details_modal" tabindex="-1" role="dialog" 
+<div class="modal fade register_details_modal" tabindex="-1" role="dialog"
 	aria-labelledby="gridSystemModalLabel">
 </div>
-<div class="modal fade close_register_modal" tabindex="-1" role="dialog" 
+<div class="modal fade close_register_modal" tabindex="-1" role="dialog"
 	aria-labelledby="gridSystemModalLabel">
 </div>
 <!-- quick product modal -->
@@ -102,7 +102,13 @@
             @endif
 	    @endforeach
 	@endif
-	
+
+
+	<script>
+		$('#assign_delivery_modal').on('change', function(){
+			$('#assign_delivery_modal').val($('#assign_delivery_modal').attr('checked') ? '1' : '0');
+		});
+	</script>
 @endsection
 
 @section('css')
@@ -132,3 +138,6 @@
         @endforeach
     @endif
 @endsection
+{{--@section('javascript')--}}
+{{--	--}}
+{{--@endsection--}}
