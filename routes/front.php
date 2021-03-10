@@ -18,4 +18,9 @@ Route::namespace('Front')->group(function(){
     Route::get('/team', 'FrontendController@getTeam')->name('teams');
     Route::get('/contact', 'FrontendController@getContact')->name('contact');
     Route::get('/faqs', 'FrontendController@getFaqs')->name('faqs');
+
+    //
+    Route::get('/shop', 'ShopController@index')->name('shop');
+    Route::get('/product/{slug}', 'ShopController@product')->name('product_single');
+    Route::get('/addtocart', 'CartController@addToCart')->name('addtocart');
 });

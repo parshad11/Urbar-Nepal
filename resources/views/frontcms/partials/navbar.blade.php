@@ -60,7 +60,7 @@
                                         {{-- <li class="{{ Request::segment(1) == 'about-us' ? 'active' : ''}}">
                                             <a href="{{ route('front_about') }}" >About</a>
                                         </li> --}}
-                                        <li><a href="#">Buy/Sell</a></li>
+                                        <li><a href="{{route('shop')}}">Buy/Sell</a></li>
                                         <li><a href="#">Careers</a></li>
                                         <li><a href="#">News</a></li>
                                         <li><a href="{{route('blog')}}">Blog</a></li>
