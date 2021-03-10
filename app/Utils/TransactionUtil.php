@@ -4201,6 +4201,7 @@ class TransactionUtil extends Util
                 ->leftJoin('transaction_sell_lines as tsl', 'transactions.id', '=', 'tsl.transaction_id')
                 ->leftJoin('users as u', 'transactions.created_by', '=', 'u.id')
                 ->leftJoin('users as ss', 'transactions.res_waiter_id', '=', 'ss.id')
+                ->leftJoin('deliveries as d', 'transactions.id', '=', 'd.transaction_id')
                 ->leftJoin('res_tables as tables', 'transactions.res_table_id', '=', 'tables.id')
                 ->join(
                     'business_locations AS bl',
@@ -4242,7 +4243,7 @@ class TransactionUtil extends Util
                     'transactions.rp_redeemed_amount',
                     'transactions.rp_earned',
                     'transactions.types_of_service_id',
-                    'transactions.shipping_status',
+                    'd.delivery_status',
                     'transactions.pay_term_number',
                     'transactions.pay_term_type',
                     'transactions.additional_notes',

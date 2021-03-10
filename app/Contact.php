@@ -67,8 +67,6 @@ class Contact extends Authenticatable
         // Return email address only...
         return $this->email;
 
-        // Return email address and name...
-        return [$this->email => $this->name];
     }
 
     /**

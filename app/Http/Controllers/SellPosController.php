@@ -58,6 +58,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Yajra\DataTables\Facades\DataTables;
 use App\InvoiceScheme;
+use App\Notifications\CustomerNotification;
+use App\NotificationTemplate;
 
 class SellPosController extends Controller
 {
@@ -135,9 +137,9 @@ class SellPosController extends Controller
 
         $is_types_service_enabled = $this->moduleUtil->isModuleEnabled('types_of_service');
 
-        $shipping_statuses = $this->transactionUtil->shipping_statuses();
+      
 
-        return view('sale_pos.index')->with(compact('business_locations', 'customers', 'sales_representative', 'is_cmsn_agent_enabled', 'commission_agents', 'service_staffs', 'is_tables_enabled', 'is_service_staff_enabled', 'is_types_service_enabled', 'shipping_statuses'));
+        return view('sale_pos.index')->with(compact('business_locations', 'customers', 'sales_representative', 'is_cmsn_agent_enabled', 'commission_agents', 'service_staffs', 'is_tables_enabled', 'is_service_staff_enabled', 'is_types_service_enabled'));
     }
 
     /**
@@ -425,8 +427,10 @@ class SellPosController extends Controller
                 }
 
                 $transaction = $this->transactionUtil->createSellTransaction($business_id, $input, $invoice_total, $user_id,$assign_delivery);
+               
 
                 $this->transactionUtil->createOrUpdateSellLines($transaction, $input['products'], $input['location_id']);
+                
                 
                 if (!$is_direct_sale) {
                     //Add change return
@@ -485,6 +489,7 @@ class SellPosController extends Controller
                         $redeemed = !empty($input['rp_redeemed']) ? $input['rp_redeemed'] : 0;
                         $this->transactionUtil->updateCustomerRewardPoints($contact_id, $transaction->rp_earned, 0, $redeemed);
                     }
+                
 
                     //Allocate the quantity from purchase and add mapping of
                     //purchase & sell lines in
@@ -498,11 +503,11 @@ class SellPosController extends Controller
                                     'pos_settings' => $pos_settings
                                 ];
                     $this->transactionUtil->mapPurchaseSell($business, $transaction->sell_lines, 'purchase');
-
+                 
                     //Auto send notification
                     $this->notificationUtil->autoSendNotification($business_id, 'new_sale', $transaction, $transaction->contact);
                 }
-
+                
                 //Set Module fields
                 if (!empty($input['has_module_data'])) {
                     $this->moduleUtil->getModuleData('after_sale_saved', ['transaction' => $transaction, 'input' => $input]);

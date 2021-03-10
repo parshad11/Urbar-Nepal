@@ -57,10 +57,10 @@ class NotificationTemplate extends Model
                 'name' =>  __('lang_v1.payment_reminder'),
                 'extra_tags' => ['{business_name}', '{business_logo}', '{contact_name}', '{invoice_number}', '{due_amount}', '{cumulative_due_amount}', '{due_date}']
             ],
-            'new_booking' => [
-                    'name' => __('lang_v1.new_booking'),
-                    'extra_tags' => self::bookingNotificationTags()
-                ],
+            // 'new_booking' => [
+            //         'name' => __('lang_v1.new_booking'),
+            //         'extra_tags' => self::bookingNotificationTags()
+            //     ],
             'new_quotation' => [
                 'name' => __('lang_v1.new_quotation'),
                 'extra_tags' => ['{business_name}', '{business_logo}', '{contact_name}', '{invoice_number}', '{total_amount}', '{quote_url}', '{location_name}', '{location_address}', '{location_email}', '{location_phone}', '{location_custom_field_1}', '{location_custom_field_2}', '{location_custom_field_3}', '{location_custom_field_4}']
@@ -74,6 +74,16 @@ class NotificationTemplate extends Model
             'send_ledger' => [
                 'name' => __('lang_v1.send_ledger'),
                 'extra_tags' => ['{business_name}', '{business_logo}', '{contact_name}', '{balance_due}']
+            ],
+        ];
+    }
+
+    public static function staffNotifications()
+    {
+        return [
+            'new_staff' => [
+                'name' => __('lang_v1.new_staff'),
+                'extra_tags' => ['{business_name}', '{business_logo}', '{user_name}', '{user_type}','{business_login}']
             ],
         ];
     }

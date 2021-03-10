@@ -14,7 +14,7 @@ $('#sell_list_filter_date_range').on('cancel.daterangepicker', function(ev, pick
     sell_table.ajax.reload();
 });
 
-$(document).on('change', '#sell_list_filter_location_id, #sell_list_filter_customer_id, #sell_list_filter_payment_status, #created_by, #sales_cmsn_agnt, #service_staffs, #shipping_status',  function() {
+$(document).on('change', '#sell_list_filter_location_id, #sell_list_filter_customer_id, #sell_list_filter_payment_status, #created_by, #sales_cmsn_agnt, #service_staffs',  function() {
     sell_table.ajax.reload();
 });
 
@@ -56,10 +56,6 @@ sell_table = $('#sell_table').DataTable({
                     d.service_staffs = $('#service_staffs').val();
                 }
 
-                if($('#shipping_status').length) {
-                    d.shipping_status = $('#shipping_status').val();
-                }
-
                 if($('#only_subscriptions').length && $('#only_subscriptions').is(':checked')) {
                     d.only_subscriptions = 1;
                 }
@@ -80,7 +76,7 @@ sell_table = $('#sell_table').DataTable({
             { data: 'total_paid', name: 'total_paid', "searchable": false},
             { data: 'total_remaining', name: 'total_remaining'},
             { data: 'return_due', orderable: false, "searchable": false},
-            { data: 'shipping_status', name: 'shipping_status'},
+            { data: 'shipping_status', name: 'd.delivery_status'},
             { data: 'total_items', name: 'total_items', "searchable": false},
             { data: 'types_of_service_name', name: 'tos.name', @if(empty($is_types_service_enabled)) visible: false @endif},
             { data: 'service_custom_field_1', name: 'service_custom_field_1', @if(empty($is_types_service_enabled)) visible: false @endif},

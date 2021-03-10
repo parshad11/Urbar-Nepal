@@ -702,6 +702,7 @@ class Util
                 $new_file_name = time() . '_' . $request->$file_name->getClientOriginalName();
                 if ($request->$file_name->storeAs($dir_name, $new_file_name)) {
                     $uploaded_file_name = $new_file_name;
+                    
                 }
             }
         }
@@ -833,7 +834,7 @@ class Util
             //Replace business_logo
             if (strpos($value, '{business_logo}') !== false) {
                 $logo_name = $business->logo;
-                $business_logo = !empty($logo_name) ? '<img src="' . url('uploads/business_logos/' . $logo_name) . '" alt="Business Logo" >' : '';
+                $business_logo = !empty($logo_name) ? '<img src="' . url('uploads/business_logos/' . $logo_name) . '" height="75" alt="Business Logo" >' : '';
 
                 $data[$key] = str_replace('{business_logo}', $business_logo, $data[$key]);
             }
@@ -841,6 +842,7 @@ class Util
             //Replace invoice_url
             if (!empty($transaction) && strpos($value, '{invoice_url}') !== false && $transaction->type == 'sell') {
                 $invoice_url = $this->getInvoiceUrl($transaction->id, $transaction->business_id);
+                $invoice_url='<a target="_blank" href="'.$invoice_url.'">here</a>';
                 $data[$key] = str_replace('{invoice_url}', $invoice_url, $data[$key]);
             }
 
@@ -1237,6 +1239,12 @@ class Util
                     $msg =$data['message'];
                     $icon_class = "fas fa-recycle bg-green";
                     $link = action('DeliveryController@index');
+                }
+                else if($notification->type ==
+                \App\Notifications\StaffAddedNotification::class
+                ){
+                    $msg =$data['message'];
+                    $icon_class = "fas fa-recycle bg-green";
                 }
                 $notifications_data[] = [
                     'msg' => $msg,

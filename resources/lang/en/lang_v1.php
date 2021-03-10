@@ -1207,5 +1207,7 @@ return [
     'delivery_notification'=>'Delivery Notification',
     'task_received'=>'Task Received',
     'delivery_received'=>'Delivery Received',
+    'new_staff'=>'New Staff',
+    'staff_notifications'=>'Staff Notification',
 
 ];

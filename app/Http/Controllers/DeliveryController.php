@@ -440,7 +440,6 @@ class DeliveryController extends Controller
                 $transaction->save();
             }
 
-
             if ($delivery->delivery_status == 'received') {
                 $delivery->delivery_started_at = null;
                 $delivery->delivery_ended_at = null;

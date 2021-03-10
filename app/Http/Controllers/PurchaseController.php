@@ -19,6 +19,7 @@ use App\User;
 use App\Utils\BusinessUtil;
 
 use App\Utils\ModuleUtil;
+use App\Utils\NotificationUtil;
 use App\Utils\ProductUtil;
 use App\Utils\TransactionUtil;
 
@@ -38,6 +39,7 @@ class PurchaseController extends Controller
     protected $productUtil;
     protected $transactionUtil;
     protected $moduleUtil;
+    protected $notificationUtil;
 
     /**
      * Constructor
@@ -45,12 +47,13 @@ class PurchaseController extends Controller
      * @param ProductUtils $product
      * @return void
      */
-    public function __construct(ProductUtil $productUtil, TransactionUtil $transactionUtil, BusinessUtil $businessUtil, ModuleUtil $moduleUtil)
+    public function __construct(ProductUtil $productUtil, TransactionUtil $transactionUtil, BusinessUtil $businessUtil, ModuleUtil $moduleUtil,NotificationUtil $notificationUtil)
     {
         $this->productUtil = $productUtil;
         $this->transactionUtil = $transactionUtil;
         $this->businessUtil = $businessUtil;
         $this->moduleUtil = $moduleUtil;
+        $this->notificationUtil = $notificationUtil;
 
         $this->dummyPaymentLine = ['method' => 'cash', 'amount' => 0, 'note' => '', 'card_transaction_number' => '', 'card_number' => '', 'card_type' => '', 'card_holder_name' => '', 'card_month' => '', 'card_year' => '', 'card_security' => '', 'cheque_number' => '', 'bank_account_number' => '',
         'is_return' => 0, 'transaction_no' => ''];
@@ -383,10 +386,13 @@ class PurchaseController extends Controller
             //Adjust stock over selling if found
             $this->productUtil->adjustStockOverSelling($transaction);
 
+           if($transaction->status=='ordered'){
             $notificationInfo=NotificationTemplate::getTemplate($business_id,'new_order');
             $business= Business::where('id', $business_id)->first();
+            $notificationInfo=$this->notificationUtil->replaceAvailableTags($business_id,$notificationInfo,$transaction);
             $notificationInfo['email_settings']=$business->email_settings;
             $transaction->contact->notify(new SupplierNotification($notificationInfo));
+           }
 
             DB::commit();
             

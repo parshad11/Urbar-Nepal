@@ -4,17 +4,13 @@ namespace App\Notifications;
 
 use App\Utils\NotificationUtil;
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
 
-class CustomerNotification extends Notification 
+class StaffAddedNotification extends Notification
 {
     use Queueable;
-
-    protected $notificationInfo;
-    protected $cc;
-    protected $bcc;
 
     /**
      * Create a new notification instance.
@@ -52,7 +48,6 @@ class CustomerNotification extends Notification
     public function toMail($notifiable)
     {
         $data = $this->notificationInfo;
-
         $mail = (new MailMessage)
                     ->subject($data['subject'])
                     ->view(
@@ -64,9 +59,6 @@ class CustomerNotification extends Notification
         }
         if (!empty($this->bcc)) {
             $mail->bcc($this->bcc);
-        }
-        if (!empty($this->attachment)) {
-            $mail->attach($this->attachment, ['as' => $this->attachment_name]);
         }
         return $mail;
     }
@@ -80,7 +72,7 @@ class CustomerNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'message'=>'Thank you for doing business with us',
+            'message'=>'Welcome to FreshKtm.',
         ];
     }
 }

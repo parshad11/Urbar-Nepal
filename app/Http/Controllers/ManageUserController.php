@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Business;
 use App\BusinessLocation;
 use App\Contact;
 use App\Delivery;
 use App\DeliveryPerson;
+use App\Notifications\StaffAddedNotification;
+use App\NotificationTemplate;
 use App\System;
 use App\User;
 use App\Utils\ModuleUtil;
+use App\Utils\NotificationUtil;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB as FacadesDB;
@@ -19,15 +23,17 @@ use Yajra\DataTables\Facades\DataTables;
 class ManageUserController extends Controller
 {
     protected $moduleUtil;
+    protected $notificationUtil;
     /**
      * Constructor
      *
      * @param Util $commonUtil
      * @return void
      */
-    public function __construct(ModuleUtil $moduleUtil)
+    public function __construct(ModuleUtil $moduleUtil,NotificationUtil $notificationUtil)
     {
         $this->moduleUtil = $moduleUtil;
+        $this->notificationUtil = $notificationUtil;
     }
 
     /**
@@ -168,6 +174,8 @@ class ManageUserController extends Controller
             $user_details['business_id'] = $business_id;
             $user_details['password'] = $user_details['allow_login'] ? Hash::make($user_details['password']) : null;
 
+            DB::beginTransaction();
+
             if ($user_details['allow_login']) {
                 $ref_count = $this->moduleUtil->setAndGetReferenceCount('username');
                 if (blank($user_details['username'])) {
@@ -202,6 +210,12 @@ class ManageUserController extends Controller
                 
             }
 
+            $notificationInfo=NotificationTemplate::getTemplate($business_id,'new_staff');
+            $business= Business::where('id', $business_id)->first();
+            $notificationInfo=$this->notificationUtil->replaceAvailableTags($business_id,$notificationInfo,$user);
+            $notificationInfo['email_settings']=$business->email_settings;
+            $user->notify(new StaffAddedNotification($notificationInfo));
+            
             //Grant Location permissions
             $this->giveLocationPermissions($user, $request);
 
@@ -214,10 +228,13 @@ class ManageUserController extends Controller
             //Save module fields for user
             $this->moduleUtil->getModuleData('afterModelSaved', ['event' => 'user_saved', 'model_instance' => $user]);
 
+            DB::commit();
+
             $output = ['success' => 1,
                         'msg' => __("user.user_added")
                     ];
         } catch (\Exception $e) {
+            DB::rollBack();
             \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
             
             $output = ['success' => 0,
