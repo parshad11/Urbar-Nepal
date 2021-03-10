@@ -533,7 +533,7 @@
                         <div class="section-title">
                             <h2>Meet Our Team</h2>
                             <div class="title-border"></div>
-                            <p>Sed pellentesque, ligula at lacinia molestie sapien consequat</p>
+                            <p>Our core team comprises of dynamic individuals with passion and dedication.</p>
                         </div>
                     </div>
                     @foreach($team_members as $team_member)
@@ -588,7 +588,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="request-col">
-                                    <input type="text" class="form-control" placeholder="Phone Numbar" required>
+                                    <input type="text" class="form-control" placeholder="Phone Number" required>
                                 </div>
                             </div>
                             <div class="col-sm-6">
