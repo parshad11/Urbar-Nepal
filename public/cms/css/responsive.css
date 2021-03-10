@@ -308,6 +308,8 @@
 
 
 @media only screen and (max-width:767px) {
+	.page-heading-area{
+	}
 	.center767 {
 		float: none;
 		text-align: center;
@@ -321,15 +323,14 @@
 	}
 	.header-navbar .navbar-toggle {
 		border-radius: 0;
-		margin: 20px 15px 10px;
 		border-color: #999999;
 	}
 	.navbar-default .navbar-toggle .icon-bar {
 		background-color: #999999;
 	}
 	.header-navbar .navbar-default .navbar-nav>li>a {
-		margin-left: 0;
-		padding: 12px 0;
+		margin-left: 0;		
+		padding: 8px 0;
 	}
 	.navbar-nav {
 	    max-height: 350px;
@@ -451,6 +452,10 @@
 	}
 	.navbar-default .navbar-nav .open .dropdown-menu>li>a:hover {
 		color: #ffffff;
+	}
+	@media only screen and (max-width: 767px){}
+	.header-navbar .navbar-nav .dropdown-menu>li>a {
+		padding: 6px 10px;
 	}
 	.navbar-default .navbar-nav .open .dropdown-menu>li>a:focus, 
 	.navbar-default .navbar-nav .open .dropdown-menu>li>a:hover {
@@ -595,7 +600,7 @@
 		font-size: 45px;
 	}
 	.slider-ontext {
-		padding: 100px 0;
+		padding: 50px 0;
 	}
 	
 }
@@ -702,8 +707,8 @@
 		margin-top: 14px;
 	}
 	.slider-content .theme-btn {
-		font-size: 14px;
-		padding: 15px 30px;
+		font-size: 12px;
+		padding: 10px 20px;
 	}
 	.section-title h2 {
 		line-height: 35px;

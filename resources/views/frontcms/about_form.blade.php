@@ -1,7 +1,14 @@
 @extends('layouts.app')
 @section('title','About Us')
 @section('content')
-
+@section('css')
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+<style>
+.ck-editor__editable_inline {
+    min-height: 200px;
+}
+</style>
+@endsection
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>About Page Settings</h1>
@@ -29,22 +36,16 @@
             </div>
         </div>
     @endcomponent
-    {{-- About Section First --}}
+    {{-- Mission and Vision --}}
     @component('components.widget', ['class' => 'box-primary'])
     <div class="row form-group">
         <div class="col-md-2">
-            <label for="what_we_do" class="control-label">What We Do :</label>
+            <label for="mission_vision" class="control-label">Mission and Vision :</label>
         </div>
         <div class="col-md-10">
             <div class="row" style="margin-bottom: 10px;">
                 <div class="col-md-12" style="padding:0 10px 0 0;">
-                    <input type="text" name="what_sub_title" class="form-control" placeholder="Sub Heading">
-                </div>
-            </div>
-            <div class="row" style="margin-bottom: 10px;">
-                <div class="col-md-12" style="padding:0 10px 0 0;">
-                    <textarea name="what_description" class="form-control" cols="30" rows="10" style="resize: none;" required placeholder="Description ..."></textarea>
-                    {{-- <input type="text" name="phone" class="form-control" placeholder="Contact Number/Phone...?" required> --}}
+                    <textarea name="what_description" id="editor" required placeholder="Mission and Vision ..."></textarea>
                 </div>
             </div>
             <div class="row">
@@ -58,39 +59,36 @@
         </div>
     </div>
     @endcomponent
-    {{-- About Section Second --}}
+    {{-- Philosophy Section --}}
     @component('components.widget', ['class' => 'box-primary'])
     <div class="row form-group">
         <div class="col-md-2">
-            <label for="why_us" class="control-label">Why Choose Us :</label>
+            <label for="why_us" class="control-label">Philosophy :</label>
         </div>
         <div class="col-md-10">
             <div class="row" style="margin-bottom: 10px;">
                 <div class="col-md-12" style="padding:0 10px 0 0;">
-                    <input type="text" name="why_sub_title" class="form-control" placeholder="Sub Heading">
+                    <textarea name="why_description" class="form-control" cols="30" rows="10" required placeholder="Philosophy Summary ..." style="resize: none;"></textarea>
                 </div>
             </div>
-            <div class="row" style="margin-bottom: 10px;">
-                <div class="col-md-12" style="padding:0 10px 0 0;">
-                    <textarea name="why_description" class="form-control" cols="30" rows="10" style="resize: none;" required placeholder="Description ..."></textarea>
-                    {{-- <input type="text" name="phone" class="form-control" placeholder="Contact Number/Phone...?" required> --}}
+
+            <div class="row">
+                <div class="col-md-12 points_content_wrapper">
+                    <label for="philosophy" class="control-label">Philosophy Notes:</label>
+                    <div class="row" style="margin-bottom: 10px">
+                        <div class="col-md-10" style="padding-left: 0;">
+                            <input type="text" name="why_short_points[]" class="form-control" placeholder="Philosophy Notes...">
+                        </div>
+                        <a href="javascript:void(0);" class="col-md-1 btn btn-sm btn-success points_add_btn"><i class="fa fa-plus"></i>&nbsp;Add</a>
+                    </div>
                 </div>
             </div>
+
             <div class="row">
                 <div class="col-12" style="padding:0 10px 0 0;">
                     <label for="why_image" class="control-label"><small>Image Dimension: 600*630</small></label>
                     <div id="about_image_2">
 
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12 points_content_wrapper">
-                    <div class="row" style="margin-bottom: 10px">
-                        <div class="col-md-10" style="padding-left: 0;">
-                            <input type="text" name="why_short_points[]" class="form-control" placeholder="Short Points...(Optional)">
-                        </div>
-                        <a href="javascript:void(0);" class="col-md-1 btn btn-sm btn-success points_add_btn"><i class="fa fa-plus"></i>&nbsp;Add</a>
                     </div>
                 </div>
             </div>
@@ -114,8 +112,13 @@
 @endsection
 @section('javascript')
     <script src="{{ asset('cms/spartan/dist/js/spartan-multi-image-picker-min.js') }}"></script>
+    <!-- summernote js -->
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
     <script>
-         $(document).ready(function(){
+         $(document).ready(function(){            
+            $('#editor').summernote({
+                height: 150,
+            });
 
             $("#banner").spartanMultiImagePicker({
                 fieldName:        'banner_image[]',
@@ -179,7 +182,7 @@
                 $(wrapper).append(`
                     <div class="row" style="margin-bottom: 10px">
                         <div class="col-md-10" style="padding-left: 0;">
-                            <input type="text" name="why_short_points[]"class="form-control" placeholder="Short Points...?">
+                            <input type="text" name="why_short_points[]"class="form-control" placeholder="Philosophy Notes...">
                         </div>
                         <a href="javascript:void(0);" class="col-md-1 btn btn-sm btn-danger points_remove_btn"><i class="fa fa-minus"></i>&nbsp;Remove</a>
                     </div>`);

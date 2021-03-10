@@ -1,21 +1,13 @@
 @extends('frontcms.layouts.master')
-@section('title', 'Freshktm | Fresh Market And Agro ecommorce platform' )
+@section('title', 'Freshktm | Fresh Produce B to B Supply Chain' )
 @section('scripts')
 @endsection
 @section('content')
 <!-- Page heading Start -->
 <section class="page-heading-area jarallax overlay-black" id="water-animation">
+    @if(isset($about_info))
     <img class="jarallax-img" src="{{asset('uploads/img/home/about/'.$about_info->banner_image)}}" alt="">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <div class="page-heading-col border-hover">
-                    <h2>Our blog</h2>
-                    <p><a href="{{ route('front_dashboard') }}">Home</a> / <a href="{{route('blog')}}">blog</a></p>
-                </div>
-            </div>
-        </div>
-    </div>
+    @endif
 </section>
 
 <!-- Blog Single Start -->
@@ -90,6 +82,28 @@
             </div>
 
             <div class="col-md-4">
+
+                <div class="sidebar-search">
+                    <form method="post">
+                        <div class="input-group">
+                            <input placeholder="Search Here....." class="form-control" name="search-field" type="text">
+                            <span class="input-group-btn">
+                          <button type="submit" class="btn"><i class="fa fa-search"></i></button>
+                          </span>
+                        </div>
+                    </form>
+                </div>
+                <div class="categories clearfix">
+                    <h3 class="sedebar-title">categories</h3>
+                    <ul>
+                        @if(isset($categories))
+                        @foreach($categories as $category)
+                        <li><a href="#">{{$category->title}}</a> <span class="pull-right">{{count($category->news)}}</span>
+                        </li>
+                        @endforeach
+                        @endif
+                    </ul>
+                </div>
                 <div class="latest-news">
                     <h3 class="sedebar-title">latest news</h3>
                     <ul>

@@ -7,21 +7,32 @@
                     <div class="footer-title">
                         <h2>Recent post</h2>
                     </div>
+                    @if(isset($blogs))
                     @foreach ($blogs as $blog)
                     <div class="our-post">
                         <img src="{{asset('uploads/img/home/blogs/'.$blog->image)}}" alt="">
                         <p><a href="{{ route('blog_single', $blog->slug) }}">{{$blog->summary}}</a></p>
-                        <a href="javascript:;">{{\Carbon\Carbon::parse($blog->created_at)->diffForHumans()}}</a>
+                        <p>{{\Carbon\Carbon::parse($blog->created_at)->diffForHumans()}}</p>
                     </div>
                     @endforeach
+                    @endif
                 </div>  
             </div>
             <div class="col-lg-4 col-md-6">
                 <div class="our-footer-col">
                     <div class="our-footer-logo">
-                        <a href="{{route('front_dashboard')}}"><img src="{{ asset('uploads/img/home/'.$home_settings->logo_image) }}" alt=""></a>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed numquam hic nobis! Sint accusamus sapiente excepturi debitis corporis.</p>
+                        <a href="{{route('front_dashboard')}}">
+                            @if(isset($home_settings))
+                            <img src="{{ asset('uploads/img/home/'.$home_settings->logo_image) }}" alt="">
+                            @else
+                            <img src="{{ asset('img/freshktm_logo.png') }}" alt="">
+                            @endif
+                        </a>
+                        <p>Freshktm, is dedicated to deliver the fresh produce carefully selected, tested
+                            in labs, checking the uses of pesticides, not only safety, we focus on the taste of our fresh
+                            produce when it reaches to end consumers hand.</p>
                         <ul class="our-footer-social clearfix">
+                            @if(isset($home_settings) && $home_settings->social_links != null)
                             @php
                                 $result = json_decode($home_settings->social_links, true);
                             @endphp
@@ -29,6 +40,7 @@
                             <li><a href="{{ $result['twitter'] }}"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
                             <li><a href="{{ $result['linkedin'] }}"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
                             <li><a href="{{ $result['google'] }}"><i class="fa fa-google-plus" aria-hidden="true"></i></a></li>
+                            @endif
                         </ul>
                     </div>
                     <div class="subscribe-area">
@@ -79,7 +91,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="copyright-col text-center">
-                <p>Copyright ©2021 <a href="https://freshktm.com" target="_blank">freshktm</a> All Rights Reserved</p>
+                <p>Copyright ©2021 <a href="{{ route('front_dashboard') }}">freshktm</a> All Rights Reserved</p>
             </div>
         </div>
     </div>

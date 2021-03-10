@@ -18,4 +18,12 @@ Route::namespace('Front')->group(function(){
     Route::get('/team', 'FrontendController@getTeam')->name('teams');
     Route::get('/contact', 'FrontendController@getContact')->name('contact');
     Route::get('/faqs', 'FrontendController@getFaqs')->name('faqs');
+
+    //
+    Route::get('/shop', 'ShopController@index')->name('shop');
+    Route::get('/product/{slug}', 'ShopController@product')->name('product_single');
+    Route::get('/addtocart', 'CartController@addToCart')->name('addtocart');
+    Route::get('/buy-sell', 'FrontendController@getBuyOrSell')->name('buy_sell');
+    Route::get('/careers', 'FrontendController@getCareers')->name('careers');
+    Route::get('/{slug}', 'FrontendController@getPages')->name('pages');
 });
