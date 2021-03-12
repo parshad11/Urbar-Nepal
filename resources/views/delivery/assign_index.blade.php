@@ -23,15 +23,15 @@
                         <th>@lang('lang_v1.type')</th>
                         <th>@lang('messages.date')</th>
                         <th>@lang('sale.customer_name')</th>
-                        <th>@lang('sale.location')</th>  
-                        <th>@lang('delivery.shipping_details')</th> 
+                        <th>@lang('sale.location')</th>
+                        <th>@lang('delivery.shipping_details')</th>
                         <th>@lang('lang_v1.added_by')</th>
                         <th>@lang('lang_v1.assign_status')</th>
                     </tr>
                 </thead>
                 <tbody>
                 </tbody>
-                
+
             </table>
         @endif
     @endcomponent
@@ -72,14 +72,14 @@ $(document).ready( function(){
                     d.start_date = start;
                     d.end_date = end;
                 }
-               
+
 
                 d.location_id = $('#transaction_list_filter_location_id').val();
                 d.assign_delivery_status = $('#transaction_list_filter_assign_status').val();
                 d.customer_id = $('#transaction_list_filter_customer_id').val();
                 d.created_by = $('#created_by').val();
-                
-               
+
+
 
                 d = __datatable_ajax_callback(d);
             }
@@ -96,7 +96,7 @@ $(document).ready( function(){
             { data: 'shipping_details', name: 'shipping_details'},
             { data: 'added_by', name: 'u.first_name'},
             { data: 'assign_delivery_status', name: 'assign_delivery_status'},
-           
+
         ],
         "fnDrawCallback": function (oSettings) {
             __currency_convert_recursively($('#delivery_assign_table'));

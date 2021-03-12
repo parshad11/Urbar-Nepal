@@ -334,7 +334,7 @@ class AdminSidebarMenu
                             $sub->url(
                                 action('DeliveryController@listDeliveryTransaction'),
                                 __('delivery.assign_delivery'),
-                                ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'delivery-transaction' && request()->segment(2) == 'null']
+	                                ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'delivery-transaction' ]
                             );
                         }
                         if (auth()->user()->can('delivery.view') ||  auth()->user()->can('view_own_delivery')) {
