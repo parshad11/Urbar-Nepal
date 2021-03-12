@@ -5,7 +5,7 @@
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
-    <h1>@lang('delivery.assign_delivery') 
+    <h1>@lang('delivery.assign_delivery')
 </section>
 
 <!-- Main content -->
@@ -16,7 +16,7 @@
 	{!! Form::open(['url' => action('DeliveryController@store'), 'method' => 'post', 'id' => 'assign_delivery_form', 'files' => true ]) !!}
 	    @component('components.widget', ['class' => 'box-primary'])
         @if($transaction->type=='sell')
-        @php 
+        @php
         $shipping_address=$transaction->contact->shipping_address;
         $shipping_latitude=$transaction->contact->latitude;
         $shipping_longitude=$transaction->contact->longitude;
@@ -49,8 +49,8 @@
 								</div>
 							</div>
 						</div>
-						
-					
+
+
 						<div class=" col-sm-4 @if(!empty($default_delivery_status)) hide @endif">
 							<div class="form-group">
 								{!! Form::label('delivery_status', __('delivery.delivery_status') . ':*') !!}
@@ -74,7 +74,7 @@
                             <span><a target="_blank" href="https://www.mapcoordinates.net/en" class="btn-sm btn-primary">Click here</a> to find latitude and longitude</span>
                             </div>
                         </div>
-					
+
 						<div class=" col-sm-4 ">
 							<div class="form-group">
 								{!! Form::label('shipping_latitude', __('delivery.shipping_latitude') . ':') !!}
@@ -103,7 +103,7 @@
                             <span><a target="_blank" href="https://www.mapcoordinates.net/en" class="btn-sm btn-primary">Click here</a> to find latitude and longitude</span>
                             </div>
                         </div>
-					
+
 						<div class=" col-sm-4 ">
 							<div class="form-group">
 								{!! Form::label('pickup_latitude', __('delivery.pickup_latitude') . ':') !!}
@@ -115,7 +115,7 @@
 							</div>
 						</div>
 				</div>
-               
+
 
                 <div class="col-md-12" style="display:flex;justify-content: space-between;">
 
@@ -131,10 +131,10 @@
                                     {!! Form::label('special_instructions', __('delivery.special_delivery_instructions') . ':') !!}
                                     {!! Form::textarea('special_delivery_instructions', null, ['class' => 'form-control','rows'=>3]); !!}
                         </div>
-                    </div>    
+                    </div>
                 </div>
-                   
-			    
+
+
                     <div class="row">
                     <div class="col-sm-12">
                         <button type="submit" id="save_assign_delivery" class="btn btn-primary pull-right">@lang('messages.save')</button>
@@ -142,12 +142,12 @@
                 </div>
 			</div>
 		@endcomponent
-			
+
     {!! Form::close() !!}
 </section>
 @endsection
 
-@section('javascript')	
+@section('javascript')
 	<script type="text/javascript">
 
         $( "#delivery_status" ).change(function() {
@@ -156,7 +156,7 @@
         }
         else{
             $('div.delivered_to_div').addClass("hide");
-           
+
         }
         });
 
@@ -183,7 +183,7 @@
             escapeMarkup: function(m) {
                 return m;
             },
-         
+
             templateResult: function(data) {
                 if (!data.id) {
                     return data.text;

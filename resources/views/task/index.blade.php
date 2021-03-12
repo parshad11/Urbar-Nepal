@@ -25,7 +25,7 @@
                 @endslot
             @endcan
             @if (auth()->user()->can('task.view') || auth()->user()->can('view_own_task'))
-                <table class="table table-bordered table-striped " id="task_table">
+                <table class="table table-bordered table-striped ajax_view" id="task_table">
                     <thead>
                     <tr>
                         <th>Action</th>

@@ -16,7 +16,7 @@
         @endcomponent
         @component('components.widget', ['class' => 'box-primary', 'title' => 'All Delivery'])
             @if (auth()->user()->can('delivery.view') || auth()->user()->can('view_own_delivery'))
-                <table class="table table-bordered table-striped" id="delivery_table">
+                <table class="table table-bordered table-striped ajax_view" id="delivery_table">
                     <thead>
                     <tr>
                         <th>Action</th>
