@@ -6,6 +6,10 @@
 </td>
 <td>
 <div class="input-group">
+	<span class="input-group-addon"><small>@lang('product.market_price')</small></span>
+	{!! Form::text('products[' . $product->id . '][variations][' . $variation->id . '][market_price]', @num_format($variation->market_price), ['placeholder' => __('product.market_price'), 'class' => 'form-control input-sm input_number market_price']); !!}
+</div>
+<div class="input-group">
 	<span class="input-group-addon"><small>@lang('product.exc_of_tax')</small></span>
 	{!! Form::text('products[' . $product->id . '][variations][' . $variation->id . '][default_purchase_price]', @num_format($variation->default_purchase_price), ['placeholder' => __('product.exc_of_tax'), 'class' => 'form-control input-sm input_number pp_exc_tax']); !!}
 </div>

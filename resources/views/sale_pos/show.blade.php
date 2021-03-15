@@ -60,7 +60,7 @@
       @endif
 
       <strong>@lang('sale.shipping'):</strong>
-      <span class="label @if(!empty($shipping_status_colors[$sell->shipping_status])) {{$shipping_status_colors[$sell->shipping_status]}} @else {{'bg-gray'}} @endif">{{$shipping_statuses[$sell->shipping_status] ?? '' }}</span><br>
+      <span class="label @if(!empty($delivery_status_colors[$sell->shipping_status])) {{$delivery_status_colors[$sell->shipping_status]}} @else {{'bg-gray'}} @endif">{{$shipping_statuses[$sell->shipping_status] ?? '' }}</span><br>
       @if(!empty($sell->shipping_address()))
         {{$sell->shipping_address()}}
       @else

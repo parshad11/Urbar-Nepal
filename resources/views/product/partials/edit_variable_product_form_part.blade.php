@@ -25,6 +25,7 @@
                 <table class="table table-condensed table-bordered blue-header variation_value_table">
                     <tr>
                         <th>@lang('product.value')</th>
+                        <th>@lang('product.market_price')</th>
                         <th>@lang('product.default_purchase_price') &nbsp;&nbsp;<b><i class="fa fa-info-circle" aria-hidden="true" data-toggle="popover" data-html="true" data-trigger="hover" data-content="<p class='text-primary'>Drag the mouse over the table cells to copy input values</p>" data-placement="top"></i></b></th>
                         <th>@lang('product.default_selling_price') &nbsp;&nbsp;<b><i class="fa fa-info-circle" aria-hidden="true" data-toggle="popover" data-html="true" data-trigger="hover" data-content="<p class='text-primary'>Drag the mouse over the table cells to copy input values</p>" data-placement="top"></i></b></th>
                         <th><button type="button" class="btn btn-success btn-xs add_variation_value_row">+</button></th>
@@ -35,6 +36,10 @@
                           {!! Form::text('product_variation[' . $loop->parent->index . '][variations][' . $loop->index . '][value]',
                           $variation->name, ['class' => 'form-control input-sm variation_value_name', 'required']); !!}
                           {!! Form::hidden('product_variation[' . $loop->parent->index . '][variations][' . $loop->index . '][variation_id]', $variation->id); !!}
+                        </td>
+                        <td>
+                        {!! Form::number('product_variation[' . $loop->parent->index . '][variations][' . $loop->index . '][market_price]',
+                          $variation->market_price, ['class' => 'form-control input-sm variable_market_price', 'min' => '0', 'placeholder' => __('product.market_price')]); !!}
                         </td>
                         <td class="drag-select">
                           {!! Form::number('product_variation[' . $loop->parent->index . '][variations][' . $loop->index . '][default_purchase_price]',

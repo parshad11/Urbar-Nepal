@@ -4,10 +4,11 @@ namespace App\Notifications;
 
 use App\Utils\NotificationUtil;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class CustomerNotification extends Notification
+class CustomerNotification extends Notification 
 {
     use Queueable;
 
@@ -79,7 +80,7 @@ class CustomerNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            //
+                //
         ];
     }
 }
