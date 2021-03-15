@@ -125,6 +125,9 @@
             font-size: 16px;
             text-align: justify;
         }
+        #accordion .panel-heading {
+            margin-bottom: 5px;
+        }
     </style>
 @endsection
 @section('content')
@@ -150,12 +153,12 @@
 
         <div class="career-page-description">
             <p>We believe that we can do more than your expectation in quality fresh produce supply in Nepal.
-                We want to be a company where people are allowed to grow indicidually and as a team. Come and Join Us in
+                We want to be a company where people are allowed to grow individually and as a team. Come and Join Us in
                 our
-                mission of making <b>Fetter food life for people</b>.
+                mission of making <b>Better food life for people</b>.
 
                 <br><br>
-                <b>FreshKTM</b> is currently seeking qualified cadidates for following positions :
+                <b>FreshKTM</b> is currently seeking qualified candidates for following positions :
 
 
             </p>
@@ -167,17 +170,17 @@
                 @foreach($careers as $career)
                     <!-- JOB ONE -->
                         <div class="panel panel-default">
-                            <div class="panel-heading job-title" role="tab" id="headingOne">
+                            <div class="panel-heading job-title" role="tab" id="heading{{$career->id}}">
                                 <h4 class="panel-title">
-                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{$career->id}}"
                                        aria-expanded="true"
-                                       aria-controls="collapseOne">
+                                       aria-controls="collapse{{$career->id}}">
                                         {{$career->job_title}}
                                     </a>
                                 </h4>
                             </div>
-                            <div id="collapseOne" class="panel-collapse collapse job-description" role="tabpanel"
-                                 aria-labelledby="headingOne">
+                            <div id="collapse{{$career->id}}" class="panel-collapse collapse job-description" role="tabpanel"
+                                 aria-labelledby="heading{{$career->id}}">
                                 <div class="panel-body job-detail">
                                     {!! $career->job_description!!}
                                     <br>
@@ -205,7 +208,7 @@
         <div class="section-title">
             <h2>Grow With Us</h2>
             <div class="title-border"></div>
-            <p>We belive in You</p>
+            <p>We believe in You</p>
         </div>
 
         <div class="row benefits">
@@ -257,12 +260,12 @@
             <div class="">
                 <div class="benefits-title row">
                     <div class="col-md-8 title">
-                        <h3>Friendly Enviroment</h3>
+                        <h3>Friendly Environment</h3>
                     </div>
                     <div class="col-md-4 logo"><i class="fa fa-users" aria-hidden="true"></i></div>
                 </div>
                 <div class="benefits-detail">
-                    You will get to work in an inclusive enviroment and make difference in our community we serve.
+                    You will get to work in an inclusive environment and make difference in our community we serve.
                 </div>
 
             </div>

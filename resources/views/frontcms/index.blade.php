@@ -64,7 +64,7 @@
             text-align: center
         }
 
-        .value_img{
+        .value_img {
             height: 60px;
             width: auto;
         }
@@ -73,53 +73,9 @@
             width: auto;
             height: 65px;
         }
-
-        .modal-header {
-            padding: 10px 15px;
-        }
-
-        .modal-title {
-            display: inline-block;
-        }
-
-        .modal-body {
-            position: relative;
-            padding: 15px;
-            line-height: 1.5;
-            font-size: 15px;
-            text-align: justify;
-            height: 75vh;
-            overflow-y: scroll;
-        }
-
-        .modal-footer {
-            padding: 10px 15px;
-        }
     </style>
 @endsection
 @section('content')
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Message From Chairman</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    @if(isset($home_setting))
-                        {!! $home_setting->welcome_description !!}
-                    @endif
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
     <!-- Banner Start -->
     <section class="slider-area jarallax overlay-black">
         <div id="slider" data-zs-src='[
@@ -158,8 +114,10 @@
                                     </span>
                                 </h3>
                                 <div class="slider-buttons">
-                                    <a class="btn btn-default theme-btn btn-hover" href="#quote" id="get_contact">Shop Now</a>
-                                    <a class="btn btn-default theme-btn btn-hover" href="#quote" id="get_contact">Become a
+                                    <a class="btn btn-default theme-btn btn-hover" href="{{ route('shop') }}" id="">Shop
+                                        Now</a>
+                                    <a class="btn btn-default theme-btn btn-hover" href="#quote" id="get_contact">Become
+                                        a
                                         Partner</a>
                                 </div>
                             </div>
@@ -247,8 +205,7 @@
                                     @endphp
                                     <ul>
                                         @foreach ($third_list as $item)
-                                            <li><i class="fa fa-long-arrow-right" aria-hidden="true"></i>&nbsp;{{$item}}
-                                            </li>
+                                            <li><i class="fa fa-long-arrow-right" aria-hidden="true"></i>&nbsp;{{$item}}</li>
                                         @endforeach
                                     </ul>
                                     </p>
@@ -272,8 +229,8 @@
                         @if(isset($home_setting))
                             <p>{!! substr($home_setting->welcome_description, 0, 1200) !!}</p>
                         @endif
-                        <span><a class="btn btn-default theme-btn btn-hover" href="#" role="button" data-toggle="modal"
-                           data-target="#exampleModal">Read More</a>
+                        <span><a class="btn btn-default theme-btn btn-hover"
+                                 href="{{route('front_about')}}">Read More</a>
                         </span>
                     </div>
                 </div>
@@ -330,7 +287,8 @@
                                 <h3 class="title">NO FOOD LOSS</h3>
                                 <p class="description">
                                     Post harvest fresh produce loss is about 40% in Nepal.
-                                    We design the supply chain to reduce the post-harvest fruits and vegetable loss in Nepal.
+                                    We design the supply chain to reduce the post-harvest fruits and vegetable loss in
+                                    Nepal.
                                 </p>
                             </div>
                         </div>
@@ -346,7 +304,8 @@
                             <div class="value features-content">
                                 <h3 class="title">INNOVATION</h3>
                                 <p class="description">
-                                    We Think that the challenges in fresh produce supply chain and its productivity can be converted
+                                    We Think that the challenges in fresh produce supply chain and its productivity can
+                                    be converted
                                     into opportunities by using innovative digital technology.
                                 </p>
                             </div>
@@ -363,7 +322,7 @@
                             <div class="value features-content">
                                 <h3 class="title">NUTRITION</h3>
                                 <p class="description">
-                                    We aim to make an active contribution  to provide nutritious food.
+                                    We aim to make an active contribution to provide nutritious food.
                                     We are dedicated to solve the nutrition problem in Nepal through our product.
                                 </p>
                             </div>
@@ -397,7 +356,8 @@
                             <div class="value features-content">
                                 <h3 class="title">SUSTAINABILITY</h3>
                                 <p class="description">
-                                    We provide more than expected opportunities to our farmers for discovering and learning.
+                                    We provide more than expected opportunities to our farmers for discovering and
+                                    learning.
                                     Also, Enhance pleasure to be a farmer with more incomes.
                                 </p>
                             </div>
@@ -533,7 +493,7 @@
                         <div class="section-title">
                             <h2>Meet Our Team</h2>
                             <div class="title-border"></div>
-                            <p>Sed pellentesque, ligula at lacinia molestie sapien consequat</p>
+                            <p>Our core team comprises of dynamic individuals with passion and dedication.</p>
                         </div>
                     </div>
                     @foreach($team_members as $team_member)
@@ -577,33 +537,33 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="request-col">
-                                    <input type="text" class="form-control" placeholder="Your Name" required>
+                                    <input type="text" name="name" class="form-control" placeholder="Your Name" required>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="request-col">
-                                    <input type="email" class="form-control" id="inputEmail3"
+                                    <input type="email" name="email" class="form-control" id="inputEmail3"
                                            placeholder="Email Address">
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="request-col">
-                                    <input type="text" class="form-control" placeholder="Phone Numbar" required>
+                                    <input type="text" name="phone" class="form-control" placeholder="Phone Number" required>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="request-col">
-                                    <input type="text" class="form-control" placeholder="Subject">
+                                    <input type="text" name="subject" class="form-control" placeholder="Subject">
                                 </div>
                             </div>
                             <div class="col-sm-12">
                                 <div class="request-col">
-                                    <input type="text" class="form-control" placeholder="Address" required>
+                                    <input type="text" name="address" class="form-control" placeholder="Address" required>
                                 </div>
                             </div>
                             <div class="col-sm-12">
                                 <div class="request-col">
-                                    <textarea class="form-control" rows="5" placeholder="Message"></textarea>
+                                    <textarea name="message" class="form-control" rows="5" placeholder="Message"></textarea>
                                     <button class="btn btn-default theme-btn" type="submit">Send Now</button>
                                 </div>
                             </div>
@@ -655,7 +615,7 @@
     @endif
 
     <!-- Blog Start -->
-    @if(isset($blog))
+    @if(isset($blogs))
         <section class="blog-area">
             <div class="container">
                 <div class="row">
@@ -663,7 +623,7 @@
                         <div class="section-title">
                             <h2>Our Blog</h2>
                             <div class="title-border"></div>
-                            <p>Sed pellentesque, ligula at lacinia molestie sapien consequat</p>
+                            <p>Know more about fresh produce supply chain</p>
                         </div>
                     </div>
                     @if(isset($blogs))

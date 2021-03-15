@@ -71,8 +71,8 @@ class AppServiceProvider extends ServiceProvider
             }
         );
         View::composer('frontcms.partials.*', function($view){
-            $view->with('home_settings',HomeSetting::select('email', 'phone', 'social_links','logo_image')->first())
-            ->with('blogs', Blog::take(3)->orderBy('created_at','desc')->get());
+            $view->with('home_settings',HomeSetting::select('email', 'phone', 'address', 'social_links','logo_image','google_map_link')->first())
+            ->with('blogs', Blog::take(3)->where('status', 'active')->orderBy('created_at','desc')->get());
         });
 
         //This will fix "Specified key was too long; max key length is 767 bytes issue during migration"

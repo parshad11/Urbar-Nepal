@@ -27,7 +27,7 @@
                 </div>
                 <div class="blog-content">
                     <h2>{{$blog_single->title}}</h2>
-                    <p>{{$blog_single->description}}</p>
+                    <p>{!! $blog_single->description !!}</p>
                 </div>
                 {{-- <div class="row">
                     <div class="col-md-12">

@@ -28,7 +28,7 @@
                       @if(isset($teams) && count($teams) > 0)
                         @foreach ($teams as $key => $value)
                             <tr>
-                                <td>{{$key+1}}</td>
+                                <td>{{$key+$teams->firstItem()}}</td>
                                 <td>{{ $value->name }}</td>
                                 <td>{{ $value->post }}</td>
                                 <td>
@@ -39,6 +39,11 @@
                                 <td><span class="badge label label-{{ $value->status == 'active' ? 'success' : 'danger'}}">{{ $value->status == 'active' ? 'Active' : 'Inactive'}}</span></td>
                                 <td>
                                     <a href="{{ route('cms_team_edit',$value->id) }}" class="btn btn-sm btn-border-success"><i class="fa fa-paper-plane"></i>&nbsp;Edit</a>
+                                    <form action="{{route('cms_team_delete', $value->id)}}" onsubmit="return confirm('Are You Sure To Delete This Member?')" method="post" style="display: inline-block">
+                                        @csrf
+                                        @method('delete')
+                                        <button type="submit" class="btn btn-sm btn-border-danger"><i class="fa fa-trash"></i>Delete</button>
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach
@@ -48,7 +53,10 @@
                       </tr>
                       @endif
                 </tbody>
-              </table> 
+              </table>
+            @isset($teams)
+                {{$teams->links()}}
+            @endisset
         </div>
     </div>
 </section>
