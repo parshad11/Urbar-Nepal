@@ -19,10 +19,10 @@ class DeliveryController extends Controller
         if(auth()->user()->user_type=='delivery' || auth()->user()->user_type=='Delivery')
         {
             $delivery_person = DeliveryPerson::where('user_id', auth()->user()->id)->first();
-            $delivery = Delivery::where('delivery_person_id', $delivery_person->id)->get();
+            $delivery = Delivery::with('transaction')->where('delivery_person_id', $delivery_person->id)->get();
         }
         elseif(auth()->user()->user_type=='admin' || auth()->user()->user_type=='Admin'){
-            $delivery = Delivery::all();
+            $delivery = Delivery::with('transaction')->all();
         }
 
         return response()->json([
