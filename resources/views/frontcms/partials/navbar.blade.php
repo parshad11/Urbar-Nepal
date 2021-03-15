@@ -5,7 +5,7 @@
             <div class="col-md-12">
                 <div class="my-nav-row">
                     <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-md-10">
                             <nav class="navbar navbar-default">
 
                                 <div class="navbar-header d-flex">
@@ -22,8 +22,10 @@
                                     {{--@if(isset($home_settings))
                                     <div class="contact"><a href="{{ $home_settings->phone }}">{{ $home_settings->phone }}</a></div>
                                     @endif--}}
-                                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                                            data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                                    <button type="button" class="navbar-toggle collapsed"
+                                            data-toggle="collapse"
+                                            data-target="#bs-example-navbar-collapse-1"
+                                            aria-expanded="false">
                                         <span class="sr-only">Toggle navigation</span>
                                         <span class="icon-bar"></span>
                                         <span class="icon-bar"></span>
@@ -43,17 +45,20 @@
                                      data-hover="dropdown" data-animations="fadeIn">
                                     <ul class="nav navbar-nav">
                                         <li class="{{ Request::segment(1) == '' ? 'active' : ''}}">
-                                            <a href="{{ route('front_dashboard') }}">Home <i class="fa fa-home"
-                                                                                             aria-hidden="true"></i></a>
+                                            <a href="{{ route('front_dashboard') }}">Home <i
+                                                        class="fa fa-home"
+                                                        aria-hidden="true"></i></a>
                                         </li>
 
                                         <li class="dropdown">
-                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                                               role="button"
                                                aria-haspopup="true" aria-expanded="false">About Us&nbsp;<i
                                                         class="fa fa-angle-down" aria-hidden="true"></i></a>
                                             <ul class="dropdown-menu">
                                                 <li><a href="{{route('front_about')}}">About</a></li>
-                                                <li><a href="{{route('front_about')}}">Mission and Vision</a></li>
+                                                <li><a href="{{route('front_about')}}">Mission and
+                                                        Vision</a></li>
                                                 <li><a href="{{route('contact')}}">Contact Us</a></li>
                                                 <li><a href="{{route('teams')}}">Our Team</a></li>
                                                 <li><a href="{{route('faqs')}}">Faqs</a></li>
@@ -70,25 +75,11 @@
                                 </div>
                             </nav>
                         </div>
-                        @if(Request::segment(1) == 'shop')
-                            <div class="col-md-4 shop-options">
-                                <nav class="navbar navbar-default">
-                                    <ul class="nav  navbar-nav">
-                                        <li class=""><a href="register.htm">Account &nbsp; <i
-                                                        class="fas fa-user-circle"></i></a>
-                                        </li>
-                                        <li class=""><a href="cart.htm">Cart &nbsp;
-                                                <i class="fa fa-shopping-cart" aria-hidden="true"></i></i></a></li>
-                                    </ul>
-                                </nav>
+                        <div class="col-md-2 quote_div">
+                            <div class="quote-box">
+                                <a href="#quote" id="get_quote">Contact Us</a>
                             </div>
-                        @else
-                            <div class="col-md-2 quote_div">
-                                <div class="quote-box">
-                                    <a href="#quote" id="get_quote">Contact Us</a>
-                                </div>
-                            </div>
-                        @endif
+                        </div>
                     </div>
                 </div>
             </div>
