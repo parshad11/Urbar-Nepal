@@ -4,17 +4,13 @@ namespace App\Notifications;
 
 use App\Utils\NotificationUtil;
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Notification;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-use Illuminate\Notifications\Notification;
-
-class SupplierNotification extends Notification
+class StaffAddedNotification extends Notification
 {
     use Queueable;
-
-    protected $notificationInfo;
-    protected $cc;
-    protected $bcc;
 
     /**
      * Create a new notification instance.
@@ -40,7 +36,7 @@ class SupplierNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail','database'];
     }
 
     /**
@@ -76,7 +72,7 @@ class SupplierNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            //
+            'message'=>'Welcome to FreshKtm.',
         ];
     }
 }

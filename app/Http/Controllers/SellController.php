@@ -55,8 +55,8 @@ class SellController extends Controller
         $this->dummyPaymentLine = ['method' => '', 'amount' => 0, 'note' => '', 'card_transaction_number' => '', 'card_number' => '', 'card_type' => '', 'card_holder_name' => '', 'card_month' => '', 'card_year' => '', 'card_security' => '', 'cheque_number' => '', 'bank_account_number' => '',
         'is_return' => 0, 'transaction_no' => ''];
 
-        $this->shipping_status_colors = [
-            'ordered' => 'bg-yellow',
+        $this->delivery_status_colors = [
+            'received' => 'bg-yellow',
             'packed' => 'bg-info',
             'shipped' => 'bg-navy',
             'delivered' => 'bg-green',
@@ -84,7 +84,7 @@ class SellController extends Controller
         if (request()->ajax()) {
             $payment_types = $this->transactionUtil->payment_types(null, true, $business_id);
             $with = [];
-            $shipping_statuses = $this->transactionUtil->shipping_statuses();
+            $deliveryStatuses = $this->transactionUtil->deliveryStatuses();
             $sells = $this->transactionUtil->getListSells($business_id);
 
             $permitted_locations = auth()->user()->permitted_locations();
@@ -114,7 +114,7 @@ class SellController extends Controller
             }
 
             //Add condition for location,used in sales representative expense report
-            if (request()->has('location_id')) {
+            if (!empty(request()->location_id)) {
                 $location_id = request()->get('location_id');
                 if (!empty($location_id)) {
                     $sells->where('transactions.location_id', $location_id);
@@ -198,12 +198,8 @@ class SellController extends Controller
                 $sells->whereNotNull('transactions.shipping_status');
             }
 
-            if (!empty(request()->input('shipping_status'))) {
-                $sells->where('transactions.shipping_status', request()->input('shipping_status'));
-            }
-
-            if (!empty(request()->input('shipping_status'))) {
-                $sells->where('transactions.shipping_status', request()->input('shipping_status'));
+            if (!auth()->user()->can('sell.view') && auth()->user()->can('view_own_sell')) {
+                $sells->where('transactions.created_by', request()->session()->get('user.id'));
             }
             
             $sells->groupBy('transactions.id');
@@ -243,6 +239,7 @@ class SellController extends Controller
             if ($this->businessUtil->isModuleEnabled('subscription')) {
                 $sells->addSelect('transactions.is_recurring', 'transactions.recur_parent_id');
             }
+
 
             $datatable = Datatables::of($sells)
                 ->addColumn(
@@ -379,10 +376,9 @@ class SellController extends Controller
 
                     return $invoice_no;
                 })
-                ->editColumn('shipping_status', function ($row) use ($shipping_statuses) {
-                    $status_color = !empty($this->shipping_status_colors[$row->shipping_status]) ? $this->shipping_status_colors[$row->shipping_status] : 'bg-gray';
-                    $status = !empty($row->shipping_status) ? '<a href="#" class="btn-modal" data-href="' . action('SellController@editShipping', [$row->id]) . '" data-container=".view_modal"><span class="label ' . $status_color .'">' . $shipping_statuses[$row->shipping_status] . '</span></a>' : '';
-                     
+                ->editColumn('shipping_status', function ($row) use ($deliveryStatuses) {
+                    $status_color = !empty($this->delivery_status_colors[$row->delivery_status]) ? $this->delivery_status_colors[$row->delivery_status] : 'bg-gray';
+                    $status = !empty($row->delivery_status) ? '<a href="#" class="btn-modal"><span class="label ' . $status_color .'">' . $deliveryStatuses[$row->delivery_status] . '</span></a>' : '';
                     return $status;
                 })
                 ->addColumn('payment_methods', function ($row) use ($payment_types) {
@@ -431,10 +427,8 @@ class SellController extends Controller
             $service_staffs = $this->productUtil->serviceStaffDropdown($business_id);
         }
 
-        $shipping_statuses = $this->transactionUtil->shipping_statuses();
-
         return view('sell.index')
-        ->with(compact('business_locations', 'customers', 'is_woocommerce', 'sales_representative', 'is_cmsn_agent_enabled', 'commission_agents', 'service_staffs', 'is_tables_enabled', 'is_service_staff_enabled', 'is_types_service_enabled', 'shipping_statuses'));
+        ->with(compact('business_locations', 'customers', 'is_woocommerce', 'sales_representative', 'is_cmsn_agent_enabled', 'commission_agents', 'service_staffs', 'is_tables_enabled', 'is_service_staff_enabled', 'is_types_service_enabled'));
     }
 
     /**
@@ -610,7 +604,7 @@ class SellController extends Controller
         $business_details = $this->businessUtil->getDetails($business_id);
         $pos_settings = empty($business_details->pos_settings) ? $this->businessUtil->defaultPosSettings() : json_decode($business_details->pos_settings, true);
         $shipping_statuses = $this->transactionUtil->shipping_statuses();
-        $shipping_status_colors = $this->shipping_status_colors;
+        $delivery_status_colors = $this->delivery_status_colors;
         $common_settings = session()->get('business.common_settings');
         $is_warranty_enabled = !empty($common_settings['enable_product_warranty']) ? true : false;
 
@@ -622,7 +616,7 @@ class SellController extends Controller
                 'order_taxes',
                 'pos_settings',
                 'shipping_statuses',
-                'shipping_status_colors',
+                'delivery_status_colors',
                 'is_warranty_enabled'
             ));
     }

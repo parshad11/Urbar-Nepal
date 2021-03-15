@@ -25,6 +25,8 @@ return [
 
     'sell_due' => 'Total amount to be received from sales',
 
+    'market_price' => 'Price of product set on market place',
+
     'over_all_sell_purchase' => '-ve value = Amount to pay <br>+ve Value = Amount to receive',
 
     'no_of_products_for_trending_products' => 'Number of top trending products to be compared in the chart below.',

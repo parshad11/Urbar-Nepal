@@ -60,6 +60,13 @@ class User extends Authenticatable
         return $query->where('users.user_type', 'user');
     }
 
+    public function routeNotificationForMail()
+    {
+        // Return email address only...
+        return $this->email;
+
+    }
+
     /**
      * The contact the user has access to.
      * Applied only when selected_contacts is true for a user in

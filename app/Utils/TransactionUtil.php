@@ -46,6 +46,7 @@ class TransactionUtil extends Util
         $invoice_no = !empty($input['invoice_no']) ? $input['invoice_no'] : $this->getInvoiceNumber($business_id, $input['status'], $input['location_id'], $invoice_scheme_id);
 
         $final_total = $uf_data ? $this->num_uf($input['final_total']) : $input['final_total'];
+        
         $transaction = Transaction::create([
             'business_id' => $business_id,
             'location_id' => $input['location_id'],
@@ -102,7 +103,7 @@ class TransactionUtil extends Util
             'res_table_id' => !empty($input['res_table_id']) ? $input['res_table_id'] : null,
             'res_waiter_id' => !empty($input['res_waiter_id']) ? $input['res_waiter_id'] : null,
         ]);
-
+    
         return $transaction;
     }
 
@@ -4201,6 +4202,7 @@ class TransactionUtil extends Util
                 ->leftJoin('transaction_sell_lines as tsl', 'transactions.id', '=', 'tsl.transaction_id')
                 ->leftJoin('users as u', 'transactions.created_by', '=', 'u.id')
                 ->leftJoin('users as ss', 'transactions.res_waiter_id', '=', 'ss.id')
+                ->leftJoin('deliveries as d', 'transactions.id', '=', 'd.transaction_id')
                 ->leftJoin('res_tables as tables', 'transactions.res_table_id', '=', 'tables.id')
                 ->join(
                     'business_locations AS bl',
@@ -4242,7 +4244,7 @@ class TransactionUtil extends Util
                     'transactions.rp_redeemed_amount',
                     'transactions.rp_earned',
                     'transactions.types_of_service_id',
-                    'transactions.shipping_status',
+                    'd.delivery_status',
                     'transactions.pay_term_number',
                     'transactions.pay_term_type',
                     'transactions.additional_notes',
@@ -4293,6 +4295,7 @@ class TransactionUtil extends Util
                     'transactions.id',
                     'transactions.transaction_date',
                     'transactions.type',
+                    'transactions.is_direct_sale',
                     'contacts.name',
                     'contacts.contact_id',
                     'transactions.assign_delivery_status',

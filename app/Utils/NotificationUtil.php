@@ -86,108 +86,116 @@ class NotificationUtil extends Util
      *
      * @return array
      */
-    public function replaceBookingTags($business_id, $data, $booking_id)
+    public function replaceAvailableTags($business_id, $data, $model)
     {
         $business = Business::findOrFail($business_id);
-        $booking = Booking::where('business_id', $business_id)
-                    ->with(['customer', 'table', 'correspondent', 'waiter', 'location', 'business'])
-                    ->findOrFail($booking_id);
+        
         foreach ($data as $key => $value) {
             //Replace contact name
             if (strpos($value, '{contact_name}') !== false) {
-                $contact_name = $booking->customer->name;
+                $contact_name = $model->contact->name;
 
                 $data[$key] = str_replace('{contact_name}', $contact_name, $data[$key]);
             }
 
-            //Replace table
-            if (strpos($value, '{table}') !== false) {
-                $table = !empty($booking->table->name) ?  $booking->table->name : '';
-
-                $data[$key] = str_replace('{table}', $table, $data[$key]);
+            if (strpos($value, '{order_ref_number}') !== false) {
+                $ref_no = $model->ref_no;
+                $data[$key] = str_replace('{order_ref_number}', $ref_no, $data[$key]);
+            }
+    
+            if (strpos($value, '{invoice_number}') !== false) {
+                $invoice_no = $model->invoice_no;
+                $data[$key] = str_replace('{invoice_number}', $invoice_no, $data[$key]);
             }
 
-            //Replace start_time
-            if (strpos($value, '{start_time}') !== false) {
-                $start_time = $this->format_date($booking->booking_start, true);
-
-                $data[$key] = str_replace('{start_time}', $start_time, $data[$key]);
+            if (strpos($value, '{received_amount}') !== false) {
+                $received_amount = $model->payment_lines->amount;
+                $data[$key] = str_replace('{received_amount}', $received_amount, $data[$key]);
             }
 
-            //Replace end_time
-            if (strpos($value, '{end_time}') !== false) {
-                $end_time = $this->format_date($booking->booking_end, true);
-
-                $data[$key] = str_replace('{end_time}', $end_time, $data[$key]);
+            if (strpos($value, '{total_amount}') !== false) {
+                $final_total = $model->final_total;
+                $data[$key] = str_replace('{total_amount}', $final_total, $data[$key]);
             }
+
+            if (strpos($value, '{user_name}') !== false) {
+                $user_name = $model->user_name;
+                $data[$key] = str_replace('{user_name}', $user_name, $data[$key]);
+            }
+
+            if (strpos($value, '{user_type}') !== false) {
+                $user_type = $model->user_type;
+                $data[$key] = str_replace('{user_type}', $user_type, $data[$key]);
+            }
+
             //Replace location
             if (strpos($value, '{location}') !== false) {
-                $location = $booking->location->name;
+                $location = $model->location->name;
 
                 $data[$key] = str_replace('{location}', $location, $data[$key]);
             }
 
             if (strpos($value, '{location_name}') !== false) {
-                $location = $booking->location->name;
+                $location = $model->location->name;
 
                 $data[$key] = str_replace('{location_name}', $location, $data[$key]);
             }
 
             if (strpos($value, '{location_address}') !== false) {
-                $location_address = $booking->location->location_address;
+                $location_address = $model->location->location_address;
 
                 $data[$key] = str_replace('{location_address}', $location_address, $data[$key]);
             }
 
             if (strpos($value, '{location_email}') !== false) {
-                $location_email = $booking->location->email;
+                $location_email = $model->location->email;
 
                 $data[$key] = str_replace('{location_email}', $location_email, $data[$key]);
             }
 
             if (strpos($value, '{location_phone}') !== false) {
-                $location_phone = $booking->location->mobile;
+                $location_phone = $model->location->mobile;
 
                 $data[$key] = str_replace('{location_phone}', $location_phone, $data[$key]);
             }
 
             if (strpos($value, '{location_custom_field_1}') !== false) {
-                $location_custom_field_1 = $booking->location->custom_field1;
+                $location_custom_field_1 = $model->location->custom_field1;
 
                 $data[$key] = str_replace('{location_custom_field_1}', $location_custom_field_1, $data[$key]);
             }
 
             if (strpos($value, '{location_custom_field_2}') !== false) {
-                $location_custom_field_2 = $booking->location->custom_field2;
+                $location_custom_field_2 = $model->location->custom_field2;
 
                 $data[$key] = str_replace('{location_custom_field_2}', $location_custom_field_2, $data[$key]);
             }
 
             if (strpos($value, '{location_custom_field_3}') !== false) {
-                $location_custom_field_3 = $booking->location->custom_field3;
+                $location_custom_field_3 = $model->location->custom_field3;
 
                 $data[$key] = str_replace('{location_custom_field_3}', $location_custom_field_3, $data[$key]);
             }
 
             if (strpos($value, '{location_custom_field_4}') !== false) {
-                $location_custom_field_4 = $booking->location->custom_field4;
+                $location_custom_field_4 = $model->location->custom_field4;
 
                 $data[$key] = str_replace('{location_custom_field_4}', $location_custom_field_4, $data[$key]);
             }
 
-            //Replace service_staff
-            if (strpos($value, '{service_staff}') !== false) {
-                $service_staff = !empty($booking->waiter) ? $booking->waiter->user_full_name : '';
+            // //Replace service_staff
+            // if (strpos($value, '{service_staff}') !== false) {
+            //     $service_staff = !empty($booking->waiter) ? $booking->waiter->user_full_name : '';
 
-                $data[$key] = str_replace('{service_staff}', $service_staff, $data[$key]);
-            }
+            //     $data[$key] = str_replace('{service_staff}', $service_staff, $data[$key]);
+            // }
 
-            //Replace service_staff
-            if (strpos($value, '{correspondent}') !== false) {
-                $correspondent = !empty($booking->correspondent) ? $booking->correspondent->user_full_name : '';
+            // //Replace service_staff
+            // if (strpos($value, '{correspondent}') !== false) {
+            //     $correspondent = !empty($booking->correspondent) ? $booking->correspondent->user_full_name : '';
 
-                $data[$key] = str_replace('{correspondent}', $correspondent, $data[$key]);
-            }
+            //     $data[$key] = str_replace('{correspondent}', $correspondent, $data[$key]);
+            // }
 
             //Replace business_name
             if (strpos($value, '{business_name}') !== false) {
@@ -195,10 +203,15 @@ class NotificationUtil extends Util
                 $data[$key] = str_replace('{business_name}', $business_name, $data[$key]);
             }
 
+            if (strpos($value, '{business_login}') !== false) {
+                 $business_login = '<a href="'.route('login').'">Freshktm</a>';
+                $data[$key] = str_replace('{business_login}', $business_login, $data[$key]);
+            }
+
             //Replace business_logo
             if (strpos($value, '{business_logo}') !== false) {
                 $logo_name = $business->logo;
-                $business_logo = !empty($logo_name) ? '<img src="' . url('storage/business_logos/' . $logo_name) . '" alt="Business Logo" >' : '';
+                $business_logo = !empty($logo_name) ? '<img src="' . url('uploads/business_logos/' . $logo_name) . '" height="75" alt="Business Logo" >' : '';
 
                 $data[$key] = str_replace('{business_logo}', $business_logo, $data[$key]);
             }

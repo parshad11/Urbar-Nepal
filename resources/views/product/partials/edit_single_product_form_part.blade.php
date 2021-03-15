@@ -14,6 +14,7 @@
     <div class="table-responsive">
     <table class="table table-bordered add-product-price-table table-condensed {{$class}}">
         <tr>
+        <th>@lang('product.market_price')</th>
           <th>@lang('product.default_purchase_price')</th>
           <th>@lang('product.profit_percent') @show_tooltip(__('tooltip.profit_percent'))</th>
           <th>@lang('product.default_selling_price')</th>
@@ -25,6 +26,10 @@
                     <td>
                         <input type="hidden" name="single_variation_id" value="{{$variation->id}}">
 
+                        <td>
+                        <br/>
+                        {!! Form::text('market_price', @num_format($variation->market_price), ['class' => 'form-control input-sm input_number', 'id' => 'market_price', 'required']); !!}
+                        </td>
                         <div class="col-sm-6">
                           {!! Form::label('single_dpp', trans('product.exc_of_tax') . ':*') !!}
 

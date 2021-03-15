@@ -4,6 +4,7 @@
 		<div class="table-responsive">
 			<table class="table bg-gray">
 				<tr class="bg-green">
+					<th>@lang('product.market_price')</th>
 					@can('view_purchase_price')
 						<th>@lang('product.default_purchase_price') (@lang('product.exc_of_tax'))</th>
 						<th>@lang('product.default_purchase_price') (@lang('product.inc_of_tax'))</th>
@@ -22,6 +23,9 @@
 				</tr>
 				@foreach($product->variations as $variation)
 				<tr>
+					<td>
+						<span class="display_currency" data-currency_symbol="true">{{ $variation->market_price }}</span>
+					</td>
 					@can('view_purchase_price')
 					<td>
 						<span class="display_currency" data-currency_symbol="true">{{ $variation->default_purchase_price }}</span>

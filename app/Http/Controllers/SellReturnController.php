@@ -300,7 +300,7 @@ class SellReturnController extends Controller
                         ];
         }
 
-        return $output;
+        return redirect('sell-return')->with('status', $output);
     }
 
     /**

@@ -28,6 +28,9 @@
     <td>
         {!! Form::text($name . '[' . $variation_index . '][variations][' . $value_index . '][value]', $variation_name, ['class' => 'form-control input-sm variation_value_name', 'required', $readonly]); !!}
     </td>
+    <td>
+        {!! Form::text($name . '[' . $variation_index . '][variations][' . $value_index . '][market_price]', null, ['class' => 'form-control input-sm variable_market_price', 'required']); !!}
+    </td>
     <td class="{{$class}}">
         <div class="width-50 f-left">
             {!! Form::text($name . '[' . $variation_index . '][variations][' . $value_index . '][default_purchase_price]', $default, ['class' => 'form-control input-sm variable_dpp input_number', 'placeholder' => __('product.exc_of_tax'), 'required']); !!}

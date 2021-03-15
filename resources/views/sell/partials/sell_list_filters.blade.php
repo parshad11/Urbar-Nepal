@@ -1,3 +1,4 @@
+@can('business_settings.access')
 @if(empty($only) || in_array('sell_list_filter_location_id', $only))
 <div class="col-md-3">
     <div class="form-group">
@@ -7,6 +8,7 @@
     </div>
 </div>
 @endif
+@endcan
 @if(empty($only) || in_array('sell_list_filter_customer_id', $only))
 <div class="col-md-3">
     <div class="form-group">
@@ -31,6 +33,7 @@
     </div>
 </div>
 @endif
+@can('user.view')
 @if((empty($only) || in_array('created_by', $only)) && !empty($sales_representative))
 <div class="col-md-3">
     <div class="form-group">
@@ -39,6 +42,7 @@
     </div>
 </div>
 @endif
+@endcan
 @if(empty($only) || in_array('sales_cmsn_agnt', $only))
 @if(!empty($is_cmsn_agent_enabled))
     <div class="col-md-3">
@@ -58,14 +62,6 @@
         </div>
     </div>
 @endif
-@endif
-@if(!empty($shipping_statuses))
-    <div class="col-md-3">
-        <div class="form-group">
-            {!! Form::label('shipping_status', __('lang_v1.shipping_status') . ':') !!}
-            {!! Form::select('shipping_status', $shipping_statuses, null, ['class' => 'form-control select2', 'style' => 'width:100%', 'placeholder' => __('lang_v1.all')]); !!}
-        </div>
-    </div>
 @endif
 @if(empty($only) || in_array('only_subscriptions', $only))
 <div class="col-md-3">

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\BusinessLocation;
 use App\DeliveryPerson;
+use App\Notifications\TaskAssignedNotification;
 use App\Task;
 use Illuminate\Http\Request;
 use App\User;
@@ -223,6 +224,10 @@ class TaskController extends Controller
             $task->save();
             
         }
+
+        $delivery_person = DeliveryPerson::find($request->delivery_person_id);
+        $user=User::find($delivery_person->user_id);
+        $user->notify(new TaskAssignedNotification($task->record_staff->user_name,$task->id));
         
         DB::commit();
         $output = ['success' => 1,
