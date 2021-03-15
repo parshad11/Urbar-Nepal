@@ -169,7 +169,7 @@
 
                 <p>We are well equipped with the infrastructure required for fresh produce supply chain
                     with advanced technologies.</p> <br><br>
-                <a href="#!" class="btn btn-primary">Buy With Us</a>
+                <a href="{{route('shop')}}" class="btn btn-primary">Buy With Us</a>
 
             </div>
         </div>

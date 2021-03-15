@@ -29,7 +29,7 @@
                             <tr>
                                 <td>{{$key+$pages->firstItem()}}</td>
                                 <td>{{ $value->title }}</td>
-                                <td>{!! substr($value->body,0 ,50) !!}</td>
+                                <td>Fresh</td>
                                 <td>
                                     <span class="badge label label-{{ $value->status == 'active' ? 'success' : 'danger'}}">{{ $value->status == 'active' ? 'Active' : 'Inactive'}}</span>
                                 </td>

@@ -9,7 +9,7 @@
             </div>
             <div class="col-sm-4 col-xs-12">
                 <div class="herader-topbar-col tobar-leftside center767">
-                    <p>Better Food Life for People</p>
+                    <p>Fresh Produce Supply Chain</p>
                 </div>
             </div>
             <div class="col-sm-4 col-xs-12">

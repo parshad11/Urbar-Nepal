@@ -2,44 +2,49 @@
 <section class="our-footer">
     <div class="container">
         <div class="row">
-            <div class="col-lg-4 col-md-6">
+            <div class="col-md-4">
                 <div class="our-footer-col">
                     <div class="footer-title">
                         <h2>Recent post</h2>
                     </div>
                     @if(isset($blogs))
-                    @foreach ($blogs as $blog)
-                    <div class="our-post">
-                        <img src="{{asset('uploads/img/home/blogs/'.$blog->image)}}" alt="">
-                        <p><a href="{{ route('blog_single', $blog->slug) }}">{{$blog->summary}}</a></p>
-                        <p>{{\Carbon\Carbon::parse($blog->created_at)->diffForHumans()}}</p>
-                    </div>
-                    @endforeach
+                        @foreach ($blogs as $blog)
+                            <div class="our-post">
+                                <img src="{{asset('uploads/img/home/blogs/'.$blog->image)}}" alt="">
+                                <p><a href="{{ route('blog_single', $blog->slug) }}">{{$blog->summary}}</a></p>
+                                <p>{{\Carbon\Carbon::parse($blog->created_at)->diffForHumans()}}</p>
+                            </div>
+                        @endforeach
                     @endif
-                </div>  
+                </div>
             </div>
-            <div class="col-lg-4 col-md-6">
+            <div class="col-md-4">
                 <div class="our-footer-col">
                     <div class="our-footer-logo">
                         <a href="{{route('front_dashboard')}}">
                             @if(isset($home_settings))
-                            <img src="{{ asset('uploads/img/home/'.$home_settings->logo_image) }}" alt="">
+                                <img src="{{ asset('uploads/img/home/'.$home_settings->logo_image) }}" alt="">
                             @else
-                            <img src="{{ asset('img/freshktm_logo.png') }}" alt="">
+                                <img src="{{ asset('img/freshktm_logo.png') }}" alt="">
                             @endif
                         </a>
                         <p>Freshktm, is dedicated to deliver the fresh produce carefully selected, tested
-                            in labs, checking the uses of pesticides, not only safety, we focus on the taste of our fresh
+                            in labs, checking the uses of pesticides, not only safety, we focus on the taste of our
+                            fresh
                             produce when it reaches to end consumers hand.</p>
                         <ul class="our-footer-social clearfix">
                             @if(isset($home_settings) && $home_settings->social_links != null)
-                            @php
-                                $result = json_decode($home_settings->social_links, true);
-                            @endphp
-                            <li><a href="{{ $result['facebook'] }}"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
-                            <li><a href="{{ $result['twitter'] }}"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
-                            <li><a href="{{ $result['linkedin'] }}"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
-                            <li><a href="{{ $result['google'] }}"><i class="fa fa-google-plus" aria-hidden="true"></i></a></li>
+                                @php
+                                    $result = json_decode($home_settings->social_links, true);
+                                @endphp
+                                <li><a href="{{ $result['facebook'] }}"><i class="fa fa-facebook"
+                                                                           aria-hidden="true"></i></a></li>
+                                <li><a href="{{ $result['twitter'] }}"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                                </li>
+                                <li><a href="{{ $result['linkedin'] }}"><i class="fa fa-linkedin"
+                                                                           aria-hidden="true"></i></a></li>
+                                <li><a href="{{ $result['google'] }}"><i class="fa fa-google-plus"
+                                                                         aria-hidden="true"></i></a></li>
                             @endif
                         </ul>
                     </div>
@@ -56,30 +61,37 @@
                             </div>
                         </form>
                     </div>
-                </div>  
+                </div>
             </div>
-            <div class="col-lg-4 col-md-12">
+            <div class="col-md-4">
                 <div class="our-footer-col clearfix">
                     <div class="footer-title">
-                        <h2>Quick contact</h2>
+                        <h2>Quick Info</h2>
                     </div>
                     <div class="quick-contact">
-                        <form id="ajax-contact" method="post" action="php/contact.php">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                   <input type="text" class="form-control" id="name" name="name" placeholder="Your Name" required=""> 
-                                </div>
-                                <div class="col-sm-6">
-                                    <input type="email" class="form-control" id="email" name="email" placeholder="Email" required="">
-                                </div>
-                                <div class="col-sm-12">
-                                    <textarea class="form-control textarea-hight-full" id="message" name="message" rows="6" placeholder="Message" required=""></textarea>
-                                    <button class="btn btn-default theme-btn btn-hover" type="submit">Sent Message</button>
-                                </div>
-                            </div>
-                        </form>
+                        <ul class="fresh_detail">
+                            <li class="fresh_detail--list">
+                                <h4>Address:</h4>
+                                <span class="d-block">{{ isset($home_settings) ? $home_settings->address : ''}}</span>
+                            </li>
+                            <li class="fresh_detail--list">
+                                <h4>Phone:</h4>
+                                <a href="tel:{{isset($home_settings) ? $home_settings->phone : ''}}"
+                                   class="d-block">{{ isset($home_settings) ? $home_settings->phone : '' }}</a>
+                            </li>
+                            <li class="fresh_detail--list">
+                                <h4>Email:</h4>
+                                <a href="mailto:{{isset($home_settings) ? $home_settings->email : ''}}">{{isset($home_settings) ? $home_settings->email : ''}}</a>
+                            </li>
+                            <li>
+                                <iframe src="{!! isset($home_settings) ? $home_settings->google_map_link : '' !!}"
+                                        width="300" height="230" style="border:0;"
+                                        allowfullscreen="" loading="lazy">
+                                </iframe>
+                            </li>
+                        </ul>
                     </div>
-                </div>  
+                </div>
             </div>
         </div>
     </div>
@@ -91,7 +103,10 @@
     <div class="row">
         <div class="col-md-12">
             <div class="copyright-col text-center">
-                <p>Copyright ©2021 <a href="{{ route('front_dashboard') }}">freshktm</a> All Rights Reserved</p>
+                <p>Copyright ©2021 <a href="{{ route('front_dashboard') }}">freshktm</a> All Rights Reserved,
+                    <a href="{{ route('pages', 'privacy-policy') }}" style="color: #ffa829;">Privacy Policy</a>,
+                    <a href="{{ route('pages', 'terms-&-conditions') }}" style="color: #ffa829;">Terms & Conditions</a>
+                </p>
             </div>
         </div>
     </div>

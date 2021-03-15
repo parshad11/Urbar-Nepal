@@ -18,9 +18,9 @@
                                         @endif
                                     </a>
                                     </div>
-                                    @if(isset($home_settings))
+                                    {{--@if(isset($home_settings))
                                     <div class="contact"><a href="{{ $home_settings->phone }}">{{ $home_settings->phone }}</a></div>
-                                    @endif
+                                    @endif--}}
                                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
                                         data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                                         <span class="sr-only">Toggle navigation</span>
@@ -50,9 +50,10 @@
                                             <ul class="dropdown-menu">
                                                 <li><a href="{{route('front_about')}}">About</a></li>
                                                 <li><a href="{{route('front_about')}}">Mission and Vision</a></li>
+                                                <li><a href="{{route('contact')}}">Contact Us</a></li>
                                                 <li><a href="{{route('teams')}}">Our Team</a></li>
                                                 <li><a href="{{route('faqs')}}">Faqs</a></li>
-                                             
+
                                             </ul>
                                         </li>
                                         <li class="{{ Request::segment(1) == 'buy-sell' ? 'active' : ''}}"><a href="{{route('buy_sell')}}">Buy/Sell</a></li>

@@ -1,10 +1,10 @@
 @extends('frontcms.layouts.master')
-@section('title', 'Freshktm | Fresh Market And Agro ecommorce platform' )
+@section('title', 'Freshktm | Fresh Produce B to B Supply Chain' )
 @section('scripts')
 @endsection
 @section('content')
 <!-- Page heading Start -->
-<section class="page-heading-area jarallax overlay-black" id="water-animation">
+<section class="page-heading-area overlay-black" id="water-animation">
     @if(isset($about_info))
     <img class="jarallax-img" src="{{asset('uploads/img/home/about/'.$about_info->banner_image)}}" alt="">
     @endif

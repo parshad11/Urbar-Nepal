@@ -26,7 +26,7 @@
             <div class="row" style="margin-bottom: 10px;">
                 <label for="blog_image" class="control-label">Image Dimension :800*320</label>
                 <div id="blog_img">
-                    @if (isset($blog_info->image) && !empty($blog_info->image) && file_exists(public_path().'/uploads/img/home/blogs/'.$blog_info->image))
+                    @if (isset($blog_info) && !empty($blog_info->image) && file_exists(public_path().'/uploads/img/home/blogs/'.$blog_info->image))
                     <div class="col-md-3 col-sm-4 col-xs-6">
                         <div class="img-upload-preview">
                             <img src="{{ asset('uploads/img/home/blogs/'.$blog_info->image) }}" alt="" class="img-responsive">

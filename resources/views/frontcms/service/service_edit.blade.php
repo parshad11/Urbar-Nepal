@@ -42,9 +42,7 @@
             <div class="row" style="margin-bottom: 10px;">
                 <div class="col-md-12" style="padding:0 10px 0 0;">
                     <label for="service_summary" class="control-label">Short Description :</label>
-                    <textarea name="summary" class="form-control" id="service_summary" cols="20" rows="7" style="resize: none;">
-                        {{ isset($service_info->summary) ? $service_info->summary : '' }}"
-                    </textarea>
+                    <textarea name="summary" class="form-control" id="service_summary" cols="20" rows="7" style="resize: none;">{{ isset($service_info->summary) ? $service_info->summary : '' }}"</textarea>
                 </div>
             </div>
 
