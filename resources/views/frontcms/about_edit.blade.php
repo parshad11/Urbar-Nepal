@@ -29,7 +29,7 @@
             </div>
             <div class="col-md-10">
                 <div id="banner">                    
-                    @if (isset($about_info) && $about_info->banner_image != null)
+                    @if (isset($about_info) && $about_info->banner_image != null && file_exists(public_path().'/uploads/img/home/about/'.$about_info->banner_image))
                         <div class="col-md-3 col-sm-4 col-xs-6">
                             <div class="img-upload-preview">
                                 <img src="{{ asset('uploads/img/home/about/'.$about_info->banner_image) }}" alt="" class="img-responsive">
@@ -63,7 +63,7 @@
                 <div class="col-12" style="padding:0 10px 0 0;">
                     <label for="what_image" class="control-label"><small>Image Dimension: 820*725</small></label>
                     <div id="about_image_1">
-                        @if ($about_info->what_image != null)
+                        @if ($about_info->what_image != null && file_exists(public_path().'/uploads/img/home/about/'.$about_info->what_image))
                             <div class="col-md-3 col-sm-4 col-xs-6">
                                 <div class="img-upload-preview">
                                     <img src="{{ asset('uploads/img/home/about/'.$about_info->what_image) }}" alt="" class="img-responsive">
@@ -127,7 +127,7 @@
                 <div class="col-12" style="padding:0 10px 0 0;">
                     <label for="why_image" class="control-label"><small>Image Dimension: 600*630</small></label>
                     <div id="about_image_2">
-                        @if ($about_info->why_image != null)
+                        @if ($about_info->why_image != null && file_exists(public_path().'/uploads/img/home/about/'.$about_info->why_image))
                             <div class="col-md-3 col-sm-4 col-xs-6">
                                 <div class="img-upload-preview">
                                     <img src="{{ asset('uploads/img/home/about/'.$about_info->why_image) }}" alt="" class="img-responsive">

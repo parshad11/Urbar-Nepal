@@ -109,7 +109,7 @@
 
 
 @media only screen and (max-width:1024px) {
-	
+
 }
 
 @media only screen and (max-width:991px) {
@@ -130,7 +130,7 @@
 	    margin-left: 5px;
 	}
 	.navbar-header {
-	    
+
 	}
 	.header-navbar .navbar-brand {
 	    margin-top: 15px;
@@ -152,7 +152,7 @@
 		margin-top: 20px;
 	}
 	.slider-ontext {
-	    
+
 	}
 	.features-box .features-content {
 	    padding: 20px 15px;
@@ -213,7 +213,7 @@
 	    min-height: 150px;
 	}
 	/* .quick-contact {
-		
+
 	} */
 	.our-post {
 		border-bottom: none;
@@ -272,7 +272,7 @@
 		text-align: center;
 	}
 	.about-img-col {
-		
+
 	}
 	.gallery-two-area .filtr-item {
 		width: 33.33%;
@@ -299,7 +299,7 @@
 	.blog-sidebar-area-two .sidebar-search  {
 		margin-top: 0;
 	}
-	
+
 }
 @media only screen and (max-width:767px) {
 	.my-nav-row {
@@ -331,7 +331,7 @@
 		background-color: #999999;
 	}
 	.header-navbar .navbar-default .navbar-nav>li>a {
-		margin-left: 0;		
+		margin-left: 0;
 		padding: 8px 0;
 	}
 	.navbar-nav {
@@ -459,12 +459,12 @@
 	.header-navbar .navbar-nav .dropdown-menu>li>a {
 		padding: 6px 10px;
 	}
-	.navbar-default .navbar-nav .open .dropdown-menu>li>a:focus, 
+	.navbar-default .navbar-nav .open .dropdown-menu>li>a:focus,
 	.navbar-default .navbar-nav .open .dropdown-menu>li>a:hover {
 		color: #ffffff;
 	}
-	.header-navbar .navbar-default .navbar-nav>.open>a, 
-	.header-navbar .navbar-default .navbar-nav>.open>a:focus, 
+	.header-navbar .navbar-default .navbar-nav>.open>a,
+	.header-navbar .navbar-default .navbar-nav>.open>a:focus,
 	.header-navbar .navbar-default .navbar-nav>.open>a:hover {
 		color: #ffffff;
 	}
@@ -518,7 +518,7 @@
 
 
 
-	
+
 }
 
 
@@ -562,7 +562,7 @@
 	}
 	.about-image-title h3 {
 		padding-left: 20px;
-		padding-bottom: 10px;	
+		padding-bottom: 10px;
 	}
 	.welcome-col h1 {
 		font-size: 36px;
@@ -604,7 +604,7 @@
 	.slider-ontext {
 		padding: 50px 0;
 	}
-	
+
 }
 
 @media only screen and (max-width:480px) {
@@ -639,7 +639,7 @@
 	.carousel-caption {
 	    padding: 0 50px;
 	    top: 45%;
-	}	
+	}
 	.carousel-caption h3 {
 		font-size: 24px;
 	}
@@ -688,7 +688,7 @@
 
 @media only screen and (max-width:420px) {
 	.slider-col img {
-		
+
 	}
 	.slider-ontext h1, .slider-ontext h1 span {
 		font-size: 30px;
@@ -697,10 +697,10 @@
 		font-size: 18px;
 	}
 	.slider-ontext {
-		
+
 	}
 	.slider-content {
-		
+
 	}
 	.header-navbar .navbar-brand img {
 		width: 160px;

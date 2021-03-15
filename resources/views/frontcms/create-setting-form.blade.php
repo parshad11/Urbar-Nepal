@@ -211,16 +211,16 @@
     @endcomponent
 
     {{-- google Map link --}}
-    {{-- @component('components.widget', ['class' => 'box-primary'])
+     @component('components.widget', ['class' => 'box-primary'])
         <div class="row form-group">
             <div class="col-md-2">
                 <label class="control-label">{{__('Google Map Link :')}} </label><br>
             </div>
             <div class="col-md-10" style="padding-left: 0;">
-                    <input type="url" name="google_map_link" class="form-control" placeholder="Google Map Url...?" required>
+                    <input type="url" name="google_map_link" class="form-control" placeholder="Google Map Url...?">
             </div>
         </div>
-    @endcomponent --}}
+    @endcomponent
     {{-- call section image --}}
     @component('components.widget', ['class' => 'box-primary'])
         <div class="row form-group">

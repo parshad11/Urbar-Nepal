@@ -19,6 +19,7 @@ use Illuminate\Support\Str;
 
 use function GuzzleHttp\json_decode;
 use function GuzzleHttp\json_encode;
+use function GuzzleHttp\Promise\all;
 
 class CmsController extends Controller
 {
@@ -352,7 +353,7 @@ class CmsController extends Controller
 
     public function viewTeam()
     {
-        $teams = $this->team->get();
+        $teams = $this->team->orderBy('id', 'desc')->paginate(4);
         return view('frontcms.team.index')->with('teams', $teams);
     }
 
@@ -368,7 +369,9 @@ class CmsController extends Controller
         $this->team->post = $request->post;
         $this->team->social_links = json_encode(array_combine($request->social_name, $request->social_link));
         $this->team->added_by = $request->session()->get('user.id');
-        $this->team->member_image = $this->util->uploadHomeFile($request->member_image[0], config('constants.product_img_path') . '/home/team');
+        if ($request->hasFile('member_image')) {
+            $this->team->member_image = $this->util->uploadHomeFile($request->member_image[0], config('constants.product_img_path') . '/home/team');
+        }
         $status = $this->team->save();
         if ($status) {
             $output = [
@@ -387,15 +390,23 @@ class CmsController extends Controller
 
     public function updateTeam(Request $request, $id)
     {
-        // dd($request->all());
         $this->team = $this->team->find($id);
+        $member_image = $this->team->member_image;
         $this->team->name = $request->name;
         $this->team->post = $request->post;
         $this->team->social_links = json_encode(array_combine($request->social_name, $request->social_link));
         $this->team->status = $request->status;
         $this->team->member_image = $request->previous_member_image;
+        if (!isset($request->previous_member_image)) {
+            if (!empty($member_image) && file_exists(public_path() . '/uploads/img/home/team/' . $member_image)) {
+                unlink(public_path() . '/uploads/img/home/team/' . $member_image);
+            }
+        }
         if ($request->hasFile('member_image')) {
             $this->team->member_image = $this->util->uploadHomeFile($request->member_image[0], config('constants.product_img_path') . '/home/team');
+            if (!empty($member_image) && file_exists(public_path() . '/uploads/img/home/team/' . $member_image)) {
+                unlink(public_path() . '/uploads/img/home/team/' . $member_image);
+            }
         }
         $status = $this->team->save();
         if ($status) {
@@ -403,13 +414,37 @@ class CmsController extends Controller
                 'success' => 1,
                 'msg' => 'Team Member Updated Successfuly'
             ];
-            return redirect()->route('cms_team_edit', $this->team->id)->with('status', $output);
+            return redirect()->route('cms_team')->with('status', $output);
+        }
+    }
+
+    public function deleteTeam($id)
+    {
+        $team = $this->team->find($id);
+        $member_image = $team->member_image;
+        if (!$team) {
+            $output = [
+                'error' => 1,
+                'msg' => 'Team Member does not Found'
+            ];
+            return redirect()->route('cms_service')->with('status', $output);
+        }
+        $status = $team->delete();
+        if ($status) {
+            if (!empty($member_image) && file_exists(public_path() . '/uploads/img/home/team/' . $member_image)) {
+                unlink(public_path() . '/uploads/img/home/team/' . $member_image);
+            }
+            $output = [
+                'success' => 1,
+                'msg' => 'Team Member deleted Successfully'
+            ];
+            return redirect()->route('cms_team')->with('status', $output);
         }
     }
 
     public function viewServices()
     {
-        $services = $this->service->get();
+        $services = $this->service->orderBy('id', 'desc')->paginate(4);
         return view('frontcms.service.index')->with('services', $services);
     }
 
@@ -422,7 +457,9 @@ class CmsController extends Controller
     {
         $data['title'] = $request->title;
         $data['summary'] = $request->summary;
-        $data['service_image'] = $this->util->uploadHomeFile($request->service_image[0], config('constants.product_img_path') . '/home/services');
+        if ($request->hasFile('service_image')) {
+            $data['service_image'] = $this->util->uploadHomeFile($request->service_image[0], config('constants.product_img_path') . '/home/services');
+        }
         $data['added_by'] = $request->session()->get('user.id');
         $this->service->fill($data);
         $status = $this->service->save();
@@ -431,7 +468,7 @@ class CmsController extends Controller
                 'success' => 1,
                 'msg' => 'Service Added Successfuly'
             ];
-            return redirect()->route('cms_service_form')->with('status', $output);
+            return redirect()->route('cms_service')->with('status', $output);
         }
     }
 
@@ -444,13 +481,21 @@ class CmsController extends Controller
     public function updateServices(Request $request, $id)
     {
         $this->service = $this->service->where('id', $id)->first();
+        $service_image = $this->service->service_image;
         $this->service->title = $request->title;
         $this->service->summary = $request->summary;
         $this->service->status = $request->status;
         $this->service->service_image = $request->previous_service_image;
-        // dd($this->service);
+        if (!isset($request->previous_service_image)) {
+            if (!empty($service_image) && file_exists(public_path() . '/uploads/img/home/services/' . $service_image)) {
+                unlink(public_path() . '/uploads/img/home/services/' . $service_image);
+            }
+        }
         if ($request->hasFile('service_image')) {
             $this->service->service_image = $this->util->uploadHomeFile($request->service_image[0], config('constants.product_img_path') . '/home/services');
+            if (!empty($service_image) && file_exists(public_path() . '/uploads/img/home/services/' . $service_image)) {
+                unlink(public_path() . '/uploads/img/home/services/' . $service_image);
+            }
         }
         $status = $this->service->save();
         if ($status) {
@@ -462,9 +507,33 @@ class CmsController extends Controller
         }
     }
 
+    public function deleteServices($id)
+    {
+        $service = $this->service->find($id);
+        $service_image = $service->service_image;
+        if (!$service) {
+            $output = [
+                'error' => 1,
+                'msg' => 'Service does not Found'
+            ];
+            return redirect()->route('cms_service')->with('status', $output);
+        }
+        $status = $service->delete();
+        if ($status) {
+            if (!empty($service_image) && file_exists(public_path() . '/uploads/img/home/services/' . $service_image)) {
+                unlink(public_path() . '/uploads/img/home/services/' . $service_image);
+            }
+            $output = [
+                'success' => 1,
+                'msg' => 'Service deleted Successfully'
+            ];
+            return redirect()->route('cms_service')->with('status', $output);
+        }
+    }
+
     public function viewBlog()
     {
-        $blogs = Blog::with('category')->orderBy('id', "desc")->paginate();
+        $blogs = Blog::with('category')->orderBy('id', "desc")->paginate(4);
         return view('frontcms.blog.index')->with('blogs', $blogs);
     }
 
@@ -508,21 +577,53 @@ class CmsController extends Controller
     public function updateBlog(Request $request, $id)
     {
         $blog = Blog::findOrFail($id);
-        // dd($blog);
+        $blog_image = $blog->image;
         $blog->title = $request->title;
         $blog->category_id = $request->category_id;
         $blog->summary = $request->summary;
         $blog->description = $request->description;
         $blog->status = $request->status;
         $blog->image = $request->previous_blog_image;
+        if (!isset($request->previous_blog_image)) {
+            if (!empty($blog_image) && file_exists(public_path() . '/uploads/img/home/blogs/' . $blog_image)) {
+                unlink(public_path() . '/uploads/img/home/blogs/' . $blog_image);
+            }
+        }
         if ($request->hasFile('blog_image')) {
             $blog->image = $this->util->uploadHomeFile($request->blog_image[0], config('constants.product_img_path') . '/home/blogs');
+            if (!empty($blog_image) && file_exists(public_path() . '/uploads/img/home/blogs/' . $blog_image)) {
+                unlink(public_path() . '/uploads/img/home/blogs/' . $blog_image);
+            }
         }
         $status = $blog->save();
         if ($status) {
             $output = [
                 'success' => 1,
-                'msg' => 'Blog Updated Successfuly'
+                'msg' => 'Blog Updated Successfully'
+            ];
+            return redirect()->route('cms_blog')->with('status', $output);
+        }
+    }
+
+    public function deleteBlog($id)
+    {
+        $blog = Blog::find($id);
+        $blog_image = $blog->image;
+        if (!$blog) {
+            $output = [
+                'error' => 1,
+                'msg' => 'Blog does not Found'
+            ];
+            return redirect()->route('cms_blog')->with('status', $output);
+        }
+        $status = $blog->delete();
+        if ($status) {
+            if (!empty($blog_image) && file_exists(public_path() . '/uploads/img/home/blogs/' . $blog_image)) {
+                unlink(public_path() . '/uploads/img/home/blogs/' . $blog_image);
+            }
+            $output = [
+                'success' => 1,
+                'msg' => 'Blog deleted Successfully'
             ];
             return redirect()->route('cms_blog')->with('status', $output);
         }
@@ -530,7 +631,7 @@ class CmsController extends Controller
 
     public function viewTestimonial()
     {
-        $testimonials = Testimonial::get();
+        $testimonials = Testimonial::orderBy('id', "desc")->paginate(4);
         // dd($testimonials);
         return view('frontcms.testimonial.index')->with('testimonials', $testimonials);
     }
@@ -546,7 +647,9 @@ class CmsController extends Controller
         $data['name'] = $request->name;
         $data['post'] = $request->post;
         $data['comment'] = $request->comment;
-        $data['image'] = $this->util->uploadHomeFile($request->testimonial_image[0], config('constants.product_img_path') . '/home/testimonials');
+        if ($request->hasFile('testimonial_image')) {
+            $data['image'] = $this->util->uploadHomeFile($request->testimonial_image[0], config('constants.product_img_path') . '/home/testimonials');
+        }
         $data['added_by'] = $request->session()->get('user.id');
         $testimonial->fill($data);
         $status = $testimonial->save();
@@ -555,7 +658,7 @@ class CmsController extends Controller
                 'success' => 1,
                 'msg' => 'Testimonial Added Successfuly'
             ];
-            return redirect()->route('cms_testimonial_form')->with('status', $output);
+            return redirect()->route('cms_testimonial')->with('status', $output);
         }
     }
 
@@ -570,21 +673,52 @@ class CmsController extends Controller
     {
         $testimonial = new Testimonial();
         $testimonial = $testimonial->find($id);
+        $testimonial_image = $testimonial->image;
         $testimonial->name = $request->name;
         $testimonial->post = $request->post;
         $testimonial->comment = $request->comment;
         $testimonial->status = $request->status;
         $testimonial->image = $request->previous_image;
-        // dd($this->service);
+        if (!isset($request->previous_image)) {
+            if (!empty($testimonial_image) && file_exists(public_path() . '/uploads/img/home/testimonials/' . $testimonial_image)) {
+                unlink(public_path() . '/uploads/img/home/testimonials/' . $testimonial_image);
+            }
+        }
         if ($request->hasFile('testimonial_image')) {
             $testimonial->image = $this->util->uploadHomeFile($request->testimonial_image[0], config('constants.product_img_path') . '/home/testimonials');
+            if (!empty($testimonial_image) && file_exists(public_path() . '/uploads/img/home/testimonials/' . $testimonial_image)) {
+                unlink(public_path() . '/uploads/img/home/testimonials/' . $testimonial_image);
+            }
         }
-        // dd($testimonial);
         $status = $testimonial->save();
         if ($status) {
             $output = [
                 'success' => 1,
                 'msg' => 'Testimonial Updated Successfuly'
+            ];
+            return redirect()->route('cms_testimonial')->with('status', $output);
+        }
+    }
+
+    public function deleteTestimonial($id)
+    {
+        $testimonial = Testimonial::find($id);
+        $testimonial_image = $testimonial->image;
+        if (!$testimonial) {
+            $output = [
+                'error' => 1,
+                'msg' => 'Testimonial does not Exist'
+            ];
+            return redirect()->route('cms_testimonial')->with('status', $output);
+        }
+        $status = $testimonial->delete();
+        if ($status) {
+            if (!empty($testimonial_image) && file_exists(public_path() . '/uploads/img/home/testimonials/' . $testimonial_image)) {
+                unlink(public_path() . '/uploads/img/home/testimonials/' . $testimonial_image);
+            }
+            $output = [
+                'success' => 1,
+                'msg' => 'Testimonial deleted Successfully'
             ];
             return redirect()->route('cms_testimonial')->with('status', $output);
         }
@@ -613,14 +747,20 @@ class CmsController extends Controller
         }
 
     }
-    public function viewPages(){
+
+    public function viewPages()
+    {
         $pages = PageSetting::paginate();
         return view('frontcms.pages.index')->with('pages', $pages);
     }
-    public function createPages(){
+
+    public function createPages()
+    {
         return view('frontcms.pages.form');
     }
-    public function storePages(Request $request){
+
+    public function storePages(Request $request)
+    {
         $page = new PageSetting();
         $page->title = $request->title;
         $page->slug = Str::slug($request->title);
@@ -635,11 +775,15 @@ class CmsController extends Controller
             return redirect()->route('cms_pages')->with('status', $output);
         }
     }
-    public function editPages($id){
+
+    public function editPages($id)
+    {
         $page_setting = PageSetting::findOrFail($id);
         return view('frontcms.pages.edit')->with('page_setting', $page_setting);
     }
-    public function updatePages(Request $request, $id){
+
+    public function updatePages(Request $request, $id)
+    {
         $page_setting = PageSetting::findOrFail($id);
         $page_setting->title = $request->title;
         $page_setting->body = $request->body;
@@ -653,7 +797,9 @@ class CmsController extends Controller
             return redirect()->route('cms_pages')->with('status', $output);
         }
     }
-    public function deletePages($id){
+
+    public function deletePages($id)
+    {
         $page_setting = PageSetting::find($id);
         if (!$page_setting) {
             $output = [
@@ -671,14 +817,20 @@ class CmsController extends Controller
             return redirect()->route('cms_pages')->with('status', $output);
         }
     }
-    public function viewCareer(){
+
+    public function viewCareer()
+    {
         $careers = Career::paginate();
         return view('frontcms.careers.index')->with('careers', $careers);
     }
-    public function createCareer(){
+
+    public function createCareer()
+    {
         return view('frontcms.careers.form');
     }
-    public function storeCareer(Request $request){
+
+    public function storeCareer(Request $request)
+    {
         $career = new Career();
         $career->job_title = $request->job_title;
         $career->job_description = $request->job_description;
@@ -693,11 +845,15 @@ class CmsController extends Controller
             return redirect()->route('cms_career')->with('status', $output);
         }
     }
-    public function editCareer($id){
+
+    public function editCareer($id)
+    {
         $career_setting = Career::findOrFail($id);
         return view('frontcms.careers.edit')->with('career_setting', $career_setting);
     }
-    public function updateCareer(Request $request, $id){
+
+    public function updateCareer(Request $request, $id)
+    {
         $career_setting = Career::findOrFail($id);
         $career_setting->job_title = $request->job_title;
         $career_setting->job_description = $request->job_description;
@@ -712,16 +868,18 @@ class CmsController extends Controller
             return redirect()->route('cms_career')->with('status', $output);
         }
     }
-    public function deleteCareer($id){
+
+    public function deleteCareer($id)
+    {
         $career_setting = Career::findOrFail($id);
-        if (!$career_setting ) {
+        if (!$career_setting) {
             $output = [
                 'error' => 1,
                 'msg' => 'Career does not Found'
             ];
             return redirect()->route('cms_career')->with('status', $output);
         }
-        $status = $career_setting ->delete();
+        $status = $career_setting->delete();
         if ($status) {
             $output = [
                 'success' => 1,
