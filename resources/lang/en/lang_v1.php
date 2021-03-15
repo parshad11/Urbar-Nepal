@@ -1208,6 +1208,9 @@ return [
     'task_received'=>'Task Received',
     'delivery_received'=>'Delivery Received',
     'new_staff'=>'New Staff',
+    'new_customer'=>'New Customer',
+    'new_supplier'=>'New Supplier',
+    'new_record'=>'New Record',
     'staff_notifications'=>'Staff Notification',
 
 ];

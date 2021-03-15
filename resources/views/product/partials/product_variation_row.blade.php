@@ -23,12 +23,14 @@
             <tr>
                 <th>@lang('product.sku') @show_tooltip(__('tooltip.sub_sku'))</th>
                 <th>@lang('product.value')</th>
+                <th>@lang('product.market_price')</th>
                 <th class="{{$class}}">@lang('product.default_purchase_price')
                     <br/>
                     <span class="pull-left"><small><i>@lang('product.exc_of_tax')</i></small></span>
 
                     <span class="pull-right"><small><i>@lang('product.inc_of_tax')</i></small></span>
                 </th>
+                
                 <th class="{{$class}}">@lang('product.profit_percent')</th>
                 <th class="{{$class}}">@lang('product.default_selling_price')
                 <br/>
@@ -47,6 +49,9 @@
                 </td>
                 <td>
                     {!! Form::text('product_variation[' . $row_index .'][variations][0][value]', null, ['class' => 'form-control input-sm variation_value_name', 'required']); !!}
+                </td>
+                <td>
+                    {!! Form::text('product_variation[' . $row_index .'][variations][0][market_price]', null, ['class' => 'form-control input-sm variation_market_price', 'required']); !!}
                 </td>
                 <td class="{{$class}}">
                     <div class="width-50 f-left">

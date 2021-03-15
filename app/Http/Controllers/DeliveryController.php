@@ -6,6 +6,7 @@ use App\BusinessLocation;
 use App\Contact;
 use App\Delivery;
 use App\DeliveryPerson;
+use App\Notifications\DeliveryAssignedNotification;
 use App\Notifications\DeliveryNotification;
 use App\Transaction;
 use App\User;
@@ -32,9 +33,9 @@ class DeliveryController extends Controller
         ];
 
         $this->status_colors = [
-            'received' => 'bg-purple',
+            'received' => 'bg-yellow',
             'packed' => 'bg-blue',
-            'shipped' => 'bg-yellow',
+            'shipped' => 'bg-purple',
             'delivered' => 'bg-green',
             'cancelled' => 'bg-red',
         ];
@@ -154,31 +155,6 @@ class DeliveryController extends Controller
 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create($transactionId)
-    {
-        if (!auth()->user()->can('assign.delivery')) {
-            abort(403, 'Unauthorized action.');
-        }
-
-        $business_id = request()->session()->get('user.business_id');
-        $deliveryStatuses  = $this->transactionUtil->deliveryStatuses();
-        $transaction=Transaction::where('business_id', $business_id)
-                                    ->where('id', $transactionId)
-                                    ->with(
-                                        'contact',
-                                        'location'
-                                    )
-                                    ->first();
-         return view('delivery.assign')
-             ->with(compact('transaction', 'deliveryStatuses'));
-        
-    }
-
 
     public function listDeliveryTransaction(Request $request)
     {
@@ -256,8 +232,32 @@ class DeliveryController extends Controller
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-left" role="menu">';
 
-                    if (auth()->user()->can("assign.delivery")) {
+                    if (auth()->user()->can("assign.delivery") && $row->assign_delivery_status==0) {
                         $html .= '<li><a href="' . action('DeliveryController@create', [$row->id]) . '"><i class="fas fa-edit"></i>' . __("messages.assign_delivery") . '</a></li>';
+                    }
+                    if ((auth()->user()->can("purchase.view")||auth()->user()->can('view_own_purchase')) && $row->type =='purchase') {
+                        $html .= '<li><a href="#" data-href="' . action('PurchaseController@show', [$row->id]) . '" class="btn-modal" data-container=".view_modal"><i class="fas fa-eye" aria-hidden="true"></i>' . __("messages.view") . '</a></li>';
+                    }
+                    if ((auth()->user()->can("sell.view") || auth()->user()->can("direct_sell.access") || auth()->user()->can("view_own_sell_only")) && $row->type =='sell') {
+                        $html .= '<li><a href="#" data-href="' . action("SellController@show", [$row->id]) . '" class="btn-modal" data-container=".view_modal"><i class="fas fa-eye" aria-hidden="true"></i> ' . __("messages.view") . '</a></li>';
+                    }
+                    if (auth()->user()->can("purchase.update") && $row->type =='purchase') {
+                        $html .= '<li><a href="' . action('PurchaseController@edit', [$row->id]) . '"><i class="fas fa-edit"></i>' . __("messages.edit") . '</a></li>';
+                    }
+         
+                    if (auth()->user()->can("direct_sell.access") && $row->type =='sell' && $row->is_direct_sale == 1) {
+                        $html .= '<li><a target="_blank" href="' . action('SellController@edit', [$row->id]) . '"><i class="fas fa-edit"></i> ' . __("messages.edit") . '</a></li>';
+                    }
+
+                    if (auth()->user()->can("sell.update") && $row->type =='sell' && $row->is_direct_sale == 0) {
+                        $html .= '<li><a target="_blank" href="' . action('SellPosController@edit', [$row->id]) . '"><i class="fas fa-edit"></i> ' . __("messages.edit") . '</a></li>';
+                    }
+                    
+                    if ((auth()->user()->can("direct_sell.delete") || auth()->user()->can("sell.delete")) && $row->type =='sell') {
+                        $html .= '<li><a href="' . action('SellPosController@destroy', [$row->id]) . '" class="delete-sale"><i class="fas fa-trash"></i> ' . __("messages.delete") . '</a></li>';
+                    }
+                    if (auth()->user()->can("purchase.delete") && $row->type =='purchase' ) {
+                        $html .= '<li><a href="' . action('PurchaseController@destroy', [$row->id]) . '" class="delete-purchase"><i class="fas fa-trash"></i>' . __("messages.delete") . '</a></li>';
                     }
 
                     $html .= '</ul></div>';
@@ -280,7 +280,7 @@ class DeliveryController extends Controller
                 })
                 ->setRowAttr([
                     'data-href' => function ($row) {
-                        if ((auth()->user()->can("sell.view") || auth()->user()->can("view_own_sell_only")) && $row->type == 'sell') {
+                        if ((auth()->user()->can("sell.view") || auth()->user()->can("direct_sell.access") || auth()->user()->can("view_own_sell_only")) && $row->type == 'sell') {
                             return action('SellController@show', [$row->id]);
                         } elseif ((auth()->user()->can("purchase.view") || auth()->user()->can("view_own_purchase_only")) && $row->type == 'purchase') {
                             return action('PurchaseController@show', [$row->id]);
@@ -403,6 +403,32 @@ class DeliveryController extends Controller
 
 
     /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create($transactionId)
+    {
+        if (!auth()->user()->can('assign.delivery')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $business_id = request()->session()->get('user.business_id');
+        $deliveryStatuses  = $this->transactionUtil->deliveryStatuses();
+        $transaction=Transaction::where('business_id', $business_id)
+                                    ->where('id', $transactionId)
+                                    ->with(
+                                        'contact',
+                                        'location'
+                                    )
+                                    ->first();
+         return view('delivery.assign')
+             ->with(compact('transaction', 'deliveryStatuses'));
+        
+    }
+
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
@@ -467,10 +493,9 @@ class DeliveryController extends Controller
 
             }
             DB::commit();
-            $delivery = DeliveryPerson::find($request->delivery_person_id);
-            $delivery_person=User::find($delivery->user_id);
-            $user = auth()->user()->first_name . ' ' . auth()->user()->last_name;
-            $delivery_person->notify(new DeliveryNotification($user));
+            $delivery_person = DeliveryPerson::find($request->delivery_person_id);
+            $user=User::find($delivery_person->user_id);
+            $user->notify(new DeliveryAssignedNotification($delivery->record_staff->user_name,$delivery->id));
             $output = ['success' => 1,
                 'msg' => __('delivery.delivery_assign_success')
             ];

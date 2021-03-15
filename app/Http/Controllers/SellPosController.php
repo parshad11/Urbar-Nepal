@@ -426,7 +426,7 @@ class SellPosController extends Controller
                 if($input['status']=='final'&& isset($input['assign_delivery'])){
                     $assign_delivery=1;
                 }
-            
+                
                 $transaction = $this->transactionUtil->createSellTransaction($business_id, $input, $invoice_total, $user_id,$assign_delivery);
                
 

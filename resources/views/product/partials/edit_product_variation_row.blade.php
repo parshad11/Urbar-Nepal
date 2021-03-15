@@ -35,6 +35,7 @@
             <tr>
                 <th>@lang('product.sku') @show_tooltip(__('tooltip.sub_sku'))</th>
                 <th>@lang('product.value')</th>
+                <th>@lang('product.market_price')</th>
                 <th class="{{$class}}">@lang('product.default_purchase_price') 
                     <br/>
                     <span class="pull-left"><small><i>@lang('product.exc_of_tax')</i></small></span>
@@ -70,6 +71,9 @@
                         {!! Form::text($array_name . '[' . $row_index .'][' . $variation_array_name . '][' . $variation_row_index . '][value]', $variation->name, ['class' => 'form-control input-sm variation_value_name', 'required', 'readonly']); !!}
 
                         {!! Form::hidden($array_name . '[' . $row_index .'][' . $variation_array_name . '][' . $variation_row_index . '][variation_value_id]', $variation->variation_value_id); !!}
+                    </td>
+                    <td>
+                    {!! Form::text($array_name . '[' . $row_index .'][' . $variation_array_name . '][' . $variation_row_index . '][market_price]', @num_format($variation->market_price), ['class' => 'form-control input-sm variable_market_price',]); !!}
                     </td>
                     <td class="{{$class}}">
                         <div class="col-sm-6">

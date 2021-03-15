@@ -119,10 +119,10 @@ class PurchaseController extends Controller
                                 </span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-left" role="menu">';
-                    if (auth()->user()->can("purchase.view")) {
+                    if (auth()->user()->can("purchase.view")||auth()->user()->can('view_own_purchase')) {
                         $html .= '<li><a href="#" data-href="' . action('PurchaseController@show', [$row->id]) . '" class="btn-modal" data-container=".view_modal"><i class="fas fa-eye" aria-hidden="true"></i>' . __("messages.view") . '</a></li>';
                     }
-                    if (auth()->user()->can("purchase.view")) {
+                    if (auth()->user()->can("purchase.view")||auth()->user()->can('view_own_purchase')) {
                         $html .= '<li><a href="#" class="print-invoice" data-href="' . action('PurchaseController@printInvoice', [$row->id]) . '"><i class="fas fa-print" aria-hidden="true"></i>'. __("messages.print") .'</a></li>';
                     }
                     if (auth()->user()->can("purchase.update")) {
@@ -134,7 +134,7 @@ class PurchaseController extends Controller
 
                     $html .= '<li><a href="' . action('LabelsController@show') . '?purchase_id=' . $row->id . '" data-toggle="tooltip" title="' . __('lang_v1.label_help') . '"><i class="fas fa-barcode"></i>' . __('barcode.labels') . '</a></li>';
 
-                    if (auth()->user()->can("purchase.view") && !empty($row->document)) {
+                    if (auth()->user()->can("purchase.view")|| auth()->user()->can('view_own_purchase') && !empty($row->document)) {
                         $document_name = !empty(explode("_", $row->document, 2)[1]) ? explode("_", $row->document, 2)[1] : $row->document ;
                         $html .= '<li><a href="' . url('uploads/documents/' . $row->document) .'" download="' . $document_name . '"><i class="fas fa-download" aria-hidden="true"></i>' . __("purchase.download_document") . '</a></li>';
                         if (isFileImage($document_name)) {

@@ -114,7 +114,7 @@ class SellController extends Controller
             }
 
             //Add condition for location,used in sales representative expense report
-            if (request()->has('location_id')) {
+            if (!empty(request()->location_id)) {
                 $location_id = request()->get('location_id');
                 if (!empty($location_id)) {
                     $sells->where('transactions.location_id', $location_id);
@@ -197,6 +197,10 @@ class SellController extends Controller
             if ($only_shipments && auth()->user()->can('access_shipping')) {
                 $sells->whereNotNull('transactions.shipping_status');
             }
+
+            if (!auth()->user()->can('sell.view') && auth()->user()->can('view_own_sell')) {
+                $sells->where('transactions.created_by', request()->session()->get('user.id'));
+            }
             
             $sells->groupBy('transactions.id');
 
@@ -235,6 +239,7 @@ class SellController extends Controller
             if ($this->businessUtil->isModuleEnabled('subscription')) {
                 $sells->addSelect('transactions.is_recurring', 'transactions.recur_parent_id');
             }
+
 
             $datatable = Datatables::of($sells)
                 ->addColumn(
@@ -599,7 +604,7 @@ class SellController extends Controller
         $business_details = $this->businessUtil->getDetails($business_id);
         $pos_settings = empty($business_details->pos_settings) ? $this->businessUtil->defaultPosSettings() : json_decode($business_details->pos_settings, true);
         $shipping_statuses = $this->transactionUtil->shipping_statuses();
-        $shipping_status_colors = $this->shipping_status_colors;
+        $delivery_status_colors = $this->delivery_status_colors;
         $common_settings = session()->get('business.common_settings');
         $is_warranty_enabled = !empty($common_settings['enable_product_warranty']) ? true : false;
 
@@ -611,7 +616,7 @@ class SellController extends Controller
                 'order_taxes',
                 'pos_settings',
                 'shipping_statuses',
-                'shipping_status_colors',
+                'delivery_status_colors',
                 'is_warranty_enabled'
             ));
     }

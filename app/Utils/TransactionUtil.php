@@ -4295,6 +4295,7 @@ class TransactionUtil extends Util
                     'transactions.id',
                     'transactions.transaction_date',
                     'transactions.type',
+                    'transactions.is_direct_sale',
                     'contacts.name',
                     'contacts.contact_id',
                     'transactions.assign_delivery_status',

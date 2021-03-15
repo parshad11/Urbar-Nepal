@@ -1203,7 +1203,7 @@ class Util
         foreach ($notifications as $notification) {
             $data = $notification->data;
             if (in_array($notification->type, [\App\Notifications\RecurringInvoiceNotification::class, \App\Notifications\RecurringExpenseNotification::class
-            ,\App\Notifications\DeliveryNotification::class,])) {
+            ,\App\Notifications\DeliveryAssignedNotification::class,\App\Notifications\TaskAssignedNotification::class, \App\Notifications\StaffAddedNotification::class])) {
                 $msg = '';
                 $icon_class = '';
                 $link = '';
@@ -1234,17 +1234,24 @@ class Util
                     $link = action('ExpenseController@index');
                 }
                 else if($notification->type ==
-                    \App\Notifications\DeliveryNotification::class
+                    \App\Notifications\DeliveryAssignedNotification::class
                 ){
                     $msg =$data['message'];
                     $icon_class = "fa fa-tasks bg-green";
-                    $link = action('DeliveryController@index');
+                    $link = action('DeliveryController@show',$data['delivery_id']);
+                }
+                else if($notification->type ==
+                \App\Notifications\TaskAssignedNotification::class
+                ){
+                $msg =$data['message'];
+                $icon_class = "fa fa-tasks bg-green";
+                $link = action('TaskController@show',$data['task_id']);
                 }
                 else if($notification->type ==
                 \App\Notifications\StaffAddedNotification::class
                 ){
                     $msg =$data['message'];
-                    $icon_class = "fas fa-recycle bg-green";
+                    $icon_class = "fas fa-user bg-green";
                 }
                 $notifications_data[] = [
                     'msg' => $msg,
