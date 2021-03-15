@@ -40,7 +40,7 @@
                                     </ul>
                                     <h3 class="post-title"><a href="{{ route('blog_single', $blog->slug) }}">{{$blog->title}}</a></h3>
                                     <p class="post-description">
-                                        {{substr($blog->description, 0, 100)}}...
+                                        {!! substr($blog->description, 0, 100) !!}
                                     </p>
                                     <a class="btn btn-default theme-btn btn-hover" href="{{ route('blog_single', $blog->slug) }}">Read More</a>
                                 </div>

@@ -12,7 +12,7 @@
     <title>@yield('title')</title>
 
     <!-- Favicon -->
-    <link href="{{ asset('cms/images/favicon.png') }}" rel="shortcut icon" type="image/png">
+    <link href="{{ asset('cms/images/fresh-favicon.png') }}" rel="shortcut icon" type="image/png">
 
     <!-- Bootstrap CSS -->
     <link href="{{ asset('cms/css/bootstrap.min.css') }}" rel="stylesheet">
