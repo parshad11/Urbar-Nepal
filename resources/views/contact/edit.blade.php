@@ -51,17 +51,7 @@
               </div>
           </div>
         </div>
-        <div class="col-md-4 customer_fields">
-          <div class="form-group">
-              {!! Form::label('customer_group_id', __('lang_v1.customer_group') . ':') !!}
-              <div class="input-group">
-                  <span class="input-group-addon">
-                      <i class="fa fa-users"></i>
-                  </span>
-                  {!! Form::select('customer_group_id', $customer_groups, $contact->customer_group_id, ['class' => 'form-control']); !!}
-              </div>
-          </div>
-        </div>
+      
         <div class="col-md-4">
           <div class="form-group">
               {!! Form::label('supplier_business_name', __('business.business_name') . ':') !!}
@@ -99,42 +89,32 @@
                     {!! Form::text('last_name', $contact->last_name, ['class' => 'form-control', 'placeholder' => __( 'business.last_name' ) ]); !!}
                 </div>
             </div>
-            <div class="clearfix"></div>
 
-      <div class="col-md-3">
-        <div class="form-group">
-            {!! Form::label('mobile', __('contact.mobile') . ':*') !!}
-            <div class="input-group">
-                <span class="input-group-addon">
-                    <i class="fa fa-mobile"></i>
-                </span>
-                {!! Form::text('mobile', $contact->mobile, ['class' => 'form-control', 'required', 'placeholder' => __('contact.mobile')]); !!}
+         <div class="clearfix"></div>
+         <div class="col-md-4 customer_fields">
+            <div class="form-group">
+            {!! Form::label('password', __('business.password') . ':*') !!}
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="fa fa-lock"></i>
+                    </span>
+                    {!! Form::password('password',['class' => 'form-control', 'required', 'placeholder' => __( 'business.password' ) ]); !!}
+                </div>
             </div>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="form-group">
-            {!! Form::label('alternate_number', __('contact.alternate_contact_number') . ':') !!}
-            <div class="input-group">
-                <span class="input-group-addon">
-                    <i class="fa fa-phone"></i>
-                </span>
-                {!! Form::text('alternate_number', $contact->alternate_number, ['class' => 'form-control', 'placeholder' => __('contact.alternate_contact_number')]); !!}
+         </div>
+         <div class="col-md-4 customer_fields">
+            <div class="form-group">
+            {!! Form::label('confirm_password', __( 'business.confirm_password' ) . ':*') !!}
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="fa fa-lock"></i>
+                    </span>
+                    {!! Form::password('confirm_password', ['class' => 'form-control', 'required', 'placeholder' => __( 'business.confirm_password' ) ]); !!}
+                </div>
             </div>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="form-group">
-            {!! Form::label('landline', __('contact.landline') . ':') !!}
-            <div class="input-group">
-                <span class="input-group-addon">
-                    <i class="fa fa-phone"></i>
-                </span>
-                {!! Form::text('landline', $contact->landline, ['class' => 'form-control', 'placeholder' => __('contact.landline')]); !!}
-            </div>
-        </div>
-      </div>
-      <div class="col-md-3">
+         </div>
+
+         <div class="col-md-4">
             <div class="form-group">
                 {!! Form::label('email', __('business.email') . ':') !!}
                 <div class="input-group">
@@ -144,8 +124,43 @@
                     {!! Form::email('email', $contact->email, ['class' => 'form-control','placeholder' => __('business.email')]); !!}
                 </div>
             </div>
-        </div>
+         </div>
+         <div class="clearfix"></div>
 
+        <div class="col-md-4">
+          <div class="form-group">
+              {!! Form::label('mobile', __('contact.mobile') . ':*') !!}
+              <div class="input-group">
+                  <span class="input-group-addon">
+                      <i class="fa fa-mobile"></i>
+                  </span>
+                  {!! Form::text('mobile', $contact->mobile, ['class' => 'form-control', 'required', 'placeholder' => __('contact.mobile')]); !!}
+              </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+              {!! Form::label('alternate_number', __('contact.alternate_contact_number') . ':') !!}
+              <div class="input-group">
+                  <span class="input-group-addon">
+                      <i class="fa fa-phone"></i>
+                  </span>
+                  {!! Form::text('alternate_number', $contact->alternate_number, ['class' => 'form-control', 'placeholder' => __('contact.alternate_contact_number')]); !!}
+              </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+              {!! Form::label('landline', __('contact.landline') . ':') !!}
+              <div class="input-group">
+                  <span class="input-group-addon">
+                      <i class="fa fa-phone"></i>
+                  </span>
+                  {!! Form::text('landline', $contact->landline, ['class' => 'form-control', 'placeholder' => __('contact.landline')]); !!}
+              </div>
+          </div>
+        </div>
+      
         <div class="col-sm-4">
             <div class="form-group">
                 {!! Form::label('dob', __('lang_v1.dob') . ':') !!}
@@ -157,6 +172,17 @@
                     {!! Form::text('dob', !empty($contact->dob) ? @format_date($contact->dob) : null, ['class' => 'form-control dob-date-picker','placeholder' => __('lang_v1.dob'), 'readonly']); !!}
                 </div>
             </div>
+        </div>
+        <div class="col-md-4 customer_fields">
+          <div class="form-group">
+              {!! Form::label('customer_group_id', __('lang_v1.customer_group') . ':') !!}
+              <div class="input-group">
+                  <span class="input-group-addon">
+                      <i class="fa fa-users"></i>
+                  </span>
+                  {!! Form::select('customer_group_id', $customer_groups, $contact->customer_group_id, ['class' => 'form-control']); !!}
+              </div>
+          </div>
         </div>
         
         <!-- lead additional field -->

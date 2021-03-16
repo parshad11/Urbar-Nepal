@@ -28,5 +28,6 @@ Route::middleware(['cors'])->group(function () {
 		route::get('/delivery-people', 'Api\DeliveryPersonController@GetAllDeliveryPeople');
 		route::get('/task', 'Api\TaskController@index');
 		route::post('/task/{id}', 'Api\TaskController@update');
+		route::get('/delivery_person/track/{id}', 'Api\DeliveryPersonController@getDeliveryPersonLocation');
 	});
 });

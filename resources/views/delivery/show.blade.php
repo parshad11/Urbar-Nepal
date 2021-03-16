@@ -44,16 +44,21 @@
                                     </p>
                                 </div>
                                 <div class="clearfix"></div>
-                             @php
-                                 if($delivery->transaction->type=='sell_transfer'){
-                                     $type='Stock Transfer'
-                                 }
-                             @endphp
+                                @if($delivery->transaction->type=='sell_transfer')                            
+                                    @php
+                                    $type='stock transfer'
+                                    @endphp
+                                @else
+                                    @php
+                                    $type=$delivery->transaction->type
+                                    @endphp
+                                @endif
+
                                     <div class="col-md-4">
                                     <strong>@lang('lang_v1.type'):</strong><br>
                                     <p class="well well-sm no-shadow bg-gray">
                                         @if($delivery->transaction_id)
-                                        {{ $delivery->transaction->type}}
+                                        {{ $type}}
                                         @else
                                         --
                                         @endif
@@ -236,7 +241,7 @@
                             </li>
                         </ul>
                             
-                                <a href="#" class="btn btn-primary btn-block">
+                                <a href="{{url('/api/delivery_person/track/'.$delivery->delivery_person->id)}}" class="btn btn-primary btn-block">
                                     <i class="fas fa-thumbtack"></i>
                                     @lang("messages.track")
                                 </a>

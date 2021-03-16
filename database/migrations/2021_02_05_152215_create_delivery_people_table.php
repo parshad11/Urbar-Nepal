@@ -17,7 +17,8 @@ class CreateDeliveryPeopleTable extends Migration
             $table->bigIncrements('id');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->integer('tracking_id')->nullable();
+            $table->string('latitude')->nullable();
+            $table->string('longitude')->nullable();
             $table->dateTime('join_date');
             $table->timestamps();
         });

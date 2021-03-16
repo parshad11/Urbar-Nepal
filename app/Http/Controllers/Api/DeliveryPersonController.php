@@ -16,6 +16,6 @@ class DeliveryPersonController extends Controller
     }
 
     public function getDeliveryPersonLocation($delivery_person_id){
-        
+        dd("hello");
     }
 }

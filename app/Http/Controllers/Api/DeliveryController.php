@@ -33,6 +33,7 @@ class DeliveryController extends Controller
     public function update(Request $request,$id){
         $data=$request->all();
         $delivery=Delivery::findorfail($id);
+        dd($data);
         if($request->delivery_status=='Shipped' || $request->delivery_status=='shipped'){
             $data['delivery_started_at']=date('Y-m-d h:i:s');
         }
