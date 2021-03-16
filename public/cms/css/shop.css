@@ -35,11 +35,13 @@
     background: #2393d1;
 }
 .shop .content {
-    width: 80%;
-    margin: auto;
+    /*width: 80%;*/
+    /*margin: auto;*/
+    padding: 80px 0;
 }
 .shop .content .left {
     padding: none;
+    border: 1px solid #65656514;
 }
 .shop .content .left .title {
     text-align: center;
@@ -109,21 +111,33 @@
     color: #ffff;
 }
 .shop .content .right .product {
-    margin-top: 8%;
-    padding: 2% 10%;
+    margin-top: 20px;
+    padding: 15px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+    transition: all .3s ease-in-out;
 }
-.shop .content .right .product:hover .img {
-    opacity: 0.5;
+.shop .content .right .product:hover{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
+}
+.shop .content .right .product:hover .img{
+    overflow: hidden;
+}
+.shop .content .right .product:hover .img img{
+    transition: all .3s ease-in-out;
+}
+.shop .content .right .product:hover .img img{
+    /*opacity: 0.5;*/
+    transform: scale(1.1);
 }
 .shop .content .right .product:hover .description .title {
-    text-decoration: underline;
+    /*text-decoration: underline;*/
 }
 .shop .content .right .product .img {
-    width: 100%;
-    border: 1px solid #e2e2e2;
+    max-width: 100%;
+    /*border: 1px solid #e2e2e2;*/
 }
 .shop .content .right .product .description {
-    padding: 2% 5%;
+    padding: 15px 0 0;
     text-align: left;
 }
 .shop .content .right .product .description .title {

@@ -17,8 +17,11 @@ class ShopController extends Controller
      */
     public function index()
     {
-        /*$products = Product::with('variations', 'product_variations')->get();*/
-        return view('ecommerce.shop');
+        $products = Product::with('product_variations.variations.product')->get();
+//        return $products[0]->product_variations[0]->variations;
+//        return $products->product_variations[0]->variations[0]->default_sell_price;
+//        return $products;
+        return view('ecommerce.shop')->with('products', $products);
     }
 
     public function product($id)
@@ -27,13 +30,12 @@ class ShopController extends Controller
         $business_id = request()->session()->get('user.business_id');
         $product = Product::join('variations as v', 'v.product_id', '=', 'products.id')
             ->leftJoin('variation_location_details as vld', 'vld.variation_id', '=', 'v.id')
-            ->where('products.business_id', $business_id)
+//            ->where('products.business_id', $business_id)
             ->where('products.id', $id)
             ->select(
                 'products.id',
                 'products.image',
                 'products.name',
-                // 'products.unit',
                 DB::raw('SUM(vld.qty_available) as current_stock'),
         )->first();
 
