@@ -229,14 +229,14 @@
                 }
                 var href = $(this).data('href');
                 var status = $(this).data('status');
-                $('#update_status_modal').modal('show');
-                $('#update_status_form').attr('action', href);
-                $('#update_status_form #update_status').val(status);
-                $('#update_status_form #update_status').trigger('change');
+                $('#update_delivery_status_modal').modal('show');
+                $('#update_delivery_status_form').attr('action', href);
+                $('#update_delivery_status_form #update_status').val(status);
+                $('#update_delivery_status_form #update_status').trigger('change');
             });
 
 
-            $(document).on('submit', '#update_status_form', function (e) {
+            $(document).on('submit', '#update_delivery_status_form', function (e) {
                 e.preventDefault();
                 $(this)
                     .find('button[type="submit"]')
@@ -250,13 +250,13 @@
                     data:data,
                     success: function (result) {
                         if (result.success == true) {
-                            $('div#update_status_modal').modal('hide');
+                            $('div#update_delivery_status_modal').modal('hide');
                             toastr.success(result.msg);
                             delivery_table.ajax.reload();
                         } else {
                             toastr.error(result.msg);
                         }
-                        $('#update_status_form')
+                        $('#update_delivery_status_form')
                             .find('button[type="submit"]')
                             .attr('disabled', false);
                     },

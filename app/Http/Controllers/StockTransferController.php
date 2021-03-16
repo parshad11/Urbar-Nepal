@@ -14,7 +14,8 @@ use App\Utils\TransactionUtil;
 use Datatables;
 use App\User;
 use App\Delivery;
-
+use App\DeliveryPerson;
+use App\Notifications\DeliveryAssignedNotification;
 use DB;
 use Illuminate\Http\Request;
 
@@ -314,7 +315,10 @@ class StockTransferController extends Controller
                 $delivery_details['delivery_status']=$request->input('delivery_status');
                 $delivery_details['special_delivery_instructions']=$request->input('special_delivery_instructions');
                 $delivery_details['assigned_by']=$user_id;
-                Delivery::create($delivery_details);
+                $delivery= Delivery::create($delivery_details);
+                $delivery_person = DeliveryPerson::find($request->delivery_person_id);
+                $user=User::find($delivery_person->user_id);
+                $user->notify(new DeliveryAssignedNotification($delivery->record_staff->user_name,$delivery->id));
                 $sell_transfer->assign_delivery_status=1;
                 $sell_transfer->save();
              }

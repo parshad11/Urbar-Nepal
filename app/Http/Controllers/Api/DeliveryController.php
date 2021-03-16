@@ -50,4 +50,6 @@ class DeliveryController extends Controller
             'data'=>$delivery
         ]);
     }
+
+    
 }

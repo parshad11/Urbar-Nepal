@@ -14,4 +14,8 @@ class DeliveryPersonController extends Controller
             'data'=>$delivery_person
         ]);
     }
+
+    public function getDeliveryPersonLocation($delivery_person_id){
+        
+    }
 }

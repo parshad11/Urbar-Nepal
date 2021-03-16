@@ -44,7 +44,11 @@
                                     </p>
                                 </div>
                                 <div class="clearfix"></div>
-                             
+                             @php
+                                 if($delivery->transaction->type=='sell_transfer'){
+                                     $type='Stock Transfer'
+                                 }
+                             @endphp
                                     <div class="col-md-4">
                                     <strong>@lang('lang_v1.type'):</strong><br>
                                     <p class="well well-sm no-shadow bg-gray">
