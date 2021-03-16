@@ -65,6 +65,19 @@ class FrontendController extends Controller
             ->with('blogs', $blogs);
     }
 
+    public function getBlog()
+    {
+        $about_details = FrontAbout::first();
+        $categories = BlogCategory::with('news')->orderBy('id', 'desc')->get();
+        $blogs = Blog::with('category')->orderBy('id', 'desc')->where('status', 'active')->paginate(4);
+        return view('frontcms.blog')
+            ->with('about_info', $about_details)
+            ->with('categories', $categories)
+            ->with('blogs', $blogs);
+    }
+
+
+
     public function getSingleBlog($slug)
     {
         $about_details = FrontAbout::select('banner_image')->first();
