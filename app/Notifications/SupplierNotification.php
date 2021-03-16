@@ -24,11 +24,12 @@ class SupplierNotification extends Notification
     public function __construct($notificationInfo)
     {
         $this->notificationInfo = $notificationInfo;
-
         $notificationUtil = new NotificationUtil();
         $notificationUtil->configureEmail($notificationInfo);
         $this->cc = !empty($notificationInfo['cc']) ? $notificationInfo['cc'] : null;
         $this->bcc = !empty($notificationInfo['bcc']) ? $notificationInfo['bcc'] : null;
+        $this->attachment = !empty($notificationInfo['attachment']) ? $notificationInfo['attachment'] : null;
+        $this->attachment_name = !empty($notificationInfo['attachment_name']) ? $notificationInfo['attachment_name'] : null;
     }
 
     /**

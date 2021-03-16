@@ -53,6 +53,7 @@ return [
     'mfg_date' => 'MFG Date',
     'exp_date' => 'EXP Date',
     'view_product' => 'View Product',
+    'market_price' => 'Market Price',
     'add_product' => 'Add Product',
     'variations' => 'Variations',
     'import_products' => 'Import Products',

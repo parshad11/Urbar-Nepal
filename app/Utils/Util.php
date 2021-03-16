@@ -141,6 +141,11 @@ class Util
         return [ 'delivery' => __('delivery.delivery'), 'pick up' => __('delivery.pick_up')];
     }
 
+    public function workTypes()
+    {
+        return [ 'task' => __('delivery.task'), 'sell' => __('delivery.sell'),'sell_transfer' => __('delivery.sell_transfer'),'purchase' => __('delivery.purchase')];
+    }
+
     public function taskStatuses()
     {
         return [ 'received' => __('lang_v1.received'), 'on process' => __('lang_v1.on_process'), 'completed' => __('lang_v1.completed'), 'cancelled' => __('lang_v1.cancelled')];
@@ -697,6 +702,7 @@ class Util
                 $new_file_name = time() . '_' . $request->$file_name->getClientOriginalName();
                 if ($request->$file_name->storeAs($dir_name, $new_file_name)) {
                     $uploaded_file_name = $new_file_name;
+                    
                 }
             }
         }
@@ -828,7 +834,7 @@ class Util
             //Replace business_logo
             if (strpos($value, '{business_logo}') !== false) {
                 $logo_name = $business->logo;
-                $business_logo = !empty($logo_name) ? '<img src="' . url('uploads/business_logos/' . $logo_name) . '" alt="Business Logo" >' : '';
+                $business_logo = !empty($logo_name) ? '<img src="' . url('uploads/business_logos/' . $logo_name) . '" height="75" alt="Business Logo" >' : '';
 
                 $data[$key] = str_replace('{business_logo}', $business_logo, $data[$key]);
             }
@@ -836,6 +842,7 @@ class Util
             //Replace invoice_url
             if (!empty($transaction) && strpos($value, '{invoice_url}') !== false && $transaction->type == 'sell') {
                 $invoice_url = $this->getInvoiceUrl($transaction->id, $transaction->business_id);
+                $invoice_url='<a target="_blank" href="'.$invoice_url.'">here</a>';
                 $data[$key] = str_replace('{invoice_url}', $invoice_url, $data[$key]);
             }
 
@@ -1109,8 +1116,8 @@ class Util
     public function delivery_assign_statuses()
     {
         $assignStatuses = [
-            '1' => __('delivery.assigned'),
-            '0' => __('delivery.not_assigned'),
+            'assigned' => __('delivery.assigned'),
+            'not assigned' => __('delivery.not_assigned'),
         ];
 
         return $assignStatuses;
@@ -1195,7 +1202,8 @@ class Util
         $notifications_data = [];
         foreach ($notifications as $notification) {
             $data = $notification->data;
-            if (in_array($notification->type, [\App\Notifications\RecurringInvoiceNotification::class, \App\Notifications\RecurringExpenseNotification::class])) {
+            if (in_array($notification->type, [\App\Notifications\RecurringInvoiceNotification::class, \App\Notifications\RecurringExpenseNotification::class
+            ,\App\Notifications\DeliveryAssignedNotification::class,\App\Notifications\TaskAssignedNotification::class, \App\Notifications\StaffAddedNotification::class])) {
                 $msg = '';
                 $icon_class = '';
                 $link = '';
@@ -1225,7 +1233,26 @@ class Util
                     $icon_class = "fas fa-recycle bg-green";
                     $link = action('ExpenseController@index');
                 }
-
+                else if($notification->type ==
+                    \App\Notifications\DeliveryAssignedNotification::class
+                ){
+                    $msg =$data['message'];
+                    $icon_class = "fa fa-tasks bg-green";
+                    $link = action('DeliveryController@show',$data['delivery_id']);
+                }
+                else if($notification->type ==
+                \App\Notifications\TaskAssignedNotification::class
+                ){
+                $msg =$data['message'];
+                $icon_class = "fa fa-tasks bg-green";
+                $link = action('TaskController@show',$data['task_id']);
+                }
+                else if($notification->type ==
+                \App\Notifications\StaffAddedNotification::class
+                ){
+                    $msg =$data['message'];
+                    $icon_class = "fas fa-user bg-green";
+                }
                 $notifications_data[] = [
                     'msg' => $msg,
                     'icon_class' => $icon_class,
@@ -1233,7 +1260,9 @@ class Util
                     'read_at' => $notification->read_at,
                     'created_at' => $notification->created_at->diffForHumans()
                 ];
-            } else {
+
+            }
+            else {
                 $moduleUtil = new \App\Utils\ModuleUtil;
                 $module_notification_data = $moduleUtil->getModuleData('parse_notification', $notification);
                 if (!empty($module_notification_data)) {
@@ -1245,7 +1274,6 @@ class Util
                 }
             }
         }
-
         return $notifications_data;
     }
 
@@ -1266,4 +1294,6 @@ class Util
 
         return $f->format($number);
     }
+
+
 }

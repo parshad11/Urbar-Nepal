@@ -144,14 +144,16 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
 
     Route::resource('delivery', 'DeliveryController')->except(['create']);
     Route::get('delivery/{transactionId}/create/', 'DeliveryController@create');
-    Route::get('/delivery-transaction', 'DeliveryController@listDeliveryTransaction');
+    Route::get('/delivery-transaction', 'DeliveryController@listDeliveryTransaction')->name('delivery.transactions');
     Route::resource('task', 'TaskController');
     Route::put('/task/statusupdate/{id}', 'TaskController@statusupdate');
-    Route::get('/active/work', 'TaskController@getActiveWork');
+    Route::put('/delivery/statusupdate/{id}', 'DeliveryController@statusupdate');
+    Route::get('/active/work', 'DeliveryController@getActiveWork');
 
     Route::resource('roles', 'RoleController');
 
     Route::resource('users', 'ManageUserController');
+    Route::get('user/getstaff', 'ManageUserController@getStaff');
 
     Route::get('/user/get_delivery_people', 'ManageUserController@getDeliveryPeople')->name('user.getdeliverypeople');
 

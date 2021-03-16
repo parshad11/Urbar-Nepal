@@ -8,6 +8,7 @@ use App\Record;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use App\Contact;
+use App\CustomerGroup;
 use App\Unit;
 use App\User;
 use App\Utils\ModuleUtil;
@@ -31,20 +32,26 @@ class RecordController extends Controller
         if (!(auth()->user()->can('record.view') || auth()->user()->can('record.view_own'))) {
             abort(403, 'Unauthorized action.');
         }
-
-
+      
+        $business_id = request()->session()->get('user.business_id');
+        $sales_representative = User::forDropdown($business_id, false, false, true);
+        
         if ($request->ajax()) {
-
-            $business_id = request()->session()->get('user.business_id');
+            
             $records = $this->recordUtil->getListRecords($business_id);
             $permitted_locations = auth()->user()->permitted_locations();
             if ($permitted_locations != 'all') {
                 $records->whereIn('records.location_id', $permitted_locations);
             }
 
-            if (!empty(request()->supplier_id)) {
-                $records->where('contacts.id', request()->supplier_id);
+            if (!empty(request()->added_by)) {
+                $records->where('records.created_by', request()->added_by);
             }
+
+            if (!empty(request()->supplier_id)) {
+                $records->where('records.contact_id', request()->supplier_id);
+            }
+
 
             if (!empty(request()->location_id)) {
                 $records->where('records.location_id', request()->location_id);
@@ -52,18 +59,10 @@ class RecordController extends Controller
         
             $start_date = $request->start_date;
             $end_date = $request->end_date;
-
-            $location=$request->location;
-
-            if (!empty($start_date) && !empty($end_date || !empty($request->location))) {
+            if (!empty($start_date) && !empty($end_date)) {
                 $records->whereBetween('expected_collection_date', [$start_date, $end_date]);
             }
-            if (!empty($request->location) ) {
-                $records->where('location', 'like', '%' . $location. '%');
-            }
-            if (!empty($start_date) && !empty($end_date && !empty($request->location))) {
-               $records->whereBetween('expected_collection_date', [$start_date, $end_date])->where('location', 'like', '%' . $location. '%');
-            }
+           
      
             return Datatables::of($records)
                 ->addIndexColumn()
@@ -92,7 +91,9 @@ class RecordController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         } else {
-            return view('record.index');
+            $sales_representative = User::forDropdown($business_id, false, false, true);
+            $business_locations = BusinessLocation::forDropdown($business_id, false);
+            return view('record.index')->with(compact('sales_representative','business_locations'));
         }
     }
 
@@ -109,7 +110,17 @@ class RecordController extends Controller
 
         $business_id = request()->session()->get('user.business_id');
         $units = Unit::forDropdown($business_id, true);
-        
+        $types = [];
+        if (auth()->user()->can('supplier.create')) {
+            $types['supplier'] = __('report.supplier');
+        }
+        if (auth()->user()->can('customer.create')) {
+            $types['customer'] = __('report.customer');
+        }
+        if (auth()->user()->can('supplier.create') && auth()->user()->can('customer.create')) {
+            $types['both'] = __('lang_v1.both_supplier_customer');
+        }
+        $customer_groups = CustomerGroup::forDropdown($business_id);
         //Get all business locations
         $business_locations = BusinessLocation::forDropdown($business_id, false, true);
         $bl_attributes = $business_locations['attributes'];
@@ -117,7 +128,7 @@ class RecordController extends Controller
 
         $contact = Contact::where('type', 'supplier')->get();
 
-        return view('record.create')->with(compact('contact','units','business_locations','bl_attributes'));
+        return view('record.create')->with(compact('contact','units','business_locations','bl_attributes','types','customer_groups'));
     }
 
     /**
@@ -136,21 +147,12 @@ class RecordController extends Controller
         try {
             $business_id = $request->session()->get('user.business_id');
             $user_id = $request->session()->get('user.id');
-            $record_data = $request->only(['contact_id','location_id','item','expected_collection_date','location','quantity','unit_id']);
-            $request->validate([
-            'contact_id' => 'required',
-            'location_id' => 'required',
-            'item' => 'required',
-            'expected_collection_date'=>'required',
-            'location' => 'required',
-            'quantity'=>'required',
-            'unit_id'=>'required',
-           
-        ]);
-        $record_data['created_by'] = $user_id;
-        $record_data['business_id'] = $business_id;
-        $record_data['expected_collection_date']=$this->moduleUtil->uf_date($record_data['expected_collection_date']);
-
+            $record_data = $request->only(['contact_id','item','expected_collection_date','location','quantity','unit_id']);
+            $record_data['created_by'] = $user_id;
+            $record_data['business_id'] = $business_id;
+            $record_data['location_id'] = $request->business_location_id;
+            $record_data['expected_collection_date']=$this->moduleUtil->uf_date($record_data['expected_collection_date']);
+     
         DB::beginTransaction();
 
         $record = Record::create($record_data);
@@ -237,14 +239,6 @@ class RecordController extends Controller
         try {
             $record=Record::findOrFail($id);
             $record_data = $request->only(['item','expected_collection_date','location','quantity','unit_id']);
-            $request->validate([
-            'item' => 'required',
-            'expected_collection_date'=>'required',
-            'location' => 'required',
-            'quantity'=>'required',
-            'unit_id'=>'required',
-           
-        ]);
 
         $record_data['expected_collection_date']=$this->moduleUtil->uf_date($record_data['expected_collection_date']);
 

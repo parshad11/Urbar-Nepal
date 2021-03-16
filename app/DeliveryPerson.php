@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
 class DeliveryPerson extends Model
 {
+    use Notifiable;
+    
     protected $table='delivery_people';
 
     protected $fillable=['user_id','join_date','tracking_id'];

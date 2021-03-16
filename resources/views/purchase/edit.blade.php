@@ -63,11 +63,20 @@
               </div>
             </div>
             
+              @if($purchase->status=='received')
+                        @php
+                        $disabled=true;
+                        @endphp
+                      @else
+                        @php
+                        $disabled=false;
+                        @endphp
+              @endif
             <div class="col-sm-3 @if(!empty($default_purchase_status)) hide @endif">
               <div class="form-group">
                 {!! Form::label('status', __('purchase.purchase_status') . ':*') !!}
                 @show_tooltip(__('tooltip.order_status'))
-                {!! Form::select('status', $orderStatuses, $purchase->status, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select') , 'required']); !!}
+                {!! Form::select('status', $orderStatuses, $purchase->status,  ($disabled)?['class' => 'form-control select2', 'placeholder' => __('messages.please_select') , 'required','id'=>'purchase_status',"disabled" => "disabled"]:['class' => 'form-control select2', 'placeholder' => __('messages.please_select') , 'required','id'=>'purchase_status']); !!}
               </div>
             </div>
 
@@ -175,14 +184,14 @@
                   </tr>
                 </table>
               </div>
-
-              <div class="col-sm-3">
+                   
+              <div class="col-sm-3 ">
                 <div class="form-group">
 				        	<div class="checkbox">
                     <br/>
                     <label>
                       {!! Form::checkbox('assign_delivery', 1, $purchase->assign_delivery,
-                      [ 'class' => 'input-icheck', 'id' => 'assign_delivery']); !!} {{ __( 'delivery.assign_delivery' ) }}
+                      ($disabled)?[ 'class' => 'input-icheck', 'id' => 'assign_delivery',"disabled" => "disabled"]:[ 'class' => 'input-icheck', 'id' => 'assign_delivery',]); !!} {{ __( 'delivery.assign_delivery' ) }}
                     </label>
                    </div>
                 </div>
@@ -313,110 +322,6 @@
       update_table_total();
       update_grand_total();
       __page_leave_confirmation('#add_purchase_form');
-
-     if($('#assign_delivery').is(':checked')) {
-				$('div.assign_delivery_div').removeClass('hide');
-        }
-
-      $('#assign_delivery').on('ifChecked', function(event){
-				$('div.assign_delivery_div').removeClass('hide');
-   	    	});
-
-			$('#assign_delivery').on('ifUnchecked', function(event){
-				$('div.assign_delivery_div').addClass('hide');
-        	});
-
-			$('delivery_person_id').select2({
-			ajax: {
-				url: '/users/get_delivery_people',
-				method:'get',
-				dataType: 'json',
-				delay: 250,
-				data: function(params) {
-					return {
-						q: params.term, // search term
-						page: params.page,
-					};
-				},
-				processResults: function(data) {
-					console.log(data)
-					return {
-						results: data,
-					};
-				},
-			},
-			minimumInputLength: 1,
-			escapeMarkup: function(m) {
-				return m;
-			},
-			templateResult: function(data) {
-				if (!data.id) {
-					return data.text;
-				}
-				var html = data.text;
-				return html;
-			},
-			language: {
-				noResults: function() {
-					// var name = $('#delivery_person_id')
-					// 	.data('select2')
-					// 	.dropdown.$search.val();
-				},
-			},
-  		    });
-
-			$('#supplier_id').select2({
-			ajax: {
-				url: '/purchases/get_suppliers',
-				dataType: 'json',
-				delay: 250,
-				data: function(params) {
-					return {
-						q: params.term, // search term
-						page: params.page,
-					};
-				},
-				processResults: function(data) {
-					return {
-						results: data,
-					};
-				},
-			},
-			minimumInputLength: 1,
-			escapeMarkup: function(m) {
-				return m;
-			},
-			templateResult: function(data) {
-				if (!data.id) {
-					return data.text;
-				}
-				var html = data.text + ' - ' + data.business_name + ' (' + data.contact_id + ')';
-				return html;
-			},
-			language: {
-				noResults: function() {
-					var name = $('#supplier_id')
-						.data('select2')
-						.dropdown.$search.val();
-					return (
-						'<button type="button" data-name="' +
-						name +
-						'" class="btn btn-link add_new_supplier"><i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i>&nbsp; ' +
-						__translate('add_name_as_new_supplier', { name: name }) +
-						'</button>'
-					);
-				},
-			},
-			}).on('select2:select', function (e) {
-				var data = e.params.data;
-				$('#pay_term_number').val(data.pay_term_number);
-				$('#pay_term_type').val(data.pay_term_type);
-				$('#advance_balance_text').text(__currency_trans_from_en(data.balance), true);
-				$('#advance_balance').val(data.balance);
-				$('#pickup_address').val(data.pickup_address);
-
-			});
-
 
     });
   </script>

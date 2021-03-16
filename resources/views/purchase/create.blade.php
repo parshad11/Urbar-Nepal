@@ -56,7 +56,7 @@
 			<div class="col-sm-3 @if(!empty($default_purchase_status)) hide @endif">
 				<div class="form-group">
 					{!! Form::label('status', __('purchase.purchase_status') . ':*') !!} @show_tooltip(__('tooltip.order_status'))
-					{!! Form::select('status', $orderStatuses, $default_purchase_status, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required']); !!}
+					{!! Form::select('status', $orderStatuses, $default_purchase_status, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required','id'=>'purchase_status']); !!}
 				</div>
 			</div>
 
@@ -224,7 +224,7 @@
 
 				<input type="hidden" id="row_count" value="0">
 
-				<div class="col-sm-3">
+				<div class="col-sm-3 assign_delivery_div">
                 <div class="form-group">
 					<div class="checkbox">
 					<br/>
@@ -372,6 +372,23 @@
                 format: moment_date_format + ' ' + moment_time_format,
                 ignoreReadonly: true,
             });
+
+			$( "#purchase_status" ).change(function() {
+        if(this.value == 'received'){
+			$("#assign_delivery").prop("checked", false);
+            $('div.assign_delivery_div').addClass( "hide" );
+			
+        }
+		else if(this.value == 'pending'){
+			$("#assign_delivery").prop("checked", false);
+            $('div.assign_delivery_div').addClass( "hide" );
+			
+        }
+        else{
+            $('div.assign_delivery_div').removeClass("hide");
+           
+        }
+        });
 
 
 			$('#location_id').select2({

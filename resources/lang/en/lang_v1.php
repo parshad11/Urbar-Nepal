@@ -1200,8 +1200,17 @@ return [
     'type'=>'Type',
     'assign_status'=>'Assign Status',
     'assigned_by'=>'Assigned By',
-    'all_transactions'=>'All Transactions',
+    'all_transactions_for_delivery'=>'All Transactions For Delivery',
     'assigned'=>'Assigned',
     'not_assigned'=>'Not Assigned',
+    'upload_front_cms'=>'Upload Front CMS',
+    'delivery_notification'=>'Delivery Notification',
+    'task_received'=>'Task Received',
+    'delivery_received'=>'Delivery Received',
+    'new_staff'=>'New Staff',
+    'new_customer'=>'New Customer',
+    'new_supplier'=>'New Supplier',
+    'new_record'=>'New Record',
+    'staff_notifications'=>'Staff Notification',
 
 ];

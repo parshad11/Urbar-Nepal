@@ -7,35 +7,13 @@
         <h1>@lang( 'contact.supplier_record' )
             <small>@lang( 'contact.manage_supplier_record' )</small>
         </h1>
-        {!! Form::open(['url' => action('RecordController@index'), 'method' => 'get', 'id' => 'record_form' ]) !!}
-        <div class="row no-print">
-            <div class="col-md-3 col-md-offset-9 col-xs-6 ">
-                <div class="input-group">
-                    <span class="input-group-addon bg-light-blue"><i class="fa fa-map-marker"></i></span>
-                    {!! Form::text('location', '', ['placeholder' => __('Enter Location'), 'class' => 'form-control location','id' => 'location']); !!}
-                    {{--<input type="text" name="location" placeholder="Enter Location" class="form-control" id="location">--}}
-                </div>
-
-            </div>
-        </div>
-        <br>
-        <div class="row no-print">
-            <div class="col-xs-12">
-                <div class="form-group pull-right">
-                    <div class="">
-                        <div class="form-group">
-                            {!! Form::label('cg_date_range', __('Date Range') . ':') !!}
-                            {!! Form::text('date_range', '', ['placeholder' => __('select a date range'), 'class' => 'form-control', 'id' => 'cg_date_range', 'readonly']); !!}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {!! Form::close() !!}
     </section>
 
     <!-- Main content -->
     <section class="content">
+        @component('components.filters', ['title' => __('report.filters')])
+                @include('record.partial.record_list_filters')
+        @endcomponent
         @component('components.widget', ['class' => 'box-primary', 'title' => __( 'All Supplier Record' )])
             @can('record.create')
                 @slot('tool')
@@ -88,34 +66,35 @@
     <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            if ($('#cg_date_range').length == 1) {
-                $('#cg_date_range').daterangepicker(
-                    dateRangeSettings,
-                    function (start, end) {
-                        $('#cg_date_range').val(start.format(moment_date_format) + ' ~ ' + end.format(moment_date_format));
-                        record_table.ajax.reload();
-                    }
-                );
-
-                $('#cg_date_range').on('cancel.daterangepicker', function (ev, picker) {
-                    $(this).val('');
-                    record_table.ajax.reload();
-                });
-            }
-            $(document).ready(function () {
-                $("#location").keyup(function () {
-                    record_table.ajax.reload();
-                });
+            $('#record_list_filter_date_range').daterangepicker(
+              dateRangeSettings,
+            function (start, end) {
+                $('#record_list_filter_date_range').val(start.format(moment_date_format) + ' ~ ' + end.format(moment_date_format));
+                record_table.ajax.reload();
             });
+            $('#record_list_filter_date_range').on('cancel.daterangepicker', function(ev, picker) {
+                $('#record_list_filter_date_range').val('');
+                record_table.ajax.reload();
+            });
+
             record_table = $('#record_table').DataTable({
                 processing: true,
                 serverSide: true,
                 "ajax": {
                     "url": "/records",
                     "data": function (d) {
-                        d.start_date = $('#cg_date_range').data('daterangepicker').startDate.format('YYYY-MM-DD');
-                        d.end_date = $('#cg_date_range').data('daterangepicker').endDate.format('YYYY-MM-DD');
-                        d.location = $('#location').val();
+                        if($('#record_list_filter_date_range').val()) {
+                        var start = $('#record_list_filter_date_range').data('daterangepicker').startDate.format('YYYY-MM-DD');
+                        var end = $('#record_list_filter_date_range').data('daterangepicker').endDate.format('YYYY-MM-DD');
+                        d.start_date = start;
+                        d.end_date = end;
+                    }
+                        d.location_id = $('#location_id').val();
+                        d.supplier_id = $('#supplier_id').val();
+                        d.added_by = $('#user_id').val();
+                
+
+                       d = __datatable_ajax_callback(d);
                     }
                 },
                 columns: [
@@ -163,9 +142,106 @@
                     }
                 });
             });
-            $('select#cg_location_id, select#cg_customer_group_id, #cg_date_range').change(function () {
-                record_table.ajax.reload();
-            });
-        })
+
+            $('#location_id').select2({
+			ajax: {
+				url: '/business/get_locations',
+				dataType: 'json',
+				delay: 250,
+				data: function(params) {
+					return {
+						q: params.term, // search term
+						page: params.page,
+					};
+				},
+				processResults: function(data) {
+					return {
+						results: data,
+					};
+				},
+			},
+			minimumInputLength: 1,
+			escapeMarkup: function(m) {
+				return m;
+			},
+			templateResult: function(data) {
+				if (!data.id) {
+					return data.text;
+				}
+				var html = data.text;
+				return html;
+			},
+			}).on('select2:select', function (e) {
+               record_table.ajax.reload();
+
+			});
+
+            $('#user_id').select2({
+			ajax: {
+				url: '/user/getstaff',
+				dataType: 'json',
+				delay: 250,
+				data: function(params) {
+					return {
+						q: params.term, // search term
+						page: params.page,
+					};
+				},
+				processResults: function(data) {
+					return {
+						results: data,
+					};
+				},
+			},
+			minimumInputLength: 1,
+			escapeMarkup: function(m) {
+				return m;
+			},
+			templateResult: function(data) {
+				if (!data.id) {
+					return data.text;
+				}
+				var html = data.text;
+				return html;
+			},
+			}).on('select2:select', function (e) {
+               record_table.ajax.reload();
+
+			});
+
+
+            $('#supplier_id').select2({
+        ajax: {
+            url: '/purchases/get_suppliers',
+            dataType: 'json',
+            delay: 250,
+            data: function(params) {
+                return {
+                    q: params.term, // search term
+                    page: params.page,
+                };
+            },
+            processResults: function(data) {
+                return {
+                    results: data,
+                };
+            },
+        },
+        minimumInputLength: 1,
+        escapeMarkup: function(m) {
+            return m;
+        },
+        templateResult: function(data) {
+            if (!data.id) {
+                return data.text;
+            }
+            var html = data.text + ' - ' + data.business_name + ' (' + data.contact_id + ')';
+            return html;
+        },
+     }).on('select2:select', function (e) {
+        record_table.ajax.reload();
+     });
+
+    });
     </script>
 @endsection

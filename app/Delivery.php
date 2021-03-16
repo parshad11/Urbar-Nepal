@@ -11,6 +11,7 @@ class Delivery extends Model
     use Notifiable;
 
 
+
     /**
      * The attributes that aren't mass assignable.
      *
@@ -33,7 +34,10 @@ class Delivery extends Model
         return $this->belongsTo(DeliveryPerson::class,'delivery_person_id');
     }
 
-
+    public function record_staff()
+    {
+        return $this->belongsTo(\App\User::class, 'assigned_by');
+    }
 
     
 }

@@ -555,4 +555,9 @@ class ModuleUtil extends Util
         }
         return $module_data;
     }
+
+    public function getDeliveryUser($id){
+        $delivery_person=User::findorfail($id);
+        return $delivery_person->surname.'.'.$delivery_person->first_name.' '.$delivery_person->last_name;
+    }
 }

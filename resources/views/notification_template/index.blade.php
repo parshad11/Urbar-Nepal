@@ -22,6 +22,14 @@
 
     <div class="row">
         <div class="col-md-12">
+            @component('components.widget', ['class' => 'box-primary', 'title' => __('lang_v1.staff_notifications') . ':'])
+                @include('notification_template.partials.tabs', ['templates' => $staff_notifications])
+            @endcomponent
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
             @component('components.widget', ['class' => 'box-primary', 'title' => __('lang_v1.customer_notifications') . ':'])
                 @include('notification_template.partials.tabs', ['templates' => $customer_notifications])
             @endcomponent
@@ -32,6 +40,16 @@
         <div class="col-md-12">
             @component('components.widget', ['class' => 'box-primary', 'title' => __('lang_v1.supplier_notifications') . ':'])
                 @include('notification_template.partials.tabs', ['templates' => $supplier_notifications])
+                
+                
+            @endcomponent
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            @component('components.widget', ['class' => 'box-primary', 'title' => __('lang_v1.delivery_notification') . ':'])
+                @include('notification_template.partials.tabs', ['templates' => $delivery_notifications])
 
                 <div class="callout callout-warning">
                     <p>@lang('lang_v1.logo_not_work_in_sms'):</p>
@@ -39,6 +57,7 @@
             @endcomponent
         </div>
     </div>
+  
     <div class="row">
         <div class="col-md-12">
             <button type="submit" class="btn btn-danger pull-right">@lang('messages.save')</button>

@@ -334,7 +334,7 @@ class AdminSidebarMenu
                             $sub->url(
                                 action('DeliveryController@listDeliveryTransaction'),
                                 __('delivery.assign_delivery'),
-                                ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'delivery-transaction' && request()->segment(2) == 'null']
+	                                ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'delivery-transaction' ]
                             );
                         }
                         if (auth()->user()->can('delivery.view') ||  auth()->user()->can('view_own_delivery')) {
@@ -358,9 +358,9 @@ class AdminSidebarMenu
                                 ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'task' && request()->segment(2) == null]
                             );
                         }
-                        if (auth()->user()->can('view_own_delivery')||auth()->user()->can('view_own_task')) {
+                        if (auth()->user()->can('task.view') || auth()->user()->can('delivery.view') || auth()->user()->can('view_own_delivery')||auth()->user()->can('view_own_task')) {
                             $sub->url(
-                                action('TaskController@getActiveWork'),
+                                action('DeliveryController@getActiveWork'),
                                 __('lang_v1.current_work'),
                                 ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'active' && request()->segment(2) =='work']
                             );
@@ -671,7 +671,7 @@ class AdminSidebarMenu
             }
 
             //Fornt CMS Setting
-            if (in_array('frontcms', $enabled_modules) ) {
+            if (in_array('frontcms', $enabled_modules) && auth()->user()->can('upload.front_cms') ) {
                 $menu->dropdown(
                     'FrontCMS',
                     function ($sub) {

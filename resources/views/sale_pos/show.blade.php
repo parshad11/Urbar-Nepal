@@ -14,7 +14,7 @@
     <div class="row">
       <div class="col-sm-4">
         <b>{{ __('sale.invoice_no') }}:</b> #{{ $sell->invoice_no }}<br>
-        <b>{{ __('sale.status') }}:</b> 
+        <b>{{ __('sale.status') }}:</b>
           @if($sell->status == 'draft' && $sell->is_quotation == 1)
             {{ __('lang_v1.quotation') }}
           @else
@@ -47,7 +47,7 @@
               {{__('contact.landline')}}: {{ $sell->contact->landline }}
           @endif
         @endif
-        
+
       </div>
       <div class="col-sm-4">
       @if(in_array('tables' ,$enabled_modules))
@@ -60,7 +60,7 @@
       @endif
 
       <strong>@lang('sale.shipping'):</strong>
-      <span class="label @if(!empty($shipping_status_colors[$sell->shipping_status])) {{$shipping_status_colors[$sell->shipping_status]}} @else {{'bg-gray'}} @endif">{{$shipping_statuses[$sell->shipping_status] ?? '' }}</span><br>
+      <span class="label @if(!empty($delivery_status_colors[$sell->shipping_status])) {{$delivery_status_colors[$sell->shipping_status]}} @else {{'bg-gray'}} @endif">{{$shipping_statuses[$sell->shipping_status] ?? '' }}</span><br>
       @if(!empty($sell->shipping_address()))
         {{$sell->shipping_address()}}
       @else
@@ -142,7 +142,7 @@
                     ( {{ __('lang_v1.change_return') }} )
                   @endif
                 </td>
-                <td>@if($payment_line->note) 
+                <td>@if($payment_line->note)
                   {{ ucfirst($payment_line->note) }}
                   @else
                   --

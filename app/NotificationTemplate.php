@@ -45,6 +45,10 @@ class NotificationTemplate extends Model
     public static function customerNotifications()
     {
         return [
+            'new_customer' => [
+                'name' => __('lang_v1.new_customer'),
+                'extra_tags' => ['{business_name}', '{business_logo}','{business_login}', '{contact_name}', '{location_name}', '{location_address}', '{location_email}', '{location_phone}', '{location_custom_field_1}', '{location_custom_field_2}', '{location_custom_field_3}', '{location_custom_field_4}']
+            ],
             'new_sale' => [
                 'name' => __('lang_v1.new_sale'),
                 'extra_tags' => ['{business_name}', '{business_logo}', '{contact_name}', '{invoice_number}', '{invoice_url}', '{total_amount}', '{paid_amount}', '{due_amount}', '{cumulative_due_amount}', '{due_date}', '{location_name}', '{location_address}', '{location_email}', '{location_phone}', '{location_custom_field_1}', '{location_custom_field_2}', '{location_custom_field_3}', '{location_custom_field_4}']
@@ -57,10 +61,10 @@ class NotificationTemplate extends Model
                 'name' =>  __('lang_v1.payment_reminder'),
                 'extra_tags' => ['{business_name}', '{business_logo}', '{contact_name}', '{invoice_number}', '{due_amount}', '{cumulative_due_amount}', '{due_date}']
             ],
-            'new_booking' => [
-                    'name' => __('lang_v1.new_booking'),
-                    'extra_tags' => self::bookingNotificationTags()
-                ],
+            // 'new_booking' => [
+            //         'name' => __('lang_v1.new_booking'),
+            //         'extra_tags' => self::bookingNotificationTags()
+            //     ],
             'new_quotation' => [
                 'name' => __('lang_v1.new_quotation'),
                 'extra_tags' => ['{business_name}', '{business_logo}', '{contact_name}', '{invoice_number}', '{total_amount}', '{quote_url}', '{location_name}', '{location_address}', '{location_email}', '{location_phone}', '{location_custom_field_1}', '{location_custom_field_2}', '{location_custom_field_3}', '{location_custom_field_4}']
@@ -78,12 +82,44 @@ class NotificationTemplate extends Model
         ];
     }
 
+    public static function staffNotifications()
+    {
+        return [
+            'new_staff' => [
+                'name' => __('lang_v1.new_staff'),
+                'extra_tags' => ['{business_name}', '{business_logo}', '{user_name}', '{user_type}','{business_login}']
+            ],
+        ];
+    }
+
+    public static function deliveryNotifications()
+    {
+        return [
+            'task_received' => [
+                'name' => __('lang_v1.task_received'),
+                'extra_tags' => ['{business_name}', '{business_logo}','{delivery_person_name}','{view_button}']
+            ],
+            'delivery_received' => [
+                'name' => __('lang_v1.delivery_received'),
+                'extra_tags' => ['{business_name}', '{business_logo}','{delivery_person_name}','{view_button}']
+            ],
+        ];
+    }
+
     public static function supplierNotifications()
     {
         return [
+            'new_supplier' => [
+                'name' => __('lang_v1.new_supplier'),
+                'extra_tags' => ['{business_name}', '{business_logo}', '{contact_business_name}', '{contact_name}', '{location_name}', '{location_address}', '{location_email}', '{location_phone}', '{location_custom_field_1}', '{location_custom_field_2}', '{location_custom_field_3}', '{location_custom_field_4}']
+            ],
             'new_order' => [
                 'name' => __('lang_v1.new_order'),
                 'extra_tags' => ['{business_name}', '{business_logo}', '{contact_business_name}', '{contact_name}', '{order_ref_number}', '{total_amount}', '{received_amount}', '{due_amount}', '{location_name}', '{location_address}', '{location_email}', '{location_phone}', '{location_custom_field_1}', '{location_custom_field_2}', '{location_custom_field_3}', '{location_custom_field_4}']
+            ],
+            'new_record' => [
+                'name' => __('lang_v1.new_record'),
+                'extra_tags' => ['{business_name}', '{business_logo}', '{contact_business_name}', '{contact_name}','{expected_collection_date}','{item_name}','{quantity}','{unit}','{location_name}', '{location_address}', '{location_email}', '{location_phone}', '{location_custom_field_1}', '{location_custom_field_2}', '{location_custom_field_3}', '{location_custom_field_4}']
             ],
             'payment_paid' => [
                 'name' => __('lang_v1.payment_paid'),

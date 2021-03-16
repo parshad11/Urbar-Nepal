@@ -25,6 +25,8 @@ return [
 
     'sell_due' => 'Total amount to be received from sales',
 
+    'market_price' => 'Price of product set on market place',
+
     'over_all_sell_purchase' => '-ve value = Amount to pay <br>+ve Value = Amount to receive',
 
     'no_of_products_for_trending_products' => 'Number of top trending products to be compared in the chart below.',
@@ -45,7 +47,7 @@ return [
 
     'pay_term' => "Payments to be paid for purchases/sales within the given time period.<br/><small class='text-muted'>All upcoming or due payments will be displayed in dashboard - Payment Due section</small>",
 
-    'order_status' => 'Products in this purchase will be available for sale only if the <b>Order Status</b> is <b>Items Received</b>.',
+    'order_status' => 'Products in this purchase will be available for sale only if the <b>Order Status</b> is <b>Received</b>. Once received you cannot change status and assign delivery.',
 
     'purchase_location' => 'Business location where the purchased product will be available for sale.',
    

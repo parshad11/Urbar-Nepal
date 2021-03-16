@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Business;
 use App\BusinessLocation;
 use App\Contact;
 use App\Delivery;
 use App\DeliveryPerson;
+use App\Notifications\StaffAddedNotification;
+use App\NotificationTemplate;
 use App\System;
 use App\User;
 use App\Utils\ModuleUtil;
+use App\Utils\NotificationUtil;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB as FacadesDB;
@@ -19,15 +23,17 @@ use Yajra\DataTables\Facades\DataTables;
 class ManageUserController extends Controller
 {
     protected $moduleUtil;
+    protected $notificationUtil;
     /**
      * Constructor
      *
      * @param Util $commonUtil
      * @return void
      */
-    public function __construct(ModuleUtil $moduleUtil)
+    public function __construct(ModuleUtil $moduleUtil,NotificationUtil $notificationUtil)
     {
         $this->moduleUtil = $moduleUtil;
+        $this->notificationUtil = $notificationUtil;
     }
 
     /**
@@ -168,6 +174,8 @@ class ManageUserController extends Controller
             $user_details['business_id'] = $business_id;
             $user_details['password'] = $user_details['allow_login'] ? Hash::make($user_details['password']) : null;
 
+            DB::beginTransaction();
+
             if ($user_details['allow_login']) {
                 $ref_count = $this->moduleUtil->setAndGetReferenceCount('username');
                 if (blank($user_details['username'])) {
@@ -202,6 +210,12 @@ class ManageUserController extends Controller
                 
             }
 
+            $notificationInfo=NotificationTemplate::getTemplate($business_id,'new_staff');
+            $business= Business::where('id', $business_id)->first();
+            $notificationInfo=$this->notificationUtil->replaceAvailableTags($business_id,$notificationInfo,$user);
+            $notificationInfo['email_settings']=$business->email_settings;
+            $user->notify(new StaffAddedNotification($notificationInfo));
+            
             //Grant Location permissions
             $this->giveLocationPermissions($user, $request);
 
@@ -214,10 +228,13 @@ class ManageUserController extends Controller
             //Save module fields for user
             $this->moduleUtil->getModuleData('afterModelSaved', ['event' => 'user_saved', 'model_instance' => $user]);
 
+            DB::commit();
+
             $output = ['success' => 1,
                         'msg' => __("user.user_added")
                     ];
         } catch (\Exception $e) {
+            DB::rollBack();
             \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
             
             $output = ['success' => 0,
@@ -252,6 +269,32 @@ class ManageUserController extends Controller
         $users = User::forDropdown($business_id, false);
 
         return view('manage_user.show')->with(compact('user', 'view_partials', 'users'));
+    }
+
+    public function getStaff(){
+        if (request()->ajax()) {
+            $term = request()->q;
+            if (empty($term)) {
+                return json_encode([]);
+            }
+
+            $business_id = request()->session()->get('user.business_id');
+         
+
+            $query = User::where('business_id', $business_id)->active();
+                   
+            
+           
+            $users = $query->where(function ($query) use ($term) {
+                $query->where('users.first_name', 'like', '%' . $term .'%')
+                      ->orWhere('users.last_name', 'like', '%' . $term .'%');
+                     
+                
+            })
+            ->select('users.id', DB::raw("CONCAT(COALESCE(users.surname, ''),' ',COALESCE(users.first_name, ''),' ',COALESCE(users.last_name,'')) as text"))
+            ->get();  
+            return json_encode($users);
+        }
     }
 
     /**
@@ -362,6 +405,9 @@ class ManageUserController extends Controller
 
             $user = User::where('business_id', $business_id)
                           ->findOrFail($id);
+            if($user->user_type=='delivery'){
+                $delivery_role_status=1;
+            }
 
             $role_id = $request->input('role');
             $role = Role::findOrFail($role_id);
@@ -375,6 +421,12 @@ class ManageUserController extends Controller
                 $delivery_person_detail= DeliveryPerson::updateOrCreate($delivery_person_detail);
                 
             }
+         
+          
+            if(isset($delivery_role_status) && $user->user_type!='delivery'){
+                $delivery_person=DeliveryPerson::where('user_id',$user->id);
+                $delivery_person->delete();
+            }
             
             $user_role = $user->roles->first();
             $previous_role = !empty($user_role->id) ? $user_role->id : 0;
@@ -386,7 +438,8 @@ class ManageUserController extends Controller
                 $role = Role::findOrFail($role_id);
                 $user->assignRole($role->name);
             }
-
+            // dump(isset($delivery_role_status));
+            // dd($user->user_type);
 
             //Grant Location permissions
             $this->giveLocationPermissions($user, $request);
@@ -542,12 +595,6 @@ class ManageUserController extends Controller
 
           
             $deliveryPeople = DeliveryPerson::join('users','delivery_people.user_id','=','users.id')
-            // with('user')->whereHas('user',function ($query) use ($term) {
-            //     $query ->where('first_name', 'like', '%' . $term .'%')
-            //           ->orWhere('last_name', 'like', '%' . $term .'%');
-            //                     // ->orWhere('supplier_business_name', 'like', '%' . $term .'%')
-            //                     //  ->orWhere('users.contact_id', 'like', '%' . $term .'%');
-            // })
             ->where('users.first_name', 'like', '%' . $term .'%')
             ->orWhere('users.last_name', 'like', '%' . $term .'%')
              ->select('delivery_people.id', DB::raw("CONCAT(COALESCE(users.surname, ''),' ',COALESCE(users.first_name, ''),' ',COALESCE(users.last_name,'')) as text"))

@@ -42,6 +42,15 @@ class NotificationTemplateController extends Controller
 
         $general_notifications = $this->__getTemplateDetails($general_notifications);
 
+        $delivery_notifications = NotificationTemplate::deliveryNotifications();
+        
+        $delivery_notifications = $this->__getTemplateDetails($delivery_notifications);
+      
+        $staff_notifications = NotificationTemplate::staffNotifications();
+        
+        $staff_notifications = $this->__getTemplateDetails($staff_notifications);
+      
+
         $customer_notifications = NotificationTemplate::customerNotifications();
 
         $module_customer_notifications = $this->moduleUtil->getModuleData('notification_list', ['notification_for' => 'customer']);
@@ -67,7 +76,7 @@ class NotificationTemplateController extends Controller
         $supplier_notifications = $this->__getTemplateDetails($supplier_notifications);
 
         return view('notification_template.index')
-                ->with(compact('customer_notifications', 'supplier_notifications', 'general_notifications'));
+                ->with(compact('customer_notifications', 'supplier_notifications', 'general_notifications','delivery_notifications','staff_notifications'));
     }
 
     private function __getTemplateDetails($notifications)

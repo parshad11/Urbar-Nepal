@@ -1,12 +1,11 @@
 @extends('layouts.app')
-@section('title', __( 'delivery.deliveries'))
+@section('title', __( 'delivery.delivery_transaction'))
 
 @section('content')
 
 <!-- Content Header (Page header) -->
 <section class="content-header no-print">
-        <h1>@lang( 'delivery.deliveries' )
-            <small>@lang( 'delivery.manage_deliveries')</small>
+        <h1>@lang( 'delivery.delivery_transaction' )
         </h1>
 </section>
 
@@ -15,7 +14,7 @@
     @component('components.filters', ['title' => __('report.filters')])
         @include('delivery.partials.transaction_list_filters')
     @endcomponent
-    @component('components.widget', ['class' => 'box-primary', 'title' => __( 'lang_v1.all_transactions')])
+    @component('components.widget', ['class' => 'box-primary', 'title' => __( 'lang_v1.all_transactions_for_delivery')])
         @if(auth()->user()->can('purchase.view') ||  auth()->user()->can('view_own_purchase') ||auth()->user()->can('direct_sell.access')||auth()->user()->can('sell.view')||auth()->user()->can('view_own_sell_only'))
             <table class="table table-bordered table-striped ajax_view" id="delivery_assign_table">
                 <thead>
@@ -24,15 +23,15 @@
                         <th>@lang('lang_v1.type')</th>
                         <th>@lang('messages.date')</th>
                         <th>@lang('sale.customer_name')</th>
-                        <th>@lang('sale.location')</th>  
-                        <th>@lang('delivery.shipping_details')</th> 
+                        <th>@lang('sale.location')</th>
+                        <th>@lang('delivery.shipping_details')</th>
                         <th>@lang('lang_v1.added_by')</th>
                         <th>@lang('lang_v1.assign_status')</th>
                     </tr>
                 </thead>
                 <tbody>
                 </tbody>
-                
+
             </table>
         @endif
     @endcomponent
@@ -73,18 +72,21 @@ $(document).ready( function(){
                     d.start_date = start;
                     d.end_date = end;
                 }
-               
+
 
                 d.location_id = $('#transaction_list_filter_location_id').val();
                 d.assign_delivery_status = $('#transaction_list_filter_assign_status').val();
                 d.customer_id = $('#transaction_list_filter_customer_id').val();
                 d.created_by = $('#created_by').val();
-                
-               
+
+
 
                 d = __datatable_ajax_callback(d);
             }
         },
+        scrollY:        "75vh",
+        scrollX:        true,
+        scrollCollapse: true,
         columns: [
             { data: 'action', name: 'action', orderable: false, "searchable": false},
             { data: 'type', name: 'type'},
@@ -94,7 +96,7 @@ $(document).ready( function(){
             { data: 'shipping_details', name: 'shipping_details'},
             { data: 'added_by', name: 'u.first_name'},
             { data: 'assign_delivery_status', name: 'assign_delivery_status'},
-           
+
         ],
         "fnDrawCallback": function (oSettings) {
             __currency_convert_recursively($('#delivery_assign_table'));

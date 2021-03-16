@@ -9,6 +9,8 @@ use App\Contact;
 use App\CustomerGroup;
 use App\Delivery;
 use App\DeliveryPerson;
+use App\Notifications\SupplierNotification;
+use App\NotificationTemplate;
 use App\Product;
 use App\PurchaseLine;
 use App\TaxRate;
@@ -17,11 +19,14 @@ use App\User;
 use App\Utils\BusinessUtil;
 
 use App\Utils\ModuleUtil;
+use App\Utils\NotificationUtil;
 use App\Utils\ProductUtil;
 use App\Utils\TransactionUtil;
 
 use App\Variation;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -34,6 +39,7 @@ class PurchaseController extends Controller
     protected $productUtil;
     protected $transactionUtil;
     protected $moduleUtil;
+    protected $notificationUtil;
 
     /**
      * Constructor
@@ -41,12 +47,13 @@ class PurchaseController extends Controller
      * @param ProductUtils $product
      * @return void
      */
-    public function __construct(ProductUtil $productUtil, TransactionUtil $transactionUtil, BusinessUtil $businessUtil, ModuleUtil $moduleUtil)
+    public function __construct(ProductUtil $productUtil, TransactionUtil $transactionUtil, BusinessUtil $businessUtil, ModuleUtil $moduleUtil,NotificationUtil $notificationUtil)
     {
         $this->productUtil = $productUtil;
         $this->transactionUtil = $transactionUtil;
         $this->businessUtil = $businessUtil;
         $this->moduleUtil = $moduleUtil;
+        $this->notificationUtil = $notificationUtil;
 
         $this->dummyPaymentLine = ['method' => 'cash', 'amount' => 0, 'note' => '', 'card_transaction_number' => '', 'card_number' => '', 'card_type' => '', 'card_holder_name' => '', 'card_month' => '', 'card_year' => '', 'card_security' => '', 'cheque_number' => '', 'bank_account_number' => '',
         'is_return' => 0, 'transaction_no' => ''];
@@ -112,10 +119,10 @@ class PurchaseController extends Controller
                                 </span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-left" role="menu">';
-                    if (auth()->user()->can("purchase.view")) {
+                    if (auth()->user()->can("purchase.view")||auth()->user()->can('view_own_purchase')) {
                         $html .= '<li><a href="#" data-href="' . action('PurchaseController@show', [$row->id]) . '" class="btn-modal" data-container=".view_modal"><i class="fas fa-eye" aria-hidden="true"></i>' . __("messages.view") . '</a></li>';
                     }
-                    if (auth()->user()->can("purchase.view")) {
+                    if (auth()->user()->can("purchase.view")||auth()->user()->can('view_own_purchase')) {
                         $html .= '<li><a href="#" class="print-invoice" data-href="' . action('PurchaseController@printInvoice', [$row->id]) . '"><i class="fas fa-print" aria-hidden="true"></i>'. __("messages.print") .'</a></li>';
                     }
                     if (auth()->user()->can("purchase.update")) {
@@ -127,7 +134,7 @@ class PurchaseController extends Controller
 
                     $html .= '<li><a href="' . action('LabelsController@show') . '?purchase_id=' . $row->id . '" data-toggle="tooltip" title="' . __('lang_v1.label_help') . '"><i class="fas fa-barcode"></i>' . __('barcode.labels') . '</a></li>';
 
-                    if (auth()->user()->can("purchase.view") && !empty($row->document)) {
+                    if (auth()->user()->can("purchase.view")|| auth()->user()->can('view_own_purchase') && !empty($row->document)) {
                         $document_name = !empty(explode("_", $row->document, 2)[1]) ? explode("_", $row->document, 2)[1] : $row->document ;
                         $html .= '<li><a href="' . url('uploads/documents/' . $row->document) .'" download="' . $document_name . '"><i class="fas fa-download" aria-hidden="true"></i>' . __("purchase.download_document") . '</a></li>';
                         if (isFileImage($document_name)) {
@@ -294,6 +301,7 @@ class PurchaseController extends Controller
         }
 
         try {
+           
             $business_id = $request->session()->get('user.business_id');
 
             //Check if subscribed or not
@@ -324,7 +332,7 @@ class PurchaseController extends Controller
             $enable_product_editing = $request->session()->get('business.enable_editing_product_from_purchase');
 
             //Update business exchange rate.
-            Business::update_business($business_id, ['p_exchange_rate' => ($transaction_data['exchange_rate'])]);
+             Business::update_business($business_id, ['p_exchange_rate' => ($transaction_data['exchange_rate'])]);
 
             $currency_details = $this->transactionUtil->purchaseCurrencyDetails($business_id);
 
@@ -364,18 +372,6 @@ class PurchaseController extends Controller
             
             $transaction = Transaction::create($transaction_data);
 
-            // if($transaction->assign_delivery){
-            //     $delivery_details['transaction_id']=$transaction->id;
-            //     $delivery_details['delivery_person_id']=$request->input('delivery_person_id');
-            //     $delivery_details['delivery_status']=$request->input('delivery_status');
-            //     $delivery_details['pickup_address']=$request->input('pickup_address');
-            //     $delivery_details['pickup_latitude']=$request->input('pickup_latitude');
-            //     $delivery_details['pickup_longitude']=$request->input('pickup_longitude');
-            //     $delivery_details['shipping_address']=$request->input('shipping_address');
-            //     $delivery_details['special_delivery_instructions']=$request->input('special_delivery_instructions');
-            //     Delivery::create($delivery_details);
-
-            // }
             $purchase_lines = [];
             $purchases = $request->input('purchases');
 
@@ -389,7 +385,15 @@ class PurchaseController extends Controller
 
             //Adjust stock over selling if found
             $this->productUtil->adjustStockOverSelling($transaction);
-            
+
+           if($transaction->status=='ordered'){
+            $notificationInfo=NotificationTemplate::getTemplate($business_id,'new_order');
+            $business= Business::where('id', $business_id)->first();
+            $notificationInfo=$this->notificationUtil->replaceAvailableTags($business_id,$notificationInfo,$transaction);
+            $notificationInfo['email_settings']=$business->email_settings;
+            $transaction->contact->notify(new SupplierNotification($notificationInfo));
+           }
+
             DB::commit();
             
             $output = ['success' => 1,
@@ -576,7 +580,7 @@ class PurchaseController extends Controller
         }
 
         try {
-            
+        
             $transaction = Transaction::findOrFail($id);
             //Validate document size
             $request->validate([
@@ -636,19 +640,11 @@ class PurchaseController extends Controller
             //update transaction
             $transaction->update($update_data);
 
-            // if($transaction->assign_delivery){
-            //     $delivery_details['delivery_person_id']=$request->input('delivery_person_id');
-            //     $delivery_details['delivery_status']=$request->input('delivery_status');
-            //     $delivery_details['pickup_address']=$request->input('pickup_address');
-            //     $delivery_details['pickup_latitude']=$request->input('pickup_latitude');
-            //     $delivery_details['pickup_longitude']=$request->input('pickup_longitude');
-            //     $delivery_details['shipping_address']=$request->input('shipping_address');
-            //     $delivery_details['special_delivery_instructions']=$request->input('special_delivery_instructions');
-            //     $delivery=Delivery::where('transaction_id',$transaction->id)->first();
-             
-            //     $delivery->update($delivery_details);
-
-            // }
+            if($transaction->assign_delivery==0){
+                $delivery = Delivery::where('transaction_id', $id)
+                ->firstOrFail();
+                $delivery->delete();
+            }
 
             //Update transaction payment status
             $this->transactionUtil->updatePaymentStatus($transaction->id);
@@ -800,7 +796,7 @@ class PurchaseController extends Controller
                                 ->orWhere('supplier_business_name', 'like', '%' . $term .'%')
                                 ->orWhere('contacts.contact_id', 'like', '%' . $term .'%');
             })
-                        ->select('contacts.id', 'name as text', 'supplier_business_name as business_name', 'contact_id', 'contacts.pay_term_type', 'contacts.pay_term_number', 'contacts.balance','contacts.shipping_address as pickup_address','contacts.latitude as pickup_latitude','contacts.longitude as pickup_longitude')
+                        ->select('contacts.id', 'name as text', 'supplier_business_name as business_name', 'contact_id', 'contacts.pay_term_type', 'contacts.pay_term_number', 'contacts.balance','contacts.shipping_address as supplier_address','contacts.latitude as pickup_latitude','contacts.longitude as pickup_longitude')
                         ->onlySuppliers()
                         ->get();
                         

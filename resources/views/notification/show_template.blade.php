@@ -1,7 +1,7 @@
 <!-- Fix for scroll issue in new booking -->
 <style type="text/css">
   .modal {
-    overflow-y:auto; 
+    overflow-y:auto;
   }
 </style>
 <div class="modal-dialog" role="document">
@@ -101,7 +101,7 @@
             selector: 'textarea#email_body',
         });
     }
-    
+
   $(document).ready(function(){
     //initialize iCheck
     $('input[type="checkbox"].input-icheck, input[type="radio"].input-icheck').iCheck({

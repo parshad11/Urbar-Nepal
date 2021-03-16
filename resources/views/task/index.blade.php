@@ -11,6 +11,9 @@
 
     <!-- Main content -->
     <section class="content">
+    @component('components.filters', ['title' => __('report.filters')])
+            @include('task.partial.task_list_filters')
+        @endcomponent
         @component('components.widget', ['class' => 'box-primary', 'title' => __( 'All Task' )])
             @can('task.create')
                 @slot('tool')
@@ -22,7 +25,7 @@
                 @endslot
             @endcan
             @if (auth()->user()->can('task.view') || auth()->user()->can('view_own_task'))
-                <table class="table table-bordered table-striped" id="task_table">
+                <table class="table table-bordered table-striped ajax_view" id="task_table">
                     <thead>
                     <tr>
                         <th>Action</th>
@@ -32,6 +35,8 @@
                         <th>Title</th>
                         <th>Task Status</th>
                         <th>Task Address</th>
+                        <th>Task Started At</th>
+                        <th>Task Ended At</th>
                         <th>Assigned_by</th>
                     </tr>
                     </thead>
@@ -39,7 +44,7 @@
 
                     </tbody>
                 </table>
-            @endcan
+            @endif
         @endcomponent
 
     </section>
@@ -67,30 +72,62 @@
     <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
     <script type="text/javascript">
         $(document).ready(function () {
+
+            $('#task_list_filter_date_range').daterangepicker(
+              dateRangeSettings,
+            function (start, end) {
+                $('#task_list_filter_date_range').val(start.format(moment_date_format) + ' ~ ' + end.format(moment_date_format));
+                task_table.ajax.reload();
+            });
+            $('#task_list_filter_date_range').on('cancel.daterangepicker', function(ev, picker) {
+                $('#task_list_filter_date_range').val('');
+                task_table.ajax.reload();
+            });
+
             task_table = $('#task_table').DataTable({
                 processing: true,
                 serverSide: true,
                 "ajax": {
                     "url": "/task",
                     "data": function (d) {
-
+                        if($('#task_list_filter_date_range').val()) {
+                        var start = $('#task_list_filter_date_range').data('daterangepicker').startDate.format('YYYY-MM-DD');
+                        var end = $('#task_list_filter_date_range').data('daterangepicker').endDate.format('YYYY-MM-DD');
+                        d.start_date = start;
+                        d.end_date = end;
+                    }
+                        d.location_id = $('#location_id').val();
+                        d.task_status = $('#task_list_filter_task_status').val();
+                        d.task_type = $('#task_list_filter_task_type').val();
+                        d.delivery_person_id = $('#delivery_person_id').val();
+                        d.assigned_by = $('#assigned_by').val();
                     }
                 },
                 columns: [
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                     {data: 'location_name', name: 'BS.name'},
-                    {data: 'assign_to', name: 'u.first_name'},
+                    {data: 'assigned_to', name: 'u.first_name'},
                     {data: 'task_type', name: 'task_type'},
                     {data: 'title', name: 'title'},
                     {data: 'task_status', name: 'task_status'},
                     {data: 'task_address', name: 'task_address'},
+                    {data: 'started_at', name: 'started_at'},
+                    {data: 'ended_at', name: 'ended_at'},
                     {data: 'assigned_by', name: 'u.first_name'},
                 ],
 
                 "fnDrawCallback": function (oSettings) {
                     __currency_convert_recursively($('#task_table'));
-                }
+                },
+                createdRow: function( row, data, dataIndex ) {
+            $( row ).find('td:eq(6)').attr('class', 'clickable_td');
+        }
             });
+
+            $(document).on('change','#assigned_by,#task_list_filter_task_status,#task_list_filter_task_type',  function() {
+             task_table.ajax.reload();
+            });
+
             $(document).on('click', 'a.delete-task', function (e) {
                 e.preventDefault();
                 swal({
@@ -123,6 +160,9 @@
 
             $(document).on('click', 'a.update_status', function (e) {
                 e.preventDefault();
+                if($(this).data('status')=='completed'){
+                    return;
+                }
                 var href = $(this).data('href');
                 var status = $(this).data('status');
                 $('#update_status_modal').modal('show');
@@ -130,6 +170,75 @@
                 $('#update_status_form #update_status').val(status);
                 $('#update_status_form #update_status').trigger('change');
             });
+
+            $('#location_id').select2({
+			ajax: {
+				url: '/business/get_locations',
+				dataType: 'json',
+				delay: 250,
+				data: function(params) {
+					return {
+						q: params.term, // search term
+						page: params.page,
+					};
+				},
+				processResults: function(data) {
+					return {
+						results: data,
+					};
+				},
+			},
+			minimumInputLength: 1,
+			escapeMarkup: function(m) {
+				return m;
+			},
+			templateResult: function(data) {
+				if (!data.id) {
+					return data.text;
+				}
+				var html = data.text;
+				return html;
+			},
+			}).on('select2:select', function (e) {
+                task_table.ajax.reload();
+
+			});
+
+    
+            $('#delivery_person_id').select2({
+            ajax: {
+                url: '/user/get_delivery_people',
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        q: params.term, // search term
+                        page: params.page,
+                    };
+                },
+                processResults: function(data) {
+                    console.log(data);
+                    return {
+                        results: data,
+                    };
+                },
+            },
+            minimumInputLength: 1,
+            escapeMarkup: function(m) {
+                return m;
+            },
+         
+            templateResult: function(data) {
+                if (!data.id) {
+                    return data.text;
+                }
+                var html = data.text;
+                return html;
+            },
+        }).on('select2:select', function (e) {
+                task_table.ajax.reload();
+			});
+
 
 
             $(document).on('submit', '#update_status_form', function (e) {
@@ -160,6 +269,7 @@
             });
         })
     </script>
+    <script src="{{ asset('js/payment.js?v=' . $asset_v) }}"></script>
 @endsection
 @section('css')
     <style>

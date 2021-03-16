@@ -15,6 +15,8 @@ class CreateDeliveriesTable extends Migration
     {
         Schema::create('deliveries', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->integer('business_id')->unsigned();
+            $table->foreign('business_id')->references('id')->on('business')->onDelete('cascade');
             $table->integer('transaction_id')->unsigned();
             $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
             $table->bigInteger('delivery_person_id')->unsigned();
@@ -28,7 +30,7 @@ class CreateDeliveriesTable extends Migration
             $table->string('pickup_longitude')->nullable();
             $table->string('special_delivery_instructions')->nullable();
             $table->dateTime('delivery_started_at')->nullable();
-            $table->dateTime('delivered_ended_at')->nullable();
+            $table->dateTime('delivery_ended_at')->nullable();
             $table->string('delivered_to')->nullable();
             $table->integer('assigned_by')->unsigned();
             $table->foreign('assigned_by')->references('id')->on('users')->onDelete('cascade');

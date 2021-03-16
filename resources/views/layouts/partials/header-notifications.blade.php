@@ -5,7 +5,7 @@
 @endphp
 <!-- Notifications: style can be found in dropdown.less -->
 <li class="dropdown notifications-menu">
-  <a href="#" class="dropdown-toggle load_notifications" data-toggle="dropdown" id="show_unread_notifications" data-loaded="false">
+  <a href="#" class="dropdown-toggle load_notifications" data-toggle="dropdown" id="" data-loaded="false">
     <i class="fas fa-bell"></i>
     <span class="label label-warning notifications_count">@if(!empty($total_unread)){{$total_unread}}@endif</span>
   </a>
@@ -17,7 +17,7 @@
       <ul class="menu" id="notifications_list">
       </ul>
     </li>
-    
+
     @if(count($all_notifications) > 10)
       <li class="footer load_more_li">
         <a href="#" class="load_more_notifications">@lang('lang_v1.load_more')</a>

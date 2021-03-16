@@ -14,6 +14,7 @@ use Laravel\Passport\HasApiTokens;
 class User extends Authenticatable
 {
     use Notifiable;
+    use HasApiTokens;
     use SoftDeletes;
     use HasRoles;
     use HasApiTokens;
@@ -49,10 +50,21 @@ class User extends Authenticatable
         return $this->belongsTo(\App\Business::class);
     }
 
+    public function scopeActive($query)
+    {
+        return $query->where('users.status', 'active');
+    }
 
     public function scopeUser($query)
     {
         return $query->where('users.user_type', 'user');
+    }
+
+    public function routeNotificationForMail()
+    {
+        // Return email address only...
+        return $this->email;
+
     }
 
     /**
@@ -171,9 +183,7 @@ class User extends Authenticatable
      */
     public static function forDropdown($business_id, $prepend_none = true, $include_commission_agents = false, $prepend_all = false, $check_location_permission = false)
     {
-        $query = User::where('business_id', $business_id)
-                    ->user();
-                    
+        $query = User::where('business_id', $business_id); 
         if (!$include_commission_agents) {
             $query->where('is_cmmsn_agnt', 0);
         }
@@ -304,6 +314,8 @@ class User extends Authenticatable
     {
         return $this->belongsTo(\Modules\Crm\Entities\CrmContact::class, 'crm_contact_id');
     }
+
+
 
 
 }

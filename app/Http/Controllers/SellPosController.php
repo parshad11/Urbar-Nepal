@@ -24,6 +24,7 @@
  * @copyright  2018 The Web Fosters
  * @license    As attached in zip file.
  */
+
 namespace App\Http\Controllers;
 
 use App\Account;
@@ -58,6 +59,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Yajra\DataTables\Facades\DataTables;
 use App\InvoiceScheme;
+use App\Notifications\CustomerNotification;
+use App\NotificationTemplate;
 
 class SellPosController extends Controller
 {
@@ -135,9 +138,9 @@ class SellPosController extends Controller
 
         $is_types_service_enabled = $this->moduleUtil->isModuleEnabled('types_of_service');
 
-        $shipping_statuses = $this->transactionUtil->shipping_statuses();
+      
 
-        return view('sale_pos.index')->with(compact('business_locations', 'customers', 'sales_representative', 'is_cmsn_agent_enabled', 'commission_agents', 'service_staffs', 'is_tables_enabled', 'is_service_staff_enabled', 'is_types_service_enabled', 'shipping_statuses'));
+        return view('sale_pos.index')->with(compact('business_locations', 'customers', 'sales_representative', 'is_cmsn_agent_enabled', 'commission_agents', 'service_staffs', 'is_tables_enabled', 'is_service_staff_enabled', 'is_types_service_enabled'));
     }
 
     /**
@@ -423,10 +426,13 @@ class SellPosController extends Controller
                 if($input['status']=='final'&& isset($input['assign_delivery'])){
                     $assign_delivery=1;
                 }
-
+                
                 $transaction = $this->transactionUtil->createSellTransaction($business_id, $input, $invoice_total, $user_id,$assign_delivery);
+               
 
                 $this->transactionUtil->createOrUpdateSellLines($transaction, $input['products'], $input['location_id']);
+                
+              
                 
                 if (!$is_direct_sale) {
                     //Add change return
@@ -442,7 +448,7 @@ class SellPosController extends Controller
                     $this->transactionUtil->createOrUpdatePaymentLines($transaction, $input['payment']);
                 }
 
-
+                
 
                 //Check for final and do some processing.
                 if ($input['status'] == 'final') {
@@ -485,6 +491,7 @@ class SellPosController extends Controller
                         $redeemed = !empty($input['rp_redeemed']) ? $input['rp_redeemed'] : 0;
                         $this->transactionUtil->updateCustomerRewardPoints($contact_id, $transaction->rp_earned, 0, $redeemed);
                     }
+                    
 
                     //Allocate the quantity from purchase and add mapping of
                     //purchase & sell lines in
@@ -498,24 +505,12 @@ class SellPosController extends Controller
                                     'pos_settings' => $pos_settings
                                 ];
                     $this->transactionUtil->mapPurchaseSell($business, $transaction->sell_lines, 'purchase');
-
+                
                     //Auto send notification
                     $this->notificationUtil->autoSendNotification($business_id, 'new_sale', $transaction, $transaction->contact);
+
                 }
-
-                // if($transaction->assign_delivery){
-                //     $delivery_details['transaction_id']=$transaction->id;
-                //     $delivery_details['delivery_person_id']=$request->input('delivery_person_id');
-                //     $delivery_details['delivery_status']=$request->input('delivery_status');
-                //     $delivery_details['pickup_address']=$request->input('pickup_address');
-                //     $delivery_details['shipping_address']=$request->input('shipping_address');
-                //     $delivery_details['shipping_latitude']=$request->input('shipping_latitude');
-                //     $delivery_details['shipping_longitude']=$request->input('shipping_longitude');
-                //     $delivery_details['special_delivery_instructions']=$request->input('special_delivery_instructions');
-                //     Delivery::create($delivery_details);
-    
-                // }
-
+                
                 //Set Module fields
                 if (!empty($input['has_module_data'])) {
                     $this->moduleUtil->getModuleData('after_sale_saved', ['transaction' => $transaction, 'input' => $input]);
@@ -987,6 +982,7 @@ class SellPosController extends Controller
         }
         
         try {
+        
             $input = $request->except('_token');
             //status is send as quotation from edit sales screen.
             $input['is_quotation'] = 0;
@@ -1098,6 +1094,15 @@ class SellPosController extends Controller
                 if($input['status']=='final'&& isset($input['assign_delivery'])){
                     $assign_delivery=1;
                 }
+                
+                if($assign_delivery==0){
+                    $delivery = Delivery::where('transaction_id', $id)
+                    ->first();
+                    if ($delivery) {
+						$delivery->delete();
+					}
+
+                }
                 //Begin transaction
                 DB::beginTransaction();
             
@@ -1129,21 +1134,7 @@ class SellPosController extends Controller
                     $this->transactionUtil->updateCustomerRewardPoints($contact_id, $transaction->rp_earned, $rp_earned_before, $transaction->rp_redeemed, $rp_redeemed_before);
                 }
               
-                // if($transaction->assign_delivery){
-                //     Delivery::updateOrCreate(
-                //        ['transaction_id'=>$transaction->id,
-                //        'delivery_person_id'=>$request->input('delivery_person_id'),
-                //        'delivery_status'=>$request->input('delivery_status'),
-                //        'pickup_address'=>$request->input('pickup_address'),
-                //        'shipping_address'=>$request->input('shipping_address'),
-                //        'shipping_latitude'=>$request->input('shipping_latitude'),
-                //        'shipping_longitude'=>$request->input('shipping_longitude'),
-                //        'special_delivery_instructions'=>$request->input('special_delivery_instructions')]
-
-                //     );
-                   
-    
-                // }
+               
 
                 //Update payment status
                 $this->transactionUtil->updatePaymentStatus($transaction->id, $transaction->final_total);

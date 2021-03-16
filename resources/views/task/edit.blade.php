@@ -47,10 +47,19 @@
                             {!! Form::select('task_type', $taskTypes, $task->task_type, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required']); !!}
                         </div>
                     </div>
+                    @if($task->task_status=='completed')
+                        @php
+                        $disabled=true;
+                        @endphp
+                      @else
+                        @php
+                        $disabled=false;
+                        @endphp
+                      @endif	
                     <div class="col-sm-4 ">
                         <div class="form-group">
                             {!! Form::label('task_status', __('delivery.task_status') . ':*') !!}
-                            {!! Form::select('task_status', $taskStatuses, $task->task_status, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required']); !!}
+                            {!! Form::select('task_status', $taskStatuses, $task->task_status,($disabled)? ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required',"disabled"=>"disabled"]:['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required']); !!}
                         </div>
                     </div>
                     <div class="clearfix"></div>
@@ -89,9 +98,7 @@
                             </div>
 
                             <div class="form-group">
-                                <p>Please open this link to choose pickup location's latitude and longitude: <a
-                                            href="https://www.mapcoordinates.net/en" target="_blank">https://www.mapcoordinates.net/en </a>
-                                </p>
+                            <span><a target="_blank" href="https://www.mapcoordinates.net/en" class="btn-sm btn-primary">Click here</a> to find latitude and longitude</span>
                             </div>
                         </div>
                         <div class="col-sm-4 ">

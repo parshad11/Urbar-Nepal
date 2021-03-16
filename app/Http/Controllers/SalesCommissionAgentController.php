@@ -96,6 +96,7 @@ class SalesCommissionAgentController extends Controller
             $input['business_id'] = $business_id;
             $input['allow_login'] = 0;
             $input['is_cmmsn_agnt'] = 1;
+            $input['user_type'] = 'agent';
 
             $user = User::create($input);
             

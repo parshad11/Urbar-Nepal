@@ -308,6 +308,7 @@
           </div>
         </div>
 
+       
         <div class="form-group col-sm-12" id="product_form_part">
           @include('product.partials.single_product_form_part', ['profit_percent' => $default_profit_percent])
         </div>

@@ -58,6 +58,7 @@ class RecordUtil extends Util
     {
         $tasks = Task::leftJoin('users as u', 'tasks.assigned_by', '=', 'u.id')
                       ->leftJoin('delivery_people as d', 'tasks.delivery_person_id', '=', 'd.id')
+                      ->leftJoin('users as r', 'd.user_id', '=', 'r.id')
                       ->join(
                         'business_locations AS BS',
                         'tasks.location_id',
@@ -70,14 +71,15 @@ class RecordUtil extends Util
                         'tasks.title', 
                         'tasks.task_type',
                         'tasks.task_status',
-                        DB::raw("CONCAT(COALESCE(u.surname, ''),' ',COALESCE(u.first_name, ''),' ',COALESCE(u.last_name,'')) as assign_to"),
-                        DB::raw("CONCAT(COALESCE(tasks.task_address, ''),' ',COALESCE(tasks.task_latitude, ''),' ',COALESCE(tasks.task_longitude,'')) as task_address"),
+                        'tasks.started_at',
+                        'tasks.ended_at',
+                        DB::raw("CONCAT(COALESCE(r.surname, ''),' ',COALESCE(r.first_name, ''),' ',COALESCE(r.last_name,'')) as assigned_to"),
+                        'tasks.task_address',
                         'BS.name as location_name',
                         DB::raw("CONCAT(COALESCE(u.surname, ''),' ',COALESCE(u.first_name, ''),' ',COALESCE(u.last_name,'')) as assigned_by")
                        
                     )
                     ->groupBy('tasks.id');
-
         return $tasks;
         }
 

@@ -392,7 +392,7 @@ class ProductController extends Controller
         //Product types also includes modifier.
         return ['single' => __('lang_v1.single'),
                 'variable' => __('lang_v1.variable'),
-                'combo' => __('lang_v1.combo')
+                // 'combo' => __('lang_v1.combo')
             ];
     }
 
@@ -410,6 +410,7 @@ class ProductController extends Controller
         }
 
         try {
+            
             $business_id = $request->session()->get('user.business_id');
             $form_fields = ['name', 'brand_id', 'unit_id', 'category_id', 'tax', 'type', 'barcode_type', 'sku', 'alert_quantity', 'tax_type', 'weight', 'product_custom_field1', 'product_custom_field2', 'product_custom_field3', 'product_custom_field4', 'product_description', 'sub_unit_ids'];
 
@@ -466,7 +467,7 @@ class ProductController extends Controller
             }
             
             if ($product->type == 'single') {
-                $this->productUtil->createSingleProductVariation($product->id, $product->sku, $request->input('single_dpp'), $request->input('single_dpp_inc_tax'), $request->input('profit_percent'), $request->input('single_dsp'), $request->input('single_dsp_inc_tax'));
+                $this->productUtil->createSingleProductVariation($product->id, $product->sku,$request->input('market_price'), $request->input('single_dpp'), $request->input('single_dpp_inc_tax'), $request->input('profit_percent'), $request->input('single_dsp'), $request->input('single_dsp_inc_tax'));
             } elseif ($product->type == 'variable') {
                 if (!empty($request->input('product_variation'))) {
                     $input_variations = $request->input('product_variation');
@@ -720,10 +721,11 @@ class ProductController extends Controller
             $product->product_locations()->sync($product_locations);
             
             if ($product->type == 'single') {
-                $single_data = $request->only(['single_variation_id', 'single_dpp', 'single_dpp_inc_tax', 'single_dsp_inc_tax', 'profit_percent', 'single_dsp']);
+                $single_data = $request->only(['single_variation_id', 'single_dpp', 'single_dpp_inc_tax', 'single_dsp_inc_tax', 'profit_percent', 'single_dsp','market_price']);
                 $variation = Variation::find($single_data['single_variation_id']);
 
                 $variation->sub_sku = $product->sku;
+                $variation->market_price = $this->productUtil->num_uf($single_data['market_price']);
                 $variation->default_purchase_price = $this->productUtil->num_uf($single_data['single_dpp']);
                 $variation->dpp_inc_tax = $this->productUtil->num_uf($single_data['single_dpp_inc_tax']);
                 $variation->profit_percent = $this->productUtil->num_uf($single_data['profit_percent']);
@@ -1351,6 +1353,7 @@ class ProductController extends Controller
                 $product->id,
                 $product->sku,
                 $request->input('single_dpp'),
+                $request->input('market_price'),
                 $request->input('single_dpp_inc_tax'),
                 $request->input('profit_percent'),
                 $request->input('single_dsp'),

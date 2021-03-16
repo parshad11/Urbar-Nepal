@@ -1099,6 +1099,22 @@
             <hr>
             <div class="row check_group">
                 <div class="col-md-3">
+                    <h4>@lang( 'lang_v1.upload_front_cms' )</h4>
+                </div>
+                <div class="col-md-9">
+                    <div class="col-md-12">
+                        <div class="checkbox">
+                            <label>
+                                {!! Form::checkbox('permissions[]', 'upload.front_cms', false,
+                                [ 'class' => 'input-icheck']); !!} {{ __( 'lang_v1.upload_front_cms' ) }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row check_group">
+                <div class="col-md-3">
                     <h4>@lang( 'account.account' )</h4>
                 </div>
                 <div class="col-md-9">
