@@ -20,6 +20,7 @@
                     <thead>
                     <tr>
                         <th>Action</th>
+                        <th>Work Id</th>
                         <th>@lang('purchase.business_location')</th>
                         <th>Assigned To</th>
                         <th>Work Type</th>
@@ -100,6 +101,7 @@
                 },
                 columns: [
                     {data: 'action', name: 'action', orderable: false, searchable: false},
+                    {data: 'id', name: 'id'},
                     {data: 'business_location', name: 'bl.name'},
                     {data: 'assigned_to', name: 'u.first_name'},
                     {data: 'type', name: 'type'},

@@ -486,14 +486,14 @@
                 ignoreReadonly: true,
             });
 
-			$( "#sell_status" ).change(function() {
-        if(this.value == 'final'){
-            $('div.assign_delivery_div').removeClass( "hide" );
-        }
-        else{
-            $('div.assign_delivery_div').addClass("hide");
-           
-        }
+			$("#sell_status").change(function(e) {
+			if(this.value == 'final'){
+				$('div.assign_delivery_div').removeClass( "hide" );
+			}
+			else{
+				$('div.assign_delivery_div').addClass("hide");
+			
+			}
         });
 
 			$('#select_location_id').select2({

@@ -20,6 +20,7 @@
                 <thead>
                     <tr>
                         <th>@lang('messages.action')</th>
+                        <th>@lang('lang_v1.transaction_id')</th>
                         <th>@lang('lang_v1.type')</th>
                         <th>@lang('messages.date')</th>
                         <th>@lang('sale.customer_name')</th>
@@ -89,6 +90,7 @@ $(document).ready( function(){
         scrollCollapse: true,
         columns: [
             { data: 'action', name: 'action', orderable: false, "searchable": false},
+            { data: 'id', name: 'id'},
             { data: 'type', name: 'type'},
             { data: 'transaction_date', name: 'transaction_date'  },
             { data: 'name', name: 'contacts.name'},

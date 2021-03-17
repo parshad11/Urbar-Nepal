@@ -13,7 +13,7 @@
 <div class="col-md-3">
     <div class="form-group">
         {!! Form::label('task_list_filter_task_status',  __('delivery.task_status') . ':') !!}
-        {!! Form::select('task_list_filter_task_status',$statuses, null, ['class' => 'form-control select2', 'style' => 'width:100%', 'placeholder' => __('lang_v1.all')]); !!}
+        {!! Form::select('task_list_filter_task_status',$taskStatuses, null, ['class' => 'form-control select2', 'style' => 'width:100%', 'placeholder' => __('lang_v1.all')]); !!}
     </div>
 </div>
 @endif

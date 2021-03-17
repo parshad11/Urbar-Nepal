@@ -479,27 +479,3 @@
 
   </div><!-- /.modal-content -->
 </div><!-- /.modal-dialog -->
-@section('javascript')
-<script type="text/javascript">
-  $('form#contact_add_form').validate({
-                rules: {
-                    password: {
-                        required: true,
-                        minlength: 5
-                    },
-                    confirm_password: {
-                        equalTo: "#password"
-                    },
-                },
-                messages: {
-                    password: {
-                        minlength: 'Password should be minimum 5 characters',
-                    },
-                    confirm_password: {
-                        equalTo: 'Should be same as password'
-                    },
-                  
-                }
-            });
-            </script>
-@endsection

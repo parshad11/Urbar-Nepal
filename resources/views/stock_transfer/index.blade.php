@@ -22,6 +22,7 @@
             <table class="table table-bordered table-striped ajax_view" id="stock_transfer_table">
                 <thead>
                     <tr>
+                        <th>@lang('lang_v1.id')</th>
                         <th>@lang('messages.date')</th>
                         <th>@lang('purchase.ref_no')</th>
                         <th>@lang('lang_v1.location_from')</th>

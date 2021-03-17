@@ -20,6 +20,7 @@
                     <thead>
                     <tr>
                         <th>Action</th>
+                        <th>Transaction Id</th>
                         <th>Transaction Type</th>
                         <th>Delivery Person</th>
                         <th>Delivery Status</th>
@@ -99,8 +100,12 @@
                        d = __datatable_ajax_callback(d);
                     }
                 },
+                scrollY:        "75vh",
+                scrollX:        true,
+                scrollCollapse: true,
                 columns: [
                     {data: 'action', name: 'action', orderable: false, searchable: false},
+                    {data: 'transaction_id', name: 'transaction_id'},
                     {data: 'type', name: 'transactions.type'},
                     {data: 'delivery_person', name: 'r.first_name'},
                     {data: 'delivery_status', name: 'delivery_status'},
