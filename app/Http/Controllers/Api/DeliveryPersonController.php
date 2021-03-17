@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use FontLib\Table\Type\loca;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\DeliveryPerson;
@@ -15,7 +16,15 @@ class DeliveryPersonController extends Controller
         ]);
     }
 
-    public function getDeliveryPersonLocation($delivery_person_id){
-        dd("hello");
+    public function getDeliveryPersonLocation(Request $request,$id){
+        if($request->ajax()){
+			$latitude=27.68519335;
+			$longitude=85.34866242;
+			$location=[
+				'latitude'=>$latitude,
+				'longitude'=>$longitude
+			];
+	        return $location;
+        }
     }
 }
