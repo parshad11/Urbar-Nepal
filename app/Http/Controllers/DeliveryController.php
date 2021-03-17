@@ -282,7 +282,6 @@ class DeliveryController extends Controller
                     return $html;
                 }
                 )
-                ->removeColumn('id')
                 ->editColumn('transaction_date', '{{@format_datetime($transaction_date)}}')
                 ->editColumn('assign_delivery_status', function ($row) use ($assignStatuses) {
                     if ($row->assign_delivery_status == 1) {
@@ -419,7 +418,6 @@ class DeliveryController extends Controller
                     }
                     return $status;
                 })
-                ->removeColumn('id')
                 ->rawColumns(['action','type','status'])
                 ->make(true);
 
@@ -506,16 +504,41 @@ class DeliveryController extends Controller
                 $delivery->delivery_started_at = null;
                 $delivery->delivery_ended_at = null;
                 $delivery->save();
+
+                if($transaction->type=='sell_transfer'){
+                $transaction->status='pending';
+                $transaction->save();
+                }
+                else if($transaction->type=='purchase'){
+                    $transaction->status='pending';
+                    $transaction->save();
+                }
             }
             if ($delivery->delivery_status == 'shipped') {
                 $delivery_started_at = now();
                 $delivery->delivery_started_at = $delivery_started_at;
                 $delivery->save();
+                if($transaction->type=='sell_transfer'){
+                    $transaction->status='transit';
+                    $transaction->save();
+                }
+                else if($transaction->type=='purchase'){
+                        $transaction->status='pending';
+                        $transaction->save();
+                 }
             }
             if ($delivery->delivery_status == 'delivered') {
                 $delivery_ended_at = now();
                 $delivery->delivery_ended_at = $delivery_ended_at;
                 $delivery->save();
+                if($transaction->type=='sell_transfer'){
+                    $transaction->status='completed';
+                    $transaction->save();
+                }
+                else if($transaction->type=='purchase'){
+                        $transaction->status='received';
+                        $transaction->save();
+                 }
             }
             if ($delivery->delivery_status == 'cancelled') {
                 $delivery->delivery_started_at = null;
@@ -601,7 +624,7 @@ class DeliveryController extends Controller
             }
 
 
-            $transaction_id = $request['transaction_id'];
+            $transaction = Transaction::findOrFail($request['transaction_id']);
 
             $delivery_data = $request->only(['delivery_person_id', 'delivery_status', 'shipping_address', 'shipping_latitude', 'shipping_longitude', 'pickup_address', 'pickup_latitude', 'pickup_longitude', 'special_delivery_instructions', 'delivered_to']);
 
@@ -619,16 +642,41 @@ class DeliveryController extends Controller
                 $delivery->delivery_started_at = null;
                 $delivery->delivery_ended_at = null;
                 $delivery->save();
+                if($transaction->type=='sell_transfer'){
+                    $transaction->status='pending';
+                    $transaction->save();
+                    }
+                    else if($transaction->type=='purchase'){
+                        $transaction->status='pending';
+                        $transaction->save();
+                }
             }
             if (!isset($shipped_status_set) && $delivery->delivery_status == 'shipped') {
                 $delivery_started_at = now();
                 $delivery->delivery_started_at = $delivery_started_at;
                 $delivery->save();
+               
+                if($transaction->type=='sell_transfer'){
+                    $transaction->status='transit';
+                    $transaction->save();
+                }
+                else if($transaction->type=='purchase'){
+                        $transaction->status='pending';
+                        $transaction->save();
+                 }
             }
             if (!isset($delivered_status_set) && $delivery->delivery_status == 'delivered') {
                 $delivery_ended_at = now();
                 $delivery->delivery_ended_at = $delivery_ended_at;
                 $delivery->save();
+                if($transaction->type=='sell_transfer'){
+                    $transaction->status='completed';
+                    $transaction->save();
+                }
+                else if($transaction->type=='purchase'){
+                        $transaction->status='received';
+                        $transaction->save();
+                 }
             }
             if ($delivery->delivery_status == 'cancelled') {
                 $delivery->delivery_started_at = null;
@@ -669,7 +717,7 @@ class DeliveryController extends Controller
             $data = $request->validate([
                 'delivery_status' => 'required',
             ]);
-
+            $transaction=Transaction::findorFail($delivery->transaction_id);
             DB::beginTransaction();
             $update_data['delivery_status'] = $request->input('delivery_status');
             $delivery->update($update_data);
@@ -682,16 +730,40 @@ class DeliveryController extends Controller
                 $delivery->delivery_started_at = null;
                 $delivery->delivery_ended_at = null;
                 $delivery->save();
+                if($transaction->type=='sell_transfer'){
+                    $transaction->status='pending';
+                    $transaction->save();
+                    }
+                    else if($transaction->type=='purchase'){
+                        $transaction->status='pending';
+                        $transaction->save();
+                 }
             }
             if (!isset($shipped_status_set) && $delivery->delivery_status == 'shipped') {
                 $delivery_started_at = now();
                 $delivery->delivery_started_at = $delivery_started_at;
                 $delivery->save();
+                if($transaction->type=='sell_transfer'){
+                    $transaction->status='transit';
+                    $transaction->save();
+                }
+                else if($transaction->type=='purchase'){
+                        $transaction->status='pending';
+                        $transaction->save();
+                }
             }
             if (!isset($delivered_status_set) && $delivery->delivery_status == 'delivered') {
                 $delivery_ended_at = now();
                 $delivery->delivery_ended_at = $delivery_ended_at;
                 $delivery->save();
+                if($transaction->type=='sell_transfer'){
+                    $transaction->status='completed';
+                    $transaction->save();
+                }
+                else if($transaction->type=='purchase'){
+                        $transaction->status='received';
+                        $transaction->save();
+                }
             }
             if ($delivery->delivery_status == 'cancelled') {
                 $delivery->delivery_started_at = null;

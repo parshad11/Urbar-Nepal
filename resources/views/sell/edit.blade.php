@@ -236,7 +236,7 @@
 						</tr>
 					</table>
 					</div>
-					<div class="col-sm-3 assign_delivery_div">
+					<div class="col-sm-3 hide assign_delivery_div">
 					<div class="checkbox">
 					<label>
 						{!! Form::checkbox('assign_delivery', 1, $transaction->assign_delivery, 

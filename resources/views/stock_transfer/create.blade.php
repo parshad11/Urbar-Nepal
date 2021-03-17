@@ -96,7 +96,7 @@
 					</table>
 					</div>
 				</div>
-				<div class="col-sm-3">
+				<div class="col-sm-3 assign_delivery_checkbox">
 				<div class="checkbox">
 					<label>
 						{!! Form::checkbox('assign_delivery', 1, null,
@@ -176,6 +176,25 @@
 
 	<script>
         $(document).ready(function (e) {
+
+			$( "#status" ).change(function() {
+        if(this.value == 'transit'){
+			$("#assign_delivery").prop("checked", false);
+            $('div.assign_delivery_checkbox').addClass( "hide" );
+        }
+	
+		else if(this.value == 'completed'){
+			$("#assign_delivery").prop("checked", false);
+            $('div.assign_delivery_checkbox').addClass( "hide" );
+			
+        }
+        else{
+            $('div.assign_delivery_checkbox').removeClass("hide");
+           
+        }
+
+		});
+	
 
 		$('#assign_delivery').on('ifChecked', function(event){
 				$('div.assign_delivery_div').removeClass('hide');

@@ -4328,6 +4328,7 @@ class TransactionUtil extends Util
                 ->where('transactions.business_id', $business_id)
                 ->select(
                     'deliveries.id',
+                    'deliveries.transaction_id',
                     'deliveries.delivery_person_id',
                     DB::raw("CONCAT(COALESCE(r.surname, ''),' ',COALESCE(r.first_name, ''),' ',COALESCE(r.last_name,'')) as delivery_person"),
                     'bl.name as business_location',

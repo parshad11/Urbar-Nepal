@@ -145,9 +145,10 @@ class TaskController extends Controller
                               ->make(true); 
 
         } else {
+            $taskStatuses = $this->productUtil->taskStatuses();
             $sales_representative = User::forDropdown($business_id, false, false, true);
             $business_locations = BusinessLocation::forDropdown($business_id, false);
-            return view('task.index')->with(compact('statuses','business_locations','sales_representative','taskTypes'));
+            return view('task.index')->with(compact('taskStatuses','business_locations','sales_representative','taskTypes'));
         }
 
     }

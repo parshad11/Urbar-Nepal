@@ -534,6 +534,7 @@ $(document).ready(function() {
         aaSorting: [[1, 'desc']],
         columns: [
             { data: 'action', name: 'action', orderable: false, searchable: false },
+            { data: 'id', name: 'id' },
             { data: 'transaction_date', name: 'transaction_date' },
             { data: 'ref_no', name: 'ref_no' },
             { data: 'location_name', name: 'BS.name' },

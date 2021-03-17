@@ -142,6 +142,8 @@ return [
     'card_type' => 'Card Type',
     'month' => 'Month',
     'year' => 'Year',
+    'id' => 'Id',
+    'transaction_id' => 'Transaction Id',
     'security_code' => 'Security Code',
     'cheque_no' => 'Cheque Number',
     'bank_account_number' => 'Bank Account No',
