@@ -158,7 +158,7 @@
                 });
             });
 
-            $(document).on('click', 'a.update_status', function (e) {
+            $(document).on('click', 'a.update_task_status', function (e) {
                 e.preventDefault();
                 if($(this).data('status')=='completed'){
                     return;
