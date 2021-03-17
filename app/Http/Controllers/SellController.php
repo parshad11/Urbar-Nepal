@@ -198,7 +198,7 @@ class SellController extends Controller
                 $sells->whereNotNull('transactions.shipping_status');
             }
 
-            if (!auth()->user()->can('sell.view') && auth()->user()->can('view_own_sell')) {
+            if (!auth()->user()->can('sell.view') && auth()->user()->can('view_own_sell_only')) {
                 $sells->where('transactions.created_by', request()->session()->get('user.id'));
             }
             
