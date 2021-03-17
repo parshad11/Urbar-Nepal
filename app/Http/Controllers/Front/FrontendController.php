@@ -14,6 +14,9 @@ use App\Front\Team;
 use App\Front\Testimonial;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Mail\VendorRequestMail;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Mail;
 
 use function GuzzleHttp\json_decode;
 
@@ -65,15 +68,10 @@ class FrontendController extends Controller
             ->with('blogs', $blogs);
     }
 
-    public function getBlog()
+    public function mailRequest(Request $request)
     {
-        $about_details = FrontAbout::first();
-        $categories = BlogCategory::with('news')->orderBy('id', 'desc')->get();
-        $blogs = Blog::with('category')->orderBy('id', 'desc')->where('status', 'active')->paginate(4);
-        return view('frontcms.blog')
-            ->with('about_info', $about_details)
-            ->with('categories', $categories)
-            ->with('blogs', $blogs);
+        Mail::to(Config::get('mail.from.address'))->send(new VendorRequestMail($request));
+        return redirect()->back();
     }
 
 
