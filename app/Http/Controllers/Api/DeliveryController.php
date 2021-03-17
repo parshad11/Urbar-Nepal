@@ -22,7 +22,7 @@ class DeliveryController extends Controller
             $delivery = Delivery::with('transaction')->where('delivery_person_id', $delivery_person->id)->get();
         }
         elseif(auth()->user()->user_type=='admin' || auth()->user()->user_type=='Admin'){
-            $delivery = Delivery::with('transaction')->all();
+            $delivery = Delivery::with('transaction')->get();
         }
 
         return response()->json([
@@ -45,7 +45,7 @@ class DeliveryController extends Controller
         }
         $delivery->fill($data);
         $success=$delivery->save();
-
+		$delivery=Delivery::where('id',$id)->get();
         return response()->json([
             'data'=>$delivery
         ]);
@@ -53,3 +53,7 @@ class DeliveryController extends Controller
 
     
 }
+
+
+
+
