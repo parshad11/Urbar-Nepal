@@ -474,6 +474,7 @@ class DeliveryController extends Controller
             $input = $request->except('_token');
 
             $business_id = $request->session()->get('user.business_id');
+            $transaction=Transaction::findOrFail($input['transaction_id']);
             $user_id = $request->session()->get('user.id');
             DB::beginTransaction();
             $delivery = Delivery::create([
