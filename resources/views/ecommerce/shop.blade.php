@@ -111,38 +111,45 @@
 
                     <!-- PRODUCTS -->
                     <div class="row">
-                        {{--                        @forelse($products)--}}
                         @forelse($products as $product)
-                            <div class="card col-md-4 col-sm-6 col-xs-12">
-                                <div class="product">
-                                    <div class="img">
-                                        <a href="single.htm">
-                                            <img class="img img-responsive"
-                                                 src="https://www.radishbo-ya.co.jp/contents/shop/radish/commodity/249.jpg"
-                                                 alt="">
-                                        </a>
-                                    </div>
-                                    <div class="description">
-                                        <div class="title"><b><a href="single.htm">Name</a></b></div>
-                                        <div class="price">
-                                            <div class="kalimati"><small>Kalimati Price : Rs. 100</small></div>
-                                            <div class="main main-offer">Price : 120 Rs</div>
-                                            <select name="variation" id="">
-                                                <option value="1">1</option>
-                                                <option value="1">2</option>
-                                                <option value="1">3</option>
-                                                <option value="1">4</option>
-                                            </select>
-                                            <div class="offer">Price : 120 Rs</div>
-                                        </div>
-                                        <button class="btn btn-success">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
+                            @foreach ($product->product_variations as $product_variation)
+                                @foreach ($product_variation->variations as $variation)
+                                    <div class="card col-md-4 col-sm-4 col-xs-6">
+                                        <div class="product">
+                                            <div class="img">
+                                                <a href="single.htm">
+                                                    <img class="img img-responsive"
+                                                         src="@if($variation->name != "DUMMY")
+                                                         @foreach($variation->media as $media)
+                                                         {{-- {!! $media->thumbnail([300, 300]) !!} --}}
+                                                         {{$media->display_url}}
+                                                         @endforeach
+                                                         @else
+                                                         {{$variation->product->image_url}}
+                                                         @endif" alt=""></a>
+                                            </div>
+                                            <div class="description">
+                                                <div class="title"><b><a href="{{route('product_single',$variation->sub_sku)}}">{{$variation->product->name}}
+                                                            &nbsp;{{$variation->name != "DUMMY" ? $variation->name : ''}}</a></b>
+                                                </div>
+                                                <div class="price">
 
+                                                    {{-- <p>{{$variation->media[0]->path}}</p> --}}
+                                                    <div class="kalimati"><small>Kalimati Price :Rs. {{$variation->market_price}}</small></div>
+
+                                                    <div class="offer">Price : Rs.{{$variation->sell_price_inc_tax}}</div>
+                                                </div>
+                                                <button class="btn btn-success">Add to Cart</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                @endforeach
+                            @endforeach
                         @empty
                         @endforelse
                     </div>
+                    {{-- {{$product->links()}} --}}
                 </div>
             </div>
 

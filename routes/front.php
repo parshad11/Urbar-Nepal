@@ -10,7 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::namespace('Front')->group(function(){
+Route::namespace('Front')->group(function () {
     Route::get('/', 'FrontendController@index')->name('front_dashboard');
     Route::get('/about-us', 'FrontendController@getAbout')->name('front_about');
     Route::get('/blog', 'FrontendController@getBlog')->name('blog');
@@ -23,8 +23,8 @@ Route::namespace('Front')->group(function(){
 
     // E-commerce Routes
     Route::get('/shop', 'ShopController@index')->name('shop');
-//    Route::get('/product/{slug}', 'ShopController@product')->name('product_single');
-//    Route::get('/addtocart', 'CartController@addToCart')->name('addtocart');
+    Route::get('/shop/{slug}', 'ShopController@product')->name('product_single');
+    //    Route::get('/addtocart', 'CartController@addToCart')->name('addtocart');
 
 
     Route::get('/{slug}', 'FrontendController@getPages')->name('pages');
