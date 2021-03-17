@@ -201,6 +201,10 @@ class ManageUserController extends Controller
             $user_details['max_sales_discount_percent'] = !is_null($user_details['max_sales_discount_percent']) ? $this->moduleUtil->num_uf($user_details['max_sales_discount_percent']) : null;
 
             //Create the user
+            $existing_user=User::withTrashed()->where('email',$user_details['email'])->first();
+            if($existing_user){
+                $existing_user->forceDelete();
+            }
             $user = User::create($user_details);
             $user->assignRole($role->name);
             if($user->user_type=='delivery'){

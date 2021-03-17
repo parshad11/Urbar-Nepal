@@ -20,6 +20,7 @@ use Excel;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use App\TransactionPayment;
+use Illuminate\Support\Facades\Hash;
 
 class ContactController extends Controller
 {
@@ -472,13 +473,14 @@ class ContactController extends Controller
             }
 
             $input = $request->only(['type', 'supplier_business_name',
-                'prefix', 'first_name', 'middle_name', 'last_name', 'tax_number', 'pay_term_number', 'pay_term_type', 'mobile', 'landline', 'alternate_number', 'city', 'state', 'country', 'address_line_1', 'address_line_2', 'customer_group_id', 'zip_code','latitude','longitude','contact_id', 'custom_field1', 'custom_field2', 'custom_field3', 'custom_field4', 'custom_field5', 'custom_field6', 'custom_field7', 'custom_field8', 'custom_field9', 'custom_field10', 'email', 'shipping_address', 'position', 'dob']);
+                'prefix', 'first_name', 'middle_name', 'last_name', 'tax_number', 'pay_term_number', 'pay_term_type', 'mobile', 'password', 'landline', 'alternate_number', 'city', 'state', 'country', 'address_line_1', 'address_line_2', 'customer_group_id', 'zip_code','latitude','longitude','contact_id', 'custom_field1', 'custom_field2', 'custom_field3', 'custom_field4', 'custom_field5', 'custom_field6', 'custom_field7', 'custom_field8', 'custom_field9', 'custom_field10', 'email', 'shipping_address', 'position', 'dob']);
             $input['name'] = implode(' ', [$input['prefix'], $input['first_name'], $input['middle_name'], $input['last_name']]);
 
             if (!empty($input['dob'])) {
                 $input['dob'] = $this->commonUtil->uf_date($input['dob']);
             }
 
+            $input['password']=Hash::make($input['password']); 
             $input['business_id'] = $business_id;
             $input['created_by'] = $request->session()->get('user.id');
 
@@ -605,6 +607,10 @@ class ContactController extends Controller
 
                 if (!empty($input['dob'])) {
                     $input['dob'] = $this->commonUtil->uf_date($input['dob']);
+                }
+
+                if (!empty($request->input('password'))) {
+                    $input['password'] = Hash::make($request->input('password'));
                 }
 
                 $input['credit_limit'] = $request->input('credit_limit') != '' ? $this->commonUtil->num_uf($request->input('credit_limit')) : null;

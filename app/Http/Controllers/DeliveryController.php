@@ -40,6 +40,14 @@ class DeliveryController extends Controller
             'cancelled' => 'bg-red',
         ];
 
+        $this->current_work_status_colors = [
+            'received' => 'bg-yellow',
+            'packed' => 'bg-blue',
+            'shipped' => 'bg-purple',
+            'on process' => 'bg-orange',
+        ];
+
+
     }
 
     /**
@@ -130,6 +138,15 @@ class DeliveryController extends Controller
 					return $html;
 				})
 				->removeColumn('id')
+                ->editColumn('type', function($row) {
+                    if($row->type=='sell_transfer') {
+                         return 'Stock Transfer';
+                     }
+                     else{
+                         return $row->type;
+                     }
+ 
+                 })
 				->editColumn('delivery_status', function ($row) use ($deliveryStatuses) {
 					$status = $deliveryStatuses[$row->delivery_status];
 					$status_color = !empty($this->status_colors[$row->delivery_status]) ? $this->status_colors[$row->delivery_status] : 'bg-gray';
@@ -144,7 +161,7 @@ class DeliveryController extends Controller
 							return '';
 						}
 					}])
-				->rawColumns(['action', 'delivery_status'])
+				->rawColumns(['action', 'delivery_status','type'])
 				->make(true);
 //
         } else {
@@ -309,7 +326,6 @@ class DeliveryController extends Controller
         $deliveryStatuses = $this->transactionUtil->deliveryStatuses();
         $taskStatuses = $this->transactionUtil->taskStatuses();
         $statuses=array_merge($deliveryStatuses,$taskStatuses);
-        unset($statuses['cancelled'],$statuses['delivered'],$statuses['completed']);
         $workTypes = $this->transactionUtil->workTypes();
         if ($request->ajax()) {
             $business_id = request()->session()->get('user.business_id');
@@ -382,22 +398,36 @@ class DeliveryController extends Controller
                     return $html;
                 })
                 ->editColumn('type', function($row) {
-                   if($row->type =='delivery'||$row->type =='pickup'){
+                   if($row->type =='delivery'||$row->type =='pick up'){
                         return 'task';
-                    } else {
+                    } else if($row->type=='sell_transfer') {
+                        return 'Stock Transfer';
+                    }
+                    else{
                         return $row->type;
                     }
 
                 })
+                ->editColumn('status', function($row) use($statuses) {
+                    $status =  $statuses[$row->status];
+                    $status_color = !empty($this->current_work_status_colors[$row->status]) ? $this->current_work_status_colors[$row->status] : 'bg-gray';
+                    if($row->type =='delivery'||$row->type =='pick up'){
+                    $status ='<a href="#" class="update_task_status" data-status="' . $row->status . '" data-href="' . action("TaskController@statusupdate", [$row->id]) . '"><span class="label ' . $status_color .'">' . $statuses[$row->status] . '</span></a>';
+                    }
+                    else{
+                        $status ='<a href="#" class="update_delivery_status" data-status="' . $row->status . '" data-href="' . action("DeliveryController@statusupdate", [$row->id]) . '"><span class="label ' . $status_color .'">' . $statuses[$row->status] . '</span></a>';
+                    }
+                    return $status;
+                })
                 ->removeColumn('id')
-                ->rawColumns(['action'])
+                ->rawColumns(['action','type','status'])
                 ->make(true);
 
         } else {
             $business_locations = BusinessLocation::forDropdown($business_id, false);
             $customers = Contact::customersDropdown($business_id, false);
             $sales_representative = User::forDropdown($business_id, false, false, true);
-            return view('delivery.currentwork')->with(compact('statuses','taskStatuses','business_locations','customers','sales_representative','deliveryStatuses','workTypes'));
+            return view('delivery.currentwork')->with(compact('statuses','taskStatuses','business_locations','customers','sales_representative','deliveryStatuses','workTypes','deliveryStatuses','taskStatuses'));
         }
     }
 
@@ -444,6 +474,7 @@ class DeliveryController extends Controller
             $input = $request->except('_token');
 
             $business_id = $request->session()->get('user.business_id');
+            $transaction=Transaction::findOrFail($input['transaction_id']);
             $user_id = $request->session()->get('user.id');
             DB::beginTransaction();
             $delivery = Delivery::create([
@@ -524,6 +555,7 @@ class DeliveryController extends Controller
         $delivery_person = $this->moduleUtil->getDeliveryUser($delivery->delivery_person_id);
         return view('delivery.show', compact('delivery', 'delivery_person'));
     }
+
 
 
     /**

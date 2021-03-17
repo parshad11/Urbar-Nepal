@@ -36,7 +36,8 @@
                     <div class="row">
                         <div class="contact-col">
                             <div id="form-messages"></div>
-                            <form id="ajax-contact" method="post" action="php/contact.php">
+                            <form id="ajax-contact" method="post" action="{{action('Front\FrontendController@mailRequest')}}">
+                            @csrf
                                 <div class="col-md-6">
                                     <input type="text" name="name" id="name" class="form-control"
                                            placeholder="Your Name" required>
