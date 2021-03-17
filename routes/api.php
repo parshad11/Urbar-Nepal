@@ -27,7 +27,8 @@ Route::middleware(['cors'])->group(function () {
 		route::put('/delivery/{id}', 'Api\DeliveryController@update');
 		route::get('/delivery-people', 'Api\DeliveryPersonController@GetAllDeliveryPeople');
 		route::get('/task', 'Api\TaskController@index');
-		route::post('/task/{id}', 'Api\TaskController@update');
+		route::put('/task/{id}', 'Api\TaskController@update');
+
 	});
 	route::post('/delivery_person/track/{id}', 'Api\DeliveryPersonController@getDeliveryPersonLocation')
 		->name('delivery.track');

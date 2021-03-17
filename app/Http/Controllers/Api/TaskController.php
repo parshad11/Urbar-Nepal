@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Task;
 use Auth;
+use DB;
 
 class TaskController extends Controller
 {
@@ -39,9 +40,6 @@ class TaskController extends Controller
 			} else if ($task->task_status == 'on process') {
 				$on_process_status_set = 1;
 			}
-			$request->validate([
-				'task_status' => 'required',
-			]);
 
 			DB::beginTransaction();
 			$update_data['task_status'] = $request->input('task_status');
@@ -69,18 +67,15 @@ class TaskController extends Controller
 
 			}
 			DB::commit();
-
-			$output = ['success' => 1,
-				'msg' => __('Task status updated succesfully')
-			];
 		} catch (\Exception $e) {
 			DB::rollBack();
 			\Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
 
-			$output = ['success' => 0,
-				'msg' => $e->getMessage()
-			];
+			return $this->respondWentWrong($e);
 		}
-		return $output;
+		$task = Task::where('id',$id)->get();
+		return response()->json([
+			'data'=>$task
+		]);
 	}
 }
