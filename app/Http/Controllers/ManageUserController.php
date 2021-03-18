@@ -598,7 +598,7 @@ class ManageUserController extends Controller
             $user_id = request()->session()->get('user.id');
 
           
-            $deliveryPeople = DeliveryPerson::join('users','delivery_people.user_id','=','users.id')
+            $deliveryPeople = DeliveryPerson::leftJoin('users','delivery_people.user_id','=','users.id')
             ->where('users.first_name', 'like', '%' . $term .'%')
             ->orWhere('users.last_name', 'like', '%' . $term .'%')
              ->select('delivery_people.id', DB::raw("CONCAT(COALESCE(users.surname, ''),' ',COALESCE(users.first_name, ''),' ',COALESCE(users.last_name,'')) as text"))
