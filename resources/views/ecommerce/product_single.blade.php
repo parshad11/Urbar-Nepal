@@ -47,7 +47,7 @@
 
         <!-- buttons -->
         <div class="section carts" style="padding-bottom:20px;">
-          <button class="btn btn-success">Add to Cart</button>
+          <button class="btn btn-success" id="add_to_cart" product_id="{{$variation->id}}">Add to Cart</button>
 
           <button class="btn btn-success">Buy Now</button>
 
@@ -97,7 +97,7 @@
 
                                 <div class="offer">Price : Rs.{{$variation->sell_price_inc_tax}}</div>
                             </div>
-                            <button class="btn btn-success">Add to Cart</button>
+                            <button class="btn btn-success" id="add_to_carts">Add to Cart</button>
                         </div>
                     </div>
                 </div>
@@ -112,4 +112,32 @@
 @endsection
 @section('scripts')
     <script src="{{asset('cms/js/shop.js')}}"></script>
+    <script>
+      $(document).ready(function(){
+        $('#add_to_cart, #add_to_carts').on('click',function(){
+          var product_id = $('#add_to_cart').attr('product_id');
+          $.ajaxSetup({
+              headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              }
+          });
+          $.ajax({
+            type:'get',
+            url: '{{route("addtocart")}}',
+            data:{
+              product_id:product_id
+            },
+            success:function(response){
+              console.log(response);
+
+            },
+            error:function(response){
+              if(response.error){
+                window.location.href='http://127.0.0.1:8000/shop/login';
+              }
+            }
+          });
+        });
+      });
+    </script>
 @endsection
