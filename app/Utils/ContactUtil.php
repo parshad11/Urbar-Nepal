@@ -2,8 +2,12 @@
 
 namespace App\Utils;
 
+use App\Business;
 use App\Contact;
+use App\Notifications\CustomerNotification;
+use App\NotificationTemplate;
 use App\Utils\TransactionUtil;
+use App\Utils\NotificationUtil;
 use App\Transaction;
 use DB;
 
@@ -108,6 +112,14 @@ class ContactUtil extends Util
             }
             
             $contact = Contact::create($input);
+            if($contact->type=='customer'||$contact->type=='both'){
+                $notificationInfo=NotificationTemplate::getTemplate($contact->business_id,'new_customer');
+                $business= Business::where('id', $contact->business_id)->first();
+                $notificationUtil=new NotificationUtil();
+                $notificationInfo=$notificationUtil->replaceAvailableTags($contact->business_id,$notificationInfo,$contact);
+                $notificationInfo['email_settings']=$business->email_settings;
+                $contact->notify(new CustomerNotification($notificationInfo));
+            }
 
             //Add opening balance
             if (!empty($opening_balance)) {

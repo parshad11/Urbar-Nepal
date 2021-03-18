@@ -31,12 +31,14 @@ Route::middleware(['cors'])->group(function () {
 		route::put('/delivery/{id}', 'Api\DeliveryController@update');
 		route::get('/delivery-people', 'Api\DeliveryPersonController@GetAllDeliveryPeople');
 		route::get('/task', 'Api\TaskController@index');
+		route::put('/task/{id}', 'Api\TaskController@update');
+
 	});
-});
+
 	Route::get('/products', 'Api\ProductController@products');
 	Route::get('/categories', 'Api\CategoryController@categories');
 	Route::get('product/{slug}', 'Api\ProductController@product');
 	Route::get('variation/{slug}', 'Api\ProductController@variation');
-
-	
-
+	route::post('/delivery_person/track/{id}', 'Api\DeliveryPersonController@getDeliveryPersonLocation')
+		->name('delivery.track');
+});

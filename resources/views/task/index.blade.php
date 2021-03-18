@@ -158,17 +158,17 @@
                 });
             });
 
-            $(document).on('click', 'a.update_status', function (e) {
+            $(document).on('click', 'a.update_task_status', function (e) {
                 e.preventDefault();
                 if($(this).data('status')=='completed'){
                     return;
                 }
                 var href = $(this).data('href');
                 var status = $(this).data('status');
-                $('#update_status_modal').modal('show');
-                $('#update_status_form').attr('action', href);
-                $('#update_status_form #update_status').val(status);
-                $('#update_status_form #update_status').trigger('change');
+                $('#update_task_status_modal').modal('show');
+                $('#update_task_status_form').attr('action', href);
+                $('#update_task_status_form #update_status').val(status);
+                $('#update_task_status_form #update_status').trigger('change');
             });
 
             $('#location_id').select2({
@@ -241,7 +241,7 @@
 
 
 
-            $(document).on('submit', '#update_status_form', function (e) {
+            $(document).on('submit', '#update_task_status_form', function (e) {
                 e.preventDefault();
                 $(this)
                     .find('button[type="submit"]')
@@ -255,13 +255,13 @@
                     data:data,
                     success: function (result) {
                         if (result.success == true) {
-                            $('div#update_status_modal').modal('hide');
+                            $('div#update_task_status_modal').modal('hide');
                             toastr.success(result.msg);
                             task_table.ajax.reload();
                         } else {
                             toastr.error(result.msg);
                         }
-                        $('#update_status_form')
+                        $('#update_task_status_form')
                             .find('button[type="submit"]')
                             .attr('disabled', false);
                     },

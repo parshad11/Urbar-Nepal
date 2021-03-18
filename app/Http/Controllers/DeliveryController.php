@@ -40,6 +40,14 @@ class DeliveryController extends Controller
             'cancelled' => 'bg-red',
         ];
 
+        $this->current_work_status_colors = [
+            'received' => 'bg-yellow',
+            'packed' => 'bg-blue',
+            'shipped' => 'bg-purple',
+            'on process' => 'bg-orange',
+        ];
+
+
     }
 
     /**
@@ -130,6 +138,15 @@ class DeliveryController extends Controller
 					return $html;
 				})
 				->removeColumn('id')
+                ->editColumn('type', function($row) {
+                    if($row->type=='sell_transfer') {
+                         return 'Stock Transfer';
+                     }
+                     else{
+                         return $row->type;
+                     }
+ 
+                 })
 				->editColumn('delivery_status', function ($row) use ($deliveryStatuses) {
 					$status = $deliveryStatuses[$row->delivery_status];
 					$status_color = !empty($this->status_colors[$row->delivery_status]) ? $this->status_colors[$row->delivery_status] : 'bg-gray';
@@ -144,7 +161,7 @@ class DeliveryController extends Controller
 							return '';
 						}
 					}])
-				->rawColumns(['action', 'delivery_status'])
+				->rawColumns(['action', 'delivery_status','type'])
 				->make(true);
 //
         } else {
@@ -265,7 +282,6 @@ class DeliveryController extends Controller
                     return $html;
                 }
                 )
-                ->removeColumn('id')
                 ->editColumn('transaction_date', '{{@format_datetime($transaction_date)}}')
                 ->editColumn('assign_delivery_status', function ($row) use ($assignStatuses) {
                     if ($row->assign_delivery_status == 1) {
@@ -309,7 +325,6 @@ class DeliveryController extends Controller
         $deliveryStatuses = $this->transactionUtil->deliveryStatuses();
         $taskStatuses = $this->transactionUtil->taskStatuses();
         $statuses=array_merge($deliveryStatuses,$taskStatuses);
-        unset($statuses['cancelled'],$statuses['delivered'],$statuses['completed']);
         $workTypes = $this->transactionUtil->workTypes();
         if ($request->ajax()) {
             $business_id = request()->session()->get('user.business_id');
@@ -382,22 +397,35 @@ class DeliveryController extends Controller
                     return $html;
                 })
                 ->editColumn('type', function($row) {
-                   if($row->type =='delivery'||$row->type =='pickup'){
+                   if($row->type =='delivery'||$row->type =='pick up'){
                         return 'task';
-                    } else {
+                    } else if($row->type=='sell_transfer') {
+                        return 'Stock Transfer';
+                    }
+                    else{
                         return $row->type;
                     }
 
                 })
-                ->removeColumn('id')
-                ->rawColumns(['action'])
+                ->editColumn('status', function($row) use($statuses) {
+                    $status =  $statuses[$row->status];
+                    $status_color = !empty($this->current_work_status_colors[$row->status]) ? $this->current_work_status_colors[$row->status] : 'bg-gray';
+                    if($row->type =='delivery'||$row->type =='pick up'){
+                    $status ='<a href="#" class="update_task_status" data-status="' . $row->status . '" data-href="' . action("TaskController@statusupdate", [$row->id]) . '"><span class="label ' . $status_color .'">' . $statuses[$row->status] . '</span></a>';
+                    }
+                    else{
+                        $status ='<a href="#" class="update_delivery_status" data-status="' . $row->status . '" data-href="' . action("DeliveryController@statusupdate", [$row->id]) . '"><span class="label ' . $status_color .'">' . $statuses[$row->status] . '</span></a>';
+                    }
+                    return $status;
+                })
+                ->rawColumns(['action','type','status'])
                 ->make(true);
 
         } else {
             $business_locations = BusinessLocation::forDropdown($business_id, false);
             $customers = Contact::customersDropdown($business_id, false);
             $sales_representative = User::forDropdown($business_id, false, false, true);
-            return view('delivery.currentwork')->with(compact('statuses','taskStatuses','business_locations','customers','sales_representative','deliveryStatuses','workTypes'));
+            return view('delivery.currentwork')->with(compact('statuses','taskStatuses','business_locations','customers','sales_representative','deliveryStatuses','workTypes','deliveryStatuses','taskStatuses'));
         }
     }
 
@@ -444,6 +472,7 @@ class DeliveryController extends Controller
             $input = $request->except('_token');
 
             $business_id = $request->session()->get('user.business_id');
+            $transaction=Transaction::findOrFail($input['transaction_id']);
             $user_id = $request->session()->get('user.id');
             DB::beginTransaction();
             $delivery = Delivery::create([
@@ -475,16 +504,41 @@ class DeliveryController extends Controller
                 $delivery->delivery_started_at = null;
                 $delivery->delivery_ended_at = null;
                 $delivery->save();
+
+                if($transaction->type=='sell_transfer'){
+                $transaction->status='pending';
+                $transaction->save();
+                }
+                else if($transaction->type=='purchase'){
+                    $transaction->status='pending';
+                    $transaction->save();
+                }
             }
             if ($delivery->delivery_status == 'shipped') {
                 $delivery_started_at = now();
                 $delivery->delivery_started_at = $delivery_started_at;
                 $delivery->save();
+                if($transaction->type=='sell_transfer'){
+                    $transaction->status='transit';
+                    $transaction->save();
+                }
+                else if($transaction->type=='purchase'){
+                        $transaction->status='pending';
+                        $transaction->save();
+                 }
             }
             if ($delivery->delivery_status == 'delivered') {
                 $delivery_ended_at = now();
                 $delivery->delivery_ended_at = $delivery_ended_at;
                 $delivery->save();
+                if($transaction->type=='sell_transfer'){
+                    $transaction->status='completed';
+                    $transaction->save();
+                }
+                else if($transaction->type=='purchase'){
+                        $transaction->status='received';
+                        $transaction->save();
+                 }
             }
             if ($delivery->delivery_status == 'cancelled') {
                 $delivery->delivery_started_at = null;
@@ -524,6 +578,7 @@ class DeliveryController extends Controller
         $delivery_person = $this->moduleUtil->getDeliveryUser($delivery->delivery_person_id);
         return view('delivery.show', compact('delivery', 'delivery_person'));
     }
+
 
 
     /**
@@ -569,7 +624,7 @@ class DeliveryController extends Controller
             }
 
 
-            $transaction_id = $request['transaction_id'];
+            $transaction = Transaction::findOrFail($request['transaction_id']);
 
             $delivery_data = $request->only(['delivery_person_id', 'delivery_status', 'shipping_address', 'shipping_latitude', 'shipping_longitude', 'pickup_address', 'pickup_latitude', 'pickup_longitude', 'special_delivery_instructions', 'delivered_to']);
 
@@ -587,16 +642,41 @@ class DeliveryController extends Controller
                 $delivery->delivery_started_at = null;
                 $delivery->delivery_ended_at = null;
                 $delivery->save();
+                if($transaction->type=='sell_transfer'){
+                    $transaction->status='pending';
+                    $transaction->save();
+                    }
+                    else if($transaction->type=='purchase'){
+                        $transaction->status='pending';
+                        $transaction->save();
+                }
             }
             if (!isset($shipped_status_set) && $delivery->delivery_status == 'shipped') {
                 $delivery_started_at = now();
                 $delivery->delivery_started_at = $delivery_started_at;
                 $delivery->save();
+               
+                if($transaction->type=='sell_transfer'){
+                    $transaction->status='transit';
+                    $transaction->save();
+                }
+                else if($transaction->type=='purchase'){
+                        $transaction->status='pending';
+                        $transaction->save();
+                 }
             }
             if (!isset($delivered_status_set) && $delivery->delivery_status == 'delivered') {
                 $delivery_ended_at = now();
                 $delivery->delivery_ended_at = $delivery_ended_at;
                 $delivery->save();
+                if($transaction->type=='sell_transfer'){
+                    $transaction->status='completed';
+                    $transaction->save();
+                }
+                else if($transaction->type=='purchase'){
+                        $transaction->status='received';
+                        $transaction->save();
+                 }
             }
             if ($delivery->delivery_status == 'cancelled') {
                 $delivery->delivery_started_at = null;
@@ -637,7 +717,7 @@ class DeliveryController extends Controller
             $data = $request->validate([
                 'delivery_status' => 'required',
             ]);
-
+            $transaction=Transaction::findorFail($delivery->transaction_id);
             DB::beginTransaction();
             $update_data['delivery_status'] = $request->input('delivery_status');
             $delivery->update($update_data);
@@ -650,16 +730,40 @@ class DeliveryController extends Controller
                 $delivery->delivery_started_at = null;
                 $delivery->delivery_ended_at = null;
                 $delivery->save();
+                if($transaction->type=='sell_transfer'){
+                    $transaction->status='pending';
+                    $transaction->save();
+                    }
+                    else if($transaction->type=='purchase'){
+                        $transaction->status='pending';
+                        $transaction->save();
+                 }
             }
             if (!isset($shipped_status_set) && $delivery->delivery_status == 'shipped') {
                 $delivery_started_at = now();
                 $delivery->delivery_started_at = $delivery_started_at;
                 $delivery->save();
+                if($transaction->type=='sell_transfer'){
+                    $transaction->status='transit';
+                    $transaction->save();
+                }
+                else if($transaction->type=='purchase'){
+                        $transaction->status='pending';
+                        $transaction->save();
+                }
             }
             if (!isset($delivered_status_set) && $delivery->delivery_status == 'delivered') {
                 $delivery_ended_at = now();
                 $delivery->delivery_ended_at = $delivery_ended_at;
                 $delivery->save();
+                if($transaction->type=='sell_transfer'){
+                    $transaction->status='completed';
+                    $transaction->save();
+                }
+                else if($transaction->type=='purchase'){
+                        $transaction->status='received';
+                        $transaction->save();
+                }
             }
             if ($delivery->delivery_status == 'cancelled') {
                 $delivery->delivery_started_at = null;

@@ -122,7 +122,7 @@
             <div class="checkbox">
               <label>
                 {!! Form::checkbox('location_permissions[]', 'location.' . $location->id, false, 
-                [ 'class' => 'input-icheck']); !!} {{ $location->name }}
+                [ 'class' => 'input-icheck',]); !!} {{ $location->name }}
               </label>
             </div>
           </div>

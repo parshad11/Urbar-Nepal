@@ -47,7 +47,7 @@ class NotificationTemplate extends Model
         return [
             'new_customer' => [
                 'name' => __('lang_v1.new_customer'),
-                'extra_tags' => ['{business_name}', '{business_logo}','{business_login}', '{contact_name}', '{location_name}', '{location_address}', '{location_email}', '{location_phone}', '{location_custom_field_1}', '{location_custom_field_2}', '{location_custom_field_3}', '{location_custom_field_4}']
+                'extra_tags' => ['{business_name}', '{business_logo}','{business_login}', '{name}', '{location_name}', '{location_address}', '{location_email}', '{location_phone}', '{location_custom_field_1}', '{location_custom_field_2}', '{location_custom_field_3}', '{location_custom_field_4}']
             ],
             'new_sale' => [
                 'name' => __('lang_v1.new_sale'),

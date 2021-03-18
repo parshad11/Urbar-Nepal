@@ -12,17 +12,17 @@ class DeliveryAssignedNotification extends Notification
     use Queueable;
 
     protected $user;
-    protected $deliveryId;
+    protected $delivery;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
 
-    public function __construct($user,$deliveryId)
+    public function __construct($user,$delivery)
     {
         $this->user=$user;
-        $this->deliveryId=$deliveryId;
+        $this->delivery=$delivery;
     }
 
     /**
@@ -45,10 +45,13 @@ class DeliveryAssignedNotification extends Notification
      */
     public function toArray($notifiable)
     {
-        return [
-            'message'=>'You have been assigned a new delivery task by '.$this->user,
-            'delivery_id'=>$this->deliveryId,
-            
-        ];
+        if($this->delivery->delivery_status=='received'){
+            return [
+                'message'=>'You have been assigned a new delivery task by '.$this->user,
+                'delivery_id'=>$this->delivery->id,
+                
+            ];
+        }
+       
     }
 }

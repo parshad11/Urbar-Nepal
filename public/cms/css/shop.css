@@ -215,6 +215,9 @@
 }
 .section input{
     width: 50px!important;
+    border-radius: 3px;
+    outline: none;
+    border: 1px solid #a6a6a6;
 }
 .single .section button {
     margin: auto;

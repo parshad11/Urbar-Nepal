@@ -982,7 +982,7 @@ class SellPosController extends Controller
         }
         
         try {
-        
+      
             $input = $request->except('_token');
             //status is send as quotation from edit sales screen.
             $input['is_quotation'] = 0;
@@ -992,6 +992,7 @@ class SellPosController extends Controller
             }
 
             $is_direct_sale = false;
+           
             if (!empty($input['products'])) {
                 //Get transaction value before updating.
                 $transaction_before = Transaction::find($id);
@@ -1011,6 +1012,7 @@ class SellPosController extends Controller
                     $output = ['success' => 0,
                                 'msg' => __('lang_v1.cutomer_credit_limit_exeeded', ['credit_limit' => $credit_limit_amount])
                             ];
+                           
                     if (!$is_direct_sale) {
                         return $output;
                     } else {

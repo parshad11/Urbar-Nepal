@@ -1,8 +1,8 @@
-<div class="modal fade" id="update_status_modal" tabindex="-1" role="dialog"
+<div class="modal fade" id="update_task_status_modal" tabindex="-1" role="dialog"
      aria-labelledby="gridSystemModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            {!! Form::open(['url' => "#", 'method' => 'put', 'id' => 'update_status_form' ]) !!}
+            {!! Form::open(['url' => "#", 'method' => 'put', 'id' => 'update_task_status_form' ]) !!}
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                 </button>
@@ -12,7 +12,7 @@
             <div class="modal-body">
                 <div class="form-group">
                     {!! Form::label('update_status', __('sale.status').':*') !!}
-                    {!! Form::select('task_status', $statuses, null, ['class' => 'form-control select2', 'required', 'id' => 'update_status', 'style' => 'width: 100%;']); !!}
+                    {!! Form::select('task_status', $taskStatuses, null, ['class' => 'form-control select2', 'required', 'id' => 'update_status', 'style' => 'width: 100%;']); !!}
                 </div>
             </div>
 

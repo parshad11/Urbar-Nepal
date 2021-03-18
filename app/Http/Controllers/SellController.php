@@ -198,7 +198,7 @@ class SellController extends Controller
                 $sells->whereNotNull('transactions.shipping_status');
             }
 
-            if (!auth()->user()->can('sell.view') && auth()->user()->can('view_own_sell')) {
+            if (!auth()->user()->can('sell.view') && auth()->user()->can('view_own_sell_only')) {
                 $sells->where('transactions.created_by', request()->session()->get('user.id'));
             }
             
@@ -301,7 +301,6 @@ class SellController extends Controller
                         return $html;
                     }
                 )
-                ->removeColumn('id')
                 ->editColumn(
                     'final_total',
                     '<span class="display_currency final-total" data-currency_symbol="true" data-orig-value="{{$final_total}}">{{$final_total}}</span>'

@@ -32,8 +32,8 @@ class TaskController extends Controller
         $this->task=$task;
 
         $this->status_colors = [
-            'received' => 'bg-purple',
-            'on process' => 'bg-yellow',
+            'received' => 'bg-yellow',
+            'on process' => 'bg-orange',
             'completed' => 'bg-green',
             'cancelled' => 'bg-red',
         ];
@@ -129,7 +129,7 @@ class TaskController extends Controller
                     $row->task_status = $row->task_status == 'final' ? 'completed' : $row->task_status;
                     $status =  $statuses[$row->task_status];
                     $status_color = !empty($this->status_colors[$row->task_status]) ? $this->status_colors[$row->task_status] : 'bg-gray';
-                    $status ='<a href="#" class="update_status" data-status="' . $row->task_status . '" data-href="' . action("TaskController@statusupdate", [$row->id]) . '"><span class="label ' . $status_color .'">' . $statuses[$row->task_status] . '</span></a>';
+                    $status ='<a href="#" class="update_task_status" data-status="' . $row->task_status . '" data-href="' . action("TaskController@statusupdate", [$row->id]) . '"><span class="label ' . $status_color .'">' . $statuses[$row->task_status] . '</span></a>';
                     return $status;
                 })
                 ->setRowAttr([
@@ -145,9 +145,10 @@ class TaskController extends Controller
                               ->make(true); 
 
         } else {
+            $taskStatuses = $this->productUtil->taskStatuses();
             $sales_representative = User::forDropdown($business_id, false, false, true);
             $business_locations = BusinessLocation::forDropdown($business_id, false);
-            return view('task.index')->with(compact('statuses','business_locations','sales_representative','taskTypes'));
+            return view('task.index')->with(compact('taskStatuses','business_locations','sales_representative','taskTypes'));
         }
 
     }

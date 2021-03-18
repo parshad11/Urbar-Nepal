@@ -100,6 +100,9 @@
 
     $(document).on('click', '.update_status', function(e){
         e.preventDefault();
+        if($(this).data('status')=='received'){
+                    return;
+         }
         $('#update_purchase_status_form').find('#status').val($(this).data('status'));
         $('#update_purchase_status_form').find('#purchase_id').val($(this).data('purchase_id'));
         $('#update_purchase_status_modal').modal('show');

@@ -20,6 +20,7 @@
                     <thead>
                     <tr>
                         <th>Action</th>
+                        <th>Work Id</th>
                         <th>@lang('purchase.business_location')</th>
                         <th>Assigned To</th>
                         <th>Work Type</th>
@@ -35,6 +36,12 @@
             @endcan
         @endcomponent
     </section>
+    @can('task.update')
+        @include('task.partial.update_task_status_modal')
+    @endcan
+    @can('delivery.update')
+        @include('delivery.partials.update_delivery_status_modal')
+    @endcan
 
     <!-- /.content -->
 @stop
@@ -94,6 +101,7 @@
                 },
                 columns: [
                     {data: 'action', name: 'action', orderable: false, searchable: false},
+                    {data: 'id', name: 'id'},
                     {data: 'business_location', name: 'bl.name'},
                     {data: 'assigned_to', name: 'u.first_name'},
                     {data: 'type', name: 'type'},
@@ -110,6 +118,82 @@
 
             $(document).on('change','#assigned_by,#currentwork_list_filter_status,#currentwork_list_filter_work_type',  function() {
              currentwork_table.ajax.reload();
+            });
+
+            $(document).on('click', 'a.update_task_status', function (e) {
+                e.preventDefault();
+               
+                var href = $(this).data('href');
+                var status = $(this).data('status');
+                $('#update_task_status_modal').modal('show');
+                $('#update_task_status_form').attr('action', href);
+                $('#update_task_status_form #update_status').val(status);
+                $('#update_task_status_form #update_status').trigger('change');
+            });
+
+            $(document).on('submit', '#update_task_status_form', function (e) {
+                e.preventDefault();
+                $(this)
+                    .find('button[type="submit"]')
+                    .attr('disabled', true);
+                var data = $(this).serialize();
+
+                $.ajax({
+                    method: 'put',
+                    url: $(this).attr('action'),
+                    dataType: 'json',
+                    data:data,
+                    success: function (result) {
+                        if (result.success == true) {
+                            $('div#update_task_status_modal').modal('hide');
+                            toastr.success(result.msg);
+                            currentwork_table.ajax.reload();
+                        } else {
+                            toastr.error(result.msg);
+                        }
+                        $('#update_task_status_form')
+                            .find('button[type="submit"]')
+                            .attr('disabled', false);
+                    },
+                });
+            });
+
+            $(document).on('click', 'a.update_delivery_status', function (e) {
+                e.preventDefault();
+               
+                var href = $(this).data('href');
+                var status = $(this).data('status');
+                $('#update_delivery_status_modal').modal('show');
+                $('#update_delivery_status_form').attr('action', href);
+                $('#update_delivery_status_form #update_status').val(status);
+                $('#update_delivery_status_form #update_status').trigger('change');
+            });
+
+            $(document).on('submit', '#update_delivery_status_form', function (e) {
+                e.preventDefault();
+                $(this)
+                    .find('button[type="submit"]')
+                    .attr('disabled', true);
+                var data = $(this).serialize();
+
+                $.ajax({
+                    method: 'put',
+                    url: $(this).attr('action'),
+                    dataType: 'json',
+                    data:data,
+                    success: function (result) {
+                        if (result.success == true) {
+                            $('div#update_delivery_status_modal').modal('hide');
+                            toastr.success(result.msg);
+                            currentwork_table.ajax.reload();
+                        } else {
+                            toastr.error(result.msg);
+                        }
+                        $('#update_delivery_status_form')
+                            .find('button[type="submit"]')
+                            .attr('disabled', false);
+                    },
+                });
             });
 
             $(document).on('click', 'a.delete-work', function (e) {

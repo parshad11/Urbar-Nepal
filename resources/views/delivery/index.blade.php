@@ -20,6 +20,7 @@
                     <thead>
                     <tr>
                         <th>Action</th>
+                        <th>Transaction Id</th>
                         <th>Transaction Type</th>
                         <th>Delivery Person</th>
                         <th>Delivery Status</th>
@@ -99,8 +100,12 @@
                        d = __datatable_ajax_callback(d);
                     }
                 },
+                scrollY:        "75vh",
+                scrollX:        true,
+                scrollCollapse: true,
                 columns: [
                     {data: 'action', name: 'action', orderable: false, searchable: false},
+                    {data: 'transaction_id', name: 'transaction_id'},
                     {data: 'type', name: 'transactions.type'},
                     {data: 'delivery_person', name: 'r.first_name'},
                     {data: 'delivery_status', name: 'delivery_status'},
@@ -229,14 +234,14 @@
                 }
                 var href = $(this).data('href');
                 var status = $(this).data('status');
-                $('#update_status_modal').modal('show');
-                $('#update_status_form').attr('action', href);
-                $('#update_status_form #update_status').val(status);
-                $('#update_status_form #update_status').trigger('change');
+                $('#update_delivery_status_modal').modal('show');
+                $('#update_delivery_status_form').attr('action', href);
+                $('#update_delivery_status_form #update_status').val(status);
+                $('#update_delivery_status_form #update_status').trigger('change');
             });
 
 
-            $(document).on('submit', '#update_status_form', function (e) {
+            $(document).on('submit', '#update_delivery_status_form', function (e) {
                 e.preventDefault();
                 $(this)
                     .find('button[type="submit"]')
@@ -250,13 +255,13 @@
                     data:data,
                     success: function (result) {
                         if (result.success == true) {
-                            $('div#update_status_modal').modal('hide');
+                            $('div#update_delivery_status_modal').modal('hide');
                             toastr.success(result.msg);
                             delivery_table.ajax.reload();
                         } else {
                             toastr.error(result.msg);
                         }
-                        $('#update_status_form')
+                        $('#update_delivery_status_form')
                             .find('button[type="submit"]')
                             .attr('disabled', false);
                     },

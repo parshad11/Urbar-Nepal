@@ -89,13 +89,17 @@ class NotificationUtil extends Util
     public function replaceAvailableTags($business_id, $data, $model)
     {
         $business = Business::findOrFail($business_id);
-        
         foreach ($data as $key => $value) {
             //Replace contact name
             if (strpos($value, '{contact_name}') !== false) {
                 $contact_name = $model->contact->name;
 
                 $data[$key] = str_replace('{contact_name}', $contact_name, $data[$key]);
+            }
+
+            if (strpos($value, '{name}') !== false) {
+                $name = $model->name;
+                $data[$key] = str_replace('{name}', $name, $data[$key]);
             }
 
             if (strpos($value, '{order_ref_number}') !== false) {

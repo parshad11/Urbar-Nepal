@@ -14,6 +14,9 @@ use App\Front\Team;
 use App\Front\Testimonial;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Mail\VendorRequestMail;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Mail;
 
 use function GuzzleHttp\json_decode;
 
@@ -64,6 +67,14 @@ class FrontendController extends Controller
             ->with('categories', $categories)
             ->with('blogs', $blogs);
     }
+
+    public function mailRequest(Request $request)
+    {
+        Mail::to(Config::get('mail.from.address'))->send(new VendorRequestMail($request));
+        return redirect()->back();
+    }
+
+
 
     public function getSingleBlog($slug)
     {

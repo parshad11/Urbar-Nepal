@@ -533,7 +533,8 @@
                     <div class="request-title">
                         <h2>Get a Quote</h2>
                     </div>
-                    <form>
+                    <form action="{{action('Front\FrontendController@mailRequest')}}" method="post">
+                    @csrf
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="request-col">
