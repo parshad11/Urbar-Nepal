@@ -45,8 +45,11 @@ return [
             'driver' => 'passport',
             'provider' => 'users',
         ],
-
-        'customer' => [
+	    'ecommerce' => [
+		    'driver' => 'passport',
+		    'provider' => 'contacts',
+	    ],
+	    'customer' => [
             'driver' => 'session',
             'provider' => 'contacts',
         ]

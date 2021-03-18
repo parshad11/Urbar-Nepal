@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\User;
 use FontLib\Table\Type\loca;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -14,7 +15,7 @@ class DeliveryPersonController extends Controller
 {
 
 	public function GetAllDeliveryPeople(){
-        $delivery_person=DeliveryPerson::with('user')->where('user_id',Auth::user()->id)->get();
+        $delivery_person=User::where('id',Auth::user()->id)->get();
         return response()->json([
             'data'=>$delivery_person
         ]);
