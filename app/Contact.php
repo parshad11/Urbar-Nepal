@@ -14,6 +14,8 @@ class Contact extends Authenticatable
 
     use SoftDeletes;
 
+    protected $guard = 'customer';
+
     /**
      * The attributes that aren't mass assignable.
      *
@@ -27,6 +29,8 @@ class Contact extends Authenticatable
      * @var array
      */
     
+    // The attributes that should be hidden for arrays.
+    protected $hidden = ['password'];
 
     /**
     * Get the business that owns the user.
