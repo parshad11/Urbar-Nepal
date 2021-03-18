@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Front;
 
+use App\Front\Cart;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Product;
@@ -17,9 +18,9 @@ class CartController extends Controller
      */
     public function index()
     {
-        //
-        // dd('test');
-        return  view('ecommerce/cart');
+        $cart_items = Cart::with('variation')->where('user_id',auth()->guard('customer')->user()->id)->get();
+        // return $cart_items[0]->product->name;
+        return view('ecommerce.cart')->with('cart_items', $cart_items);
     }
 
     public function addToCart(Request $request)
@@ -38,7 +39,7 @@ class CartController extends Controller
 
         $data['quantity'] = isset($request->quantity) ? $request->quantity : 1;
         // $data['tax'] = $tax;
-        // $data['shipping'] = $product->shipping_cost;
+        $data['total_price'] = $data['quantity'] * $variation_product->sell_price_inc_tax;
         //  dd( $request['quantity']);
         // return response()->json($data);
 
@@ -48,7 +49,8 @@ class CartController extends Controller
             foreach ($request->session()->get('cart') as $key => $cartItem) {
                 if ($cartItem['id'] == $variation_product->id) {
                     $foundInCart = true;
-                    $cartItem['quantity'] += 1;
+                    $cartItem['quantity'] += $request->quantity;
+                    $cartItem['total_price'] = $cartItem['quantity'] * $variation_product->sell_price_inc_tax;
                 }
                 $cart->push($cartItem);
             }
@@ -62,16 +64,26 @@ class CartController extends Controller
             $cart = collect([$data]);
             $request->session()->put('cart', $cart);
         }
-        return $request->session()->get('cart');
-        // dd('tesst');
-        // dd($cartItem['quantity'] );
-        // Session::all();
-        // dd($request->session()->all());
-
-        // dd('yes');
+        $cart_data = array();
+        // print_r($request->session()->get('cart'));
+        foreach ($request->session()->get('cart') as $key => $value) {
+            $cart_db = Cart::updateOrCreate(
+                [
+                    'product_id' => $value['id'],
+                    'user_id' => $value['user_id'],
+                ],
+                [
+                    'product_id' => $value['id'],
+                    'user_id' => $value['user_id'],
+                    'quantity' => $value['quantity'],
+                    'total_price' => $value['total_price']
+                ]
+            );
+            array_push($cart_data, $cart_db);
+        }
+        return $cart_data;
         // return view('ecommerce.cart', compact('product', 'data'));
     }
-
 
     /**
      * Show the form for creating a new resource.

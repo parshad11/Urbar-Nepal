@@ -28,7 +28,7 @@ Route::namespace('Front')->group(function () {
 
     // E-commerce Routes
     Route::get('/shop/addtocart', 'CartController@addToCart')->name('addtocart')->middleware(['auth:customer']);
-    Route::get('/shop/checkout', 'CartController@addToCart')->name('product.checkout')->middleware('auth:customer');
+    Route::get('/shop/cart', 'CartController@index')->name('product.cart')->middleware('auth:customer');
     Route::get('/shop', 'ShopController@index')->name('shop');
     Route::get('/shop/product/{slug}', 'ShopController@product')->name('product_single');
 

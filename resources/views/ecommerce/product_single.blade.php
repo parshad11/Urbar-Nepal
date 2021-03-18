@@ -40,14 +40,14 @@
           <h5 class="title-attr">Order Quantity</h5>
           <div style="display:flex;">
             <div class="btn-minus plus-minus"><span class="glyphicon glyphicon-minus"></span></div>
-            <input value="1" class=""/>
+            <input value="1" class="input_quantity"/>
             <div class="btn-plus plus-minus"><span class="glyphicon glyphicon-plus"></span></div>
           </div>
         </div>
 
         <!-- buttons -->
         <div class="section carts" style="padding-bottom:20px;">
-          <button class="btn btn-success" id="add_to_cart" product_id="{{$variation->id}}">Add to Cart</button>
+          <button class="btn btn-success" id="add_to_carts" product_id="{{$variation->id}}">Add to Cart</button>
 
           <button class="btn btn-success">Buy Now</button>
 
@@ -97,7 +97,7 @@
 
                                 <div class="offer">Price : Rs.{{$variation->sell_price_inc_tax}}</div>
                             </div>
-                            <button class="btn btn-success" id="add_to_carts">Add to Cart</button>
+                            <button class="btn btn-success" id="add_to_carts" product_id="{{$variation->id}}">Add to Cart</button>
                         </div>
                     </div>
                 </div>
@@ -115,7 +115,8 @@
     <script>
       $(document).ready(function(){
         $('#add_to_cart, #add_to_carts').on('click',function(){
-          var product_id = $('#add_to_cart').attr('product_id');
+          var quantity = $('.input_quantity').val();
+          var product_id = $(this).attr('product_id');
           $.ajaxSetup({
               headers: {
                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -125,7 +126,11 @@
             type:'get',
             url: '{{route("addtocart")}}',
             data:{
-              product_id:product_id
+              product_id:product_id,
+              quantity:quantity
+            },
+            beforeSend: function (response) {
+                $(this).prop('disabled', true);
             },
             success:function(response){
               console.log(response);
@@ -135,6 +140,9 @@
               if(response.error){
                 window.location.href='http://127.0.0.1:8000/shop/login';
               }
+            },
+            complete: function () {
+                $(this).prop('disabled', false);
             }
           });
         });
