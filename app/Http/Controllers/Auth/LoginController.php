@@ -7,6 +7,7 @@ use App\Utils\BusinessUtil;
 use App\Utils\ModuleUtil;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -44,8 +45,38 @@ class LoginController extends Controller
     public function __construct(BusinessUtil $businessUtil, ModuleUtil $moduleUtil)
     {
         $this->middleware('guest')->except('logout');
+        $this->middleware('guest:customer')->except('logout');
         $this->businessUtil = $businessUtil;
         $this->moduleUtil = $moduleUtil;
+    }
+
+    public function showCustomerLoginForm()
+    {
+        return view('ecommerce.login');
+    }
+
+    public function customerLogin(Request $request)
+    {
+        //validation rules.
+        $rules = [
+            'email'    => 'required|email',
+            'password' => 'required|string',
+        ];
+        //custom validation error messages.
+        $messages = [
+            'email.required' => 'Email can not be empty',
+            'password.required' => 'Password can not be empty',
+        ];
+        //validate the request.
+        $request->validate($rules, $messages);
+
+        if (Auth::guard('customer')->attempt(['email' => $request->email, 'password' => $request->password])) {
+            // if(session('link') != null){
+            //     return redirect($request->session()->get('link'));
+            // }else 
+            return redirect()->intended('/shop');
+        }
+        return back()->withInput($request->only('email'));
     }
 
     /**
@@ -78,17 +109,17 @@ class LoginController extends Controller
         if (!$user->business->is_active) {
             \Auth::logout();
             return redirect('/login')
-              ->with(
-                  'status',
-                  ['success' => 0, 'msg' => __('lang_v1.business_inactive')]
-              );
+                ->with(
+                    'status',
+                    ['success' => 0, 'msg' => __('lang_v1.business_inactive')]
+                );
         } elseif ($user->status != 'active') {
             \Auth::logout();
             return redirect('/login')
-              ->with(
-                  'status',
-                  ['success' => 0, 'msg' => __('lang_v1.user_inactive')]
-              );
+                ->with(
+                    'status',
+                    ['success' => 0, 'msg' => __('lang_v1.user_inactive')]
+                );
         } elseif (!$user->allow_login) {
             \Auth::logout();
             return redirect('/login')

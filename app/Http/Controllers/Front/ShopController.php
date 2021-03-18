@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Front;
 
+use App\BusinessLocation;
+use App\VariationLocationDetails;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Product;
 use App\Category;
+use App\Variation;
 use Illuminate\Support\Facades\DB;
 
 class ShopController extends Controller
@@ -17,33 +20,33 @@ class ShopController extends Controller
      */
     public function index()
     {
-        /*$products = Product::with('variations', 'product_variations')->get();*/
-        return view('ecommerce.shop');
+        $location=BusinessLocation::where('name','freshktm')->first();
+        $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id',$location->id)->pluck('product_id')->toArray();
+        $products = Product::with('product_variations.variations.product')->whereIn('id',$variation_location_product_ids)->get();
+        // return $products;
+        // return $products[0]->product_variations[0]->variations;
+        // return $products->product_variations[0]->variations[0]->default_sell_price;
+        // return $products;
+        return view('ecommerce.shop')->with('products', $products);
     }
 
-    public function product($id)
+    public function product($slug)
     {
-        // dd($id);
-        $business_id = request()->session()->get('user.business_id');
-        $product = Product::join('variations as v', 'v.product_id', '=', 'products.id')
-            ->leftJoin('variation_location_details as vld', 'vld.variation_id', '=', 'v.id')
-            ->where('products.business_id', $business_id)
-            ->where('products.id', $id)
-            ->select(
-                'products.id',
-                'products.image',
-                'products.name',
-                // 'products.unit',
-                DB::raw('SUM(vld.qty_available) as current_stock'),
-        )->first();
-
+        $product = Variation::with('product')->where('sub_sku' ,$slug)->first();
+        $product_cat = $product->product->category_id;
+        $location=BusinessLocation::where('name','freshktm')->first();
+        $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id',$location->id)->pluck('product_id')->toArray();
+        $products = Product::with('product_variations.variations.product')->where('category_id',$product_cat)->whereIn('id',$variation_location_product_ids)->get();
+        // dd($product_cat);
+        // dd($product->product);
         // dd($product);
         // $variation = $this->product_variations();
         // return view('ecommerce.shop');
         // $shops = $this->shops->get();
         // dd($product->get('name'));
         // dd($product->variations[0]);
-        return view('ecommerce.product_single')->with('product', $product);
+        return view('ecommerce.product_single')->with('variation', $product)
+        ->with('products', $products);
     }
 
     /**

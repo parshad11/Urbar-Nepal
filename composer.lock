@@ -2021,7 +2021,11 @@
             ],
             "support": {
                 "issues": "https://github.com/lcobucci/jwt/issues",
+<<<<<<< HEAD
+                "source": "https://github.com/lcobucci/jwt/tree/3.4.5"
+=======
                 "source": "https://github.com/lcobucci/jwt/tree/3.3.3"
+>>>>>>> demo
             },
             "funding": [
                 {
@@ -2033,7 +2037,11 @@
                     "type": "patreon"
                 }
             ],
+<<<<<<< HEAD
+            "time": "2021-02-16T09:40:01+00:00"
+=======
             "time": "2020-08-20T13:22:28+00:00"
+>>>>>>> demo
         },
         {
             "name": "league/event",
@@ -3366,30 +3374,29 @@
         },
         {
             "name": "ocramius/package-versions",
-            "version": "1.11.0",
+            "version": "1.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Ocramius/PackageVersions.git",
-                "reference": "f51ff2b2b49baaa302d6bf71880e4d8b5acd7015"
+                "reference": "94c9d42a466c57f91390cdd49c81313264f49d85"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Ocramius/PackageVersions/zipball/f51ff2b2b49baaa302d6bf71880e4d8b5acd7015",
-                "reference": "f51ff2b2b49baaa302d6bf71880e4d8b5acd7015",
+                "url": "https://api.github.com/repos/Ocramius/PackageVersions/zipball/94c9d42a466c57f91390cdd49c81313264f49d85",
+                "reference": "94c9d42a466c57f91390cdd49c81313264f49d85",
                 "shasum": ""
             },
             "require": {
-                "composer-plugin-api": "^2.0.0",
-                "composer-runtime-api": "^2.0.0",
-                "php": "^7.4.7"
+                "composer-plugin-api": "^1.1.0 || ^2.0",
+                "php": "^7.4.0"
             },
             "require-dev": {
-                "composer/composer": "^2.0.0@dev",
-                "doctrine/coding-standard": "^8.1.0",
+                "composer/composer": "^1.9.3 || ^2.0@dev",
+                "doctrine/coding-standard": "^7.0.2",
                 "ext-zip": "^1.15.0",
-                "infection/infection": "^0.16.4",
-                "phpunit/phpunit": "^9.1.5",
-                "vimeo/psalm": "^3.12.2"
+                "infection/infection": "^0.15.3",
+                "phpunit/phpunit": "^9.1.1",
+                "vimeo/psalm": "^3.9.3"
             },
             "type": "composer-plugin",
             "extra": {
@@ -3416,7 +3423,7 @@
             "description": "Composer plugin that provides efficient querying for installed package versions (no runtime IO)",
             "support": {
                 "issues": "https://github.com/Ocramius/PackageVersions/issues",
-                "source": "https://github.com/Ocramius/PackageVersions/tree/1.11.x"
+                "source": "https://github.com/Ocramius/PackageVersions/tree/1.9.0"
             },
             "funding": [
                 {
@@ -3428,7 +3435,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-08-21T12:16:47+00:00"
+            "time": "2020-06-22T14:15:44+00:00"
         },
         {
             "name": "opis/closure",

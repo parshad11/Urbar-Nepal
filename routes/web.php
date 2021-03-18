@@ -467,3 +467,4 @@ Route::namespace('Front')->middleware(['setData', 'auth', 'SetSessionData', 'lan
     Route::put('/frontcms/career/{id}', 'CmsController@updateCareer')->name('cms_career_update');
     Route::delete('/frontcms/career/{id}/destroy', 'CmsController@deleteCareer')->name('cms_career_delete');
 });
+
