@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['cors'])->group(function () {
 	route::post('/login', 'Api\LoginController@login')->name('delivery.login');
+	route::post('ecommerce/login', 'Api\EcommerceLoginController@login');
 	Route::middleware(['auth:api'])->group(function () {
 		route::get('/delivery', 'Api\DeliveryController@index');
 		route::put('/delivery/{id}', 'Api\DeliveryController@update');
