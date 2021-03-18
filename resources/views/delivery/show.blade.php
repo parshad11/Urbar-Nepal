@@ -261,11 +261,9 @@
                                                        @lang("messages.track")
                                                   </button>
                                              </div>
-
-                                             <div id='delivery_location'>
+                                             <div id='delivery_location' class="mt-5 hidden" style="height: 400px;">
 
                                              </div>
-
                                         </div>
                                    </div>
                               </div>
@@ -320,34 +318,39 @@
              .addTo(delivery_shipping_map);
 
          delivery_shipping_map.addControl(new mapboxgl.NavigationControl());
+
+
+
      </script>
-     <script type="text/javascript">
-         $('#delivery_track').on('click', function () {
+ <script type="text/javascript">
+          $('#delivery_track').on('click', function () {
 
-             // $('#delivery_track').hide();
-             var id = {{ $delivery->delivery_person->id }};
-             $.post('{{ route('delivery.track',$delivery->delivery_person->id) }}', {
-                 _token: '{{ @csrf_token() }}',
-                 id: id,
-             }, function (data) {
-                 const delivery_latitude = data.latitude;
-                 const delivery_longitude = data.longitude;
-                 mapboxgl.accessToken = 'pk.eyJ1IjoicHJhbW9kbGFtc2FsIiwiYSI6ImNqenp2d25xZjIyZnozbG1saXJvdzY4encifQ.JnhenWIopEkt6RAp5ukfCA';
-                 const delivery_shipping_location = new mapboxgl.Map({
-                     container: 'delivery_location',
-                     style: 'mapbox://styles/mapbox/streets-v11',
-                     center: [delivery_longitude, delivery_latitude],
-                     zoom: 13
-                 });
-                 var marker = new mapboxgl.Marker()
-                     .setLngLat([delivery_longitude, delivery_latitude])
-                     .addTo(delivery_shipping_location);
 
-                 delivery_shipping_location.addControl(new mapboxgl.NavigationControl());
-                 console.log(delivery_longitude);
-                 console.log(delivery_latitude);
-             });
-         });
-     </script>
+              var id = {{ $delivery->delivery_person->id }};
+              $.post('{{ route('delivery.track',$delivery->delivery_person->id) }}', {
+                  _token: '{{ @csrf_token() }}',
+                  id: id,
+              }, function (data) {
+                  $('#delivery_location').removeClass('hidden');
+                  mapboxgl.accessToken = 'pk.eyJ1IjoicHJhbW9kbGFtc2FsIiwiYSI6ImNqenp2d25xZjIyZnozbG1saXJvdzY4encifQ.JnhenWIopEkt6RAp5ukfCA';
+                  const delivery_latitude = data.data.latitude;
+                  const delivery_longitude = data.data.longitude;
+                  const delivery_person_location = new mapboxgl.Map({
+                      container: 'delivery_location',
+                      style: 'mapbox://styles/mapbox/streets-v11',
+                      center: [delivery_longitude, delivery_latitude],
+                      zoom: 13
+                  });
+                  var marker = new mapboxgl.Marker()
+                      .setLngLat([delivery_longitude, delivery_latitude])
+                      .addTo(delivery_person_location);
 
+                  delivery_person_location.addControl(new mapboxgl.NavigationControl());
+                  console.log(delivery_longitude);
+                  console.log(delivery_latitude);
+              });
+          });
+
+      </script>
 @endsection
+

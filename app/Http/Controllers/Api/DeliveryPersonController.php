@@ -17,14 +17,15 @@ class DeliveryPersonController extends Controller
     }
 
     public function getDeliveryPersonLocation(Request $request,$id){
-        if($request->ajax()){
-			$latitude=27.68519335;
-			$longitude=85.34866242;
-			$location=[
-				'latitude'=>$latitude,
-				'longitude'=>$longitude
-			];
-	        return $location;
-        }
+    	$latitude=27.68519336;
+    	$longitude=85.34866242;
+	    $location=[
+		    'latitude'=>$latitude,
+		    'longitude'=>$longitude
+	    ];
+	    return response()->json([
+		    'data'=>$location
+	    ]);
+
     }
 }

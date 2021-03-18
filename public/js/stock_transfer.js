@@ -146,6 +146,7 @@ $(document).ready(function() {
             },
         ],
         columns: [
+            { data: 'id', name: 'id' },
             { data: 'transaction_date', name: 'transaction_date' },
             { data: 'ref_no', name: 'ref_no' },
             { data: 'location_from', name: 'l1.name' },
