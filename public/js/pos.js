@@ -799,7 +799,6 @@ $(document).ready(function () {
         $('div#posShippingModal').modal('hide');
         $('input#shipping_details').val($('#shipping_details_modal').val());
         var checked= document.getElementById('assign_delivery_modal').checked;
-        console.log(checked);
         $('#assign_delivery').val(document.getElementById('assign_delivery_modal').checked ? 1 : '' );
         $('input#assign_delivery').val($('#assign_delivery').val());
 

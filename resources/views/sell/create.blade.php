@@ -269,13 +269,13 @@
 
 					</div>
 
-                    <div class="col-sm-3 hide assign_delivery_div">
+                    <div class="col-sm-3 assign_delivery_div">
              		   <div class="form-group">
 							<div class="checkbox">
 							<br/>
 							<label>
 								{!! Form::checkbox('assign_delivery', 1, false, 
-								[ 'class' => 'input-icheck', 'id' => 'assign_delivery']); !!} {{ __( 'delivery.assign_delivery' ) }}
+								[ 'class' => 'input-icheck', 'id' => 'assign_sell_delivery']); !!} {{ __( 'delivery.assign_delivery' ) }}
 							</label>
 							</div>
                 		</div>
@@ -486,15 +486,22 @@
                 ignoreReadonly: true,
             });
 
-			$("#sell_status").change(function(e) {
-			if(this.value == 'final'){
-				$('div.assign_delivery_div').removeClass( "hide" );
+			$( "#sell_status" ).change(function() {
+			if(this.value == 'draft'){
+				$("#assign_delivery").prop("checked", false);
+				$('div.assign_delivery_div').addClass( "hide" );
+				
+			}
+			else if(this.value == 'quotation'){
+				$("#assign_delivery").prop("checked", false);
+				$('div.assign_delivery_div').addClass( "hide" );
+				
+				
 			}
 			else{
-				$('div.assign_delivery_div').addClass("hide");
-			
+				$('div.assign_delivery_div').removeClass("hide");
 			}
-        });
+		});
 
 			$('#select_location_id').select2({
 			ajax: {
