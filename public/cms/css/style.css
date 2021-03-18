@@ -636,7 +636,7 @@ input:-moz-placeholder {
 .my-nav-row {
     background: #2393D1;
     padding-left: 20px;
-    padding-right: 20px;
+    /* padding-right: 20px; */
 }
 .header-navbar .navbar-brand {
     padding: 0;

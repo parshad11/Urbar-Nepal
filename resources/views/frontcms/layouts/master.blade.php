@@ -53,10 +53,12 @@
             .navbar-header .logo-main {
                 display: block;
                 position: absolute;
-                width: 35%;
-                height: auto;
+                width: 120px;
+                /* height: auto; */
                 padding: 2%;
-                left: -10%;
+                left: 0%;
+                /* bottom: 100%; */
+                /* right: 100%; */
             }
 
             .navbar-header .contact {

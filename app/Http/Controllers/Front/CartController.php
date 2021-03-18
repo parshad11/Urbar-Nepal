@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Front;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Product;
+use App\Variation;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
@@ -17,64 +19,57 @@ class CartController extends Controller
     {
         //
         // dd('test');
-       return  view('ecommerce/cart');
+        return  view('ecommerce/cart');
     }
 
     public function addToCart(Request $request)
     {
         // dd($request);
-        $product = Product::find($request->product_id);
-        // $data = array();
-        $data['id'] = $product->id;
+        // return $request->product_id;
+        $user_id = Auth::guard('customer')->user()->id;
+        $variation_product = Variation::with('product')->find($request->product_id);
+        $data = array();
+        $data['id'] = $variation_product->id;
+        $data['user_id'] = $user_id;
         // $str = '';
         // $tax = 0;
-// dd($product);
-        
-   
-        $data['quantity'] = $request['quantity'];
-        $data['price'] = $request['price'];
+        // dd($product);
+
+
+        $data['quantity'] = isset($request->quantity) ? $request->quantity : 1;
         // $data['tax'] = $tax;
         // $data['shipping'] = $product->shipping_cost;
-//  dd( $request['quantity']);
+        //  dd( $request['quantity']);
+        // return response()->json($data);
 
-        if ($request['quantity'] == null){
-            $data['quantity'] = 1;
-        }
-        if($request->session()->has('cart')){
-
+        if ($request->session()->has('cart')) {
             $foundInCart = false;
             $cart = collect();
-                // dd($request->id);
-            foreach ($request->session()->get('cart') as $key => $cartItem){
-                if($cartItem['id'] == $product->id){
-                    // dd('test');
-                        
-                        $foundInCart = true;
-                        $cartItem['quantity'] += $request['quantity'];
-                    
+            foreach ($request->session()->get('cart') as $key => $cartItem) {
+                if ($cartItem['id'] == $variation_product->id) {
+                    $foundInCart = true;
+                    $cartItem['quantity'] += 1;
                 }
                 $cart->push($cartItem);
             }
-            
+
             if (!$foundInCart) {
-                
+
                 $cart->push($data);
             }
             $request->session()->put('cart', $cart);
-        }
-        else{
+        } else {
             $cart = collect([$data]);
-            // dd($cart);
             $request->session()->put('cart', $cart);
         }
-
+        return $request->session()->get('cart');
         // dd('tesst');
         // dd($cartItem['quantity'] );
         // Session::all();
-        dd($request->session()->all());
+        // dd($request->session()->all());
 
         // dd('yes');
-        return view('ecommerce.cart', compact('product', 'data'));
+        // return view('ecommerce.cart', compact('product', 'data'));
     }
 
 

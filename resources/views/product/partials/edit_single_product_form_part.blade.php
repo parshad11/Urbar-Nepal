@@ -23,13 +23,12 @@
         @foreach($product_deatails->variations as $variation )
             @if($loop->first)
                 <tr>
-                    <td>
                         <input type="hidden" name="single_variation_id" value="{{$variation->id}}">
-
                         <td>
                         <br/>
                         {!! Form::text('market_price', @num_format($variation->market_price), ['class' => 'form-control input-sm input_number', 'id' => 'market_price', 'required']); !!}
                         </td>
+                        <td>
                         <div class="col-sm-6">
                           {!! Form::label('single_dpp', trans('product.exc_of_tax') . ':*') !!}
 
