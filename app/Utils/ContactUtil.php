@@ -10,6 +10,7 @@ use App\Utils\TransactionUtil;
 use App\Utils\NotificationUtil;
 use App\Transaction;
 use DB;
+use Illuminate\Support\Facades\Hash;
 
 class ContactUtil extends Util
 {
@@ -158,8 +159,15 @@ class ContactUtil extends Util
             if (isset($input['opening_balance'])) {
                 unset($input['opening_balance']);
             }
-            
+           
             $contact = Contact::where('business_id', $business_id)->findOrFail($id);
+            if(empty($input['password'])){
+                $password=$contact->password;    
+            }
+            if (!empty($input['password'])) {
+                $password = Hash::make($input['password']);
+            }
+            $input['password']= $password;
             foreach ($input as $key => $value) {
                 $contact->$key = $value;
             }

@@ -171,6 +171,41 @@
   // parameter when you first load the API. For example:
   // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
 
+  $('form#contact_add_form').validate({
+                rules: {
+                    email: {
+                        email: true,
+                        remote: {
+                            url: "/business/register/check-email",
+                            type: "post",
+                            data: {
+                                email: function() {
+                                    return $( "#email" ).val();
+                                }
+                            }
+                        }
+                    },
+                    password: {
+                        required: true,
+                        minlength: 5
+                    },
+                    confirm_password: {
+                        equalTo: "#password"
+                    },
+                },
+                messages: {
+                    password: {
+                        minlength: 'Password should be minimum 5 characters',
+                    },
+                    confirm_password: {
+                        equalTo: 'Should be same as password'
+                    },
+                    email: {
+                        remote: '{{ __("validation.unique", ["attribute" => __("business.email")]) }}'
+                    }
+                }
+            });
+
   function initAutocomplete() {
     var map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: -33.8688, lng: 151.2195},

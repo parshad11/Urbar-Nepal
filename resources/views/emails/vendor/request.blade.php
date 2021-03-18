@@ -1,5 +1,5 @@
 @component('mail::message')
-Hello  {{ Config('mail.from.name') }}, 
+Hello  {{ Config('mail.from.name') }},<br> 
 Someone has just contacted you from freshktm contact field with following detail.
 
 @component('mail::panel')

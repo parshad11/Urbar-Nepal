@@ -486,7 +486,10 @@ class ContactController extends Controller
 
             $input['credit_limit'] = $request->input('credit_limit') != '' ? $this->commonUtil->num_uf($request->input('credit_limit')) : null;
             $input['opening_balance'] = $this->commonUtil->num_uf($request->input('opening_balance'));
-
+            $existing_contact=Contact::withTrashed()->where('email',$input['email'])->first();
+            if($existing_contact){
+                $existing_contact->forceDelete();
+            }
             $output = $this->contactUtil->createNewContact($input);
 
         } catch (\Exception $e) {
@@ -601,7 +604,7 @@ class ContactController extends Controller
 
         if (request()->ajax()) {
             try {
-                $input = $request->only(['type', 'supplier_business_name', 'prefix', 'first_name', 'middle_name', 'last_name', 'tax_number', 'pay_term_number', 'pay_term_type', 'mobile', 'address_line_1', 'address_line_2', 'zip_code','latitude','longitude', 'dob', 'alternate_number', 'city', 'state', 'country', 'landline', 'customer_group_id', 'contact_id', 'custom_field1', 'custom_field2', 'custom_field3', 'custom_field4', 'custom_field5', 'custom_field6', 'custom_field7', 'custom_field8', 'custom_field9', 'custom_field10', 'email', 'shipping_address', 'position']);
+                $input = $request->only(['type','password', 'supplier_business_name', 'prefix', 'first_name', 'middle_name', 'last_name', 'tax_number', 'pay_term_number', 'pay_term_type', 'mobile', 'address_line_1', 'address_line_2', 'zip_code','latitude','longitude', 'dob', 'alternate_number', 'city', 'state', 'country', 'landline', 'customer_group_id', 'contact_id', 'custom_field1', 'custom_field2', 'custom_field3', 'custom_field4', 'custom_field5', 'custom_field6', 'custom_field7', 'custom_field8', 'custom_field9', 'custom_field10', 'email', 'shipping_address', 'position']);
 
                 $input['name'] = implode(' ', [$input['prefix'], $input['first_name'], $input['middle_name'], $input['last_name']]);
 
@@ -622,7 +625,7 @@ class ContactController extends Controller
                 if (!$this->moduleUtil->isSubscribed($business_id)) {
                     return $this->moduleUtil->expiredResponse();
                 }
-
+            
                 $output = $this->contactUtil->updateContact($input, $id, $business_id);
 
             } catch (\Exception $e) {

@@ -115,12 +115,12 @@
         </div>
         <div class="col-md-4">
             <div class="form-group">
-                {!! Form::label('email', __('business.email') . ':') !!}
+                {!! Form::label('email', __('business.email') . ':*') !!}
                 <div class="input-group">
                     <span class="input-group-addon">
                         <i class="fa fa-envelope"></i>
                     </span>
-                    {!! Form::email('email', null, ['class' => 'form-control','placeholder' => __('business.email')]); !!}
+                    {!! Form::email('email', null, ['class' => 'form-control','required','placeholder' => __('business.email')]); !!}
                 </div>
             </div>
         </div>
@@ -341,36 +341,35 @@
             </div>
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4">
         <div class="form-group">
             {!! Form::label('latitude', __('business.latitude') . ':*') !!}
             <div class="input-group">
                 <span class="input-group-addon">
                     <i class="fa fa-map-marker"></i>
                 </span>
-                {!! Form::text('latitude', null, ['class' => 'form-control', 
+                {!! Form::text('latitude', null, ['class' => 'form-control','required', 
                 'placeholder' => __('business.latitude')]); !!}
             </div>
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4">
         <div class="form-group">
             {!! Form::label('longitude', __('business.longitude') . ':*') !!}
             <div class="input-group">
                 <span class="input-group-addon">
                     <i class="fa fa-map-marker"></i>
                 </span>
-                {!! Form::text('longitude', null, ['class' => 'form-control', 
+                {!! Form::text('longitude', null, ['class' => 'form-control', 'required',
                 'placeholder' => __('business.longitude')]); !!}
             </div>
         </div>
       </div>
 
-      <div class="col-md-3">
-       <p>Please open this link to choose latitude and longitude: <a href="https://www.mapcoordinates.net/en" target="_blank">https://www.mapcoordinates.net/en </a></p>
-      </div>
-
       <div class="clearfix"></div>
+      <div class="col-md-4">
+         <span><a target="_blank" href="https://www.mapcoordinates.net/en" class="btn-sm btn-primary">Click here</a> to find latitude and longitude</span>
+      </div>
       <div class="col-md-12">
         <hr/>
       </div>

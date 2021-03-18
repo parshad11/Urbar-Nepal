@@ -306,10 +306,10 @@ class StockTransferController extends Controller
                 $delivery_details['transaction_id']=$sell_transfer->id;
                 $delivery_details['delivery_person_id']=$request->input('delivery_person_id');
                 $delivery_details['delivery_status']=$request->input('delivery_status');
-                $delivery_details['shipping_address']=$purchase_transfer->location->city;
+                $delivery_details['shipping_address']=$purchase_transfer->location->location_address;
                 $delivery_details['shipping_latitude']=$purchase_transfer->location->latitude;
                 $delivery_details['shipping_longitude']=$purchase_transfer->location->longitude;
-                $delivery_details['pickup_address']=$sell_transfer->location->city;
+                $delivery_details['pickup_address']=$sell_transfer->location->location_address;
                 $delivery_details['pickup_latitude']=$sell_transfer->location->latitude;
                 $delivery_details['pickup_longitude']=$sell_transfer->location->longitude;
                 $delivery_details['delivery_status']=$request->input('delivery_status');
@@ -481,11 +481,13 @@ class StockTransferController extends Controller
                     TransactionSellLinesPurchaseLines::whereIn('id', $deleted_sell_purchase_ids)
                         ->delete();
                 }
-
+                $delivery=Delivery::where('transaction_id',$sell_transfer->id)->first();
                 //Delete both transactions
                 $sell_transfer->delete();
                 $purchase_transfer->delete();
-
+                if ($delivery) {
+                    $delivery->delete();
+                }
                 $output = ['success' => 1,
                     'msg' => __('lang_v1.stock_transfer_delete_success')
                 ];

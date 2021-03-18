@@ -1265,9 +1265,12 @@ class SellPosController extends Controller
                 $business_id = request()->session()->get('user.business_id');
                 //Begin transaction
                 DB::beginTransaction();
-
+                $delivery=Delivery::where('transaction_id',$id)->first();
                 $output = $this->transactionUtil->deleteSale($business_id, $id);
-                
+                if ($delivery) {
+                    $delivery->delete();
+                }
+
                 DB::commit();
             } catch (\Exception $e) {
                 DB::rollBack();

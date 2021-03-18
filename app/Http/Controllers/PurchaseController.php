@@ -579,7 +579,7 @@ class PurchaseController extends Controller
         }
 
         try {
-        
+           
             $transaction = Transaction::findOrFail($id);
             //Validate document size
             $request->validate([
@@ -640,9 +640,10 @@ class PurchaseController extends Controller
             $transaction->update($update_data);
 
             if($transaction->assign_delivery==0){
-                $delivery = Delivery::where('transaction_id', $id)
-                ->firstOrFail();
-                $delivery->delete();
+                $delivery = Delivery::where('transaction_id', $id)->first();
+                if($delivery) {
+                    $delivery->delete();
+                }
             }
 
             //Update transaction payment status
@@ -740,10 +741,12 @@ class PurchaseController extends Controller
                     //Update mapping of purchase & Sell.
                     $this->transactionUtil->adjustMappingPurchaseSellAfterEditingPurchase($transaction_status, $transaction, $delete_purchase_lines);
                 }
-
+                $delivery=Delivery::where('transaction_id',$transaction->id)->first();
                 //Delete Transaction
                 $transaction->delete();
-
+                if ($delivery) {
+                    $delivery->delete();
+                }
                 //Delete account transactions
                 AccountTransaction::where('transaction_id', $id)->delete();
 
