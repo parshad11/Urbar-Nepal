@@ -112,40 +112,5 @@
 @endsection
 @section('scripts')
     <script src="{{asset('cms/js/shop.js')}}"></script>
-    <script>
-      $(document).ready(function(){
-        $('#add_to_cart, #add_to_carts').on('click',function(){
-          var quantity = $('.input_quantity').val();
-          var product_id = $(this).attr('product_id');
-          $.ajaxSetup({
-              headers: {
-                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-              }
-          });
-          $.ajax({
-            type:'get',
-            url: '{{route("addtocart")}}',
-            data:{
-              product_id:product_id,
-              quantity:quantity
-            },
-            beforeSend: function (response) {
-                $(this).prop('disabled', true);
-            },
-            success:function(response){
-              console.log(response);
-
-            },
-            error:function(response){
-              if(response.error){
-                window.location.href='http://127.0.0.1:8000/shop/login';
-              }
-            },
-            complete: function () {
-                $(this).prop('disabled', false);
-            }
-          });
-        });
-      });
-    </script>
+    
 @endsection
