@@ -21,7 +21,8 @@ class Contact extends Authenticatable
 	use HasRoles;
 	use HasApiTokens;
 
-    protected $guard = 'customer';
+
+	protected $guard = 'customer';
 
     /**
      * The attributes that aren't mass assignable.
