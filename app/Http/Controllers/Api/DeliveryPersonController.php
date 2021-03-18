@@ -13,7 +13,7 @@ class DeliveryPersonController extends Controller
 {
 
 	public function GetAllDeliveryPeople(){
-        $delivery_person=DeliveryPerson::all();
+        $delivery_person=DeliveryPerson::with('user')->get();
         return response()->json([
             'data'=>$delivery_person
         ]);
