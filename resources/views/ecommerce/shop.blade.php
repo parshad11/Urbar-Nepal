@@ -30,25 +30,34 @@
                             <button>Catalogue 2&nbsp;<i class="fas fa-download"></i></button>
                         </div>
                     </div>
-
+                    @if (isset($special_category))
                     <div class="category">
                         <div class="title"> SPECIAL SALE</div>
 
                         <ul class="category-list">
-                            <li><a href="category.htm">Seasonal</a></li>
 
-                            <li><a href="category.htm">Non-Seasonal</a></li>
-                            <li><a href="category.htm">Seasonal</a></li>
-
-                            <li><a href="category.htm">Non-Seasonal</a></li>
-                            <li><a href="category.htm">Seasonal</a></li>
-
-                            <li><a href="category.htm">Non-Seasonal</a></li>
+                        @foreach ($special_category->sub_categories as $sub_cat)
+                            <li><a href="category.htm">{{$sub_cat->name}}</a></li>                            
+                        @endforeach   
 
                         </ul>
-                    </div>
+                    </div>                     
+                    @endif
 
+                    @if (isset($categories))
                     <div class="category">
+                        <div class="title"> Categories</div>
+
+                        <ul class="category-list">
+
+                            @foreach ($categories as $category)
+                            <li class="main"><a href="category.htm">{{$category->name}} </a>
+                        @endforeach   
+
+                        </ul>
+                    </div>                     
+                    @endif
+                    {{-- <div class="category">
                         <div class="title"> Categories</div>
 
                         <ul class="category-list">
@@ -94,7 +103,7 @@
 
 
                         </ul>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="col-md-9 right">
 

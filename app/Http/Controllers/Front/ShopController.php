@@ -22,14 +22,18 @@ class ShopController extends Controller
      */
     public function index()
     {
-        $location = BusinessLocation::where('name', 'freshktm')->first();
+        $location = BusinessLocation::where('location_id', 'BL0001')->first();
         $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
         $products = Product::with('product_variations.variations.product')->whereIn('id', $variation_location_product_ids)->get();
-        // return $products;
+        $special_cat = Category::with('sub_categories')->where('name', 'like', '%special%')->where('parent_id', 0)->first();
+        $all_categories = Category::with('sub_categories')->where('parent_id', 0)->where('id', '!=', $special_cat->id)->get();
+        // return $special_cat;
         // return $products[0]->product_variations[0]->variations;
         // return $products->product_variations[0]->variations[0]->default_sell_price;
         // return $products;
-        return view('ecommerce.shop')->with('products', $products);
+        return view('ecommerce.shop')->with('products', $products)
+            ->with('special_category', $special_cat)
+            ->with('categories', $all_categories);
     }
 
     public function product($slug)
