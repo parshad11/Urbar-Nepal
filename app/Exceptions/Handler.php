@@ -70,7 +70,7 @@ class Handler extends ExceptionHandler
         if ($request->expectsJson()) {
             return response()->json(['error' => 'Unauthenticated.'], 401);
         }
-        if ($request->is('shop/addtocart') || $request->is('shop/checkout')) {
+        if ($request->is('shop/addtocart') || $request->is('shop/checkout') || $request->is('shop/cart')) {
             return redirect()->guest('/shop/login');
         }
         return redirect()->guest(route('login'));

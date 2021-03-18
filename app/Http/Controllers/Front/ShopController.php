@@ -8,7 +8,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Product;
 use App\Category;
+use App\Front\Cart;
 use App\Variation;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ShopController extends Controller
@@ -20,9 +22,9 @@ class ShopController extends Controller
      */
     public function index()
     {
-        $location=BusinessLocation::where('name','freshktm')->first();
-        $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id',$location->id)->pluck('product_id')->toArray();
-        $products = Product::with('product_variations.variations.product')->whereIn('id',$variation_location_product_ids)->get();
+        $location = BusinessLocation::where('name', 'freshktm')->first();
+        $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
+        $products = Product::with('product_variations.variations.product')->whereIn('id', $variation_location_product_ids)->get();
         // return $products;
         // return $products[0]->product_variations[0]->variations;
         // return $products->product_variations[0]->variations[0]->default_sell_price;
@@ -32,11 +34,11 @@ class ShopController extends Controller
 
     public function product($slug)
     {
-        $product = Variation::with('product')->where('sub_sku' ,$slug)->first();
+        $product = Variation::with('product')->where('sub_sku', $slug)->first();
         $product_cat = $product->product->category_id;
-        $location=BusinessLocation::where('name','freshktm')->first();
-        $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id',$location->id)->pluck('product_id')->toArray();
-        $products = Product::with('product_variations.variations.product')->where('category_id',$product_cat)->whereIn('id',$variation_location_product_ids)->get();
+        $location = BusinessLocation::where('name', 'freshktm')->first();
+        $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
+        $products = Product::with('product_variations.variations.product')->where('category_id', $product_cat)->whereIn('id', $variation_location_product_ids)->get();
         // dd($product_cat);
         // dd($product->product);
         // dd($product);
@@ -46,9 +48,17 @@ class ShopController extends Controller
         // dd($product->get('name'));
         // dd($product->variations[0]);
         return view('ecommerce.product_single')->with('variation', $product)
-        ->with('products', $products);
+            ->with('products', $products);
     }
+    public function checkout()
+    {
+        $user_id = Auth::guard('customer')->user()->id;
+        $cart_items = Cart::with('variation')->where('user_id', $user_id)->get();
+        $total_price = Cart::where('user_id', $user_id)->sum('total_price');
 
+        return view('ecommerce.checkout')->with('cart_items', $cart_items)
+            ->with('total_sum', $total_price);
+    }
     /**
      * Show the form for creating a new resource.
      *

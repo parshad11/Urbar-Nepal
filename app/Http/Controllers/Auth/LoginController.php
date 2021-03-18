@@ -79,6 +79,17 @@ class LoginController extends Controller
         return back()->withInput($request->only('email'));
     }
 
+    public function customerLogout(Request $request)
+    {
+
+        Auth::guard('web')->logout();
+        Auth::guard('customer')->logout();
+
+        $request->session()->invalidate();
+
+        return redirect()->route('front_dashboard');
+    }
+
     /**
      * Change authentication from email to username
      *
