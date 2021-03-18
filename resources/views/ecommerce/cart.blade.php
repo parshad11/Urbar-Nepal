@@ -24,7 +24,7 @@
                 <div class="col-xs-2"><img class="img-responsive" src="http://placehold.it/100x70">
                 </div>
                 <div class="col-xs-4">
-                  <h4 class="product-name"><strong>{{$item->variation->product->name}}</strong></h4>
+                  <h4 class="product-name"><strong>{{$item->variation->product->name}}&nbsp;{{$item->variation->name}}</strong></h4>
                 </div>
                 <div class="col-xs-6">
                   <div class="col-xs-3 text-right">

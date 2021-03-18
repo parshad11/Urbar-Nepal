@@ -36,10 +36,10 @@ Route::middleware(['cors'])->group(function () {
 	});
 	route::get('/delivery/location', 'Api\DeliveryPersonController@getLocation')->name('delivery.location');
 
-	Route::get('/products', 'Api\ProductController@products');
-	Route::get('/categories', 'Api\CategoryController@categories');
-	Route::get('product/{slug}', 'Api\ProductController@product');
-	Route::get('variation/{slug}', 'Api\ProductController@variation');
 	route::post('/delivery_person/track/{id}', 'Api\DeliveryPersonController@getDeliveryPersonLocation')
 		->name('delivery.track');
 });
+Route::get('/products', 'Api\ProductController@products');
+Route::get('/categories', 'Api\CategoryController@categories');
+Route::get('product/{slug}', 'Api\ProductController@product');
+Route::get('variation/{slug}', 'Api\ProductController@variation');
