@@ -22,6 +22,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['cors'])->group(function () {
 	route::post('/login', 'Api\LoginController@login')->name('delivery.login');
+	// route::post('/login', 'Api\LoginController@ecommerceLogin')->name('ecommerce.login');
+
+	
+
 	Route::middleware(['auth:api'])->group(function () {
 		route::get('/delivery', 'Api\DeliveryController@index');
 		route::put('/delivery/{id}', 'Api\DeliveryController@update');
@@ -29,3 +33,10 @@ Route::middleware(['cors'])->group(function () {
 		route::get('/task', 'Api\TaskController@index');
 	});
 });
+	Route::get('/products', 'Api\ProductController@products');
+	Route::get('/categories', 'Api\CategoryController@categories');
+	Route::get('product/{slug}', 'Api\ProductController@product');
+	Route::get('variation/{slug}', 'Api\ProductController@variation');
+
+	
+

@@ -16,6 +16,7 @@ class ShopController extends Controller
     // return view('ecommerce.shop');
     // $shops = $this->shops->get();
    //  dd($cat->name);
+  
     return view('ecommerce.shop')->with('products', $products)->with('categories', $categories);
    }
 
