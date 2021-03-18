@@ -89,10 +89,15 @@
                                         <div class="col-md-4 shop-options">
                                             <nav class="navbar navbar-default">
                                                 <ul class="nav  navbar-nav">
-                                                    <li class=""><a href="register.htm">Account &nbsp;
+                                                    @guest('customer')
+                                                    <li class=""><a href="{{route('front_login')}}">Login &nbsp;
                                                             <i class="fa fa-user-circle-o" aria-hidden="true"></i></a>
                                                     </li>
-                                                    <li class=""><a href="cart.htm">Cart &nbsp;
+                                                    @else
+                                                    <li><a href="{{route('user.logout')}}">Logout</a>
+                                                    </li>
+                                                    @endguest
+                                                    <li class=""><a href="{{route('product.cart')}}">Cart &nbsp;
                                                             <i class="fa fa-cart-arrow-down" aria-hidden="true"></i></a>
                                                     </li>
                                                 </ul>

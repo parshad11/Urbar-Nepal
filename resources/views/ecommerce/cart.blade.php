@@ -57,10 +57,10 @@
 
               </div>
               <div class="col-xs-4">
-                <h4 class="text-right">Total <strong>$50.00</strong></h4>
+                <h4 class="text-right">Total <strong>Rs : {{$total_sum}}</strong></h4>
               </div>
               <div class="col-xs-3">
-                <a type="button" class="btn btn-success btn-block" href="checkout.htm">
+                <a type="button" class="btn btn-success btn-block" href="{{route('product.checkout')}}">
                   Checkout
                 </a>
               </div>
