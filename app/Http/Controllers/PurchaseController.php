@@ -302,7 +302,7 @@ class PurchaseController extends Controller
         try {
            
             $business_id = $request->session()->get('user.business_id');
-
+            dd($request->all());
             //Check if subscribed or not
             if (!$this->moduleUtil->isSubscribed($business_id)) {
                 return $this->moduleUtil->expiredResponse(action('PurchaseController@index'));
@@ -368,7 +368,7 @@ class PurchaseController extends Controller
             if (empty($transaction_data['ref_no'])) {
                 $transaction_data['ref_no'] = $this->productUtil->generateReferenceNumber($transaction_data['type'], $ref_count);
             }
-            
+
             $transaction = Transaction::create($transaction_data);
 
             $purchase_lines = [];

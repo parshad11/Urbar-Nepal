@@ -377,16 +377,18 @@
         if(this.value == 'received'){
 			$("#assign_delivery").prop("checked", false);
             $('div.assign_delivery_div').addClass( "hide" );
+			console.log($('#assign_delivery').val());
 			
         }
 		else if(this.value == 'pending'){
 			$("#assign_delivery").prop("checked", false);
             $('div.assign_delivery_div').addClass( "hide" );
+			console.log($('#assign_delivery').val());
 			
         }
         else{
             $('div.assign_delivery_div').removeClass("hide");
-           
+			console.log($('#assign_delivery').val());
         }
         });
 
