@@ -25,7 +25,11 @@ class CartController extends Controller
         return view('ecommerce.cart')->with('cart_items', $cart_items)
             ->with('total_sum', $total_price);
     }
-
+    public function updateNavCart(){
+        $user_id = Auth::guard('customer')->user()->id;
+        $cart_items_count = Cart::where('user_id', $user_id)->get()->count();
+        return $cart_items_count;
+    }
     public function addToCart(Request $request)
     {
         // dd($request);
@@ -33,13 +37,14 @@ class CartController extends Controller
         $user_id = Auth::guard('customer')->user()->id;
         $cart_items = Cart::where('user_id', $user_id)->get();
         $variation_product = Variation::with('product')->find($request->product_id);
-        $variation_stock = VariationLocationDetails::where('variation_id',$variation_product->id)->first();
-            // return $variation_stock;
-            if($request->quantity > $variation_stock){
-                return 'Stock not available';
-            }
+        $variation_stock = VariationLocationDetails::where('variation_id', $variation_product->id)->first();
+        // return $variation_stock;
+        // return $variation_stock->qty_available;
+        if ($request->quantity > $variation_stock->qty_available) {
+            return response()->json(['status'=>'error', 'msg' => 'Quantity is not available']);
+        }
         $data = array();
-        $data['id'] = $variation_product->id;
+        $data['product_id'] = $variation_product->id;
         $data['user_id'] = $user_id;
         // $str = '';
         // $tax = 0;
@@ -52,7 +57,12 @@ class CartController extends Controller
             $cart = collect();
             foreach ($cart_items as $key => $cartItem) {
                 if ($cartItem['product_id'] == $variation_product->id) {
+                    $variation_stock = VariationLocationDetails::where('variation_id', $variation_product->id)->first();
                     $foundInCart = true;
+                    if ($cartItem['quantity'] >= $variation_stock->qty_available) {
+                        return response()->json(['status'=>'error', 'msg' => 'Quantity is not available']);
+                    }
+                    // $cartItem['id'] += $variation_product->id;
                     $cartItem['quantity'] += $request->quantity;
                     $cartItem['total_price'] = $cartItem['quantity'] * $variation_product->sell_price_inc_tax;
                 }
@@ -70,11 +80,11 @@ class CartController extends Controller
         foreach ($cart as $key => $value) {
             $cart_db = Cart::updateOrCreate(
                 [
-                    'product_id' => $value['id'],
+                    'product_id' => $value['product_id'],
                     'user_id' => $value['user_id'],
                 ],
                 [
-                    'product_id' => $value['id'],
+                    'product_id' => $value['product_id'],
                     'user_id' => $value['user_id'],
                     'quantity' => $value['quantity'],
                     'total_price' => $value['total_price']
@@ -82,7 +92,7 @@ class CartController extends Controller
             );
             array_push($cart_data, $cart_db);
         }
-        return $cart_data;
+        return response()->json(['status'=>'success','msg'=> 'Product Added to Cart Successfully', 'data'=>$cart_data]);
         // return view('ecommerce.cart', compact('product', 'data'));
     }
 

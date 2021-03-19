@@ -176,7 +176,27 @@
 
     @yield('scripts')
     <script>
+        function showFrontendAlert(type, message){
+            if(type == 'danger'){
+                type = 'error';
+            }
+            Swal.fire({
+                position: 'top-end',
+                icon: type,
+                title: message,
+                showConfirmButton: false,
+                timer: 3000
+            })
+        }
+        function updateNavCart(){
+            $.get('{{ route('cart.nav_cart') }}', {_token:'{{ csrf_token() }}'}, function(data){
+                $('#cart_count').html(data);
+            });
+        }
+    </script>
+    <script>
         $(document).ready(function(){
+        updateNavCart();
           $('#add_to_cart, #add_to_carts').on('click',function(){
             var quantity = $('.input_quantity').val();
             var product_id = $(this).attr('product_id');
@@ -196,14 +216,16 @@
                   $(this).prop('disabled', true);
               },
               success:function(response){
-                console.log(response);
-                Swal.fire({
-                position: 'top-end',
-                icon: 'success',
-                title: 'Product has been added to cart',
-                showConfirmButton: false,
-                timer: 3000
-                })
+                if(response.status=='error')
+                {
+                    showFrontendAlert('warning', response.msg);
+                } else {
+                    // var cart_number = response.data.length;
+                    // alert (cart_number);
+                    // $('#cart_count').text(cart_number);
+                    updateNavCart();
+                    showFrontendAlert('success', response.msg);
+                }
   
               },
               error:function(response){

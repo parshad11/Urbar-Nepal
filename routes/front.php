@@ -28,6 +28,7 @@ Route::namespace('Front')->group(function () {
     Route::get('/careers', 'FrontendController@getCareers')->name('careers');
 
     // E-commerce Routes
+    Route::get('/shop/cart-item', 'CartController@updateNavCart')->name('cart.nav_cart');
     Route::get('/shop/addtocart', 'CartController@addToCart')->name('addtocart')->middleware(['auth:customer']);
     Route::get('/shop/cart', 'CartController@index')->name('product.cart')->middleware('auth:customer');
     Route::get('/shop/checkout', 'ShopController@checkout')->name('product.checkout')->middleware('auth:customer');

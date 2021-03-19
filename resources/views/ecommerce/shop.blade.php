@@ -91,7 +91,7 @@
                                     <div class="card col-md-4 col-sm-4 col-xs-6">
                                         <div class="product">
                                             <div class="img">
-                                                <a href="single.htm">
+                                                <a href="{{route('product_single',$variation->sub_sku)}}">
                                                     <img class="img img-responsive"
                                                          src="@if($variation->name != "DUMMY")
                                                          @foreach($variation->media as $media)
@@ -111,7 +111,7 @@
                                                     {{-- <p>{{$variation->media[0]->path}}</p> --}}
                                                     <div class="kalimati"><small>Kalimati Price :Rs. {{$variation->market_price}}</small></div>
 
-                                                    <div class="offer">Price : Rs.{{$variation->sell_price_inc_tax}}</div>
+                                                    <div class="offer">Price : Rs.{{$variation->sell_price_inc_tax}}/{{$variation->product->unit->short_name}}</div>
                                                 </div>
                                                 <button class="btn btn-success" id="add_to_carts" product_id="{{$variation->id}}">Add to Cart</button>
                                             </div>
