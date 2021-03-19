@@ -48,7 +48,12 @@ return [
 	    'customer' => [
             'driver' => 'session',
             'provider' => 'contacts',
-        ]
+        ],
+	    'customerapi' => [
+		    'driver' => 'passport',
+		    'provider' => 'contacts',
+	    ],
+
 
     ],
 

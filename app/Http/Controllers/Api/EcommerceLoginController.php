@@ -21,7 +21,7 @@ class EcommerceLoginController extends Controller
 		if (!Auth::guard('customer')->attempt($credentials)) {
 			return response()->json(['message' => 'Unauthorized'], 401);
 		}
-		$user = $user = Auth::guard('customer')->user();
+		$user = Auth::guard('customer')->user();
 		$tokenResult = $user->createToken('Personal Access Token');
 		return $this->loginSuccess($tokenResult, $user);
 	}
@@ -30,10 +30,12 @@ class EcommerceLoginController extends Controller
 	protected function loginSuccess($tokenResult, $user)
 	{
 		$token = $tokenResult->token;
+
 		$token->expires_at = Carbon::now()->addWeeks(100);
 		$token->save();
 		return response()->json([
 			'status' => 'ok',
+//			'guard'=> Auth::guard('customer')->check(),
 			'access_token' => $tokenResult->accessToken,
 			'token_type' => 'Bearer',
 			'expires_at' => Carbon::parse(

@@ -20,24 +20,33 @@ use Illuminate\Support\Facades\Route;
 		return $request->user();
 	});*/
 
-Route::middleware(['cors'])->group(function () {
-	route::post('/login', 'Api\LoginController@login')->name('delivery.login');
-	route::post('ecommerce/login', 'Api\EcommerceLoginController@login');
-	// route::post('/login', 'Api\LoginController@ecommerceLogin')->name('ecommerce.login');
+Route::namespace('Api')->middleware(['cors'])->group(function () {
+	route::post('/login', 'LoginController@login')->name('delivery.login');
+	route::post('ecommerce/login', 'EcommerceLoginController@login');
+	// route::post('/login', 'LoginController@ecommerceLogin')->name('ecommerce.login');
 
 
 
 	Route::middleware(['auth:api'])->group(function () {
-		route::get('/delivery', 'Api\DeliveryController@index');
-		route::put('/delivery/{id}', 'Api\DeliveryController@update');
-		route::get('/delivery-people', 'Api\DeliveryPersonController@GetAllDeliveryPeople');
-		route::get('/task', 'Api\TaskController@index');
-		route::put('/task/{id}', 'Api\TaskController@update');
+		route::get('/delivery', 'DeliveryController@index');
+		route::put('/delivery/{id}', 'DeliveryController@update');
+		route::get('/delivery-people', 'DeliveryPersonController@GetAllDeliveryPeople');
+		route::get('/task', 'TaskController@index');
+		route::put('/task/{id}', 'TaskController@update');
 	});
-	route::get('/delivery/location', 'Api\DeliveryPersonController@getLocation')->name('delivery.location');
+	/*Ecommerce*/
+	Route::middleware(['auth:customerapi'])->group(function () {
+		Route::get('/shop/cart', 'CartController@index');
+		Route::get('/shop/addtocart', 'CartController@addToCart');
+	});
+	route::get('/delivery/location', 'DeliveryPersonController@getLocation')->name('delivery.location');
 
-	route::post('/delivery_person/track/{id}', 'Api\DeliveryPersonController@getDeliveryPersonLocation')
+	route::post('/delivery_person/track/{id}', 'DeliveryPersonController@getDeliveryPersonLocation')
 		->name('delivery.track');
+
+
+
+
 });
 Route::get('/products', 'Api\ProductController@products');
 Route::get('/categories', 'Api\CategoryController@categories');
