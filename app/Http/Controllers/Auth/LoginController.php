@@ -45,7 +45,6 @@ class LoginController extends Controller
     public function __construct(BusinessUtil $businessUtil, ModuleUtil $moduleUtil)
     {
         $this->middleware('guest')->except(['logout','showCustomerLoginForm','customerLogin','customerLogout']);
-        // $this->middleware('guest:customer')->except('logout');
         $this->businessUtil = $businessUtil;
         $this->moduleUtil = $moduleUtil;
     }
@@ -71,11 +70,9 @@ class LoginController extends Controller
         $request->validate($rules, $messages);
 
         if (Auth::guard('customer')->attempt(['email' => $request->email, 'password' => $request->password])) {
-            // if(session('link') != null){
-            //     return redirect($request->session()->get('link'));
-            // }else 
             return redirect()->intended('/shop');
         }
+        $request->session()->flash('error', 'Invalid Credentials');
         return back()->withInput($request->only('email'));
     }
 
