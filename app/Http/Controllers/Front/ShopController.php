@@ -192,12 +192,12 @@ class ShopController extends Controller
           $input['products']=$products;
 
         if (!empty($input['products'])) {
-        $transaction = $this->transactionUtil->createSellTransaction($business_id, $input, $invoice_total,null,$assign_delivery);
+        $transaction = $this->transactionUtil->createSellTransaction($business_id, $input, $invoice_total,1,$assign_delivery);
         
         $this->transactionUtil->createOrUpdateSellLines($transaction, $input['products'], $input['location_id']);
         $is_credit_sale = isset($input['is_credit_sale']) && $input['is_credit_sale'] == 1 ? true : false;
 
-        if ($input['status'] == 'final') {
+        if ($input['status'] == 'draft') {
             //update product stock
             foreach ($input['products'] as $product) {
                 $decrease_qty = $this->productUtil

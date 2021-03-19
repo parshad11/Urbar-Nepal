@@ -44,8 +44,8 @@ class LoginController extends Controller
      */
     public function __construct(BusinessUtil $businessUtil, ModuleUtil $moduleUtil)
     {
-        $this->middleware('guest')->except('logout');
-        $this->middleware('guest:customer')->except('logout');
+        $this->middleware('guest')->except(['logout','showCustomerLoginForm','customerLogin','customerLogout']);
+        // $this->middleware('guest:customer')->except('logout');
         $this->businessUtil = $businessUtil;
         $this->moduleUtil = $moduleUtil;
     }
