@@ -30,71 +30,44 @@
                             <button>Catalogue 2&nbsp;<i class="fas fa-download"></i></button>
                         </div>
                     </div>
-
+                    @if (isset($special_category))
                     <div class="category">
                         <div class="title"> SPECIAL SALE</div>
 
                         <ul class="category-list">
-                            <li><a href="category.htm">Seasonal</a></li>
 
-                            <li><a href="category.htm">Non-Seasonal</a></li>
-                            <li><a href="category.htm">Seasonal</a></li>
-
-                            <li><a href="category.htm">Non-Seasonal</a></li>
-                            <li><a href="category.htm">Seasonal</a></li>
-
-                            <li><a href="category.htm">Non-Seasonal</a></li>
+                        @foreach ($special_category->sub_categories as $sub_cat)
+                            <li><a href="{{route('product_subcategory',[$special_category->slug,$sub_cat->slug])}}">{{$sub_cat->name}}</a></li>                            
+                        @endforeach   
 
                         </ul>
-                    </div>
+                    </div>                     
+                    @endif
 
+                    @if (isset($categories))
                     <div class="category">
                         <div class="title"> Categories</div>
 
                         <ul class="category-list">
-                            <li class="main"><a href="category.htm">Dry Fruits </a>
+
+                            @foreach ($categories as $category)
+                            <li class="main"><a href="{{route('product_category',$category->slug)}}">{{$category->name}} </a>
+                                @if($category->sub_categories!= null)
                                 &nbsp;<i style="float: right; margin:auto" class="fas fa-chevron-right"></i>
                                 <ul class="sub">
-                                    <li><a href="subcategory.htm">seasnal</a></li>
-
-                                    <li><a href="subcategory.htm"></a>Non seasnal</a></li>
-                                    <li><a href="subcategory.htm">seasnal</a></li>
-
-                                    <li><a href="subcategory.htm"></a>Non seasnal</a></li>
-
+                                    @foreach ($category->sub_categories as $sub_category)
+                                        
+                                    <li><a href="{{route('product_subcategory',[$category->slug,$sub_category->slug])}}">{{$sub_category->name}}</a></li>
+                                    @endforeach
                                 </ul>
                             </li>
 
-                            <li class="main"><a href="category.htm">Dry Fruits </a>
-                                &nbsp;<i style="float: right; margin:auto" class="fas fa-chevron-right"></i>
-                                <ul class="sub">
-                                    <li><a href="subcategory.htm">seasnal</a></li>
-
-                                    <li><a href="subcategory.htm"></a>Non seasnal</a></li>
-                                    <li><a href="subcategory.htm">seasnal</a></li>
-
-                                    <li><a href="subcategory.htm"></a>Non seasnal</a></li>
-
-                                </ul>
-                            </li>
-
-                            <li class="main"><a href="category.htm">Dry Fruits </a>
-                                &nbsp;<i style="float: right; margin:auto" class="fas fa-chevron-right"></i>
-                                <ul class="sub">
-                                    <li><a href="subcategory.htm">seasnal</a></li>
-
-                                    <li><a href="subcategory.htm"></a>Non seasnal</a></li>
-
-                                    <li><a href="subcategory.htm">seasnal</a></li>
-
-                                    <li><a href="subcategory.htm"></a>Non seasnal</a></li>
-
-                                </ul>
-                            </li>
-
+                                @endif
+                        @endforeach   
 
                         </ul>
-                    </div>
+                    </div>                     
+                    @endif
                 </div>
                 <div class="col-md-9 right">
 
@@ -111,13 +84,14 @@
 
                     <!-- PRODUCTS -->
                     <div class="row">
+
                         @forelse($products as $product)
                             @foreach ($product->product_variations as $product_variation)
                                 @foreach ($product_variation->variations as $variation)
                                     <div class="card col-md-4 col-sm-4 col-xs-6">
                                         <div class="product">
                                             <div class="img">
-                                                <a href="single.htm">
+                                                <a href="{{route('product_single',$variation->sub_sku)}}">
                                                     <img class="img img-responsive"
                                                          src="@if($variation->name != "DUMMY")
                                                          @foreach($variation->media as $media)
@@ -137,9 +111,9 @@
                                                     {{-- <p>{{$variation->media[0]->path}}</p> --}}
                                                     <div class="kalimati"><small>Kalimati Price :Rs. {{$variation->market_price}}</small></div>
 
-                                                    <div class="offer">Price : Rs.{{$variation->sell_price_inc_tax}}</div>
+                                                    <div class="offer">Price : Rs.{{$variation->sell_price_inc_tax}}/{{$variation->product->unit->short_name}}</div>
                                                 </div>
-                                                <button class="btn btn-success">Add to Cart</button>
+                                                <button class="btn btn-success" id="add_to_carts" product_id="{{$variation->id}}">Add to Cart</button>
                                             </div>
                                         </div>
                                     </div>
@@ -147,6 +121,13 @@
                                 @endforeach
                             @endforeach
                         @empty
+                        <div class="card col-lg-12">
+                            <div class="row">
+                                <div class="text-center" style="padding: 50px ">
+                                    <h1>No Product Found</h1>
+                                </div>
+                            </div>
+                        </div>
                         @endforelse
                     </div>
                     {{-- {{$product->links()}} --}}

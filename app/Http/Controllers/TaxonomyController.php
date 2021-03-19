@@ -6,6 +6,7 @@ use App\Category;
 use App\Utils\ModuleUtil;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Str;
 
 class TaxonomyController extends Controller
 {
@@ -125,6 +126,7 @@ class TaxonomyController extends Controller
             } else {
                 $input['parent_id'] = 0;
             }
+            $input['slug'] = Str::slug($request->name);
             $input['business_id'] = $request->session()->get('user.business_id');
             $input['created_by'] = $request->session()->get('user.id');
 

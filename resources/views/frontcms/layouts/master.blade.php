@@ -169,11 +169,77 @@
     <script src="{{ asset('cms/js/lightbox.min.js') }}"></script>
     <script src="{{ asset('cms/js/imagesloaded.min.js') }}"></script>
     <script src="{{ asset('cms/js/jquery.filterizr.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <!-- Custom Js -->
     <script src="{{ asset('cms/js/main.js') }}"></script>
 
     @yield('scripts')
+    <script>
+        function showFrontendAlert(type, message){
+            if(type == 'danger'){
+                type = 'error';
+            }
+            Swal.fire({
+                position: 'top-end',
+                icon: type,
+                title: message,
+                showConfirmButton: false,
+                timer: 3000
+            })
+        }
+        function updateNavCart(){
+            $.get('{{ route('cart.nav_cart') }}', {_token:'{{ csrf_token() }}'}, function(data){
+                $('#cart_count').html(data);
+            });
+        }
+    </script>
+    <script>
+        $(document).ready(function(){
+        updateNavCart();
+          $('#add_to_cart, #add_to_carts').on('click',function(){
+            var quantity = $('.input_quantity').val();
+            var product_id = $(this).attr('product_id');
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+              type:'get',
+              url: '{{route("addtocart")}}',
+              data:{
+                product_id:product_id,
+                quantity:quantity
+              },
+              beforeSend: function (response) {
+                  $(this).prop('disabled', true);
+              },
+              success:function(response){
+                if(response.status=='error')
+                {
+                    showFrontendAlert('warning', response.msg);
+                } else {
+                    // var cart_number = response.data.length;
+                    // alert (cart_number);
+                    // $('#cart_count').text(cart_number);
+                    updateNavCart();
+                    showFrontendAlert('success', response.msg);
+                }
+  
+              },
+              error:function(response){
+                if(response.error){
+                  window.location.href='http://127.0.0.1:8000/shop/login';
+                }
+              },
+              complete: function () {
+                  $(this).prop('disabled', false);
+              }
+            });
+          });
+        });
+      </script>
 
 </body>
 

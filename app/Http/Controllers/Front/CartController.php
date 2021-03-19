@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Product;
 use App\Variation;
+use App\VariationLocationDetails;
 use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
@@ -24,33 +25,44 @@ class CartController extends Controller
         return view('ecommerce.cart')->with('cart_items', $cart_items)
             ->with('total_sum', $total_price);
     }
-
+    public function updateNavCart(){
+        $user_id = Auth::guard('customer')->user()->id;
+        $cart_items_count = Cart::where('user_id', $user_id)->get()->count();
+        return $cart_items_count;
+    }
     public function addToCart(Request $request)
     {
         // dd($request);
         // return $request->product_id;
         $user_id = Auth::guard('customer')->user()->id;
+        $cart_items = Cart::where('user_id', $user_id)->get();
         $variation_product = Variation::with('product')->find($request->product_id);
+        $variation_stock = VariationLocationDetails::where('variation_id', $variation_product->id)->first();
+        // return $variation_stock;
+        // return $variation_stock->qty_available;
+        if ($request->quantity > $variation_stock->qty_available) {
+            return response()->json(['status'=>'error', 'msg' => 'Quantity is not available']);
+        }
         $data = array();
-        $data['id'] = $variation_product->id;
+        $data['product_id'] = $variation_product->id;
         $data['user_id'] = $user_id;
         // $str = '';
         // $tax = 0;
         // dd($product);
 
-
         $data['quantity'] = isset($request->quantity) ? $request->quantity : 1;
-        // $data['tax'] = $tax;
         $data['total_price'] = $data['quantity'] * $variation_product->sell_price_inc_tax;
-        //  dd( $request['quantity']);
-        // return response()->json($data);
-
-        if ($request->session()->has('cart')) {
+        if ($cart_items) {
             $foundInCart = false;
             $cart = collect();
-            foreach ($request->session()->get('cart') as $key => $cartItem) {
-                if ($cartItem['id'] == $variation_product->id) {
+            foreach ($cart_items as $key => $cartItem) {
+                if ($cartItem['product_id'] == $variation_product->id) {
+                    $variation_stock = VariationLocationDetails::where('variation_id', $variation_product->id)->first();
                     $foundInCart = true;
+                    if ($cartItem['quantity'] >= $variation_stock->qty_available) {
+                        return response()->json(['status'=>'error', 'msg' => 'Quantity is not available']);
+                    }
+                    // $cartItem['id'] += $variation_product->id;
                     $cartItem['quantity'] += $request->quantity;
                     $cartItem['total_price'] = $cartItem['quantity'] * $variation_product->sell_price_inc_tax;
                 }
@@ -61,21 +73,18 @@ class CartController extends Controller
 
                 $cart->push($data);
             }
-            $request->session()->put('cart', $cart);
         } else {
             $cart = collect([$data]);
-            $request->session()->put('cart', $cart);
         }
         $cart_data = array();
-        // print_r($request->session()->get('cart'));
-        foreach ($request->session()->get('cart') as $key => $value) {
+        foreach ($cart as $key => $value) {
             $cart_db = Cart::updateOrCreate(
                 [
-                    'product_id' => $value['id'],
+                    'product_id' => $value['product_id'],
                     'user_id' => $value['user_id'],
                 ],
                 [
-                    'product_id' => $value['id'],
+                    'product_id' => $value['product_id'],
                     'user_id' => $value['user_id'],
                     'quantity' => $value['quantity'],
                     'total_price' => $value['total_price']
@@ -83,7 +92,7 @@ class CartController extends Controller
             );
             array_push($cart_data, $cart_db);
         }
-        return $cart_data;
+        return response()->json(['status'=>'success','msg'=> 'Product Added to Cart Successfully', 'data'=>$cart_data]);
         // return view('ecommerce.cart', compact('product', 'data'));
     }
 
