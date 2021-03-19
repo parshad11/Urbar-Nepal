@@ -67,6 +67,7 @@ return [
     'list_pos' => 'List POS',
     'edit_sale' => 'Edit Sale',
     'shipping' => 'Shipping',
+    'order_added' => 'Order Added Sucessfully',
     'shipping_details' => 'Shipping Details',
     'shipping_charges' => 'Shipping Charges'
 ];

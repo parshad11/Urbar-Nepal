@@ -9,18 +9,41 @@ use App\Http\Controllers\Controller;
 use App\Product;
 use App\Category;
 use App\Front\Cart;
+use App\InvoiceLayout;
+use App\InvoiceScheme;
+use App\Utils\ContactUtil;
+use App\Utils\NotificationUtil;
+use App\Utils\ProductUtil;
+use App\Utils\TransactionUtil;
 use App\Variation;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Razorpay\Api\Invoice;
 
 class ShopController extends Controller
 {
+    protected $contactUtil;
+    protected $transactionUtil;
+    protected $productUtil;
+    protected $notificationUtil;
+
+    public function __construct( ContactUtil $contactUtil, TransactionUtil $transactionUtil,  ProductUtil $productUtil,NotificationUtil $notificationUtil) 
+    {
+        $this->contactUtil = $contactUtil;
+        $this->transactionUtil = $transactionUtil;
+        $this->productUtil = $productUtil;
+        $this->notificationUtil = $notificationUtil;
+        $this->dummyPaymentLine = ['method' => 'cash', 'amount' => 0, 'note' => '', 'card_transaction_number' => '', 'card_number' => '', 'card_type' => '', 'card_holder_name' => '', 'card_month' => '', 'card_year' => '', 'card_security' => '', 'cheque_number' => '', 'bank_account_number' => '',
+        'is_return' => 0, 'transaction_no' => ''];
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(ContactUtil $contactUtil)
     {
         $location = BusinessLocation::where('location_id', 'BL0001')->first();
         $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
@@ -57,10 +80,10 @@ class ShopController extends Controller
     {
         $user_id = Auth::guard('customer')->user()->id;
         $cart_items = Cart::with('variation')->where('user_id', $user_id)->get();
+        $user=Auth::guard('customer')->user();
         $total_price = Cart::where('user_id', $user_id)->sum('total_price');
 
-        return view('ecommerce.checkout')->with('cart_items', $cart_items)
-            ->with('total_sum', $total_price);
+        return view('ecommerce.checkout')->with(compact('cart_items','user','total_price'));
     }
 
     public function categoryProduct($slug){
@@ -114,7 +137,185 @@ class ShopController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // try {
+        $input = $request->except('_token');
+        
+        $location = BusinessLocation::where('location_id', 'BL0001')->first();
+        $input['status'] = 'draft';
+        $input['location_id']=$location->id;
+        $assign_delivery=1;
+        $user=Auth::guard('customer')->user();
+        $input['contact_id']=$user->id;
+        $business_id=$user->business_id;
+        $input['commission_agent'] = !empty($request->input('commission_agent')) ? $request->input('commission_agent') : null;
+        $input['discount_amount'] = !empty($request->input('discount_amount')) ? $request->input('discount_amount') : null;
+        $cart_items=json_decode($input['cart_items'],true);
+        $input['cart_items']=$cart_items;
+        $invoice_total=$input['total_price'];
+        $input['final_total']=$invoice_total;
+        $input['is_direct_sale']=true;
+        $input['is_save_and_print']=1;
+        $input['transaction_date'] = Carbon::now()->format('Y-m-d H:i:s');
+        
+        DB::beginTransaction();
+        //Customer group details
+        $contact_id = $user->id;
+        $cg = $this->contactUtil->getCustomerGroup($business_id, $contact_id);
+        $input['customer_group_id'] = (empty($cg) || empty($cg->id)) ? null : $cg->id;
+        
+
+        $invoice=InvoiceScheme::where('name','Default')->first();
+        $input['invoice_scheme_id']=$invoice->id;
+        $product=[];
+        $products=[];
+        foreach($cart_items as $item){
+           
+            $product['product_type']=$item['variation']['product']['type'];
+            $product['unit_price']=$item['variation']['default_sell_price'];
+            $product['line_discount_price']='fixed';
+            $product['line_discount_amount']=0;
+            $product['item_tax']=0;
+            $product['tax_id']=null;
+            $product['sell_line_note']=null;
+            $product['lot_no_line_id']=null;
+            $product['product_id']=$item['product_id'];
+            $product['variation_id']=$item['variation']['id'];
+            $product['enable_stock']=$item['variation']['product']['enable_stock'];
+            $product['quantity']=$item['quantity'];
+            $product['product_unit_id']=$item['variation']['product']['unit_id'];
+            $product['sub_unit_id']=$item['variation']['product']['unit_id'];
+            $product['base_unit_multiplier']=1;
+            $product['unit_price_inc_tax']=$item['variation']['sell_price_inc_tax'];
+            array_push($products,$product);
+          }
+          
+          $input['products']=$products;
+
+        if (!empty($input['products'])) {
+        $transaction = $this->transactionUtil->createSellTransaction($business_id, $input, $invoice_total,1,$assign_delivery);
+        
+        $this->transactionUtil->createOrUpdateSellLines($transaction, $input['products'], $input['location_id']);
+        $is_credit_sale = isset($input['is_credit_sale']) && $input['is_credit_sale'] == 1 ? true : false;
+
+        if ($input['status'] == 'draft') {
+            //update product stock
+            foreach ($input['products'] as $product) {
+                $decrease_qty = $this->productUtil
+                            ->num_uf($product['quantity']);
+                if (!empty($product['base_unit_multiplier'])) {
+                    $decrease_qty = $decrease_qty * $product['base_unit_multiplier'];
+                }
+
+                if ($product['enable_stock']) {
+                    $this->productUtil->decreaseProductQuantity(
+                        $product['product_id'],
+                        $product['variation_id'],
+                        $input['location_id'],
+                        $decrease_qty
+                    );
+                }
+
+            }
+            $this->notificationUtil->autoSendNotification($business_id, 'new_sale', $transaction, $user);
+        }
+        
+        DB::commit();
+        if ($request->input('is_save_and_print') == 1) {
+            $url = $this->transactionUtil->getInvoiceUrl($transaction->id, $business_id);
+            return redirect()->to($url . '?print_on_load=true');
+        }
+
+        $msg = trans("sale.order_added");
+        $receipt = '';
+        $invoice_layout = InvoiceLayout::where('name','Default')->first();
+        $invoice_layout_id =$invoice_layout->id;
+       
+        $print_invoice = true;
+
+        if ($print_invoice) {
+            $receipt = $this->receiptContent($business_id, $input['location_id'], $transaction->id, null, false, true, $invoice_layout_id);
+        }
+
+        $output = ['success' => 1, 'msg' => $msg, 'receipt' => $receipt ];
+        } 
+        else {
+            $output = ['success' => 0,
+                        'msg' => trans("messages.something_went_wrong")
+                    ];
+        }
+        // }  catch (\Exception $e) {
+        //     DB::rollBack();
+        //     \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+        //     $msg = trans("messages.something_went_wrong");
+
+        //     $output = ['success' => 0,
+        //                     'msg' => $msg
+        //                 ];
+        // }
+        // return redirect()
+        // ->action('Front\ShopController@index')
+        // ->with('status', $output);
+        return 'test sucessful';
+    }
+
+    private function receiptContent(
+        $business_id,
+        $location_id,
+        $transaction_id,
+        $printer_type = null,
+        $is_package_slip = false,
+        $from_pos_screen = true,
+        $invoice_layout_id = null
+    ) {
+        $output = ['is_enabled' => false,
+                    'print_type' => 'browser',
+                    'html_content' => null,
+                    'printer_config' => [],
+                    'data' => []
+                ];
+
+
+        $business_details = $this->businessUtil->getDetails($business_id);
+        $location_details = BusinessLocation::find($location_id);
+        
+        if ($from_pos_screen && $location_details->print_receipt_on_invoice != 1) {
+            return $output;
+        }
+        //Check if printing of invoice is enabled or not.
+        //If enabled, get print type.
+        $output['is_enabled'] = true;
+
+        $invoice_layout_id = !empty($invoice_layout_id) ? $invoice_layout_id : $location_details->invoice_layout_id;
+        $invoice_layout = $this->businessUtil->invoiceLayout($business_id, $location_id, $invoice_layout_id);
+
+        //Check if printer setting is provided.
+        $receipt_printer_type = is_null($printer_type) ? $location_details->receipt_printer_type : $printer_type;
+
+        $receipt_details = $this->transactionUtil->getReceiptDetails($transaction_id, $location_id, $invoice_layout, $business_details, $location_details, $receipt_printer_type);
+
+        $currency_details = [
+            'symbol' => $business_details->currency_symbol,
+            'thousand_separator' => $business_details->thousand_separator,
+            'decimal_separator' => $business_details->decimal_separator,
+        ];
+        $receipt_details->currency = $currency_details;
+        
+        if ($is_package_slip) {
+            $output['html_content'] = view('sale_pos.receipts.packing_slip', compact('receipt_details'))->render();
+            return $output;
+        }
+        //If print type browser - return the content, printer - return printer config data, and invoice format config
+        if ($receipt_printer_type == 'printer') {
+            $output['print_type'] = 'printer';
+            $output['printer_config'] = $this->businessUtil->printerConfig($business_id, $location_details->printer_id);
+            $output['data'] = $receipt_details;
+        } else {
+            $layout = !empty($receipt_details->design) ? 'sale_pos.receipts.' . $receipt_details->design : 'sale_pos.receipts.classic';
+
+            $output['html_content'] = view($layout, compact('receipt_details'))->render();
+        }
+        
+        return $output;
     }
 
     /**

@@ -90,6 +90,17 @@
             </div>
         </div>
         <div class="clearfix"></div>
+        <div class="col-md-4">
+            <div class="form-group">
+                {!! Form::label('email', __('business.email') . ':*') !!}
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="fa fa-envelope"></i>
+                    </span>
+                    {!! Form::email('email', null, ['class' => 'form-control','required','placeholder' => __('business.email')]); !!}
+                </div>
+            </div>
+        </div>
         <div class="col-md-4 customer_fields">
             <div class="form-group">
                 {!! Form::label('password', __('business.password') . ':*') !!}
@@ -113,17 +124,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="form-group">
-                {!! Form::label('email', __('business.email') . ':*') !!}
-                <div class="input-group">
-                    <span class="input-group-addon">
-                        <i class="fa fa-envelope"></i>
-                    </span>
-                    {!! Form::email('email', null, ['class' => 'form-control','required','placeholder' => __('business.email')]); !!}
-                </div>
-            </div>
-        </div>
+        
         <div class="clearfix"></div>
         <div class="col-md-4">
         <div class="form-group">

@@ -305,7 +305,7 @@ class SellPosController extends Controller
 
         try {
             $input = $request->except('_token');
-    
+            dd($input);
             //Check Customer credit limit
             $is_credit_limit_exeeded = $this->transactionUtil->isCustomerCreditLimitExeeded($input);
 
@@ -329,7 +329,7 @@ class SellPosController extends Controller
                 $input['status'] = 'draft';
                 $input['is_quotation'] = 1;
             }
-
+           
             if (!empty($input['products'])) {
                 $business_id = $request->session()->get('user.business_id');
 
