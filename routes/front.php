@@ -31,6 +31,7 @@ Route::namespace('Front')->group(function () {
     Route::get('/shop/addtocart', 'CartController@addToCart')->name('addtocart')->middleware(['auth:customer']);
     Route::get('/shop/cart', 'CartController@index')->name('product.cart')->middleware('auth:customer');
     Route::get('/shop/checkout', 'ShopController@checkout')->name('product.checkout')->middleware('auth:customer');
+    Route::post('/shop/checkout', 'ShopController@store')->name('order.store')->middleware('auth:customer');
     Route::get('/shop', 'ShopController@index')->name('shop');
     Route::get('/shop/product/{slug}', 'ShopController@product')->name('product_single');
 

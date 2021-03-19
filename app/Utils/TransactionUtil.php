@@ -40,13 +40,12 @@ class TransactionUtil extends Util
      *
      * @return boolean
      */
-    public function createSellTransaction($business_id, $input, $invoice_total, $user_id,$assign_delivery,$uf_data = true)
+    public function createSellTransaction($business_id, $input, $invoice_total,$user_id=1,$assign_delivery,$uf_data = true)
     {
         $invoice_scheme_id = !empty($input['invoice_scheme_id']) ? $input['invoice_scheme_id'] : null;
         $invoice_no = !empty($input['invoice_no']) ? $input['invoice_no'] : $this->getInvoiceNumber($business_id, $input['status'], $input['location_id'], $invoice_scheme_id);
-
         $final_total = $uf_data ? $this->num_uf($input['final_total']) : $input['final_total'];
-        
+     
         $transaction = Transaction::create([
             'business_id' => $business_id,
             'location_id' => $input['location_id'],
@@ -56,12 +55,12 @@ class TransactionUtil extends Util
             'customer_group_id' => !empty($input['customer_group_id']) ? $input['customer_group_id'] : null,
             'invoice_no' => $invoice_no,
             'ref_no' => '',
-            'total_before_tax' => $invoice_total['total_before_tax'],
+            'total_before_tax' => !empty($input['total_before_tax']) ? $input['total_before_tax'] : $final_total,
             'transaction_date' => $input['transaction_date'],
             'tax_id' => !empty($input['tax_rate_id']) ? $input['tax_rate_id'] : null,
             'discount_type' => !empty($input['discount_type']) ? $input['discount_type'] : null,
             'discount_amount' => $uf_data ? $this->num_uf(@$input['discount_amount']) : @$input['discount_amount'],
-            'tax_amount' => $invoice_total['tax'],
+            'tax_amount' =>!empty($input['tax']) ? $input['tax'] : 0,
             'final_total' => $final_total,
             'additional_notes' => !empty($input['sale_note']) ? $input['sale_note'] : null,
             'staff_note' => !empty($input['staff_note']) ? $input['staff_note'] : null,
@@ -70,6 +69,7 @@ class TransactionUtil extends Util
             'commission_agent' => @$input['commission_agent'],
             'is_quotation' => isset($input['is_quotation']) ? $input['is_quotation'] : 0,
             'shipping_details' => isset($input['shipping_details']) ? $input['shipping_details'] : null,
+            'shipping_address' => isset($input['shipping_address']) ? $input['shipping_address'] : null,
             'assign_delivery'=>$assign_delivery,
             'shipping_charges' => isset($input['shipping_charges']) ? $uf_data ? $this->num_uf($input['shipping_charges']) : $input['shipping_charges'] : 0,
             'exchange_rate' => !empty($input['exchange_rate']) ?

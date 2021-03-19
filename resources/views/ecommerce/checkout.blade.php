@@ -16,7 +16,8 @@
             <a href="#" class="btn btn-info" style="width: 100%;">Add More Products &amp; Services</a>
             <hr>
             <div class="shopping_cart">
-              <form class="form-horizontal" role="form" action="" method="post" id="payment-form">
+              <form class="form-horizontal" role="form" action="{{action('Front\ShopController@store')}}" method="post" id="payment-form">
+              @csrf
                 <div class="panel-group" id="accordion">
                   <div class="panel panel-default">
                     <div class="panel-heading">
@@ -56,7 +57,7 @@
                           <div class="col-md-3">
                             <div style="text-align: center;">
                               <h3>Order Total</h3>
-                              <h3><span style="color:green;">Rs :{{$total_sum}}</span></h3>
+                              <h3><span style="color:green;">Rs :{{$total_price}}</span></h3>
                             </div>
                           </div>
                         </div>
@@ -84,101 +85,29 @@
                     <div class="panel-body">
 
                       <table class="table table-striped" style="font-weight: bold;">
-                        <tbody><tr>
-                          <td style="width: 175px;">
-                            <label for="id_email">Email:</label>
-                          </td>
-                          <td>
-                            <input class="form-control" id="id_email" name="email" required="required" type="text">
-                          </td>
-                        </tr>
+                        <tbody>
                         <tr>
                           <td style="width: 175px;">
-                            <label for="id_first_name">First name:</label>
+                            <label for="id_address_line_1">Shipping Address:</label>
                           </td>
                           <td>
-                            <input class="form-control" id="id_first_name" name="first_name" required="required" type="text">
+                            <input class="form-control" id="id_address_line_1" name="shipping_address" required="required" type="text" value={{$user->shipping_address}}>
                           </td>
                         </tr>
-                        <tr>
-                          <td style="width: 175px;">
-                            <label for="id_last_name">Last name:</label>
-                          </td>
-                          <td>
-                            <input class="form-control" id="id_last_name" name="last_name" required="required" type="text">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td style="width: 175px;">
-                            <label for="id_address_line_1">Address:</label>
-                          </td>
-                          <td>
-                            <input class="form-control" id="id_address_line_1" name="address_line_1" required="required" type="text">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td style="width: 175px;">
-                            <label for="id_address_line_2">Unit / Suite #:</label>
-                          </td>
-                          <td>
-                            <input class="form-control" id="id_address_line_2" name="address_line_2" type="text">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td style="width: 175px;">
-                            <label for="id_city">City:</label>
-                          </td>
-                          <td>
-                            <input class="form-control" id="id_city" name="city" required="required" type="text">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td style="width: 175px;">
-                            <label for="id_state">State:</label>
-                          </td>
-                          <td>
-                            <select class="form-control" id="id_state" name="state">
-                              <option value="p1">Pradesh 1</option>
-                              <option value="p2">Pradesh 2</option>
-                              <option value="p3">Pradesh 3</option>
-                              <option value="p4">Pradesh 4</option>
-                              <option value="p5">Pradesh 5</option>
-
-
-                            </select>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td style="width: 175px;">
-                            <label for="id_postalcode">Postalcode:</label>
-                          </td>
-                          <td>
-                            <input class="form-control" id="id_postalcode" name="postalcode" required="required" type="text">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td style="width: 175px;">
-                            <label for="id_phone">Phone:</label>
-                          </td>
-                          <td>
-                            <input class="form-control" id="id_phone" name="phone" type="text">
-                          </td>
-                        </tr>
-
                       </tbody></table>
                     </div>
-
+                    <input type="hidden" name="cart_items" id="cart_items" value="{{$cart_items}}">
+                    <input type="hidden" name="total_price" id="total_price" value="{{$total_price}}">
                     <div class="panel-heading" style="background: none; border: none;">
                       <h4 class="panel-title">
-                        <div style="text-align: center; width:100%;"><a style="width:100%;" data-toggle="collapse" data-parent="#accordion" href="" class=" btn btn-success">Place an Order</a>
+                        <button type="submit" id="submit_order_form" class="btn btn-primary pull-right btn-flat">@lang('messages.save')</button>
+                        </div>
                         </div>
                       </h4>
                     </div>
                   </div>
 
-
                 </div>
-
 
             </form></div>
           </div>
