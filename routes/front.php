@@ -13,6 +13,7 @@
 
 Route::get('/shop/login', 'Auth\LoginController@showCustomerLoginForm')->name('front_login');
 Route::post('/shop/login', 'Auth\LoginController@customerLogin')->name('post_front_login');
+Route::get('/shop/logout', 'Auth\LoginController@customerLogout')->name('user.logout');
 
 Route::namespace('Front')->group(function () {
     Route::get('/', 'FrontendController@index')->name('front_dashboard');
@@ -29,6 +30,7 @@ Route::namespace('Front')->group(function () {
     // E-commerce Routes
     Route::get('/shop/addtocart', 'CartController@addToCart')->name('addtocart')->middleware(['auth:customer']);
     Route::get('/shop/cart', 'CartController@index')->name('product.cart')->middleware('auth:customer');
+    Route::get('/shop/checkout', 'ShopController@checkout')->name('product.checkout')->middleware('auth:customer');
     Route::get('/shop', 'ShopController@index')->name('shop');
     Route::get('/shop/product/{slug}', 'ShopController@product')->name('product_single');
 

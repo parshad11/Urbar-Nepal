@@ -18,9 +18,11 @@ class CartController extends Controller
      */
     public function index()
     {
-        $cart_items = Cart::with('variation')->where('user_id',auth()->guard('customer')->user()->id)->get();
+        $cart_items = Cart::with('variation')->where('user_id', auth()->guard('customer')->user()->id)->get();
+        $total_price = Cart::where('user_id', auth()->guard('customer')->user()->id)->sum('total_price');
         // return $cart_items[0]->product->name;
-        return view('ecommerce.cart')->with('cart_items', $cart_items);
+        return view('ecommerce.cart')->with('cart_items', $cart_items)
+            ->with('total_sum', $total_price);
     }
 
     public function addToCart(Request $request)
