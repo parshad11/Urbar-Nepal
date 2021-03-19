@@ -94,10 +94,11 @@
                                                             <i class="fa fa-user-circle-o" aria-hidden="true"></i></a>
                                                     </li>
                                                     @else
-                                                    <li><a href="{{route('user.logout')}}">Logout</a>
+                                                    <li><a href="{{route('user.logout')}}">Logout &nbsp;
+                                                        <i class="fa fa-user-circle-o" aria-hidden="true"></i></a>
                                                     </li>
                                                     @endguest
-                                                    <li class=""><a href="{{route('product.cart')}}">Cart &nbsp;
+                                                    <li class=""><a href="{{route('product.cart')}}">Cart @auth('customer')(<span id="cart_count">0</span>)@endauth&nbsp;
                                                             <i class="fa fa-cart-arrow-down" aria-hidden="true"></i></a>
                                                     </li>
                                                 </ul>

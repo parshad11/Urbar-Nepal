@@ -75,7 +75,7 @@
                 <div class="card col-md-3 col-sm-4 col-xs-12">
                     <div class="product">
                         <div class="img">
-                            <a href="single.htm">
+                            <a href="{{route('product_single',$variation->sub_sku)}}">
                                 <img class="img img-responsive"
                                       src="@if($variation->name != "DUMMY")
                                       @foreach($variation->media as $media)

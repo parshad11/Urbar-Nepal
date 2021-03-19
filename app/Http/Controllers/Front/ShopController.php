@@ -47,10 +47,9 @@ class ShopController extends Controller
     {
         $location = BusinessLocation::where('location_id', 'BL0001')->first();
         $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
-        $products = Product::with('product_variations.variations.product')->whereIn('id', $variation_location_product_ids)->get();
+        $products = Product::with(['product_variations.variations.product', 'unit'])->whereIn('id', $variation_location_product_ids)->get();
         $special_cat = Category::with('sub_categories')->where('name', 'like', '%special%')->where('parent_id', 0)->first();
         $all_categories = Category::with('sub_categories')->where('parent_id', 0)->where('id', '!=', $special_cat->id)->get();
-        // return $special_cat;
         // return $products[0]->product_variations[0]->variations;
         // return $products->product_variations[0]->variations[0]->default_sell_price;
         // return $products;
@@ -65,7 +64,7 @@ class ShopController extends Controller
         $product_cat = $product->product->category_id;
         $location = BusinessLocation::where('name', 'freshktm')->first();
         $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
-        $products = Product::with('product_variations.variations.product')->where('category_id', $product_cat)->whereIn('id', $variation_location_product_ids)->get();
+        $products = Product::with(['product_variations.variations.product', 'unit'])->where('category_id', $product_cat)->whereIn('id', $variation_location_product_ids)->get();
         // dd($product_cat);
         // dd($product->product);
         // dd($product);
@@ -85,6 +84,40 @@ class ShopController extends Controller
         $total_price = Cart::where('user_id', $user_id)->sum('total_price');
 
         return view('ecommerce.checkout')->with(compact('cart_items','user','total_price'));
+    }
+
+    public function categoryProduct($slug){
+        // return $slug;
+        $category =Category::where('slug',$slug)->first();
+        $location = BusinessLocation::where('location_id', 'BL0001')->first();
+        $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
+        $products = Product::with(['product_variations.variations.product', 'unit'])->where('category_id',$category->id)->whereIn('id', $variation_location_product_ids)->get();
+        $special_cat = Category::with('sub_categories')->where('name', 'like', '%special%')->where('parent_id', 0)->first();
+        $all_categories = Category::with('sub_categories')->where('parent_id', 0)->where('id', '!=', $special_cat->id)->get();
+        // return $special_cat;
+        // return $products[0]->product_variations[0]->variations;
+        // return $products->product_variations[0]->variations[0]->default_sell_price;
+        // return $products;
+        return view('ecommerce.shop')->with('products', $products)
+            ->with('special_category', $special_cat)
+            ->with('categories', $all_categories);
+    }
+    public function subcategoryProduct($slug,$sub_cat_slug){
+        // return $sub_cat_slug;
+        // return $slug;
+        $category =Category::where('slug',$sub_cat_slug)->first();
+        $location = BusinessLocation::where('location_id', 'BL0001')->first();
+        $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
+        $products = Product::with(['product_variations.variations.product', 'unit'])->where('category_id',$category->id)->whereIn('id', $variation_location_product_ids)->get();
+        $special_cat = Category::with('sub_categories')->where('name', 'like', '%special%')->where('parent_id', 0)->first();
+        $all_categories = Category::with('sub_categories')->where('parent_id', 0)->where('id', '!=', $special_cat->id)->get();
+        // return $special_cat;
+        // return $products[0]->product_variations[0]->variations;
+        // return $products->product_variations[0]->variations[0]->default_sell_price;
+        // return $products;
+        return view('ecommerce.shop')->with('products', $products)
+            ->with('special_category', $special_cat)
+            ->with('categories', $all_categories);
     }
     /**
      * Show the form for creating a new resource.
