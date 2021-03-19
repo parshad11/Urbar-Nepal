@@ -97,7 +97,7 @@
                                                     <li><a href="{{route('user.logout')}}">Logout</a>
                                                     </li>
                                                     @endguest
-                                                    <li class=""><a href="{{route('product.cart')}}">Cart &nbsp;
+                                                    <li class=""><a href="{{route('product.cart')}}">Cart (0)&nbsp;
                                                             <i class="fa fa-cart-arrow-down" aria-hidden="true"></i></a>
                                                     </li>
                                                 </ul>

@@ -37,7 +37,7 @@
                         <ul class="category-list">
 
                         @foreach ($special_category->sub_categories as $sub_cat)
-                            <li><a href="category.htm">{{$sub_cat->name}}</a></li>                            
+                            <li><a href="{{route('product_subcategory',[$special_category->slug,$sub_cat->slug])}}">{{$sub_cat->name}}</a></li>                            
                         @endforeach   
 
                         </ul>
@@ -51,59 +51,23 @@
                         <ul class="category-list">
 
                             @foreach ($categories as $category)
-                            <li class="main"><a href="category.htm">{{$category->name}} </a>
+                            <li class="main"><a href="{{route('product_category',$category->slug)}}">{{$category->name}} </a>
+                                @if($category->sub_categories!= null)
+                                &nbsp;<i style="float: right; margin:auto" class="fas fa-chevron-right"></i>
+                                <ul class="sub">
+                                    @foreach ($category->sub_categories as $sub_category)
+                                        
+                                    <li><a href="{{route('product_subcategory',[$category->slug,$sub_category->slug])}}">{{$sub_category->name}}</a></li>
+                                    @endforeach
+                                </ul>
+                            </li>
+
+                                @endif
                         @endforeach   
 
                         </ul>
                     </div>                     
                     @endif
-                    {{-- <div class="category">
-                        <div class="title"> Categories</div>
-
-                        <ul class="category-list">
-                            <li class="main"><a href="category.htm">Dry Fruits </a>
-                                &nbsp;<i style="float: right; margin:auto" class="fas fa-chevron-right"></i>
-                                <ul class="sub">
-                                    <li><a href="subcategory.htm">seasnal</a></li>
-
-                                    <li><a href="subcategory.htm"></a>Non seasnal</a></li>
-                                    <li><a href="subcategory.htm">seasnal</a></li>
-
-                                    <li><a href="subcategory.htm"></a>Non seasnal</a></li>
-
-                                </ul>
-                            </li>
-
-                            <li class="main"><a href="category.htm">Dry Fruits </a>
-                                &nbsp;<i style="float: right; margin:auto" class="fas fa-chevron-right"></i>
-                                <ul class="sub">
-                                    <li><a href="subcategory.htm">seasnal</a></li>
-
-                                    <li><a href="subcategory.htm"></a>Non seasnal</a></li>
-                                    <li><a href="subcategory.htm">seasnal</a></li>
-
-                                    <li><a href="subcategory.htm"></a>Non seasnal</a></li>
-
-                                </ul>
-                            </li>
-
-                            <li class="main"><a href="category.htm">Dry Fruits </a>
-                                &nbsp;<i style="float: right; margin:auto" class="fas fa-chevron-right"></i>
-                                <ul class="sub">
-                                    <li><a href="subcategory.htm">seasnal</a></li>
-
-                                    <li><a href="subcategory.htm"></a>Non seasnal</a></li>
-
-                                    <li><a href="subcategory.htm">seasnal</a></li>
-
-                                    <li><a href="subcategory.htm"></a>Non seasnal</a></li>
-
-                                </ul>
-                            </li>
-
-
-                        </ul>
-                    </div> --}}
                 </div>
                 <div class="col-md-9 right">
 
@@ -120,6 +84,7 @@
 
                     <!-- PRODUCTS -->
                     <div class="row">
+
                         @forelse($products as $product)
                             @foreach ($product->product_variations as $product_variation)
                                 @foreach ($product_variation->variations as $variation)
@@ -148,7 +113,7 @@
 
                                                     <div class="offer">Price : Rs.{{$variation->sell_price_inc_tax}}</div>
                                                 </div>
-                                                <button class="btn btn-success">Add to Cart</button>
+                                                <button class="btn btn-success" id="add_to_carts" product_id="{{$variation->id}}">Add to Cart</button>
                                             </div>
                                         </div>
                                     </div>
@@ -156,6 +121,13 @@
                                 @endforeach
                             @endforeach
                         @empty
+                        <div class="card col-lg-12">
+                            <div class="row">
+                                <div class="text-center" style="padding: 50px ">
+                                    <h1>No Product Found</h1>
+                                </div>
+                            </div>
+                        </div>
                         @endforelse
                     </div>
                     {{-- {{$product->links()}} --}}
