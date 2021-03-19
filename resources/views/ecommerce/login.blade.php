@@ -20,12 +20,21 @@
         <div class="col-md-8 col-md-offset-2">
           <div class="tab">
             <!-- Nav tabs -->
+
+            @if(Session::has('error'))
+            <div class="alert alert-danger alert-dismissible alert-sm" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <strong>Error !&nbsp;</strong>{{Session::get('error')}},&nbsp;Try Again
+            </div>
+            @endif
             <ul class="nav nav-tabs" role="tablist">
               <li role="presentation" class="active"><a href="#Section1" role="tab" data-toggle="tab">sign in</a></li>
               {{-- <li role="presentation"><a href="#Section2" role="tab" data-toggle="tab">sign up</a></li> --}}
             </ul>
             <!-- Tab panes -->
+
             <div class="tab-content tabs">
+
               <div class="tab-pane fade in active" id="Section1">
                 <form class="form-horizontal" method="POST" action="{{route('post_front_login')}}">
                     @csrf

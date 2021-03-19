@@ -229,8 +229,8 @@
   
               },
               error:function(response){
-                if(response.error){
-                  window.location.href='http://127.0.0.1:8000/shop/login';
+                if(response.error){                   
+                  window.location.href=document.location.origin +'/shop/login';
                 }
               },
               complete: function () {

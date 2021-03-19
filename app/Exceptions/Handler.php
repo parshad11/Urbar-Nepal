@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Auth\AuthenticationException;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Arr;
 use Mail;
 use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\Debug\ExceptionHandler as SymfonyExceptionHandler;
@@ -70,10 +71,16 @@ class Handler extends ExceptionHandler
         if ($request->expectsJson()) {
             return response()->json(['error' => 'Unauthenticated.'], 401);
         }
-        if ($request->is('shop/addtocart') || $request->is('shop/checkout') || $request->is('shop/cart')) {
-            return redirect()->guest('/shop/login');
+        $guard = Arr::get($exception->guards(), 0);
+        switch ($guard) {
+            case 'customer':
+                $login = 'front_login';
+                break;
+            default:
+                $login = 'login';
+                break;
         }
-        return redirect()->guest(route('login'));
+        return redirect()->guest(route($login));
     }
 
     /**
@@ -90,7 +97,7 @@ class Handler extends ExceptionHandler
 
             $html = $handler->getHtml($e);
             $email = config('mail.username');
-            
+
             if (!empty($email)) {
                 Mail::to($email)->send(new ExceptionOccured($html));
             }
