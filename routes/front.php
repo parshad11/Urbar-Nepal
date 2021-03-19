@@ -29,10 +29,10 @@ Route::namespace('Front')->group(function () {
 
     // E-commerce Routes
     Route::get('/shop/cart-item', 'CartController@updateNavCart')->name('cart.nav_cart');
-    Route::get('/shop/addtocart', 'CartController@addToCart')->name('addtocart')->middleware(['auth:customer']);
-    Route::get('/shop/cart', 'CartController@index')->name('product.cart')->middleware('auth:customer');
-    Route::get('/shop/checkout', 'ShopController@checkout')->name('product.checkout')->middleware('auth:customer');
-    Route::post('/shop/checkout', 'ShopController@store')->name('order.store')->middleware('auth:customer');
+    Route::get('/shop/addtocart', 'CartController@addToCart')->name('addtocart')->middleware(['auth:customer','SetCustomerSessionData']);
+    Route::get('/shop/cart', 'CartController@index')->name('product.cart')->middleware(['auth:customer','SetCustomerSessionData']);
+    Route::get('/shop/checkout', 'ShopController@checkout')->name('product.checkout')->middleware(['auth:customer','SetCustomerSessionData']);
+    Route::post('/shop/checkout', 'ShopController@store')->name('order.store')->middleware(['auth:customer','SetCustomerSessionData']);
     Route::get('/shop/category/{slug}', 'ShopController@categoryProduct')->name('product_category');
     Route::get('/shop/category/{slug}/{sub_slug}', 'ShopController@subcategoryProduct')->name('product_subcategory');
     Route::get('/shop', 'ShopController@index')->name('shop');

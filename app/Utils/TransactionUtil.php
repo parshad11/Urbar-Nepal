@@ -45,7 +45,7 @@ class TransactionUtil extends Util
         $invoice_scheme_id = !empty($input['invoice_scheme_id']) ? $input['invoice_scheme_id'] : null;
         $invoice_no = !empty($input['invoice_no']) ? $input['invoice_no'] : $this->getInvoiceNumber($business_id, $input['status'], $input['location_id'], $invoice_scheme_id);
         $final_total = $uf_data ? $this->num_uf($input['final_total']) : $input['final_total'];
-     
+
         $transaction = Transaction::create([
             'business_id' => $business_id,
             'location_id' => $input['location_id'],
@@ -382,13 +382,13 @@ class TransactionUtil extends Util
             }
         }
 
-        if (!empty($combo_lines)) {
-            $transaction->sell_lines()->saveMany($combo_lines);
-        }
+        // if (!empty($combo_lines)) {
+        //     $transaction->sell_lines()->saveMany($combo_lines);
+        // }
 
-        if (!empty($modifiers_formatted)) {
-            $transaction->sell_lines()->saveMany($modifiers_formatted);
-        }
+        // if (!empty($modifiers_formatted)) {
+        //     $transaction->sell_lines()->saveMany($modifiers_formatted);
+        // }
 
         if ($return_deleted) {
             return $deleted_lines;
