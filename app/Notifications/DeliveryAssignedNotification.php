@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Delivery;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -45,13 +46,20 @@ class DeliveryAssignedNotification extends Notification
      */
     public function toArray($notifiable)
     {
-        if($this->delivery->delivery_status=='received'){
-            return [
-                'message'=>'You have been assigned a new delivery task by '.$this->user,
-                'delivery_id'=>$this->delivery->id,
-                
+	    $delivery=Delivery::find($this->delivery);
+	    if($delivery->delivery_status=='received'){
+        	return [
+                'message'=>'You have been assigned a new delivery task by '.' '.$this->user,
+                'delivery_id'=>$delivery->id,
             ];
         }
+	    if($delivery->delivery_status=='cancelled'){
+	    	return [
+			    'message'=>'Your delivery task has been cancelled by'.' '.$this->user,
+			    'delivery_id'=>$delivery->id,
+
+		    ];
+	    }
        
     }
 }

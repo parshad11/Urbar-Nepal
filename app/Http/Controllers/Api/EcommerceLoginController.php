@@ -17,7 +17,7 @@ class EcommerceLoginController extends Controller
 			'password' => 'required|string',
 			'remember_me' => 'boolean'
 		]);
-		$credentials = request(['email', 'password']);
+		$credentials = ['email'=>$request->email,'password'=>$request->password,'type'=>['customer','both']];
 		if (!Auth::guard('customer')->attempt($credentials)) {
 			return response()->json(['message' => 'Unauthorized'], 401);
 		}

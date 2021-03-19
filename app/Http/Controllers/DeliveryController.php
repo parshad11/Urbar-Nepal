@@ -772,6 +772,10 @@ class DeliveryController extends Controller
 
             }
             DB::commit();
+	        $delivery=Delivery::findorfail($id);
+	        $delivery_person = DeliveryPerson::find($delivery->delivery_person_id);
+	        $user=User::find($delivery_person->user_id);
+	        $user->notify(new DeliveryAssignedNotification($delivery->record_staff->user_name,$delivery->id));
 
             $output = ['success' => 1,
                 'msg' => __('Delivery status updated succesfully')
