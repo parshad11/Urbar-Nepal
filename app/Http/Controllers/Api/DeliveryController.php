@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Transaction;
 use Illuminate\Http\Request;
 use App\Delivery;
 use App\DeliveryPerson;
@@ -33,16 +34,46 @@ class DeliveryController extends Controller
     public function update(Request $request,$id){
         $data=$request->all();
         $delivery=Delivery::findorfail($id);
+	    $transaction=Transaction::findorFail($delivery->transaction_id);
+	    if($request->delivery_status=='packed'){
+		    $data['delivery_started_at']=null;
+		    $data['delivery_ended_at']=null;
+		    if($transaction->type=='sell_transfer'){
+			    $transaction->status='pending';
+			    $transaction->save();
+		    }
+		    else if($transaction->type=='purchase'){
+			    $transaction->status='pending';
+			    $transaction->save();
+		    }
+	    }
         if($request->delivery_status=='Shipped' || $request->delivery_status=='shipped'){
             $data['delivery_started_at']=date('Y-m-d h:i:s');
+	        if($transaction->type=='sell_transfer'){
+		        $transaction->status='transit';
+		        $transaction->save();
+	        }
+	        else if($transaction->type=='purchase'){
+		        $transaction->status='pending';
+		        $transaction->save();
+	        }
         }
         if($request->delivery_status=='Delivered' || $request->delivery_status=='delivered'){
             $data['delivery_ended_at']=date('Y-m-d h:i:s');
+	        if($transaction->type=='sell_transfer'){
+		        $transaction->status='completed';
+		        $transaction->save();
+	        }
+	        else if($transaction->type=='purchase'){
+		        $transaction->status='received';
+		        $transaction->save();
+	        }
         }
         if($request->delivery_status=='Cancelled' || $request->delivery_status=='cancelled'){
             $data['delivery_started_at']=null;
             $data['delivery_ended_at']=null;
         }
+
         $delivery->fill($data);
         $success=$delivery->save();
 		$delivery=Delivery::where('id',$id)->get();
