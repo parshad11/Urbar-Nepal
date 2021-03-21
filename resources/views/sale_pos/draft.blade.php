@@ -27,6 +27,13 @@
 
         <div class="col-md-3">
             <div class="form-group">
+                {!! Form::label('sell_list_filter_draft_type',  __('sale.draft_type') . ':') !!}
+                {!! Form::select('sell_list_filter_draft_type', $draftTypes, null, ['class' => 'form-control select2', 'style' => 'width:100%', 'placeholder' => __('lang_v1.all')]); !!}
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="form-group">
                 {!! Form::label('sell_list_filter_date_range', __('report.date_range') . ':') !!}
                 {!! Form::text('sell_list_filter_date_range', null, ['placeholder' => __('lang_v1.select_a_date_range'), 'class' => 'form-control', 'readonly']); !!}
             </div>
@@ -50,7 +57,8 @@
                 <thead>
                     <tr>
                         <th>@lang('messages.date')</th>
-                        <th>@lang('purchase.ref_no')</th>
+                        <th>@lang('sale.invoice_no')</th>
+                        <th>@lang('sale.draft_type')</th>
                         <th>@lang('sale.customer_name')</th>
                         <th>@lang('sale.location')</th>
                         <th>@lang('messages.action')</th>
@@ -93,7 +101,9 @@ $(document).ready( function(){
                 if($('#sell_list_filter_location_id').length) {
                     d.location_id = $('#sell_list_filter_location_id').val();
                 }
+
                 d.customer_id = $('#sell_list_filter_customer_id').val();
+                d.draft_type = $('#sell_list_filter_draft_type').val();
 
                 if($('#created_by').length) {
                     d.created_by = $('#created_by').val();
@@ -101,13 +111,14 @@ $(document).ready( function(){
             }
         },
         columnDefs: [ {
-            "targets": 4,
+            "targets": 5,
             "orderable": false,
             "searchable": false
         } ],
         columns: [
             { data: 'transaction_date', name: 'transaction_date'  },
             { data: 'invoice_no', name: 'invoice_no'},
+            { data: 'is_ecommerce_order', name: 'is_ecommerce_order'},
             { data: 'name', name: 'contacts.name'},
             { data: 'business_location', name: 'bl.name'},
             { data: 'action', name: 'action'}
@@ -116,7 +127,7 @@ $(document).ready( function(){
             __currency_convert_recursively($('#purchase_table'));
         }
     });
-    $(document).on('change', '#sell_list_filter_location_id, #sell_list_filter_customer_id, #created_by',  function() {
+    $(document).on('change', '#sell_list_filter_location_id, #sell_list_filter_customer_id, #created_by,#sell_list_filter_draft_type',  function() {
         sell_table.ajax.reload();
     });
 });

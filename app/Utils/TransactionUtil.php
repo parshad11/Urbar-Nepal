@@ -4229,6 +4229,7 @@ class TransactionUtil extends Util
                     'transactions.id',
                     'transactions.transaction_date',
                     'transactions.is_direct_sale',
+                    'transactions.is_ecommerce_order',
                     'transactions.invoice_no',
                     'transactions.invoice_no as invoice_no_text',
                     'contacts.name',

@@ -825,6 +825,11 @@ class Util
                 $data[$key] = str_replace('{due_amount}', $due_amount, $data[$key]);
             }
 
+            if (strpos($value, '{transaction_date}') !== false) {
+                $transaction_date = $transaction->transaction_date;
+                $data[$key] = str_replace('{transaction_date}', $transaction_date, $data[$key]);
+            }
+
             //Replace business_name
             if (strpos($value, '{business_name}') !== false) {
                 $business_name = $business->name;
@@ -1136,6 +1141,16 @@ class Util
         return $deliveryStatuses ;
     }
 
+    public function draftTypes()
+    {
+        $draftTypes = [
+            '1' => __('sale.ecommerce_draft'),
+            '0' => __('sale.internal_draft'),
+        ];
+
+        return $draftTypes;
+    }
+
     public function stockDeliveryStatuses()
     {
         $stockDeliveryStatuses = [
@@ -1203,7 +1218,7 @@ class Util
         foreach ($notifications as $notification) {
             $data = $notification->data;
             if (in_array($notification->type, [\App\Notifications\RecurringInvoiceNotification::class, \App\Notifications\RecurringExpenseNotification::class
-            ,\App\Notifications\DeliveryAssignedNotification::class,\App\Notifications\TaskAssignedNotification::class, \App\Notifications\StaffAddedNotification::class])) {
+            ,\App\Notifications\DeliveryAssignedNotification::class,\App\Notifications\TaskAssignedNotification::class, \App\Notifications\StaffAddedNotification::class, \App\Notifications\OrderCreatedNotification::class])) {
                 $msg = '';
                 $icon_class = '';
                 $link = '';
@@ -1253,6 +1268,13 @@ class Util
                     $msg =$data['message'];
                     $icon_class = "fas fa-user bg-green";
                 }
+                else if($notification->type ==
+                \App\Notifications\OrderCreatedNotification::class
+            ){
+                $msg =$data['message'];
+                $icon_class = "fa fa-tasks bg-green";
+                $link = action('SellController@show',$data['transaction_id']);
+            }
                 $notifications_data[] = [
                     'msg' => $msg,
                     'icon_class' => $icon_class,

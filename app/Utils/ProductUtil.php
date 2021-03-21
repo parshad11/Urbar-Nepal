@@ -6,6 +6,9 @@ use App\Business;
 use App\BusinessLocation;
 use App\Discount;
 use App\Media;
+use App\Notifications\CustomerNotification;
+use App\Notifications\SupplierNotification;
+use App\NotificationTemplate;
 use App\Product;
 use App\ProductRack;
 use App\ProductVariation;
@@ -20,6 +23,7 @@ use App\VariationGroupPrice;
 use App\VariationLocationDetails;
 use App\VariationTemplate;
 use App\VariationValueTemplate;
+use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\DB;
 
 class ProductUtil extends Util
@@ -176,6 +180,56 @@ class ProductUtil extends Util
                 foreach ($variations as $variation) {
                     Media::uploadMedia($product->business_id, $variation, request(), $images[$i]);
                     $i++;
+                }
+            }
+        }
+    }
+
+    public function autoSendNotification($business_id, $notification_type, $transaction, $contact)
+    {
+        $notification_template = NotificationTemplate::where('business_id', $business_id)
+                ->where('template_for', $notification_type)
+                ->first();
+                dd($notification_template);
+
+        $business = Business::findOrFail($business_id);
+        $data['email_settings'] = $business->email_settings;
+        $data['sms_settings'] = $business->sms_settings;
+
+        if (!empty($notification_template)) {
+            if (!empty($notification_template->auto_send) || !empty($notification_template->auto_send_sms)) {
+                $orig_data = [
+                    'email_body' => $notification_template->email_body,
+                    'sms_body' => $notification_template->sms_body,
+                    'subject' => $notification_template->subject
+                ];
+                $tag_replaced_data = $this->replaceTags($business_id, $orig_data, $transaction);
+
+                $data['email_body'] = $tag_replaced_data['email_body'];
+                $data['sms_body'] = $tag_replaced_data['sms_body'];
+
+                //Auto send email
+                if (!empty($notification_template->auto_send) && !empty($contact->email)) {
+                    $data['subject'] = $tag_replaced_data['subject'];
+                    $data['to_email'] = $contact->email;
+
+                    $customer_notifications = NotificationTemplate::customerNotifications();
+                    $supplier_notifications = NotificationTemplate::supplierNotifications();
+                    if (array_key_exists($notification_type, $customer_notifications)) {
+                        Notification::route('mail', $data['to_email'])
+                                        ->notify(new CustomerNotification($data));
+                    } elseif (array_key_exists($notification_type, $supplier_notifications)) {
+                        Notification::route('mail', $data['to_email'])
+                                        ->notify(new SupplierNotification($data));
+                    }
+                }
+
+                //Auto send sms
+                if (!empty($notification_template->auto_send_sms)) {
+                    $data['mobile_number'] = $contact->mobile;
+                    if (!empty($contact->mobile)) {
+                        $this->sendSms($data);
+                    }
                 }
             }
         }
@@ -817,7 +871,9 @@ class ProductUtil extends Util
                     $input['location_id'],
                     $uf_quantity
                 );
-
+                if($transaction->is_ecommerce_order==1){
+                    $this->autoSendNotification($transaction->business_id, 'order_accepted', $transaction, $transaction->contact);
+                }
                 //Adjust quantity for combo items.
                 if (isset($product['product_type']) && $product['product_type'] == 'combo') {
                     $this->decreaseProductQuantityCombo($product['combo'], $input['location_id']);

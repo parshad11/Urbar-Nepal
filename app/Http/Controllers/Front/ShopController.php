@@ -11,6 +11,8 @@ use App\Category;
 use App\Front\Cart;
 use App\InvoiceLayout;
 use App\InvoiceScheme;
+use App\Notifications\OrderCreatedNotification;
+use App\User;
 use App\Utils\BusinessUtil;
 use App\Utils\ContactUtil;
 use App\Utils\NotificationUtil;
@@ -204,13 +206,14 @@ class ShopController extends Controller
 
        
         $this->notificationUtil->autoSendNotification($business_id, 'new_sale', $transaction, $user);
+        $admin=User::where('user_type','admin')->first();
         $cart_items=Cart::where('user_id',$transaction->user_id)->get();
         if($cart_items){
             foreach ($cart_items as $item){
                 $item->delete();
             }
         }
-
+        $cart_items->save();
         DB::commit();
 
         $msg = trans("sale.order_added");

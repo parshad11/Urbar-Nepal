@@ -64,10 +64,13 @@ return [
     'add_payment_row' => 'Add Payment Row',
     'finalize_payment' => 'Finalize Payment',
     'sale_date' => 'Sale Date',
+    'draft_type' => 'Draft Type',
     'list_pos' => 'List POS',
     'edit_sale' => 'Edit Sale',
     'shipping' => 'Shipping',
     'order_added' => 'Order Added Sucessfully',
     'shipping_details' => 'Shipping Details',
-    'shipping_charges' => 'Shipping Charges'
+    'shipping_charges' => 'Shipping Charges',
+    'ecommerce_draft' => 'Ecommerce Draft',
+    'internal_draft' => 'Internal Draft'
 ];

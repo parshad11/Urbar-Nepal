@@ -86,7 +86,7 @@ class SellController extends Controller
             $with = [];
             $deliveryStatuses = $this->transactionUtil->deliveryStatuses();
             $sells = $this->transactionUtil->getListSells($business_id);
-
+      
             $permitted_locations = auth()->user()->permitted_locations();
             if ($permitted_locations != 'all') {
                 $sells->whereIn('transactions.location_id', $permitted_locations);
@@ -240,7 +240,7 @@ class SellController extends Controller
                 $sells->addSelect('transactions.is_recurring', 'transactions.recur_parent_id');
             }
 
-
+            
             $datatable = Datatables::of($sells)
                 ->addColumn(
                     'action',
@@ -330,6 +330,7 @@ class SellController extends Controller
                     }
                 )
                 ->editColumn('transaction_date', '{{@format_datetime($transaction_date)}}')
+               
                 ->editColumn(
                     'payment_status',
                     function ($row) {
@@ -855,12 +856,13 @@ class SellController extends Controller
 
         $business_locations = BusinessLocation::forDropdown($business_id, false);
         $customers = Contact::customersDropdown($business_id, false);
+        $draftTypes = $this->transactionUtil->draftTypes();
       
         $sales_representative = User::forDropdown($business_id, false, false, true);
     
 
         return view('sale_pos.draft')
-            ->with(compact('business_locations', 'customers', 'sales_representative'));
+            ->with(compact('business_locations', 'customers', 'sales_representative','draftTypes'));
     }
 
     /**
@@ -912,6 +914,7 @@ class SellController extends Controller
                 ->select(
                     'transactions.id',
                     'transaction_date',
+                    'is_ecommerce_order',
                     'invoice_no',
                     'contacts.name',
                     'bl.name as business_location',
@@ -935,6 +938,13 @@ class SellController extends Controller
                 $location_id = request()->get('location_id');
                 if (!empty($location_id)) {
                     $sells->where('transactions.location_id', $location_id);
+                }
+            }
+
+            if (request()->has('draft_type')) {
+                $draft_type= request()->get('draft_type');
+                if (isset($draft_type)) {
+                    $sells->where('transactions.is_ecommerce_order', $draft_type);
                 }
             }
 
@@ -1002,6 +1012,13 @@ class SellController extends Controller
 
                     return $invoice_no;
                 })
+                ->addColumn('is_ecommerce_order', function ($row) {
+                    if($row->is_ecommerce_order==1){
+                        return 'Ecommerce Draft';
+                    }else{
+                          return 'Internal Draft';
+                      }
+                  })
                 ->editColumn('transaction_date', '{{@format_date($transaction_date)}}')
                 ->setRowAttr([
                     'data-href' => function ($row) {
@@ -1011,7 +1028,7 @@ class SellController extends Controller
                             return '';
                         }
                     }])
-                ->rawColumns(['action', 'invoice_no', 'transaction_date'])
+                ->rawColumns(['action', 'invoice_no', 'transaction_date','is_ecommerce_order'])
                 ->make(true);
         }
     }

@@ -1214,5 +1214,6 @@ return [
     'new_supplier'=>'New Supplier',
     'new_record'=>'New Record',
     'staff_notifications'=>'Staff Notification',
+    'order_accepted'=>'Order Accepted',
 
 ];
