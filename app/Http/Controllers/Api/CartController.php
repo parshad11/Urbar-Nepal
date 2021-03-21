@@ -77,8 +77,4 @@ class CartController extends Controller
 		}
 		return response()->json(['status'=>'success','msg'=> 'Product Added to Cart Successfully', 'data'=>$cart_data]);
 	}
-
-	public function removeFromCart(Request $request){
-		return 'success';
-	}
 }

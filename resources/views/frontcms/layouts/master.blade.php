@@ -185,7 +185,7 @@
                 icon: type,
                 title: message,
                 showConfirmButton: false,
-                timer: 3000
+                timer: 1500
             })
         }
         function updateNavCart(){
@@ -196,48 +196,69 @@
     </script>
     <script>
         $(document).ready(function(){
-        updateNavCart();
-          $('#add_to_cart, #add_to_carts').on('click',function(){
-            var quantity = $('.input_quantity').val();
-            var product_id = $(this).attr('product_id');
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            updateNavCart();
+            $('#add_to_cart, #add_to_carts').on('click',function(){
+                var quantity = $('.input_quantity').val();
+                var product_id = $(this).attr('product_id');
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                type:'get',
+                url: '{{route("addtocart")}}',
+                data:{
+                    product_id:product_id,
+                    quantity:quantity
+                },
+                beforeSend: function (response) {
+                    $(this).prop('disabled', true);
+                },
+                success:function(response){
+                    if(response.status=='error')
+                    {
+                        showFrontendAlert('warning', response.msg);
+                    } else {
+                        // var cart_number = response.data.length;
+                        // alert (cart_number);
+                        // $('#cart_count').text(cart_number);
+                        updateNavCart();
+                        showFrontendAlert('success', response.msg);
+                    }
+    
+                },
+                error:function(response){
+                    if(response.error){                   
+                    window.location.href=document.location.origin +'/shop/login';
+                    }
+                },
+                complete: function () {
+                    $(this).prop('disabled', false);
                 }
+                });
             });
-            $.ajax({
-              type:'get',
-              url: '{{route("addtocart")}}',
-              data:{
-                product_id:product_id,
-                quantity:quantity
-              },
-              beforeSend: function (response) {
-                  $(this).prop('disabled', true);
-              },
-              success:function(response){
-                if(response.status=='error')
-                {
-                    showFrontendAlert('warning', response.msg);
-                } else {
-                    // var cart_number = response.data.length;
-                    // alert (cart_number);
-                    // $('#cart_count').text(cart_number);
+
+            $('.deleteCartItem').on('click', function(e){
+            var cart_id = $(this).data('id');
+                $.ajax({
+                type:'get',
+                url:'{{route("removefromcart")}}',
+                data:{
+                    cart_id:cart_id
+                },
+                success:function(response){
                     updateNavCart();
-                    showFrontendAlert('success', response.msg);
-                }
-  
-              },
-              error:function(response){
-                if(response.error){                   
-                  window.location.href=document.location.origin +'/shop/login';
-                }
-              },
-              complete: function () {
-                  $(this).prop('disabled', false);
-              }
+                    $('#cart_item_detail').html(response);
+                    showFrontendAlert('success', 'Product has been removed from cart successfully');
+                },
+                error:function(response){
+                    console.log('error');
+                    showFrontendAlert('danger', 'Something went wrong');
+                },
             });
-          });
+
+            });
         });
       </script>
 

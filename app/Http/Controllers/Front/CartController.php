@@ -20,12 +20,11 @@ class CartController extends Controller
     public function index()
     {
         $cart_items = Cart::with('variation')->where('user_id', auth()->guard('customer')->user()->id)->get();
-        $total_price = Cart::where('user_id', auth()->guard('customer')->user()->id)->sum('total_price');
         // return $cart_items[0]->product->name;
-        return view('ecommerce.cart')->with('cart_items', $cart_items)
-            ->with('total_sum', $total_price);
+        return view('ecommerce.cart')->with('cart_items', $cart_items);
     }
-    public function updateNavCart(){
+    public function updateNavCart()
+    {
         $user_id = Auth::guard('customer')->user()->id;
         $cart_items_count = Cart::where('user_id', $user_id)->get()->count();
         return $cart_items_count;
@@ -41,7 +40,7 @@ class CartController extends Controller
         // return $variation_stock;
         // return $variation_stock->qty_available;
         if ($request->quantity > $variation_stock->qty_available) {
-            return response()->json(['status'=>'error', 'msg' => 'Quantity is not available']);
+            return response()->json(['status' => 'error', 'msg' => 'Quantity is not available']);
         }
         $data = array();
         $data['product_id'] = $variation_product->id;
@@ -60,7 +59,7 @@ class CartController extends Controller
                     $variation_stock = VariationLocationDetails::where('variation_id', $variation_product->id)->first();
                     $foundInCart = true;
                     if ($cartItem['quantity'] >= $variation_stock->qty_available) {
-                        return response()->json(['status'=>'error', 'msg' => 'Quantity is not available']);
+                        return response()->json(['status' => 'error', 'msg' => 'Quantity is not available']);
                     }
                     // $cartItem['id'] += $variation_product->id;
                     $cartItem['quantity'] += $request->quantity;
@@ -92,8 +91,21 @@ class CartController extends Controller
             );
             array_push($cart_data, $cart_db);
         }
-        return response()->json(['status'=>'success','msg'=> 'Product Added to Cart Successfully', 'data'=>$cart_data]);
+        return response()->json(['status' => 'success', 'msg' => 'Product Added to Cart Successfully', 'data' => $cart_data]);
         // return view('ecommerce.cart', compact('product', 'data'));
+    }
+
+
+    public function removeFromCart(Request $request)
+    {
+        $user_id = auth()->guard('customer')->user()->id;
+        $cart_id = $request->cart_id;
+        $cart_item = Cart::where('id', $cart_id)->where('user_id', $user_id)->first();
+        if ($cart_item) {
+            $cart_item->delete();
+            $cart_items = Cart::with('variation')->where('user_id', $user_id)->get();
+            return view('ecommerce.cart_detail')->with('cart_items', $cart_items);
+        }
     }
 
     /**
