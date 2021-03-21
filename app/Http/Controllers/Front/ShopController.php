@@ -140,7 +140,7 @@ class ShopController extends Controller
      */
     public function store(Request $request)
     {
-//    	dd($request->all());
+    	dd($request->all());
         try {
         $input = $request->except('_token');
         $location = BusinessLocation::where('location_id', 'BL0001')->first();
