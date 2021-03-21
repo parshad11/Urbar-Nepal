@@ -228,6 +228,7 @@ class TransactionUtil extends Util
                 $this->editSellLine($product, $location_id, $status_before, $multiplier);
 
                 //update or create modifiers for existing sell lines
+	            return $product['transaction_sell_lines_id'];
                 if ($this->isModuleEnabled('modifiers')) {
                     if (!empty($product['modifier'])) {
                         foreach ($product['modifier'] as $key => $value) {
