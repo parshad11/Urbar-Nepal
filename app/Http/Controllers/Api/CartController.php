@@ -75,6 +75,11 @@ class CartController extends Controller
 			);
 			array_push($cart_data, $cart_db);
 		}
-		return response()->json(['status'=>'success','msg'=> 'Product Added to Cart Successfully', 'data'=>$cart_data]);
+
+		return response()->json([
+			'status'=>'success',
+			'msg'=> 'Product Added to Cart Successfully',
+			'data'=>$cart_data,
+		]);
 	}
 }
