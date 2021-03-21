@@ -11,6 +11,8 @@ use App\Utils\ContactUtil;
 use App\Utils\TransactionUtil;
 use App\Utils\NotificationUtil;
 use App\Http\Controllers\Controller;
+use App\Notifications\OrderCreatedNotification;
+use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -99,8 +101,12 @@ class ShopController extends Controller
 				$transaction = $this->transactionUtil->createSellTransaction($business_id, $input, $invoice_total,1,$assign_delivery,$uf_data = true);
 				$this->transactionUtil->createOrUpdateSellLines($transaction, $input['products'], $input['location_id']);
 				
-$is_credit_sale = isset($input['is_credit_sale']) && $input['is_credit_sale'] == 1 ? true : false;
+				$is_credit_sale = isset($input['is_credit_sale']) && $input['is_credit_sale'] == 1 ? true : false;
 				$this->notificationUtil->autoSendNotification($business_id, 'new_sale', $transaction, $user);
+
+				$admin=User::where('user_type','admin')->first();
+
+        		$admin->notify(new OrderCreatedNotification($transaction->contact->name,$transaction));
 
 				$cart_items=Cart::where('user_id',$transaction->contact_id)->get();
 				if($cart_items){

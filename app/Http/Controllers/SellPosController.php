@@ -1143,11 +1143,11 @@ class SellPosController extends Controller
                 //Update product stock
                 $this->productUtil->adjustProductStockForInvoice($status_before, $transaction, $input);
 
-                if ($status_before == 'draft' && $transaction->status == 'final') {
-                    if($transaction->is_ecommerce_order==1){
-                        $this->notificationUtil->autoSendNotification($business_id, 'order_accepted', $transaction, $transaction->contact);
-                    }
-                }
+                // if ($status_before == 'draft' && $transaction->status == 'final') {
+                //     if($transaction->is_ecommerce_order==1){
+                //         $this->notificationUtil->autoSendNotification($business_id, 'order_accepted', $transaction, $transaction->contact);
+                //     }
+                // }
 
                 //Allocate the quantity from purchase and add mapping of
                 //purchase & sell lines in
