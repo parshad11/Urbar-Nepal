@@ -28,7 +28,7 @@
             <div class="tab-content tabs">
               <div class="tab-pane fade in active" id="Section1">
                 <form class="form-horizontal" method="POST" action="{{route('post_front_login')}}">
-                    @csrf
+                {{ csrf_field() }}
                   <div class="form-group">
                     <label for="exampleInputEmail1">E-mail</label>
                     @if ($errors->has('email'))
