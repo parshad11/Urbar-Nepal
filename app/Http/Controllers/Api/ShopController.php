@@ -72,6 +72,7 @@ class ShopController extends Controller
 			$input['invoice_scheme_id']=$invoice->id;
 			$product=[];
 			$products=[];
+			dd($cart_items);
 			foreach($cart_items as $item){
 				$product['product_type']=$item['variation']['product']['type'];
 				$product['unit_price']=$item['variation']['default_sell_price'];
@@ -81,7 +82,7 @@ class ShopController extends Controller
 				$product['tax_id']=null;
 				$product['sell_line_note']=null;
 				$product['lot_no_line_id']=null;
-				$product['product_id']=$item['product_id'];
+				$product['product_id']=$item['variation']['product']['id'];
 				$product['variation_id']=$item['variation']['id'];
 				$product['enable_stock']=$item['variation']['product']['enable_stock'];
 				$product['quantity']=$item['quantity'];
