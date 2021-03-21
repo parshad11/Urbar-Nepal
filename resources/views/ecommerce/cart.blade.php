@@ -18,35 +18,8 @@
               </div>
             </div>
           </div>
-          <div class="panel-body">
-              @foreach ($cart_items as $item)                  
-            <div class="row productInCart">
-                <div class="col-xs-2"><img class="img-responsive" src="http://placehold.it/100x70">
-                </div>
-                <div class="col-xs-4">
-                  <h4 class="product-name"><strong>{{$item->variation->product->name}}&nbsp;{{$item->variation->name}}</strong></h4>
-                </div>
-                <div class="col-xs-6">
-                  <div class="col-xs-3 text-right">
-                    <h6><strong>{{$item->variation->sell_price_inc_tax}} <span class="text-muted">x</span></strong></h6>
-                  </div>
-                  <div class="col-xs-2">
-                    <input type="text" class="form-control input-sm" value="{{$item->quantity}}">
-                  </div>
-                  <div class="col-xs-3">
-                    <button type="button" class="btn btn-link btn-xs deleteFromCart">
-                      <span class="glyphicon glyphicon-trash"> </span>
-                    </button>
-                  </div>
-  
-                  <div class="col-xs-4">
-                    <strong>{{$item->total_price}} Rs</strong>
-                  </div>
-                </div>
-              </div>
-              @endforeach
+          @include('ecommerce.cart_detail')
 
-          </div>
           <div class="panel-footer">
             <div class="row text-center">
 
@@ -56,9 +29,9 @@
                 </button>
 
               </div>
-              <div class="col-xs-4">
-                <h4 class="text-right">Total <strong>Rs : {{$total_sum}}</strong></h4>
-              </div>
+              {{-- <div class="col-xs-4">
+                <h4 class="text-right" id="cart_total_price">Total <strong>Rs : {{$total_sum}}</strong></h4>
+              </div> --}}
               <div class="col-xs-3">
                 <a type="button" class="btn btn-success btn-block" href="{{route('product.checkout')}}">
                   Checkout

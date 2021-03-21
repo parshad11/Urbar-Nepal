@@ -144,7 +144,6 @@ class ShopController extends Controller
     {
         try {
         $input = $request->except('_token');
-        
         $location = BusinessLocation::where('location_id', 'BL0001')->first();
         $input['status'] = 'draft';
         $input['location_id']=$location->id;
@@ -161,6 +160,7 @@ class ShopController extends Controller
         $input['final_total']=$invoice_total;
         $input['is_direct_sale']=1;
         $input['is_save_and_print']=1;
+        $input['is_ecommerce_order']=1;
         $input['transaction_date'] = Carbon::now()->format('Y-m-d H:i:s');
         
         DB::beginTransaction();
@@ -206,14 +206,17 @@ class ShopController extends Controller
 
        
         $this->notificationUtil->autoSendNotification($business_id, 'new_sale', $transaction, $user);
+
         $admin=User::where('user_type','admin')->first();
-        $cart_items=Cart::where('user_id',$transaction->user_id)->get();
+
+        $admin->notify(new OrderCreatedNotification($transaction->contact->name,$transaction));
+
+        $cart_items=Cart::where('user_id',$transaction->contact_id)->get();
         if($cart_items){
             foreach ($cart_items as $item){
                 $item->delete();
             }
         }
-        $cart_items->save();
         DB::commit();
 
         $msg = trans("sale.order_added");

@@ -1273,7 +1273,7 @@ class Util
             ){
                 $msg =$data['message'];
                 $icon_class = "fa fa-tasks bg-green";
-                $link = action('SellController@show',$data['transaction_id']);
+                $link = action('SellController@showDraft',$data['transaction_id']);
             }
                 $notifications_data[] = [
                     'msg' => $msg,

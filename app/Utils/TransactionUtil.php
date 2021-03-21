@@ -66,6 +66,7 @@ class TransactionUtil extends Util
             'staff_note' => !empty($input['staff_note']) ? $input['staff_note'] : null,
             'created_by' => $user_id,
             'is_direct_sale' => !empty($input['is_direct_sale']) ? $input['is_direct_sale'] : 0,
+            'is_ecommerce_order' => !empty($input['is_ecommerce_order']) ? $input['is_ecommerce_order'] : 0,
             'commission_agent' => @$input['commission_agent'],
             'is_quotation' => isset($input['is_quotation']) ? $input['is_quotation'] : 0,
             'shipping_details' => isset($input['shipping_details']) ? $input['shipping_details'] : null,
@@ -151,6 +152,7 @@ class TransactionUtil extends Util
             'staff_note' => !empty($input['staff_note']) ? $input['staff_note'] : null,
             'commission_agent' => $input['commission_agent'],
             'is_quotation' => isset($input['is_quotation']) ? $input['is_quotation'] : 0,
+            'is_ecommerce_order' => $transaction->is_ecommerce_order,
             'shipping_details' => isset($input['shipping_details']) ? $input['shipping_details'] : null,
             'shipping_charges' => isset($input['shipping_charges']) ? $uf_data ? $this->num_uf($input['shipping_charges']) : $input['shipping_charges'] : 0,
             'assign_delivery'=>$assign_delivery,
@@ -228,6 +230,7 @@ class TransactionUtil extends Util
                 $this->editSellLine($product, $location_id, $status_before, $multiplier);
 
                 //update or create modifiers for existing sell lines
+	            return $product['transaction_sell_lines_id'];
                 if ($this->isModuleEnabled('modifiers')) {
                     if (!empty($product['modifier'])) {
                         foreach ($product['modifier'] as $key => $value) {
