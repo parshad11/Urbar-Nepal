@@ -125,6 +125,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::get('/sells/subscriptions', 'SellPosController@listSubscriptions');
     Route::get('/sells/duplicate/{id}', 'SellController@duplicateSell');
     Route::get('/sells/drafts', 'SellController@getDrafts');
+    Route::get('/sells/drafts/{id}', 'SellController@showDraft');
     Route::get('/sells/quotations', 'SellController@getQuotations');
     Route::get('/sells/draft-dt', 'SellController@getDraftDatables');
     Route::resource('sells', 'SellController')->except(['show']);

@@ -35,11 +35,10 @@ class NotificationUtil extends Util
         $notification_template = NotificationTemplate::where('business_id', $business_id)
                 ->where('template_for', $notification_type)
                 ->first();
-
+        
         $business = Business::findOrFail($business_id);
         $data['email_settings'] = $business->email_settings;
         $data['sms_settings'] = $business->sms_settings;
-
         if (!empty($notification_template)) {
             if (!empty($notification_template->auto_send) || !empty($notification_template->auto_send_sms)) {
                 $orig_data = [
@@ -47,7 +46,10 @@ class NotificationUtil extends Util
                     'sms_body' => $notification_template->sms_body,
                     'subject' => $notification_template->subject
                 ];
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3d92940069aa6dd83fbb752b57c3b7a36fd081d2
                 $tag_replaced_data = $this->replaceTags($business_id, $orig_data, $transaction);
                 $data['email_body'] = $tag_replaced_data['email_body'];
                 $data['sms_body'] = $tag_replaced_data['sms_body'];

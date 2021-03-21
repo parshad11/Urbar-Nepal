@@ -66,7 +66,7 @@
                         , 'placeholder' => __('lang_v1.sms_body'), 'id' => $key . '_sms_body', 'rows' => 6]); !!}
                     </div>
                 </div>
-                @if($key == 'new_sale')
+                @if($key == 'new_sale'||$key == 'order_accepted')
                     <div class="col-md-12">
                         <div class="form-group">
                             <label class="checkbox-inline">

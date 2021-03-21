@@ -53,6 +53,10 @@ class NotificationTemplate extends Model
                 'name' => __('lang_v1.new_sale'),
                 'extra_tags' => ['{business_name}', '{business_logo}', '{contact_name}', '{invoice_number}', '{invoice_url}', '{total_amount}', '{paid_amount}', '{due_amount}', '{cumulative_due_amount}', '{due_date}', '{location_name}', '{location_address}', '{location_email}', '{location_phone}', '{location_custom_field_1}', '{location_custom_field_2}', '{location_custom_field_3}', '{location_custom_field_4}']
             ],
+            'order_accepted' => [
+                'name' => __('lang_v1.order_accepted'),
+                'extra_tags' => ['{business_name}', '{business_logo}', '{contact_name}', '{invoice_number}', '{invoice_url}','{transaction_date}', '{total_amount}', '{paid_amount}', '{due_amount}', '{cumulative_due_amount}', '{due_date}', '{location_name}', '{location_address}', '{location_email}', '{location_phone}', '{location_custom_field_1}', '{location_custom_field_2}', '{location_custom_field_3}', '{location_custom_field_4}']
+            ],
             'payment_received' => [
                 'name' => __('lang_v1.payment_received'),
                 'extra_tags' => ['{business_name}', '{business_logo}', '{contact_name}', '{invoice_number}', '{payment_ref_number}', '{received_amount}']

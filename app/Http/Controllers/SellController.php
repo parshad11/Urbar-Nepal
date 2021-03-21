@@ -86,7 +86,7 @@ class SellController extends Controller
             $with = [];
             $deliveryStatuses = $this->transactionUtil->deliveryStatuses();
             $sells = $this->transactionUtil->getListSells($business_id);
-
+      
             $permitted_locations = auth()->user()->permitted_locations();
             if ($permitted_locations != 'all') {
                 $sells->whereIn('transactions.location_id', $permitted_locations);
@@ -240,7 +240,7 @@ class SellController extends Controller
                 $sells->addSelect('transactions.is_recurring', 'transactions.recur_parent_id');
             }
 
-
+            
             $datatable = Datatables::of($sells)
                 ->addColumn(
                     'action',
@@ -330,6 +330,7 @@ class SellController extends Controller
                     }
                 )
                 ->editColumn('transaction_date', '{{@format_datetime($transaction_date)}}')
+               
                 ->editColumn(
                     'payment_status',
                     function ($row) {
@@ -620,6 +621,59 @@ class SellController extends Controller
             ));
     }
 
+    public function showDraft($id){
+        $business_id = request()->session()->get('user.business_id');
+        $taxes = TaxRate::where('business_id', $business_id)
+                            ->pluck('name', 'id');
+        $query = Transaction::where('business_id', $business_id)
+                    ->where('id', $id)
+                    ->with(['contact', 'sell_lines' => function ($q) {
+                        $q->whereNull('parent_sell_line_id');
+                    },'sell_lines.product', 'sell_lines.product.unit', 'sell_lines.variations', 'sell_lines.variations.product_variation', 'payment_lines', 'sell_lines.modifiers', 'sell_lines.lot_details', 'tax', 'sell_lines.sub_unit', 'table', 'service_staff', 'sell_lines.service_staff', 'types_of_service', 'sell_lines.warranties']);
+
+        if (!auth()->user()->can('sell.view') && !auth()->user()->can('direct_sell.access') && auth()->user()->can('view_own_sell_only')) {
+            $query->where('transactions.created_by', request()->session()->get('user.id'));
+        }
+
+        $sell = $query->firstOrFail();
+
+        foreach ($sell->sell_lines as $key => $value) {
+            if (!empty($value->sub_unit_id)) {
+                $formated_sell_line = $this->transactionUtil->recalculateSellLineTotals($business_id, $value);
+                $sell->sell_lines[$key] = $formated_sell_line;
+            }
+        }
+
+        $payment_types = $this->transactionUtil->payment_types($sell->location_id, true);
+        $order_taxes = [];
+        if (!empty($sell->tax)) {
+            if ($sell->tax->is_tax_group) {
+                $order_taxes = $this->transactionUtil->sumGroupTaxDetails($this->transactionUtil->groupTaxDetails($sell->tax, $sell->tax_amount));
+            } else {
+                $order_taxes[$sell->tax->name] = $sell->tax_amount;
+            }
+        }
+
+        $business_details = $this->businessUtil->getDetails($business_id);
+        $pos_settings = empty($business_details->pos_settings) ? $this->businessUtil->defaultPosSettings() : json_decode($business_details->pos_settings, true);
+        $shipping_statuses = $this->transactionUtil->shipping_statuses();
+        $delivery_status_colors = $this->delivery_status_colors;
+        $common_settings = session()->get('business.common_settings');
+        $is_warranty_enabled = !empty($common_settings['enable_product_warranty']) ? true : false;
+
+        return view('sell.show')
+            ->with(compact(
+                'taxes',
+                'sell',
+                'payment_types',
+                'order_taxes',
+                'pos_settings',
+                'shipping_statuses',
+                'delivery_status_colors',
+                'is_warranty_enabled'
+            ));
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -855,12 +909,13 @@ class SellController extends Controller
 
         $business_locations = BusinessLocation::forDropdown($business_id, false);
         $customers = Contact::customersDropdown($business_id, false);
+        $draftTypes = $this->transactionUtil->draftTypes();
       
         $sales_representative = User::forDropdown($business_id, false, false, true);
     
 
         return view('sale_pos.draft')
-            ->with(compact('business_locations', 'customers', 'sales_representative'));
+            ->with(compact('business_locations', 'customers', 'sales_representative','draftTypes'));
     }
 
     /**
@@ -912,6 +967,7 @@ class SellController extends Controller
                 ->select(
                     'transactions.id',
                     'transaction_date',
+                    'is_ecommerce_order',
                     'invoice_no',
                     'contacts.name',
                     'bl.name as business_location',
@@ -935,6 +991,13 @@ class SellController extends Controller
                 $location_id = request()->get('location_id');
                 if (!empty($location_id)) {
                     $sells->where('transactions.location_id', $location_id);
+                }
+            }
+
+            if (request()->has('draft_type')) {
+                $draft_type= request()->get('draft_type');
+                if (isset($draft_type)) {
+                    $sells->where('transactions.is_ecommerce_order', $draft_type);
                 }
             }
 
@@ -1002,6 +1065,13 @@ class SellController extends Controller
 
                     return $invoice_no;
                 })
+                ->addColumn('is_ecommerce_order', function ($row) {
+                    if($row->is_ecommerce_order==1){
+                        return 'Ecommerce Draft';
+                    }else{
+                          return 'Internal Draft';
+                      }
+                  })
                 ->editColumn('transaction_date', '{{@format_date($transaction_date)}}')
                 ->setRowAttr([
                     'data-href' => function ($row) {
@@ -1011,7 +1081,7 @@ class SellController extends Controller
                             return '';
                         }
                     }])
-                ->rawColumns(['action', 'invoice_no', 'transaction_date'])
+                ->rawColumns(['action', 'invoice_no', 'transaction_date','is_ecommerce_order'])
                 ->make(true);
         }
     }

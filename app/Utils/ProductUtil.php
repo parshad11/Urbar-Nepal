@@ -6,6 +6,9 @@ use App\Business;
 use App\BusinessLocation;
 use App\Discount;
 use App\Media;
+use App\Notifications\CustomerNotification;
+use App\Notifications\SupplierNotification;
+use App\NotificationTemplate;
 use App\Product;
 use App\ProductRack;
 use App\ProductVariation;
@@ -20,6 +23,7 @@ use App\VariationGroupPrice;
 use App\VariationLocationDetails;
 use App\VariationTemplate;
 use App\VariationValueTemplate;
+use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\DB;
 
 class ProductUtil extends Util
@@ -180,6 +184,8 @@ class ProductUtil extends Util
             }
         }
     }
+
+
 
     /**
      * Update variable type product variation
@@ -817,7 +823,7 @@ class ProductUtil extends Util
                     $input['location_id'],
                     $uf_quantity
                 );
-
+              
                 //Adjust quantity for combo items.
                 if (isset($product['product_type']) && $product['product_type'] == 'combo') {
                     $this->decreaseProductQuantityCombo($product['combo'], $input['location_id']);
