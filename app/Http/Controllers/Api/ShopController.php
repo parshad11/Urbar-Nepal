@@ -18,6 +18,7 @@ class ShopController extends Controller
 {
 	protected $contactUtil;
 	protected $transactionUtil;
+	protected $notificationUtil;
 
 	public function __construct( ContactUtil $contactUtil, TransactionUtil $transactionUtil,NotificationUtil $notificationUtil)
 	{
@@ -41,6 +42,7 @@ class ShopController extends Controller
 
 	public function store(Request $request)
 	{
+
 		try {
 			$input = $request->except('_token');
 
@@ -112,11 +114,12 @@ class ShopController extends Controller
 				DB::commit();
 
 				$msg = trans("sale.order_added");
+				$status=200;
 				$output = ['success' => 1, 'msg' => $msg ];
 			}
 			else {
 				$output = ['success' => 0,
-					'msg' => trans("messages.something_went_wrong")
+					'msg' => trans("messages.something_went_wrong"),
 				];
 			}
 		}
@@ -124,12 +127,13 @@ class ShopController extends Controller
 			DB::rollBack();
 			\Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
 			$msg = trans("messages.something_went_wrong");
+			$status=401;
 			$output = ['success' => 0,
 				'msg' => $msg
 			];
 		}
 		return response()->json([
 			'message'=>$msg
-		]);
+		],$status);
 	}
 }
