@@ -11,6 +11,7 @@ use App\Category;
 use App\Front\Cart;
 use App\InvoiceLayout;
 use App\InvoiceScheme;
+use App\Utils\BusinessUtil;
 use App\Utils\ContactUtil;
 use App\Utils\NotificationUtil;
 use App\Utils\ProductUtil;
@@ -27,13 +28,15 @@ class ShopController extends Controller
     protected $transactionUtil;
     protected $productUtil;
     protected $notificationUtil;
+    protected $businessUtil;
 
-    public function __construct( ContactUtil $contactUtil, TransactionUtil $transactionUtil,  ProductUtil $productUtil,NotificationUtil $notificationUtil) 
+    public function __construct( ContactUtil $contactUtil, TransactionUtil $transactionUtil,  ProductUtil $productUtil,NotificationUtil $notificationUtil, BusinessUtil $businessUtil) 
     {
         $this->contactUtil = $contactUtil;
         $this->transactionUtil = $transactionUtil;
         $this->productUtil = $productUtil;
         $this->notificationUtil = $notificationUtil;
+        $this->businessUtil = $businessUtil;
         $this->dummyPaymentLine = ['method' => 'cash', 'amount' => 0, 'note' => '', 'card_transaction_number' => '', 'card_number' => '', 'card_type' => '', 'card_holder_name' => '', 'card_month' => '', 'card_year' => '', 'card_security' => '', 'cheque_number' => '', 'bank_account_number' => '',
         'is_return' => 0, 'transaction_no' => ''];
     }
@@ -137,7 +140,7 @@ class ShopController extends Controller
      */
     public function store(Request $request)
     {
-        // try {
+        try {
         $input = $request->except('_token');
         
         $location = BusinessLocation::where('location_id', 'BL0001')->first();
@@ -149,11 +152,12 @@ class ShopController extends Controller
         $business_id=$user->business_id;
         $input['commission_agent'] = !empty($request->input('commission_agent')) ? $request->input('commission_agent') : null;
         $input['discount_amount'] = !empty($request->input('discount_amount')) ? $request->input('discount_amount') : null;
+        $input['discount_type'] = !empty($request->input('discount_type')) ? $request->input('discount_amount') : null;
         $cart_items=json_decode($input['cart_items'],true);
         $input['cart_items']=$cart_items;
         $invoice_total=$input['total_price'];
         $input['final_total']=$invoice_total;
-        $input['is_direct_sale']=true;
+        $input['is_direct_sale']=1;
         $input['is_save_and_print']=1;
         $input['transaction_date'] = Carbon::now()->format('Y-m-d H:i:s');
         
@@ -192,70 +196,43 @@ class ShopController extends Controller
           $input['products']=$products;
 
         if (!empty($input['products'])) {
+        
         $transaction = $this->transactionUtil->createSellTransaction($business_id, $input, $invoice_total,1,$assign_delivery);
         
         $this->transactionUtil->createOrUpdateSellLines($transaction, $input['products'], $input['location_id']);
         $is_credit_sale = isset($input['is_credit_sale']) && $input['is_credit_sale'] == 1 ? true : false;
 
-        if ($input['status'] == 'draft') {
-            //update product stock
-            foreach ($input['products'] as $product) {
-                $decrease_qty = $this->productUtil
-                            ->num_uf($product['quantity']);
-                if (!empty($product['base_unit_multiplier'])) {
-                    $decrease_qty = $decrease_qty * $product['base_unit_multiplier'];
-                }
-
-                if ($product['enable_stock']) {
-                    $this->productUtil->decreaseProductQuantity(
-                        $product['product_id'],
-                        $product['variation_id'],
-                        $input['location_id'],
-                        $decrease_qty
-                    );
-                }
-
+       
+        $this->notificationUtil->autoSendNotification($business_id, 'new_sale', $transaction, $user);
+        $cart_items=Cart::where('user_id',$transaction->user_id)->get();
+        if($cart_items){
+            foreach ($cart_items as $item){
+                $item->delete();
             }
-            $this->notificationUtil->autoSendNotification($business_id, 'new_sale', $transaction, $user);
         }
-        
+
         DB::commit();
-        if ($request->input('is_save_and_print') == 1) {
-            $url = $this->transactionUtil->getInvoiceUrl($transaction->id, $business_id);
-            return redirect()->to($url . '?print_on_load=true');
-        }
 
         $msg = trans("sale.order_added");
-        $receipt = '';
-        $invoice_layout = InvoiceLayout::where('name','Default')->first();
-        $invoice_layout_id =$invoice_layout->id;
-       
-        $print_invoice = true;
-
-        if ($print_invoice) {
-            $receipt = $this->receiptContent($business_id, $input['location_id'], $transaction->id, null, false, true, $invoice_layout_id);
-        }
-
-        $output = ['success' => 1, 'msg' => $msg, 'receipt' => $receipt ];
+        $output = ['success' => 1, 'msg' => $msg ];
         } 
         else {
             $output = ['success' => 0,
                         'msg' => trans("messages.something_went_wrong")
                     ];
         }
-        // }  catch (\Exception $e) {
-        //     DB::rollBack();
-        //     \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-        //     $msg = trans("messages.something_went_wrong");
-
-        //     $output = ['success' => 0,
-        //                     'msg' => $msg
-        //                 ];
-        // }
-        // return redirect()
-        // ->action('Front\ShopController@index')
-        // ->with('status', $output);
-        return 'test sucessful';
+        }
+        catch (\Exception $e) {
+            DB::rollBack();
+            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            $msg = trans("messages.something_went_wrong");
+            $output = ['success' => 0,
+                            'msg' => $msg
+                        ];
+        }
+        return redirect()
+        ->action('Front\ShopController@index')
+        ->with('status', $output);
     }
 
     private function receiptContent(
