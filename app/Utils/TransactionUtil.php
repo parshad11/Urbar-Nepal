@@ -357,6 +357,7 @@ class TransactionUtil extends Util
         $combo_lines = [];
 
         if (!empty($lines_formatted)) {
+
             $transaction->sell_lines()->saveMany($lines_formatted);
 
             //Add corresponding modifier sell lines if exists

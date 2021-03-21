@@ -72,7 +72,6 @@ class ShopController extends Controller
 			$input['invoice_scheme_id']=$invoice->id;
 			$product=[];
 			$products=[];
-			dd($cart_items);
 			foreach($cart_items as $item){
 				$product['product_type']=$item['variation']['product']['type'];
 				$product['unit_price']=$item['variation']['default_sell_price'];
