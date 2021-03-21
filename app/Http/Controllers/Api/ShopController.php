@@ -42,8 +42,7 @@ class ShopController extends Controller
 
 	public function store(Request $request)
 	{
-
-		try {
+			try {
 			$input = $request->except('_token');
 
 			$location = BusinessLocation::where('location_id', 'BL0001')->first();
@@ -63,10 +62,10 @@ class ShopController extends Controller
 			$input['is_direct_sale']=1;
 			$input['is_save_and_print']=1;
 			$input['transaction_date'] = Carbon::now()->format('Y-m-d H:i:s');
-
 			DB::beginTransaction();
 			//Customer group details
 			$contact_id = $user->id;
+
 			$cg = $this->contactUtil->getCustomerGroup($business_id, $contact_id);
 			$input['customer_group_id'] = (empty($cg) || empty($cg->id)) ? null : $cg->id;
 			$invoice=InvoiceScheme::where('name','Default')->first();
@@ -97,10 +96,10 @@ class ShopController extends Controller
 
 			if (!empty($input['products'])) {
 
-				$transaction = $this->transactionUtil->createSellTransaction($business_id, $input, $invoice_total,1,$assign_delivery);
-
+				$transaction = $this->transactionUtil->createSellTransaction($business_id, $input, $invoice_total,1,$assign_delivery,$uf_data = true);
 				$this->transactionUtil->createOrUpdateSellLines($transaction, $input['products'], $input['location_id']);
-				$is_credit_sale = isset($input['is_credit_sale']) && $input['is_credit_sale'] == 1 ? true : false;
+				
+$is_credit_sale = isset($input['is_credit_sale']) && $input['is_credit_sale'] == 1 ? true : false;
 				$this->notificationUtil->autoSendNotification($business_id, 'new_sale', $transaction, $user);
 
 				$cart_items=Cart::where('user_id',$transaction->contact_id)->get();
