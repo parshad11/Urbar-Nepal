@@ -27,7 +27,7 @@
       </div>
       <div class="col-sm-7" style="border:0px solid gray">
         <!-- Title & Description -->
-        <h3>{{$variation->product->name}}</h3>
+        <h3>{{$variation->product->name}}&nbsp;{{$variation->name != "DUMMY" ? $variation->name : ''}}</h3>
 
         <!-- Pricing -->
         <h5>Kalimati Price : Rs {{$variation->market_price}}</h5>

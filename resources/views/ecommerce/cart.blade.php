@@ -19,12 +19,19 @@
             </div>
           </div>
           <div class="panel-body">
-              @foreach ($cart_items as $item)                  
+              @foreach ($cart_items as $key=>$item)                  
             <div class="row productInCart">
-                <div class="col-xs-2"><img class="img-responsive" src="http://placehold.it/100x70">
+                <div class="col-xs-2"><img class="img-responsive" src="@if($item->variation->name != "DUMMY")
+                  @foreach($item->variation->media as $media)
+                  {{-- {!! $media->thumbnail([300, 300]) !!} --}}
+                  {{$media->display_url}}
+                  @endforeach
+                  @else
+                  {{$item->variation->product->image_url}}
+                  @endif" alt="">
                 </div>
                 <div class="col-xs-4">
-                  <h4 class="product-name"><strong>{{$item->variation->product->name}}&nbsp;{{$item->variation->name}}</strong></h4>
+                  <h4 class="product-name"><strong>{{$item->variation->product->name}}&nbsp;{{$item->variation->name != "DUMMY" ? $item->variation->name : ''}}</strong></h4>
                 </div>
                 <div class="col-xs-6">
                   <div class="col-xs-3 text-right">
@@ -34,8 +41,8 @@
                     <input type="text" class="form-control input-sm" value="{{$item->quantity}}">
                   </div>
                   <div class="col-xs-3">
-                    <button type="button" class="btn btn-link btn-xs deleteFromCart">
-                      <span class="glyphicon glyphicon-trash"> </span>
+                    <button type="button" class="btn btn-link btn-xs deleteCartItem" data-id="{{$item->id}}">
+                      <span class="glyphicon glyphicon-trash"></span>
                     </button>
                   </div>
   
@@ -73,4 +80,41 @@
 @endsection
 @section('scripts')
     <script src="{{asset('cms/js/shop.js')}}"></script>
+    <script>
+      $(document).ready(function(){
+        $('.deleteCartItem').on('click', function(e){
+          e.preventDefault();
+          var cart_id = $(this).data('id');
+          $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+          $.ajax({
+            type:'get',
+            url:'{{route("removefromcart")}}',
+            data:{
+                cart_id:cart_id
+            },
+            success:function(response){
+              console.log(response);
+              // if(response.status=='error')
+              //   {
+              //       showFrontendAlert('warning', response.msg);
+              //   } else {
+              //       // var cart_number = response.data.length;
+              //       // alert (cart_number);
+              //       // $('#cart_count').text(cart_number);
+              //       updateNavCart();
+              //       showFrontendAlert('success', response.msg);
+              //   }
+            },
+            error:function(response){
+
+            },
+
+          });
+        });
+      });
+    </script>
 @endsection
