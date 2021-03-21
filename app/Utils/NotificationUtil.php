@@ -31,6 +31,7 @@ class NotificationUtil extends Util
      */
     public function autoSendNotification($business_id, $notification_type, $transaction, $contact)
     {
+
         $notification_template = NotificationTemplate::where('business_id', $business_id)
                 ->where('template_for', $notification_type)
                 ->first();
@@ -45,12 +46,14 @@ class NotificationUtil extends Util
                     'sms_body' => $notification_template->sms_body,
                     'subject' => $notification_template->subject
                 ];
+
                 $tag_replaced_data = $this->replaceTags($business_id, $orig_data, $transaction);
                 $data['email_body'] = $tag_replaced_data['email_body'];
                 $data['sms_body'] = $tag_replaced_data['sms_body'];
 
                 //Auto send email
                 if (!empty($notification_template->auto_send) && !empty($contact->email)) {
+
                     $data['subject'] = $tag_replaced_data['subject'];
                     $data['to_email'] = $contact->email;
 
@@ -74,6 +77,8 @@ class NotificationUtil extends Util
                 }
             }
         }
+
+	return 1;
     }
 
     /**

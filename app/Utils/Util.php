@@ -71,8 +71,10 @@ class Util
         $formatted = number_format($input_number, $currency_precision, $decimal_separator, $thousand_separator);
 
         if ($add_symbol) {
-            $currency_symbol_placement = !empty($business_details) ? $business_details->currency_symbol_placement : session('business.currency_symbol_placement');
-            $symbol = !empty($business_details) ? $business_details->currency_symbol : session('currency')['symbol'];
+//            $currency_symbol_placement = !empty($business_details) ? $business_details->currency_symbol_placement : session('business.currency_symbol_placement');
+//            $symbol = !empty($business_details) ? $business_details->currency_symbol : session('currency')['symbol'];
+	        $currency_symbol_placement = !empty($business_details) ? $business_details->currency_symbol_placement : 'before';
+	        $symbol = !empty($business_details) ? $business_details->currency_symbol : '₨';
 
             if ($currency_symbol_placement == 'after') {
                 $formatted = $formatted . ' ' . $symbol;
