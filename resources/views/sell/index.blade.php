@@ -213,7 +213,7 @@
                  }
              });
 
-             $(document).on('change', '#sell_list_filter_location_id, #sell_list_filter_customer_id, #sell_list_filter_payment_status, #created_by, #sales_cmsn_agnt, #service_staffs,',  function() {
+             $(document).on('change', $('#sell_list_filter_location_id, #sell_list_filter_customer_id, #sell_list_filter_payment_status, #created_by, #sales_cmsn_agnt, #service_staffs'),  function() {
                  sell_table.ajax.reload();
              });
               @if($is_woocommerce)
