@@ -122,9 +122,9 @@
                  serverSide: true,
                  aaSorting: [[1, 'desc']],
                  "ajax": {
-                     'headers': {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
+                    //  'headers': {
+                    //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    // },
                      "route": "{{route('sells.index')}}",
                      "data": function ( d ) {
                          if($('#sell_list_filter_date_range').val()) {
@@ -227,5 +227,5 @@
               });
          });
      </script>
-{{--     <script src="{{ asset('js/payment.js?v=' . $asset_v) }}"></script>--}}
+     <script src="{{ asset('js/payment.js?v=' . $asset_v) }}"></script>
 @endsection
