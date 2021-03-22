@@ -18,7 +18,7 @@
                 <div class="form-group">
                     <div class="checkbox">
                         <label>
-                          {!! Form::checkbox('only_woocommerce_sells', 1, false, 
+                          {!! Form::checkbox('only_woocommerce_sells', 1, false,
                           [ 'class' => 'input-icheck', 'id' => 'synced_from_woocommerce']); !!} {{ __('lang_v1.synced_from_woocommerce') }}
                         </label>
                     </div>
@@ -87,11 +87,11 @@
     @endcomponent
 </section>
 <!-- /.content -->
-<div class="modal fade payment_modal" tabindex="-1" role="dialog" 
+<div class="modal fade payment_modal" tabindex="-1" role="dialog"
     aria-labelledby="gridSystemModalLabel">
 </div>
 
-<div class="modal fade edit_payment_modal" tabindex="-1" role="dialog" 
+<div class="modal fade edit_payment_modal" tabindex="-1" role="dialog"
     aria-labelledby="gridSystemModalLabel">
 </div>
 
@@ -125,7 +125,7 @@ $(document).ready( function(){
 			 /*'headers': {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },*/
-            "url": "/sells",
+            "route": "{{route('sells.index')}}",
             "data": function ( d ) {
                 if($('#sell_list_filter_date_range').val()) {
                     var start = $('#sell_list_filter_date_range').data('daterangepicker').startDate.format('YYYY-MM-DD');
@@ -142,7 +142,7 @@ $(document).ready( function(){
                 d.sales_cmsn_agnt = $('#sales_cmsn_agnt').val();
                 d.service_staffs = $('#service_staffs').val();
 
-               
+
                 @if($is_woocommerce)
                     if($('#synced_from_woocommerce').is(':checked')) {
                         d.only_woocommerce_sells = 1;
