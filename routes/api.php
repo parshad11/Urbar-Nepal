@@ -38,6 +38,7 @@ Route::namespace('Api')->middleware(['cors'])->group(function () {
 	Route::middleware(['auth:customerapi'])->group(function () {
 		Route::get('/shop/cart', 'CartController@index');
 		Route::post('/shop/addtocart', 'CartController@addToCart');
+		Route::get('/shop/remov-from-cart/{id}', 'CartController@removeFromCart');
 		Route::get('/shop/checkout', 'ShopController@checkout');
 		Route::post('/shop/checkout', 'ShopController@store');
 	});

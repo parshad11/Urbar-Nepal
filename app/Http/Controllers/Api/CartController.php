@@ -82,4 +82,18 @@ class CartController extends Controller
 			'data'=>$cart_data,
 		]);
 	}
+
+	public function removeFromCart($cart_id)
+	{
+		$user_id = auth()->guard('customerapi')->user()->id;
+		$cart_item = Cart::where('id', $cart_id)->where('user_id', $user_id)->first();
+		if ($cart_item) {
+			$cart_item->delete();
+			$cart_items = Cart::with('variation')->where('user_id', $user_id)->get();
+			return response()->json([
+				'status'=>'success',
+				'msg'=> 'Cart Deleted Successfully',
+			]);
+		}
+	}
 }
