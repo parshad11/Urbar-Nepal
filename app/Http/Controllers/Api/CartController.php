@@ -95,5 +95,11 @@ class CartController extends Controller
 				'msg'=> 'Cart Deleted Successfully',
 			]);
 		}
+		else{
+			return response()->json([
+				'status'=>'Failed',
+				'msg'=> 'Cart Item Not Found',
+			]);
+		}
 	}
 }
