@@ -88,17 +88,28 @@
                                     @else
                                         <div class="col-md-4 shop-options">
                                             <nav class="navbar navbar-default">
-                                                <ul class="nav  navbar-nav">
+                                                <ul class="nav d-sm-flex flex-row navbar-nav">
+                                                    {{--<ul class="nav  navbar-nav">--}}
                                                     @guest('customer')
-                                                    <li class=""><a href="{{route('front_login')}}">Login &nbsp;
-                                                            <i class="fa fa-user-circle-o" aria-hidden="true"></i></a>
-                                                    </li>
+                                                        <li class=""><a href="{{route('front_login')}}">Login &nbsp;
+                                                                <i class="fa fa-user-circle-o"
+                                                                   aria-hidden="true"></i></a>
+                                                        </li>
                                                     @else
-                                                    <li><a href="{{route('user.logout')}}">Logout &nbsp;
-                                                        <i class="fa fa-user-circle-o" aria-hidden="true"></i></a>
-                                                    </li>
+                                                        <li class="account"><a
+                                                                    href="javascript:;">{{auth()->guard('customer')->user()->name}}
+                                                                &nbsp;
+                                                                <i class="fa fa-user-circle-o"
+                                                                   aria-hidden="true"></i></a>
+                                                            <ul>
+                                                                <li><a href="{{route('customer.account')}}">Account</a></li>
+                                                                <li><a href="{{route('user.logout')}}">Log Out</a></li>
+                                                            </ul>
+                                                        </li>
                                                     @endguest
-                                                    <li class=""><a href="{{route('product.cart')}}">Cart @auth('customer')(<span id="cart_count">0</span>)@endauth&nbsp;
+                                                    <li class=""><a
+                                                                href="{{route('product.cart')}}">Cart @auth('customer')(
+                                                            <span id="cart_count">0</span>)@endauth&nbsp;
                                                             <i class="fa fa-cart-arrow-down" aria-hidden="true"></i></a>
                                                     </li>
                                                 </ul>

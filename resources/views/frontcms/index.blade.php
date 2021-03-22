@@ -420,7 +420,7 @@
                 </div>
                 <div class="row">
                     @foreach($services as $service)
-                        <div class="col-md-4 col-sm-6 col-xs-6 fw600">
+                        <div class="col-md-3 col-sm-6 col-xs-6 fw600">
                             <div class="service-col">
                                 <div class="service-img">
                                     @if(isset($service->service_image) && !empty($service->service_image) && file_exists(public_path().'/uploads/img/home/services/'.$service->service_image))
@@ -451,7 +451,7 @@
                 <div class="col-md-3 col-sm-6 col-xs-6 fw600">
                     <div class="counter">
                         <div class="counter-content">
-                            <span class="count">000</span>
+                            <span class="count">0</span>
                         </div>
                         <h3 class="title">Happy Farmers</h3>
                     </div>
@@ -459,7 +459,7 @@
                 <div class="col-md-3 col-sm-6 col-xs-6 fw600">
                     <div class="counter">
                         <div class="counter-content">
-                            <span class="count">000</span>
+                            <span class="count">0</span>
                         </div>
                         <h3 class="title">Happy Clients</h3>
                     </div>
@@ -467,7 +467,7 @@
                 <div class="col-md-3 col-sm-6 col-xs-6 fw600">
                     <div class="counter">
                         <div class="counter-content">
-                            <span class="count">000</span>
+                            <span class="count">0</span>
                         </div>
                         <h3 class="title">our staff</h3>
                     </div>
@@ -475,7 +475,7 @@
                 <div class="col-md-3 col-sm-6 col-xs-6 fw600">
                     <div class="counter">
                         <div class="counter-content">
-                            <span class="count">000</span>
+                            <span class="count">0</span>
                         </div>
                         <h3 class="title">Win Awards</h3>
                     </div>

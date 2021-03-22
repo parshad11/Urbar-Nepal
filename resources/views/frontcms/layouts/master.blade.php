@@ -38,7 +38,7 @@
 
 
         @media only screen and (max-width: 767px) {
-            .my-search-box{
+            .my-search-box {
                 display: none;
             }
 
@@ -77,20 +77,21 @@
 
             }
 
-            .navbar-header button{
+            .navbar-header button {
                 right: 0;
                 position: absolute;
 
             }
 
-            .navbar-collapse{
+            .navbar-collapse {
                 margin-top: 15%;
             }
 
         }
+
         @media only screen and (max-width: 991px) {
-            .col-md-2.quote_div{
-                display: none!important;
+            .col-md-2.quote_div {
+                display: none !important;
             }
         }
 
@@ -112,112 +113,133 @@
             width: 25%;
             margin: auto;
         }
-        @media (max-width: 768px){
-            .col-md-2.col-sm-12.col-xs-12.full-wd480.appstore{
+
+        @media (max-width: 768px) {
+            .col-md-2.col-sm-12.col-xs-12.full-wd480.appstore {
                 display: none;
             }
+        }
+
+        /* ACCOUNT */
+
+        .account:hover ul {
+            display: block;
+        }
+
+        .account ul {
+            background: #2393d1;
+            position: absolute;
+            top: 25;
+            display: none;
+        }
+
+        .account a {
+            color: #ffffff;
+            padding: 12px 16px;
+        }
+
+        .account li:hover {
+            background: #4a9e4a;
+
         }
     </style>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
 </head>
 
 <body>
 
-    <!-- Preloader -->
-    <div id="preloader"></div>
+<!-- Preloader -->
+<div id="preloader"></div>
 
-    <!-- Main Header start -->
-    <header class="main-herader">
-        @include('frontcms.partials.header')
+<!-- Main Header start -->
+<header class="main-herader">
+    @include('frontcms.partials.header')
 
-        @include('frontcms.partials.navbar')
-    </header>
+    @include('frontcms.partials.navbar')
+</header>
 
-    @yield('content')
+@yield('content')
 
-    @include('frontcms.partials.footer')
+@include('frontcms.partials.footer')
 
-    <!-- modernizr -->
-    <script src="{{ asset('cms/js/modernizr-2.6.2.min.js') }}"></script>
+<!-- modernizr -->
+<script src="{{ asset('cms/js/modernizr-2.6.2.min.js') }}"></script>
 
-    <!-- jQuery -->
-    <script src="{{ asset('cms/js/jquery.min.js') }}"></script>
+<!-- jQuery -->
+<script src="{{ asset('cms/js/jquery.min.js') }}"></script>
 
-    <!-- Bootstrap Core JavaScript -->
-    <script src="{{ asset('cms/js/bootstrap.min.js') }}"></script>
+<!-- Bootstrap Core JavaScript -->
+<script src="{{ asset('cms/js/bootstrap.min.js') }}"></script>
 
-    <!-- All Included JavaScript -->
-    <script src="{{ asset('cms/js/bootstrap-dropdownhover.min.js') }}"></script>
-    <script src="{{ asset('cms/js/jquery-scrolltofixed-min.js') }}"></script>
-    <script src="{{ asset('cms/js/owl.carousel.min.js') }}"></script>
-    <script src="{{ asset('cms/js/jarallax.min.js') }}"></script>
-    <script src="{{ asset('cms/js/jquery.countup.min.js') }}"></script>
-    <script src="{{ asset('cms/js/jquery.waypoints.min.js') }}"></script>
-    <script src="{{ asset('cms/js/jquery.ripples.js') }}"></script>
-    <script src="{{ asset('cms/js/dyscrollup.js') }}"></script>
-    <script src="{{ asset('cms/js/VideoPlayerPopUp.js') }}"></script>
-    <script src="{{ asset('cms/js/animated-text.js') }}"></script>
-    <script src="{{ asset('cms/js/jquery.zoomslider.min.js') }}"></script>
-    <script src="{{ asset('cms/js/YouTubePopUp.jquery.js') }}"></script>
-    <script src="{{ asset('cms/js/lightbox.min.js') }}"></script>
-    <script src="{{ asset('cms/js/imagesloaded.min.js') }}"></script>
-    <script src="{{ asset('cms/js/jquery.filterizr.min.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<!-- All Included JavaScript -->
+<script src="{{ asset('cms/js/bootstrap-dropdownhover.min.js') }}"></script>
+<script src="{{ asset('cms/js/jquery-scrolltofixed-min.js') }}"></script>
+<script src="{{ asset('cms/js/owl.carousel.min.js') }}"></script>
+<script src="{{ asset('cms/js/jarallax.min.js') }}"></script>
+<script src="{{ asset('cms/js/jquery.countup.min.js') }}"></script>
+<script src="{{ asset('cms/js/jquery.waypoints.min.js') }}"></script>
+<script src="{{ asset('cms/js/jquery.ripples.js') }}"></script>
+<script src="{{ asset('cms/js/dyscrollup.js') }}"></script>
+<script src="{{ asset('cms/js/VideoPlayerPopUp.js') }}"></script>
+<script src="{{ asset('cms/js/animated-text.js') }}"></script>
+<script src="{{ asset('cms/js/jquery.zoomslider.min.js') }}"></script>
+<script src="{{ asset('cms/js/YouTubePopUp.jquery.js') }}"></script>
+<script src="{{ asset('cms/js/lightbox.min.js') }}"></script>
+<script src="{{ asset('cms/js/imagesloaded.min.js') }}"></script>
+<script src="{{ asset('cms/js/jquery.filterizr.min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
-    <!-- Custom Js -->
-    <script src="{{ asset('cms/js/main.js') }}"></script>
+<!-- Custom Js -->
+<script src="{{ asset('cms/js/main.js') }}"></script>
 
-    @yield('scripts')
-    <script>
-        function showFrontendAlert(type, message){
-            if(type == 'danger'){
-                type = 'error';
-            }
-            Swal.fire({
-                position: 'top-end',
-                icon: type,
-                title: message,
-                showConfirmButton: false,
-                timer: 1500
-            })
+@yield('scripts')
+<script>
+    function showFrontendAlert(type, message) {
+        if (type == 'danger') {
+            type = 'error';
         }
-        function updateNavCart(){
-            $.get('{{ route('cart.nav_cart') }}', {_token:'{{ csrf_token() }}'}, function(data){
-                $('#cart_count').html(data);
+        Swal.fire({
+            position: 'top-end',
+            icon: type,
+            title: message,
+            showConfirmButton: false,
+            timer: 1500
+        })
+    }
+
+    function updateNavCart() {
+        $.get('{{ route('cart.nav_cart') }}', {_token: '{{ csrf_token() }}'}, function (data) {
+            $('#cart_count').html(data);
+        });
+    }
+</script>
+<script>
+    $(document).ready(function () {
+        updateNavCart();
+        $('#add_to_cart, #add_to_carts').on('click', function () {
+            var quantity = $('.input_quantity').val();
+            var product_id = $(this).attr('product_id');
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
             });
-        }
-    </script>
-    <script>
-        $(document).ready(function(){
-            updateNavCart();
-            $('#add_to_cart, #add_to_carts').on('click',function(){
-                var quantity = $('.input_quantity').val();
-                var product_id = $(this).attr('product_id');
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-                $.ajax({
-                type:'get',
+            $.ajax({
+                type: 'get',
                 url: '{{route("addtocart")}}',
-                data:{
-                    product_id:product_id,
-                    quantity:quantity
+                data: {
+                    product_id: product_id,
+                    quantity: quantity
                 },
-                beforeSend: function (response) {
-                    $(this).prop('disabled', true);
-                },
-                success:function(response){
-                    if(response.status=='error')
-                    {
+                success: function (response) {
+                    if (response.status == 'error') {
                         showFrontendAlert('warning', response.msg);
                     } else {
                         // var cart_number = response.data.length;
@@ -226,41 +248,38 @@
                         updateNavCart();
                         showFrontendAlert('success', response.msg);
                     }
-    
-                },
-                error:function(response){
-                    if(response.error){                   
-                    window.location.href=document.location.origin +'/shop/login';
-                    }
-                },
-                complete: function () {
-                    $(this).prop('disabled', false);
-                }
-                });
-            });
 
-            $('.deleteCartItem').on('click', function(e){
-            var cart_id = $(this).data('id');
-                $.ajax({
-                type:'get',
-                url:'{{route("removefromcart")}}',
-                data:{
-                    cart_id:cart_id
                 },
-                success:function(response){
+                error: function (response) {
+                    if (response.error) {
+                        window.location.href = document.location.origin + '/shop/login';
+                    }
+                }
+            });
+        });
+
+        $(this).on('click','.deleteCartItem', function (e) {
+            var cart_id = $(this).data('id');
+            $.ajax({
+                type: 'get',
+                url: '{{route("removefromcart")}}',
+                data: {
+                    cart_id: cart_id
+                },
+                success: function (response) {
                     updateNavCart();
                     $('#cart_item_detail').html(response);
                     showFrontendAlert('success', 'Product has been removed from cart successfully');
                 },
-                error:function(response){
+                error: function (response) {
                     console.log('error');
                     showFrontendAlert('danger', 'Something went wrong');
-                },
+                }
             });
 
-            });
         });
-      </script>
+    });
+</script>
 
 </body>
 

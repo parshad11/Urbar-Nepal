@@ -62,7 +62,7 @@ class CartController extends Controller
                         return response()->json(['status' => 'error', 'msg' => 'Quantity is not available']);
                     }
                     // $cartItem['id'] += $variation_product->id;
-                    $cartItem['quantity'] += $request->quantity;
+                    $cartItem['quantity'] += ($request->quantity) ? $request->quantity : 1;
                     $cartItem['total_price'] = $cartItem['quantity'] * $variation_product->sell_price_inc_tax;
                 }
                 $cart->push($cartItem);

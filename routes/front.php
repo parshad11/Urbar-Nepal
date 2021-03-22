@@ -32,6 +32,9 @@ Route::namespace('Front')->group(function () {
     Route::get('/shop/remov-from-cart', 'CartController@removeFromCart')->name('removefromcart')->middleware('auth:customer');
     Route::get('/shop/addtocart', 'CartController@addToCart')->name('addtocart')->middleware(['auth:customer','SetCustomerSessionData']);
     Route::get('/shop/cart', 'CartController@index')->name('product.cart')->middleware(['auth:customer','SetCustomerSessionData']);
+
+
+    Route::get('/shop/user-account', 'ShopController@getCustomer')->name('customer.account')->middleware('auth:customer');
     Route::get('/shop/checkout', 'ShopController@checkout')->name('product.checkout')->middleware(['auth:customer','SetCustomerSessionData']);
     Route::post('/shop/checkout', 'ShopController@store')->name('order.store')->middleware(['auth:customer','SetCustomerSessionData']);
     Route::get('/shop/category/{slug}', 'ShopController@categoryProduct')->name('product_category');
