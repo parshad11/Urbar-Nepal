@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Front;
 
 use App\BusinessLocation;
+use App\Contact;
+use App\Transaction;
 use App\VariationLocationDetails;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -32,21 +34,23 @@ class ShopController extends Controller
     protected $notificationUtil;
     protected $businessUtil;
 
-    public function __construct( ContactUtil $contactUtil, TransactionUtil $transactionUtil,  ProductUtil $productUtil,NotificationUtil $notificationUtil, BusinessUtil $businessUtil) 
+    public function __construct(ContactUtil $contactUtil, TransactionUtil $transactionUtil, ProductUtil $productUtil, NotificationUtil $notificationUtil, BusinessUtil $businessUtil)
     {
         $this->contactUtil = $contactUtil;
         $this->transactionUtil = $transactionUtil;
         $this->productUtil = $productUtil;
         $this->notificationUtil = $notificationUtil;
         $this->businessUtil = $businessUtil;
-        $this->dummyPaymentLine = ['method' => 'cash', 'amount' => 0, 'note' => '', 'card_transaction_number' => '', 'card_number' => '', 'card_type' => '', 'card_holder_name' => '', 'card_month' => '', 'card_year' => '', 'card_security' => '', 'cheque_number' => '', 'bank_account_number' => '',
-        'is_return' => 0, 'transaction_no' => ''];
+        $this->dummyPaymentLine = [
+            'method' => 'cash', 'amount' => 0, 'note' => '', 'card_transaction_number' => '', 'card_number' => '', 'card_type' => '', 'card_holder_name' => '', 'card_month' => '', 'card_year' => '', 'card_security' => '', 'cheque_number' => '', 'bank_account_number' => '',
+            'is_return' => 0, 'transaction_no' => ''
+        ];
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
     public function index(ContactUtil $contactUtil)
     {
@@ -55,9 +59,6 @@ class ShopController extends Controller
         $products = Product::with(['product_variations.variations.product', 'unit'])->whereIn('id', $variation_location_product_ids)->get();
         $special_cat = Category::with('sub_categories')->where('name', 'like', '%special%')->where('parent_id', 0)->first();
         $all_categories = Category::with('sub_categories')->where('parent_id', 0)->where('id', '!=', $special_cat->id)->get();
-        // return $products[0]->product_variations[0]->variations;
-        // return $products->product_variations[0]->variations[0]->default_sell_price;
-        // return $products;
         return view('ecommerce.shop')->with('products', $products)
             ->with('special_category', $special_cat)
             ->with('categories', $all_categories);
@@ -71,58 +72,55 @@ class ShopController extends Controller
         $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
         $products = Product::with(['product_variations.variations.product', 'unit'])->where('category_id', $product_cat)->whereIn('id', $variation_location_product_ids)->get();
         // dd($product_cat);
-        // dd($product->product);
-        // dd($product);
-        // $variation = $this->product_variations();
-        // return view('ecommerce.shop');
-        // $shops = $this->shops->get();
-        // dd($product->get('name'));
-        // dd($product->variations[0]);
         return view('ecommerce.product_single')->with('variation', $product)
             ->with('products', $products);
     }
+
     public function checkout()
     {
         $user_id = Auth::guard('customer')->user()->id;
         $cart_items = Cart::with('variation')->where('user_id', $user_id)->get();
-        $user=Auth::guard('customer')->user();
+        $user = Auth::guard('customer')->user();
         $total_price = Cart::where('user_id', $user_id)->sum('total_price');
 
-        return view('ecommerce.checkout')->with(compact('cart_items','user','total_price'));
+        return view('ecommerce.checkout')->with(compact('cart_items', 'user', 'total_price'));
     }
 
-    public function categoryProduct($slug){
-        // return $slug;
-        $category =Category::where('slug',$slug)->first();
+    public function categoryProduct($slug)
+    {
+        $category = Category::where('slug', $slug)->first();
         $location = BusinessLocation::where('location_id', 'BL0001')->first();
         $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
-        $products = Product::with(['product_variations.variations.product', 'unit'])->where('category_id',$category->id)->whereIn('id', $variation_location_product_ids)->get();
+        $products = Product::with(['product_variations.variations.product', 'unit'])->where('category_id', $category->id)->whereIn('id', $variation_location_product_ids)->get();
         $special_cat = Category::with('sub_categories')->where('name', 'like', '%special%')->where('parent_id', 0)->first();
         $all_categories = Category::with('sub_categories')->where('parent_id', 0)->where('id', '!=', $special_cat->id)->get();
         // return $special_cat;
-        // return $products[0]->product_variations[0]->variations;
-        // return $products->product_variations[0]->variations[0]->default_sell_price;
-        // return $products;
         return view('ecommerce.shop')->with('products', $products)
             ->with('special_category', $special_cat)
             ->with('categories', $all_categories);
     }
-    public function subcategoryProduct($slug,$sub_cat_slug){
-        // return $sub_cat_slug;
-        // return $slug;
-        $category =Category::where('slug',$sub_cat_slug)->first();
+
+    public function subcategoryProduct($slug, $sub_cat_slug)
+    {
+        $category = Category::where('slug', $sub_cat_slug)->first();
         $location = BusinessLocation::where('location_id', 'BL0001')->first();
         $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
-        $products = Product::with(['product_variations.variations.product', 'unit'])->where('category_id',$category->id)->whereIn('id', $variation_location_product_ids)->get();
+        $products = Product::with(['product_variations.variations.product', 'unit'])->where('sub_category_id', $category->id)->whereIn('id', $variation_location_product_ids)->get();
         $special_cat = Category::with('sub_categories')->where('name', 'like', '%special%')->where('parent_id', 0)->first();
         $all_categories = Category::with('sub_categories')->where('parent_id', 0)->where('id', '!=', $special_cat->id)->get();
         // return $special_cat;
-        // return $products[0]->product_variations[0]->variations;
-        // return $products->product_variations[0]->variations[0]->default_sell_price;
-        // return $products;
         return view('ecommerce.shop')->with('products', $products)
             ->with('special_category', $special_cat)
             ->with('categories', $all_categories);
+    }
+
+    public function getCustomer(){
+        $user_id = Auth::guard('customer')->user()->id;
+        $customer_info = Contact::where('id', $user_id)->first();
+        $order_info = Transaction::with('sell_lines.variations')->where('contact_id', $user_id)->where('status', 'draft')->get();
+        return view('ecommerce.user_account')->with('customer_info', $customer_info)
+            ->with('orders', $order_info);
+
     }
     /**
      * Show the form for creating a new resource.
@@ -138,107 +136,108 @@ class ShopController extends Controller
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
         try {
-        $input = $request->except('_token');
-        $location = BusinessLocation::where('location_id', 'BL0001')->first();
-        $input['status'] = 'draft';
-        $input['location_id']=$location->id;
-        $assign_delivery=1;
-        $user=Auth::guard('customer')->user();
-        $input['contact_id']=$user->id;
-        $business_id=$user->business_id;
-        $input['commission_agent'] = !empty($request->input('commission_agent')) ? $request->input('commission_agent') : null;
-        $input['discount_amount'] = !empty($request->input('discount_amount')) ? $request->input('discount_amount') : null;
-        $input['discount_type'] = !empty($request->input('discount_type')) ? $request->input('discount_amount') : null;
-        $cart_items=json_decode($input['cart_items'],true);
-        $input['cart_items']=$cart_items;
-        $invoice_total=$input['total_price'];
-        $input['final_total']=$invoice_total;
-        $input['is_direct_sale']=1;
-        $input['is_save_and_print']=1;
-        $input['is_ecommerce_order']=1;
-        $input['transaction_date'] = Carbon::now()->format('Y-m-d H:i:s');
-        
-        DB::beginTransaction();
-        //Customer group details
-        $contact_id = $user->id;
-        $cg = $this->contactUtil->getCustomerGroup($business_id, $contact_id);
-        $input['customer_group_id'] = (empty($cg) || empty($cg->id)) ? null : $cg->id;
-        
+            $input = $request->except('_token');
+            $location = BusinessLocation::where('location_id', 'BL0001')->first();
+            $input['status'] = 'draft';
+            $input['location_id'] = $location->id;
+            $assign_delivery = 1;
+            $user = Auth::guard('customer')->user();
+            $input['contact_id'] = $user->id;
+            $business_id = $user->business_id;
+            $input['commission_agent'] = !empty($request->input('commission_agent')) ? $request->input('commission_agent') : null;
+            $input['discount_amount'] = !empty($request->input('discount_amount')) ? $request->input('discount_amount') : null;
+            $input['discount_type'] = !empty($request->input('discount_type')) ? $request->input('discount_amount') : null;
+            $cart_items = json_decode($input['cart_items'], true);
+            $input['cart_items'] = $cart_items;
+            $invoice_total = $input['total_price'];
+            $input['final_total'] = $invoice_total;
+            $input['is_direct_sale'] = 1;
+            $input['is_save_and_print'] = 1;
+            $input['is_ecommerce_order'] = 1;
+            $input['transaction_date'] = Carbon::now()->format('Y-m-d H:i:s');
 
-        $invoice=InvoiceScheme::where('name','Default')->first();
-        $input['invoice_scheme_id']=$invoice->id;
-        $product=[];
-        $products=[];
-        foreach($cart_items as $item){
-           
-            $product['product_type']=$item['variation']['product']['type'];
-            $product['unit_price']=$item['variation']['default_sell_price'];
-            $product['line_discount_price']='fixed';
-            $product['line_discount_amount']=0;
-            $product['item_tax']=0;
-            $product['tax_id']=null;
-            $product['sell_line_note']=null;
-            $product['lot_no_line_id']=null;
-            $product['product_id']=$item['variation']['product']['id'];  
-            $product['variation_id']=$item['variation']['id'];
-            $product['enable_stock']=$item['variation']['product']['enable_stock'];
-            $product['quantity']=$item['quantity'];
-            $product['product_unit_id']=$item['variation']['product']['unit_id'];
-            $product['sub_unit_id']=$item['variation']['product']['unit_id'];
-            $product['base_unit_multiplier']=1;
-            $product['unit_price_inc_tax']=$item['variation']['sell_price_inc_tax'];
-            array_push($products,$product);
-          }
-          
-          $input['products']=$products;
+            DB::beginTransaction();
+            //Customer group details
+            $contact_id = $user->id;
+            $cg = $this->contactUtil->getCustomerGroup($business_id, $contact_id);
+            $input['customer_group_id'] = (empty($cg) || empty($cg->id)) ? null : $cg->id;
 
-        if (!empty($input['products'])) {
-        
-        $transaction = $this->transactionUtil->createSellTransaction($business_id, $input, $invoice_total,1,$assign_delivery);
-        
-        $this->transactionUtil->createOrUpdateSellLines($transaction, $input['products'], $input['location_id']);
-        $is_credit_sale = isset($input['is_credit_sale']) && $input['is_credit_sale'] == 1 ? true : false;
 
-       
-        $this->notificationUtil->autoSendNotification($business_id, 'new_sale', $transaction, $user);
+            $invoice = InvoiceScheme::where('name', 'Default')->first();
+            $input['invoice_scheme_id'] = $invoice->id;
+            $product = [];
+            $products = [];
+            foreach ($cart_items as $item) {
 
-        $admin=User::where('user_type','admin')->first();
-
-        $admin->notify(new OrderCreatedNotification($transaction->contact->name,$transaction));
-
-        $cart_items=Cart::where('user_id',$transaction->contact_id)->get();
-        if($cart_items){
-            foreach ($cart_items as $item){
-                $item->delete();
+                $product['product_type'] = $item['variation']['product']['type'];
+                $product['unit_price'] = $item['variation']['default_sell_price'];
+                $product['line_discount_price'] = 'fixed';
+                $product['line_discount_amount'] = 0;
+                $product['item_tax'] = 0;
+                $product['tax_id'] = null;
+                $product['sell_line_note'] = null;
+                $product['lot_no_line_id'] = null;
+                $product['product_id'] = $item['variation']['product']['id'];
+                $product['variation_id'] = $item['variation']['id'];
+                $product['enable_stock'] = $item['variation']['product']['enable_stock'];
+                $product['quantity'] = $item['quantity'];
+                $product['product_unit_id'] = $item['variation']['product']['unit_id'];
+                $product['sub_unit_id'] = $item['variation']['product']['unit_id'];
+                $product['base_unit_multiplier'] = 1;
+                $product['unit_price_inc_tax'] = $item['variation']['sell_price_inc_tax'];
+                array_push($products, $product);
             }
-        }
-        DB::commit();
 
-        $msg = trans("sale.order_added");
-        $output = ['success' => 1, 'msg' => $msg ];
-        } 
-        else {
-            $output = ['success' => 0,
-                        'msg' => trans("messages.something_went_wrong")
-                    ];
-        }
-        }
-        catch (\Exception $e) {
+            $input['products'] = $products;
+
+            if (!empty($input['products'])) {
+
+                $transaction = $this->transactionUtil->createSellTransaction($business_id, $input, $invoice_total, 1, $assign_delivery);
+
+                $this->transactionUtil->createOrUpdateSellLines($transaction, $input['products'], $input['location_id']);
+
+                $is_credit_sale = isset($input['is_credit_sale']) && $input['is_credit_sale'] == 1 ? true : false;
+
+
+                $this->notificationUtil->autoSendNotification($business_id, 'new_sale', $transaction, $user);
+
+                $admin = User::where('user_type', 'admin')->first();
+
+
+                // $admin->notify(new OrderCreatedNotification($transaction->contact->name,$transaction));
+
+                $cart_items = Cart::where('user_id', $transaction->contact_id)->get();
+                if ($cart_items) {
+                    foreach ($cart_items as $item) {
+                        $item->delete();
+                    }
+                }
+                DB::commit();
+
+                /*$msg = trans("sale.order_added");
+                $output = ['success' => 1, 'msg' => $msg];*/
+                $request->session()->flash('success', 'Order created successfully');
+
+            } else {
+                /*$output = [
+                    'success' => 0,
+                    'msg' => trans("messages.something_went_wrong")
+                ];*/
+                $request->session()->flash('error', 'something went wrong');
+
+            }
+        } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            $msg = trans("messages.something_went_wrong");
-            $output = ['success' => 0,
-                            'msg' => $msg
-                        ];
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            $request->session()->flash('error', 'something went wrong');
         }
-        return redirect()
-        ->action('Front\ShopController@index')
-        ->with('status', $output);
+        $request->session()->flash('success', 'Order created successfully');
+        return redirect()->action('Front\ShopController@index');
     }
 
     private function receiptContent(
@@ -249,18 +248,20 @@ class ShopController extends Controller
         $is_package_slip = false,
         $from_pos_screen = true,
         $invoice_layout_id = null
-    ) {
-        $output = ['is_enabled' => false,
-                    'print_type' => 'browser',
-                    'html_content' => null,
-                    'printer_config' => [],
-                    'data' => []
-                ];
+    )
+    {
+        $output = [
+            'is_enabled' => false,
+            'print_type' => 'browser',
+            'html_content' => null,
+            'printer_config' => [],
+            'data' => []
+        ];
 
 
         $business_details = $this->businessUtil->getDetails($business_id);
         $location_details = BusinessLocation::find($location_id);
-        
+
         if ($from_pos_screen && $location_details->print_receipt_on_invoice != 1) {
             return $output;
         }
@@ -282,7 +283,7 @@ class ShopController extends Controller
             'decimal_separator' => $business_details->decimal_separator,
         ];
         $receipt_details->currency = $currency_details;
-        
+
         if ($is_package_slip) {
             $output['html_content'] = view('sale_pos.receipts.packing_slip', compact('receipt_details'))->render();
             return $output;
@@ -297,7 +298,7 @@ class ShopController extends Controller
 
             $output['html_content'] = view($layout, compact('receipt_details'))->render();
         }
-        
+
         return $output;
     }
 

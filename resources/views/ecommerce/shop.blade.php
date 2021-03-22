@@ -31,42 +31,47 @@
                         </div>
                     </div>
                     @if (isset($special_category))
-                    <div class="category">
-                        <div class="title"> SPECIAL SALE</div>
+                        <div class="category">
+                            <div class="title"> SPECIAL SALE</div>
 
-                        <ul class="category-list">
+                            <ul class="category-list">
 
-                        @foreach ($special_category->sub_categories as $sub_cat)
-                            <li><a href="{{route('product_subcategory',[$special_category->slug,$sub_cat->slug])}}">{{$sub_cat->name}}</a></li>                            
-                        @endforeach   
+                                @foreach ($special_category->sub_categories as $sub_cat)
+                                    <li>
+                                        <a href="{{route('product_subcategory',[$special_category->slug,$sub_cat->slug])}}">{{$sub_cat->name}}</a>
+                                    </li>
+                                @endforeach
 
-                        </ul>
-                    </div>                     
+                            </ul>
+                        </div>
                     @endif
 
                     @if (isset($categories))
-                    <div class="category">
-                        <div class="title"> Categories</div>
+                        <div class="category">
+                            <div class="title"> Categories</div>
 
-                        <ul class="category-list">
+                            <ul class="category-list">
 
-                            @foreach ($categories as $category)
-                            <li class="main"><a href="{{route('product_category',$category->slug)}}">{{$category->name}} </a>
-                                @if($category->sub_categories!= null)
-                                &nbsp;<i style="float: right; margin:auto" class="fas fa-chevron-right"></i>
-                                <ul class="sub">
-                                    @foreach ($category->sub_categories as $sub_category)
-                                        
-                                    <li><a href="{{route('product_subcategory',[$category->slug,$sub_category->slug])}}">{{$sub_category->name}}</a></li>
-                                    @endforeach
-                                </ul>
-                            </li>
+                                @foreach ($categories as $category)
+                                    <li class="main"><a
+                                                href="{{route('product_category',$category->slug)}}">{{$category->name}} </a>
+                                        @if($category->sub_categories!= null)
+                                            &nbsp;<i style="float: right; margin:auto" class="fas fa-chevron-right"></i>
+                                            <ul class="sub">
+                                                @foreach ($category->sub_categories as $sub_category)
 
-                                @endif
-                        @endforeach   
+                                                    <li>
+                                                        <a href="{{route('product_subcategory',[$category->slug,$sub_category->slug])}}">{{$sub_category->name}}</a>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                    </li>
 
-                        </ul>
-                    </div>                     
+                                    @endif
+                                @endforeach
+
+                            </ul>
+                        </div>
                     @endif
                 </div>
                 <div class="col-md-9 right">
@@ -103,17 +108,22 @@
                                                          @endif" alt=""></a>
                                             </div>
                                             <div class="description">
-                                                <div class="title"><b><a href="{{route('product_single',$variation->sub_sku)}}">{{$variation->product->name}}
+                                                <div class="title"><b><a
+                                                                href="{{route('product_single',$variation->sub_sku)}}">{{$variation->product->name}}
                                                             &nbsp;{{$variation->name != "DUMMY" ? $variation->name : ''}}</a></b>
                                                 </div>
                                                 <div class="price">
 
                                                     {{-- <p>{{$variation->media[0]->path}}</p> --}}
-                                                    <div class="kalimati"><small>Kalimati Price :Rs. {{$variation->market_price}}</small></div>
+                                                    <div class="kalimati"><small>Kalimati Price
+                                                            :Rs. {{$variation->market_price}}</small></div>
 
-                                                    <div class="offer">Price : Rs.{{$variation->sell_price_inc_tax}}/{{$variation->product->unit->short_name}}</div>
+                                                    <div class="offer">Price : Rs.{{$variation->sell_price_inc_tax}}
+                                                        /{{$variation->product->unit->short_name}}</div>
                                                 </div>
-                                                <button class="btn btn-success" id="add_to_carts" product_id="{{$variation->id}}">Add to Cart</button>
+                                                <button class="btn btn-success" id="add_to_carts"
+                                                        product_id="{{$variation->id}}">Add to Cart
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -121,13 +131,13 @@
                                 @endforeach
                             @endforeach
                         @empty
-                        <div class="card col-lg-12">
-                            <div class="row">
-                                <div class="text-center" style="padding: 50px ">
-                                    <h1>No Product Found</h1>
+                            <div class="card col-lg-12">
+                                <div class="row">
+                                    <div class="text-center" style="padding: 50px ">
+                                        <h1>No Product Found</h1>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         @endforelse
                     </div>
                     {{-- {{$product->links()}} --}}
@@ -140,4 +150,17 @@
 @endsection
 @section('scripts')
     <script src="{{asset('cms/js/shop.js')}}"></script>
+    @if (session()->has('success'))
+        <script>
+            $(document).ready(function(){
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Order Added Successfully',
+                showConfirmButton: false,
+                timer: 5000
+            })
+            })
+        </script>
+    @endif
 @endsection

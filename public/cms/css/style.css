@@ -621,6 +621,7 @@ input:-moz-placeholder {
     display: block;
     text-align: center;
     margin-top: 10px;
+    margin-right: 10px;
     padding-top: 10px;
     padding-bottom: 10px;
     border-radius: 30px;
