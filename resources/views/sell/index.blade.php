@@ -122,9 +122,9 @@ $(document).ready( function(){
         serverSide: true,
         aaSorting: [[1, 'desc']],
         "ajax": {
-			 'headers': {
+			 /*'headers': {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
+            },*/
             "url": "/sells",
             "data": function ( d ) {
                 if($('#sell_list_filter_date_range').val()) {
