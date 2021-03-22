@@ -9,7 +9,7 @@
 
         <!-- OVERLAY -->
         <div class="banner">
-            <img class="img img-responsive" src="https://merogroceries.com/images/media/2020/10/YXFgk16107.png" alt="">
+            <img class="img img-responsive" src="" alt="">
         </div>
     {{--<div class="shop-banner">
         <div class="image"><img src="https://merogroceries.com/images/media/2020/10/YXFgk16107.png" alt=""></div>
