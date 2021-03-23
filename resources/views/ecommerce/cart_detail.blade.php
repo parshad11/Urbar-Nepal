@@ -24,7 +24,7 @@
                 <div class="col-xs-6">
                     <div class="row">
                         <div class="col-xs-3 text-right">
-                            <h6><strong>{{$item->variation->sell_price_inc_tax}} <span
+                            <h6><strong>{{ number_format($item->variation->sell_price_inc_tax,2) }} <span
                                             class="text-muted">x</span></strong>
                             </h6>
                         </div>
@@ -38,7 +38,7 @@
                         </div>
 
                         <div class="col-xs-4">
-                            <strong>{{$item->total_price}} Rs</strong>
+                            <strong>{{ number_format($item->total_price,2) }}&nbsp;Rs</strong>
                         </div>
                     </div>
                 </div>
@@ -46,7 +46,7 @@
         @endforeach
         <div class="row">
             <div class="col-xs-12 text-right">
-                <h4 class="">Total <strong>Rs : {{$total_sum}}</strong></h4>
+                <h4 class="">Total <strong>Rs : {{ number_format($total_sum,2) }}</strong></h4>
             </div>
         </div>
     @else

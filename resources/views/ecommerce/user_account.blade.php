@@ -102,7 +102,7 @@
 
                                                     <div class="col-md-3 col-sm-3">
 
-                                                        <h4 style="color: #ffffff;">Rs. {{ number_format($order->final_total) }}</h4>
+                                                        <h4 style="color: #ffffff;">Rs. {{ number_format($order->final_total,2) }}</h4>
                                                         <div>
                                                             <span><strong>Status :</strong></span>
                                                             <span>{{ ($order->status =='draft') ? 'Pending' : 'Received'}}</span>

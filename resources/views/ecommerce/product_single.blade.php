@@ -22,16 +22,16 @@
         @endforeach
         @else
         <img class="img img-responsive"
-        src="{{$variation->product->image_url}}" alt="">
+        src="{{ $variation->product->image_url }}" alt="">
         @endif
       </div>
       <div class="col-sm-7" style="border:0px solid gray">
         <!-- Title & Description -->
-        <h3>{{$variation->product->name}}&nbsp;{{$variation->name != "DUMMY" ? $variation->name : ''}}</h3>
+        <h3>{{ $variation->product->name}}&nbsp;{{$variation->name != "DUMMY" ? $variation->name : '' }}</h3>
 
         <!-- Pricing -->
-        <h5>Kalimati Price : Rs {{$variation->market_price}}</h5>
-        <h4>Price : Rs {{$variation->sell_price_inc_tax}}</h4>
+        <h5>Kalimati Price : Rs. {{ number_format($variation->market_price,2) }}</h5>
+        <h4>Price : Rs. {{ number_format($variation->sell_price_inc_tax,2) }}</h4>
 
         <!-- Quantity-->
 
@@ -52,17 +52,16 @@
           <button class="btn btn-success">Buy Now</button>
 
         </div>
-        <h4>Product Description</h3>
+        <h4>Product Description</h4>
         <div class="description">
 
-        <p>{!!$variation->product->product_description!!}</p>
+        <p>{!! $variation->product->product_description !!}</p>
         </div>
       </div>
 
 
     </div>
   </div>
-</div>
 
 
 <div class="container single-2">
@@ -80,22 +79,22 @@
                                       src="@if($variation->name != "DUMMY")
                                       @foreach($variation->media as $media)
                                       {{-- {!! $media->thumbnail([300, 300]) !!} --}}
-                                      {{$media->display_url}}
+                                      {{ $media->display_url }}
                                       @endforeach
                                       @else
-                                      {{$variation->product->image_url}}
+                                      {{ $variation->product->image_url }}
                                       @endif" alt=""></a>
                         </div>
                         <div class="description">
-                            <div class="title"><b><a href="{{route('product_single',$variation->sub_sku)}}">{{$variation->product->name}}
-                                        &nbsp;{{$variation->name != "DUMMY" ? $variation->name : ''}}</a></b>
+                            <div class="title"><b><a href="{{ route('product_single',$variation->sub_sku) }}">{{ $variation->product->name }}
+                                        &nbsp;{{ $variation->name != "DUMMY" ? $variation->name : '' }}</a></b>
                             </div>
                             <div class="price">
 
                                 {{-- <p>{{$variation->media[0]->path}}</p> --}}
-                                <div class="kalimati"><small>Kalimati Price :Rs. {{$variation->market_price}}</small></div>
+                                <div class="kalimati"><small>Kalimati Price :Rs. {{ number_format($variation->market_price,2) }}</small></div>
 
-                                <div class="offer">Price : Rs.{{$variation->sell_price_inc_tax}}</div>
+                                <div class="offer">Price : Rs.{{ number_format($variation->sell_price_inc_tax,2) }}</div>
                             </div>
                             <button class="btn btn-success" id="add_to_carts" product_id="{{$variation->id}}">Add to Cart</button>
                         </div>
