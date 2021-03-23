@@ -84,7 +84,7 @@
             }
 
             .navbar-collapse {
-                margin-top: 15%;
+                margin-top: 50px;
             }
 
         }

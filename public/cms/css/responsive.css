@@ -371,6 +371,9 @@
 	.header-navbar .navbar-nav {
 		text-align: left;
 	}
+	.header-navbar .navbar-nav .dropdown-menu {
+		background: darkslategray;
+	}
 	.mega-menu>li {
 		width: 50%;
 	}

@@ -686,7 +686,6 @@ input:-moz-placeholder {
     padding: 0;
     border: none;
     border-top: 3px solid #4A9E4A;
-    background: darkslategray;
     border-radius: 0;
 }
 .header-navbar .navbar-nav .dropdown-menu>li>a {
