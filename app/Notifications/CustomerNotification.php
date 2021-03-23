@@ -68,7 +68,7 @@ class CustomerNotification extends Notification
         if (!empty($this->attachment)) {
             $mail->attach($this->attachment, ['as' => $this->attachment_name]);
         }
-	    $mail;
+	    return $mail;
     }
 
     /**
