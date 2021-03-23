@@ -40,13 +40,13 @@
                                       <ul>
                                         <li><b>{{$item->variation->product->name}}&nbsp;{{$item->variation->name != 'DUMMY' ? $item->variation->name : '' }}</b></li>
                                         <li>Quantity : <span>{{$item->quantity}}</span></li>
-                                        <li>Rate : <span>Rs: {{$item->variation->sell_price_inc_tax }}</span></li>
+                                        <li>Rate : <span>Rs: {{ number_format($item->variation->sell_price_inc_tax,2) }}</span></li>
     
                                       </ul>
                                     </td>
     
                                     <td>
-                                      <b>Rs.{{$item->total_price}}</b>
+                                      <b>Rs.{{ number_format($item->total_price,2) }}</b>
                                     </td>
                                     </tr>
                                   @empty
@@ -57,7 +57,7 @@
                           <div class="col-md-3">
                             <div style="text-align: center;">
                               <h3>Order Total</h3>
-                              <h3><span style="color:green;">Rs :{{$total_price}}</span></h3>
+                              <h3><span style="color:green;">Rs :{{ number_format($total_price,2) }}</span></h3>
                             </div>
                           </div>
                         </div>
