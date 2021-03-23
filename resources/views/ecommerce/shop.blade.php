@@ -97,15 +97,8 @@
                                         <div class="product">
                                             <div class="img">
                                                 <a href="{{route('product_single',$variation->sub_sku)}}">
-                                                    <img class="img img-responsive"
-                                                         src="@if($variation->name != "DUMMY")
-                                                         @foreach($variation->media as $media)
-                                                         {{-- {!! $media->thumbnail([300, 300]) !!} --}}
-                                                         {{$media->display_url}}
-                                                         @endforeach
-                                                         @else
-                                                         {{$variation->product->image_url}}
-                                                         @endif" alt=""></a>
+                                                    <img class="img img-responsive" src="@foreach($variation->media as $media){{ $media->display_url }}@endforeach" alt="">
+                                                </a>
                                             </div>
                                             <div class="description">
                                                 <div class="title"><b><a
