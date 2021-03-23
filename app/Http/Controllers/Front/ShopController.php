@@ -52,13 +52,17 @@ class ShopController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
-    public function index(ContactUtil $contactUtil)
+    public function index()
     {
         $location = BusinessLocation::where('location_id', 'BL0001')->first();
         $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
         $products = Product::with(['product_variations.variations.product', 'unit'])->whereIn('id', $variation_location_product_ids)->get();
         $special_cat = Category::with('sub_categories')->where('name', 'like', '%special%')->where('parent_id', 0)->first();
-        $all_categories = Category::with('sub_categories')->where('parent_id', 0)->where('id', '!=', $special_cat->id)->get();
+        if ($special_cat == null) {
+            $all_categories = Category::with('sub_categories')->where('parent_id', 0)->get();
+        } else {
+            $all_categories = Category::with('sub_categories')->where('parent_id', 0)->where('id', '!=', $special_cat->id)->get();
+        }
         return view('ecommerce.shop')->with('products', $products)
             ->with('special_category', $special_cat)
             ->with('categories', $all_categories);
@@ -71,7 +75,6 @@ class ShopController extends Controller
         $location = BusinessLocation::where('name', 'freshktm')->first();
         $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
         $products = Product::with(['product_variations.variations.product', 'unit'])->where('category_id', $product_cat)->whereIn('id', $variation_location_product_ids)->get();
-        // dd($product_cat);
         return view('ecommerce.product_single')->with('variation', $product)
             ->with('products', $products);
     }
@@ -97,8 +100,12 @@ class ShopController extends Controller
         $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
         $products = Product::with(['product_variations.variations.product', 'unit'])->where('category_id', $category->id)->whereIn('id', $variation_location_product_ids)->get();
         $special_cat = Category::with('sub_categories')->where('name', 'like', '%special%')->where('parent_id', 0)->first();
-        $all_categories = Category::with('sub_categories')->where('parent_id', 0)->where('id', '!=', $special_cat->id)->get();
-        // return $special_cat;
+        if ($special_cat == null) {
+            $all_categories = Category::with('sub_categories')->where('parent_id', 0)->get();
+        } else {
+            $all_categories = Category::with('sub_categories')->where('parent_id', 0)->where('id', '!=', $special_cat->id)->get();
+        }
+        //$all_categories = Category::with('sub_categories')->where('parent_id', 0)->where('id', '!=', $special_cat->id)->get();
         return view('ecommerce.shop')->with('products', $products)
             ->with('special_category', $special_cat)
             ->with('categories', $all_categories);
@@ -111,14 +118,19 @@ class ShopController extends Controller
         $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
         $products = Product::with(['product_variations.variations.product', 'unit'])->where('sub_category_id', $category->id)->whereIn('id', $variation_location_product_ids)->get();
         $special_cat = Category::with('sub_categories')->where('name', 'like', '%special%')->where('parent_id', 0)->first();
-        $all_categories = Category::with('sub_categories')->where('parent_id', 0)->where('id', '!=', $special_cat->id)->get();
-        // return $special_cat;
+        if ($special_cat == null) {
+            $all_categories = Category::with('sub_categories')->where('parent_id', 0)->get();
+        } else {
+            $all_categories = Category::with('sub_categories')->where('parent_id', 0)->where('id', '!=', $special_cat->id)->get();
+        }
+        //$all_categories = Category::with('sub_categories')->where('parent_id', 0)->where('id', '!=', $special_cat->id)->get();
         return view('ecommerce.shop')->with('products', $products)
             ->with('special_category', $special_cat)
             ->with('categories', $all_categories);
     }
 
-    public function getCustomer(){
+    public function getCustomer()
+    {
         $user_id = Auth::guard('customer')->user()->id;
         $customer_info = Contact::where('id', $user_id)->first();
         $order_info = Transaction::with('sell_lines.variations')->where('contact_id', $user_id)->where('status', 'draft')->get();
@@ -126,6 +138,7 @@ class ShopController extends Controller
             ->with('orders', $order_info);
 
     }
+
     /**
      * Show the form for creating a new resource.
      *

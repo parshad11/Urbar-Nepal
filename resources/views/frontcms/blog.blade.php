@@ -39,9 +39,9 @@
                                         <li>{{\Carbon\Carbon::parse($blog->created_at)->format('M d, Y')}}</li>
                                     </ul>
                                     <h3 class="post-title"><a href="{{ route('blog_single', $blog->slug) }}">{{$blog->title}}</a></h3>
-                                    <p class="post-description">
+                                    <div class="post-description">
                                         {!! substr($blog->description, 0, 100) !!}...
-                                    </p>
+                                    </div>
                                     <a class="btn btn-default theme-btn btn-hover" href="{{ route('blog_single', $blog->slug) }}">Read More</a>
                                 </div>
                             </div>

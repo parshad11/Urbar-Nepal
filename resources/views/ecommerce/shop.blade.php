@@ -116,9 +116,9 @@
 
                                                     {{-- <p>{{$variation->media[0]->path}}</p> --}}
                                                     <div class="kalimati"><small>Kalimati Price
-                                                            :Rs. {{$variation->market_price}}</small></div>
+                                                            :Rs. {{ number_format($variation->market_price,2) }}</small></div>
 
-                                                    <div class="offer">Price : Rs.{{$variation->sell_price_inc_tax}}
+                                                    <div class="offer">Price : Rs.{{ number_format($variation->sell_price_inc_tax,2) }}
                                                         /{{$variation->product->unit->short_name}}</div>
                                                 </div>
                                                 <button class="btn btn-success" id="add_to_carts"
@@ -160,6 +160,19 @@
                 showConfirmButton: false,
                 timer: 5000
             })
+            })
+        </script>
+    @endif
+    @if (session()->has('error'))
+        <script>
+            $(document).ready(function(){
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: {{Session::get('error')}},
+                    showConfirmButton: false,
+                    timer: 3000
+                })
             })
         </script>
     @endif
