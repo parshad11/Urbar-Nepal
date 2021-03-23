@@ -80,9 +80,13 @@ class ShopController extends Controller
     {
         $user_id = Auth::guard('customer')->user()->id;
         $cart_items = Cart::with('variation')->where('user_id', $user_id)->get();
+       
         $user = Auth::guard('customer')->user();
         $total_price = Cart::where('user_id', $user_id)->sum('total_price');
-
+        if(null!=($cart_items)){
+            request()->session()->flash('error', 'Your cart is empty. Please add product into cart');
+            return redirect()->route('shop');
+        }
         return view('ecommerce.checkout')->with(compact('cart_items', 'user', 'total_price'));
     }
 
@@ -194,7 +198,7 @@ class ShopController extends Controller
             }
 
             $input['products'] = $products;
-
+         
             if (!empty($input['products'])) {
 
                 $transaction = $this->transactionUtil->createSellTransaction($business_id, $input, $invoice_total, 1, $assign_delivery);
@@ -228,7 +232,7 @@ class ShopController extends Controller
                     'success' => 0,
                     'msg' => trans("messages.something_went_wrong")
                 ];*/
-                $request->session()->flash('error', 'something went wrong');
+                $request->session()->flash('error', 'Your cart is empty. Please add product into cart');
 
             }
         } catch (\Exception $e) {
