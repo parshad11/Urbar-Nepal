@@ -285,7 +285,7 @@
         margin: auto;}
 
     .navbar-collapse {
-        margin-top: 25%!important;
+        /*margin-top: 25%!important;*/
     }
     .single .container {
         margin-top: 0px !important;

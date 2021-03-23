@@ -23,16 +23,16 @@ class CartController extends Controller
         // return $cart_items[0]->product->name;
         return view('ecommerce.cart')->with('cart_items', $cart_items);
     }
+
     public function updateNavCart()
     {
         $user_id = Auth::guard('customer')->user()->id;
         $cart_items_count = Cart::where('user_id', $user_id)->get()->count();
         return $cart_items_count;
     }
+
     public function addToCart(Request $request)
     {
-        // dd($request);
-        // return $request->product_id;
         $user_id = Auth::guard('customer')->user()->id;
         $cart_items = Cart::where('user_id', $user_id)->get();
         $variation_product = Variation::with('product')->find($request->product_id);
@@ -108,6 +108,68 @@ class CartController extends Controller
         }
     }
 
+    public function buyNow(Request $request)
+    {
+        $user_id = Auth::guard('customer')->user()->id;
+        $cart_items = Cart::where('user_id', $user_id)->get();
+        $variation_product = Variation::with('product')->find($request->variation_id);
+        $variation_stock = VariationLocationDetails::where('variation_id', $variation_product->id)->first();
+        // return $variation_stock;
+        // return $variation_stock->qty_available;
+        if ($request->quantity > $variation_stock->qty_available) {
+            return response()->json(['status' => 'error', 'msg' => 'Quantity is not available']);
+        }
+        $data = array();
+        $data['product_id'] = $variation_product->id;
+        $data['user_id'] = $user_id;
+        // dd($product);
+
+        $data['quantity'] = isset($request->quantity) ? $request->quantity : 1;
+        $data['total_price'] = $data['quantity'] * $variation_product->sell_price_inc_tax;
+        if ($cart_items) {
+            $foundInCart = false;
+            $cart = collect();
+            foreach ($cart_items as $key => $cartItem) {
+                if ($cartItem['product_id'] == $variation_product->id) {
+                    $variation_stock = VariationLocationDetails::where('variation_id', $variation_product->id)->first();
+                    $foundInCart = true;
+                    if ($cartItem['quantity'] >= $variation_stock->qty_available) {
+                        return response()->json(['status' => 'error', 'msg' => 'Quantity is not available']);
+                    }
+                    // $cartItem['id'] += $variation_product->id;
+                    $cartItem['quantity'] += ($request->quantity) ? $request->quantity : 1;
+                    $cartItem['total_price'] = $cartItem['quantity'] * $variation_product->sell_price_inc_tax;
+                }
+                $cart->push($cartItem);
+            }
+
+            if (!$foundInCart) {
+
+                $cart->push($data);
+            }
+        } else {
+            $cart = collect([$data]);
+        }
+        $cart_data = array();
+        foreach ($cart as $key => $value) {
+            $cart_db = Cart::updateOrCreate(
+                [
+                    'product_id' => $value['product_id'],
+                    'user_id' => $value['user_id'],
+                ],
+                [
+                    'product_id' => $value['product_id'],
+                    'user_id' => $value['user_id'],
+                    'quantity' => $value['quantity'],
+                    'total_price' => $value['total_price']
+                ]
+            );
+            array_push($cart_data, $cart_db);
+        }
+         return response()->json(['status' => 'success', 'msg' => 'Product Added to Cart Successfully', 'data' => $cart_data]);
+         //return view('ecommerce.cart', compact('product', 'data'));
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -121,7 +183,7 @@ class CartController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -132,7 +194,7 @@ class CartController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -143,7 +205,7 @@ class CartController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -154,8 +216,8 @@ class CartController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -166,7 +228,7 @@ class CartController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

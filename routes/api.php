@@ -36,6 +36,7 @@ Route::namespace('Api')->middleware(['cors'])->group(function () {
 	});
 	/*Ecommerce*/
 	Route::middleware(['auth:customerapi'])->group(function () {
+		Route::get('/customer/profile','EcommerceLoginController@profile');
 		Route::get('/shop/cart', 'CartController@index');
 		Route::post('/shop/addtocart', 'CartController@addToCart');
 		Route::get('/shop/remov-from-cart/{id}', 'CartController@removeFromCart');

@@ -8,14 +8,16 @@
                 $total_sum = $total_sum + $item['total_price'];
             @endphp
             <div class="row productInCart">
-                <div class="col-xs-2"><img class="img-responsive" src="@if($item->variation->name != "DUMMY")
+                <div class="col-xs-2">
+                    <img class="img img-responsive" src="@foreach($item->variation->media as $media){{ $media->display_url }}@endforeach" alt="">
+                    {{--<img class="img-responsive" src="@if($item->variation->name != "DUMMY")
                     @foreach($item->variation->media as $media)
-                    {{-- {!! $media->thumbnail([300, 300]) !!} --}}
+                     {!! $media->thumbnail([300, 300]) !!}
                     {{$media->display_url}}
                     @endforeach
                     @else
                     {{$item->variation->product->image_url}}
-                    @endif" alt="">
+                    @endif" alt="">--}}
                 </div>
                 <div class="col-xs-4">
                     <h4 class="product-name"><strong>{{$item->variation->product->name}}

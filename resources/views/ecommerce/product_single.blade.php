@@ -7,23 +7,14 @@
 <div class="container">
     <div class="single-item-link">
         <ol class="breadcrumb">
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Library</a></li>
-            <li class="active">Data</li>
+            <li><a href="{{ route('front_dashboard') }}">Home</a></li>
+            <li><a href="{{ route('shop') }}">Shop</a></li>
+            <li class="active">{{ $variation->product->name }}</li>
           </ol>
     </div>
-    {{-- {{$product}} --}}
     <div class="row">
       <div class="col-sm-5 item-photo">
-        @if($variation->name != "DUMMY")
-        @foreach($variation->media as $media)
-        {!! $media->thumbnail([300, 300]) !!}
-        {{-- {{$media->display_url}} --}}
-        @endforeach
-        @else
-        <img class="img img-responsive"
-        src="{{ $variation->product->image_url }}" alt="">
-        @endif
+          <img class="img img-responsive" src="@foreach($variation->media as $media){{ $media->display_url }}@endforeach" alt="">
       </div>
       <div class="col-sm-7" style="border:0px solid gray">
         <!-- Title & Description -->
@@ -49,7 +40,7 @@
         <div class="section carts" style="padding-bottom:20px;">
           <button class="btn btn-success" id="add_to_carts" product_id="{{$variation->id}}">Add to Cart</button>
 
-          <button class="btn btn-success">Buy Now</button>
+          <button class="btn btn-success" id="product_buy_now" product_id="{{$variation->id}}">Buy Now</button>
 
         </div>
         <h4>Product Description</h4>
@@ -75,23 +66,14 @@
                     <div class="product">
                         <div class="img">
                             <a href="{{route('product_single',$variation->sub_sku)}}">
-                                <img class="img img-responsive"
-                                      src="@if($variation->name != "DUMMY")
-                                      @foreach($variation->media as $media)
-                                      {{-- {!! $media->thumbnail([300, 300]) !!} --}}
-                                      {{ $media->display_url }}
-                                      @endforeach
-                                      @else
-                                      {{ $variation->product->image_url }}
-                                      @endif" alt=""></a>
+                                <img class="img img-responsive" src="@foreach($variation->media as $media){{ $media->display_url }}@endforeach" alt="">
+                            </a>
                         </div>
                         <div class="description">
                             <div class="title"><b><a href="{{ route('product_single',$variation->sub_sku) }}">{{ $variation->product->name }}
                                         &nbsp;{{ $variation->name != "DUMMY" ? $variation->name : '' }}</a></b>
                             </div>
                             <div class="price">
-
-                                {{-- <p>{{$variation->media[0]->path}}</p> --}}
                                 <div class="kalimati"><small>Kalimati Price :Rs. {{ number_format($variation->market_price,2) }}</small></div>
 
                                 <div class="offer">Price : Rs.{{ number_format($variation->sell_price_inc_tax,2) }}</div>
@@ -111,5 +93,35 @@
 @endsection
 @section('scripts')
     <script src="{{asset('cms/js/shop.js')}}"></script>
-    
+    <script>
+        $(document).ready(function (){
+           $(this).on('click', '#product_buy_now', function(event){
+               event.preventDefault();
+               let quantity = $('.input_quantity').val();
+               let product_variation_id = $(this).attr('product_id');
+               $.ajax({
+                   method: 'POST',
+                   url: '{{ route('product_buy_now') }}',
+                   data:{
+                       "_token": "{{ csrf_token() }}",
+                       quantity:quantity,
+                       variation_id:product_variation_id
+                   },
+                   success:function(response){
+                       if (response.status == 'error') {
+                           showFrontendAlert('warning', response.msg);
+                       } else {
+                           location.href = "{{ route('product.checkout') }}";
+                       }
+                   },
+                   error:function(response){
+                       if (response.error) {
+                           window.location.href = document.location.origin + '/shop/login';
+                       }
+                   }
+               });
+
+           });
+        });
+    </script>
 @endsection

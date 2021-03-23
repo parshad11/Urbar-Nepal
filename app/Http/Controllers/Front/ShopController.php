@@ -86,7 +86,8 @@ class ShopController extends Controller
        
         $user = Auth::guard('customer')->user();
         $total_price = Cart::where('user_id', $user_id)->sum('total_price');
-        if(null!=($cart_items)){
+//        dd($cart_items);
+        if(count($cart_items)<=0){
             request()->session()->flash('error', 'Your cart is empty. Please add product into cart');
             return redirect()->route('shop');
         }
@@ -221,13 +222,12 @@ class ShopController extends Controller
                 $is_credit_sale = isset($input['is_credit_sale']) && $input['is_credit_sale'] == 1 ? true : false;
 
 
-                $this->notificationUtil->autoSendNotification($business_id, 'new_sale', $transaction, $user);
 
-                $admin = User::where('user_type', 'admin')->first();
+	            $this->notificationUtil->autoSendNotification($business_id, 'new_sale', $transaction, $user);
+	            $admin = User::where('user_type', 'admin')->first();
 
 
-                $admin->notify(new OrderCreatedNotification($transaction->contact->name,$transaction));
-
+	            $admin->notify(new OrderCreatedNotification($transaction->contact->name,$transaction));
                 $cart_items = Cart::where('user_id', $transaction->contact_id)->get();
                 if ($cart_items) {
                     foreach ($cart_items as $item) {

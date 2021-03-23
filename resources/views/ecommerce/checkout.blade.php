@@ -13,7 +13,7 @@
               Review Your Order &amp; Complete Checkout
             </h2>
             <hr>
-            <a href="#" class="btn btn-info" style="width: 100%;">Add More Products &amp; Services</a>
+            <a href="{{ route('shop') }}" class="btn btn-info" style="width: 100%;">Add More Products and Services</a>
             <hr>
             <div class="shopping_cart">
               <form class="form-horizontal" role="form" action="{{action('Front\ShopController@store')}}" method="post" id="payment-form">
@@ -22,11 +22,11 @@
                   <div class="panel panel-default">
                     <div class="panel-heading">
                       <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" class="collapsed">Review
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" class="">Review
                           Your Order</a>
                       </h4>
                     </div>
-                    <div id="collapseOne" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                    <div id="collapseOne" class="panel-collapse collapse in" aria-expanded="true" style="height: auto;">
                       <div class="panel-body">
                         <div class="items">
                           <div class="col-md-9">
@@ -34,7 +34,6 @@
 
                               <tbody>
                                   @forelse ($cart_items as $item)
-                                      
                                 <tr>
                                     <td>
                                       <ul>
@@ -100,7 +99,7 @@
                     <input type="hidden" name="total_price" id="total_price" value="{{$total_price}}">
                     <div class="panel-heading" style="background: none; border: none;">
                       <h4 class="panel-title">
-                        <button type="submit" id="submit_order_form" class="btn btn-primary pull-right btn-flat">@lang('messages.save')</button>
+                        <button type="submit" id="submit_order_form" class="btn btn-primary pull-right btn-flat">Place Order</button>
                         </div>
                         </div>
                       </h4>
