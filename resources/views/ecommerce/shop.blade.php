@@ -163,4 +163,17 @@
             })
         </script>
     @endif
+    @if (session()->has('error'))
+        <script>
+            $(document).ready(function(){
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: {{Session::get('error')}},
+                    showConfirmButton: false,
+                    timer: 3000
+                })
+            })
+        </script>
+    @endif
 @endsection
