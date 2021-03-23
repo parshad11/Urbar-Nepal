@@ -44,4 +44,11 @@ class EcommerceLoginController extends Controller
 			'user' => $user
 		]);
 	}
+
+	public function profile(){
+		$user=Auth::guard('customerapi')->user();
+		return response()->json([
+			'user'=>[$user],
+		]);
+	}
 }

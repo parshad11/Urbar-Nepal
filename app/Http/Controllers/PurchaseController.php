@@ -302,7 +302,6 @@ class PurchaseController extends Controller
         try {
            
             $business_id = $request->session()->get('user.business_id');
-            dd($request->all());
             //Check if subscribed or not
             if (!$this->moduleUtil->isSubscribed($business_id)) {
                 return $this->moduleUtil->expiredResponse(action('PurchaseController@index'));
