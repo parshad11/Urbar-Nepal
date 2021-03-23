@@ -215,6 +215,11 @@ class NotificationUtil extends Util
                 $data[$key] = str_replace('{business_login}', $business_login, $data[$key]);
             }
 
+            if (strpos($value, '{ecommerce_login}') !== false) {
+                $ecommerce_login = '<a href="'.route('front_login').'">Freshktm</a>';
+               $data[$key] = str_replace('{ecommerce_login}', $ecommerce_login, $data[$key]);
+           }
+
             //Replace business_logo
             if (strpos($value, '{business_logo}') !== false) {
                 $logo_name = $business->logo;

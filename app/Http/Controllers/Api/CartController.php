@@ -9,12 +9,29 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Contact;
+use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
 {
 	public function index()
 	{
-		$cart_items = Cart::with('variation')->where('user_id', auth()->guard('customerapi')->user()->id)->get();
+		$path=asset('/uploads/media/');
+		$cart_items = Cart::leftJoin('variations as v','carts.product_id','=','v.id')
+						->leftJoin('products as p','v.product_id','=','p.id')
+						->leftJoin('media as m','m.model_id','=','v.id')
+						->where('user_id', auth()->guard('customerapi')->user()->id)
+						->select(
+							'carts.id',
+							'carts.quantity',
+							'carts.total_price as product_price',
+							'v.id as variation_id',
+							'p.id as product_id',
+							'v.name as variation_name',
+							'p.name as product_name',
+							DB::raw("CONCAT('$path','/',m.file_name) as product_image"),
+						)
+						->get();
+					
 		$total_price = Cart::where('user_id', auth()->guard('customerapi')->user()->id)->sum('total_price');
 		return response()->json([
 			'cart_item'=>$cart_items,

@@ -226,7 +226,7 @@ class ShopController extends Controller
                 $admin = User::where('user_type', 'admin')->first();
 
 
-                // $admin->notify(new OrderCreatedNotification($transaction->contact->name,$transaction));
+                $admin->notify(new OrderCreatedNotification($transaction->contact->name,$transaction));
 
                 $cart_items = Cart::where('user_id', $transaction->contact_id)->get();
                 if ($cart_items) {
