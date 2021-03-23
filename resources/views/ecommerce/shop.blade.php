@@ -168,8 +168,8 @@
             $(document).ready(function(){
                 Swal.fire({
                     position: 'top-end',
-                    icon: 'success',
-                    title: {{Session::get('error')}},
+                    icon: 'error',
+                    title: "{{Session::get('error')}}",
                     showConfirmButton: false,
                     timer: 3000
                 })
