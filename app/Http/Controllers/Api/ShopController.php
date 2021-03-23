@@ -30,8 +30,23 @@ class ShopController extends Controller
 	}
 	public function checkout()
 	{
+		$path=asset('/uploads/media/');
 		$user_id = Auth::guard('customerapi')->user()->id;
-		$cart_items = Cart::with('variation')->where('user_id', $user_id)->get();
+		$cart_items = Cart::leftJoin('variations as v','carts.product_id','=','v.id')
+							->leftJoin('products as p','v.product_id','=','p.id')
+							->leftJoin('media as m','m.model_id','=','v.id')
+							->where('user_id', $user_id)
+							->select(
+								'carts.id',
+								'carts.quantity',
+								'carts.total_price as product_price',
+								'v.id as variation_id',
+								'p.id as product_id',
+								'v.name as variation_name',
+								'p.name as product_name',
+								DB::raw("CONCAT('$path','/',m.file_name) as product_image"),
+							)
+							->get();
 		$user=Auth::guard('customerapi')->user();
 		$total_price = Cart::where('user_id', $user_id)->sum('total_price');
 
