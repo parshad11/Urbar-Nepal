@@ -79,15 +79,16 @@
                                             @foreach($order->sell_lines as $order_item)
                                                 <div class="row">
                                                     <div class="col-md-2 col-sm-2">
-                                                        <img src="@if($order_item->variations->name != "DUMMY")
+                                                        <img class="img img-responsive" src="@foreach($order_item->variations->media as $media){{ $media->display_url }}@endforeach" alt="">
+                                                        {{--<img src="@if($order_item->variations->name != "DUMMY")
                                                         @foreach($order_item->variations->media as $media)
-                                                        {{-- {!! $media->thumbnail([300, 300]) !!} --}}
+                                                         {!! $media->thumbnail([300, 300]) !!}
                                                         {{$media->display_url}}
                                                         @endforeach
                                                         @else
                                                         {{$order_item->variations->product->image_url}}
                                                         @endif"
-                                                             alt="">
+                                                             alt="">--}}
                                                     </div>
                                                     <div class="col-md-7 col-sm-7 ">
                                                         <a href="" style="color: #ffffff;">

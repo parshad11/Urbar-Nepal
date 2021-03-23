@@ -685,11 +685,24 @@
 	}
 
 }
+@media only screen and (max-width:426px) {
+	.slider-ontext {
+		padding: 120px 0 30px;
+	}
+	.slider-ontext .slider-buttons .theme-btn {
+		/*margin-top: 0!important;*/
+		margin-right: 10px!important;
+	}
+	.theme-btn {
+		font-size: 14px;
+		padding: 6px 12px;
+	}
+	.cd-headline{
+		display: none;
+	}
+}
 
 @media only screen and (max-width:420px) {
-	.slider-col img {
-
-	}
 	.slider-ontext h1, .slider-ontext h1 span {
 		font-size: 30px;
 	}
