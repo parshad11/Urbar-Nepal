@@ -24,6 +24,11 @@ class Transaction extends Model
      * @var string
      */
     protected $table = 'transactions';
+
+    public function delivery()
+    {
+        return $this->hasOne(\App\Delivery::class,'transaction_id');
+    }
     
     public function purchase_lines()
     {

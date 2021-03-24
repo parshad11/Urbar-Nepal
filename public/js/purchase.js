@@ -190,7 +190,7 @@ $(document).ready(function() {
             })
             .autocomplete('instance')._renderItem = function(ul, item) {
             return $('<li>')
-                .append('<div>' + item.text + '</div>')
+                .append('<div>' + item.text +'<br>'+item.unit_price +item.unit + '</div>')
                 .appendTo(ul);
         };
     }

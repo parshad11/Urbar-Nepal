@@ -841,13 +841,14 @@ class PurchaseController extends Controller
                 '=',
                 'variations.product_id'
             )
+            ->leftjoin('units as U', 'products.unit_id', '=', 'U.id')
                 ->where(function ($query) use ($term) {
                     $query->where('products.name', 'like', '%' . $term .'%');
                     $query->orWhere('sku', 'like', '%' . $term .'%');
                     $query->orWhere('sub_sku', 'like', '%' . $term .'%');
                 })
                 ->active()
-                ->where('business_id', $business_id)
+                ->where('products.business_id', $business_id)
                 ->whereNull('variations.deleted_at')
                 ->select(
                     'products.id as product_id',
@@ -856,7 +857,9 @@ class PurchaseController extends Controller
                     // 'products.sku as sku',
                     'variations.id as variation_id',
                     'variations.name as variation',
-                    'variations.sub_sku as sub_sku'
+                    'variations.sub_sku as sub_sku',
+                    'variations.dpp_inc_tax as unit_price',
+                    'U.short_name as unit'
                 )
                 ->groupBy('variation_id');
 
@@ -873,11 +876,13 @@ class PurchaseController extends Controller
                 $products_array[$product->product_id]['name'] = $product->name;
                 $products_array[$product->product_id]['sku'] = $product->sub_sku;
                 $products_array[$product->product_id]['type'] = $product->type;
+                $products_array[$product->product_id]['unit'] = $product->unit;
                 $products_array[$product->product_id]['variations'][]
                 = [
                         'variation_id' => $product->variation_id,
                         'variation_name' => $product->variation,
-                        'sub_sku' => $product->sub_sku
+                        'sub_sku' => $product->sub_sku,
+                        'unit_price'=>$product->unit_price
                         ];
             }
 
@@ -890,10 +895,13 @@ class PurchaseController extends Controller
                         $result[] = [ 'id' => $i,
                                     'text' => $value['name'] . ' - ' . $value['sku'],
                                     'variation_id' => 0,
-                                    'product_id' => $key
+                                    'product_id' => $key,
+                                    'unit_price'=>'',
+                                    'unit'=>''
                                 ];
                     }
                     $name = $value['name'];
+                    $unit=$value['unit'];
                     foreach ($value['variations'] as $variation) {
                         $text = $name;
                         if ($value['type'] == 'variable') {
@@ -904,6 +912,8 @@ class PurchaseController extends Controller
                                             'text' => $text . ' - ' . $variation['sub_sku'],
                                             'product_id' => $key ,
                                             'variation_id' => $variation['variation_id'],
+                                            'unit_price'=>'Rs '.$variation['unit_price'],
+                                            'unit'=>' per '.$unit
                                         ];
                     }
                     $i++;

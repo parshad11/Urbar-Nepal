@@ -133,10 +133,9 @@ class ShopController extends Controller
     public function getCustomer()
     {
         $user_id = Auth::guard('customer')->user()->id;
-        $customer_info = Contact::where('id', $user_id)->first();
-        $order_info = Transaction::with('sell_lines.variations')->where('contact_id', $user_id)->where('status', 'draft')->get();
-        return view('ecommerce.user_account')->with('customer_info', $customer_info)
-            ->with('orders', $order_info);
+        $customer = Contact::where('id', $user_id)->first();
+        $orders = Transaction::with(['sell_lines.variations','delivery'])->where('contact_id', $user_id)->where('is_ecommerce_order',1)->get();
+        return view('ecommerce.user_account')->with(compact('customer', 'orders'));
 
     }
 
@@ -222,8 +221,8 @@ class ShopController extends Controller
                 $is_credit_sale = isset($input['is_credit_sale']) && $input['is_credit_sale'] == 1 ? true : false;
 
 	            $this->notificationUtil->autoSendNotification($business_id, 'new_sale', $transaction, $user);
-	            $admin = User::where('user_type', 'admin')->first();
 
+	            $admin = User::where('user_type', 'admin')->first();
 
 	            $admin->notify(new OrderCreatedNotification($transaction->contact->name,$transaction));
                 $cart_items = Cart::where('user_id', $transaction->contact_id)->get();

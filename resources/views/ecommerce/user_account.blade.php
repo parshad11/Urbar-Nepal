@@ -29,7 +29,7 @@
                                             <h4 style="color: #ffffff;">Full Name</h4>
                                         </div>
                                         <div class="col-sm-9 ">
-                                            {{$customer_info->name}}
+                                            {{$customer->name}}
                                         </div>
                                     </div>
                                     <hr>
@@ -38,7 +38,7 @@
                                             <h4 style="color: #ffffff;">Email</h4>
                                         </div>
                                         <div class="col-sm-9 ">
-                                            {{$customer_info->email}}
+                                            {{$customer->email}}
                                         </div>
                                     </div>
                                     <hr>
@@ -47,7 +47,7 @@
                                             <h4 style="color: #ffffff;">Phone</h4>
                                         </div>
                                         <div class="col-sm-9 ">
-                                            {{$customer_info->mobile}}
+                                            {{$customer->mobile}}
                                         </div>
                                     </div>
                                     <hr>
@@ -65,8 +65,7 @@
                                             <h4 style="color: #ffffff;">Address</h4>
                                         </div>
                                         <div class="col-sm-9 text-secondary">
-                                            {{$customer_info->address_line_1}}&nbsp;{{$customer_info->city}}
-                                            &nbsp;{{$customer_info->country}}
+                                            {{$customer->contact_address}}
                                         </div>
                                     </div>
 
@@ -75,6 +74,7 @@
                             <div class="tab-pane fade" id="Section2">
                                 @if(isset($orders))
                                     @forelse($orders as $order)
+                            
                                         @if(isset($order->sell_lines) && $order->sell_lines!=null)
                                             @foreach($order->sell_lines as $order_item)
                                                 <div class="row">
@@ -106,7 +106,11 @@
                                                         <h4 style="color: #ffffff;">Rs. {{ number_format($order->final_total,2) }}</h4>
                                                         <div>
                                                             <span><strong>Status :</strong></span>
-                                                            <span>{{ ($order->status =='draft') ? 'Pending' : 'Received'}}</span>
+                                                            <span>{{ ($order->status =='draft') ? 'Pending' : 'Accepted'}}</span>
+                                                        </div>
+                                                        <div>
+                                                            <span><strong>Delivery Status:</strong></span>
+                                                            <span>{{($order->delivery)?@ucwords($order->delivery->delivery_status):'Not Assigned'}}</span>
                                                         </div>
 
                                                     </div>
