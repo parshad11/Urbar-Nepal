@@ -25,9 +25,9 @@
                         <div class="title"> Catalogue</div>
 
                         <div class="download-options">
-                            <button>Catalogue 1&nbsp;<i class="fas fa-download"></i></button>
+                            <button>Catalogue 1&nbsp;<i class="fa fa-download" aria-hidden="true"></i></button>
 
-                            <button>Catalogue 2&nbsp;<i class="fas fa-download"></i></button>
+                            <button>Catalogue 2&nbsp;<i class="fa fa-download" aria-hidden="true"></i></button>
                         </div>
                     </div>
                     @if (isset($special_category))
@@ -56,7 +56,7 @@
                                     <li class="main"><a
                                                 href="{{route('product_category',$category->slug)}}">{{$category->name}} </a>
                                         @if($category->sub_categories!= null)
-                                            &nbsp;<i style="float: right; margin:auto" class="fas fa-chevron-right"></i>
+                                            &nbsp;<i class="fa fa-chevron-right" aria-hidden="true"style="float: right; margin:auto"></i>
                                             <ul class="sub">
                                                 @foreach ($category->sub_categories as $sub_category)
 
@@ -79,7 +79,7 @@
                     <!-- SEARCH BOX -->
                     <div class="search-box">
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search ...."
+                            <input type="text" class="form-control" name="query" placeholder="Search ...."
                                    aria-describedby="basic-addon2">
 
                             <span class="input-group-addon btn btn-success" id="basic-addon2">Search &nbsp;<i
@@ -97,7 +97,9 @@
                                         <div class="product">
                                             <div class="img">
                                                 <a href="{{route('product_single',$variation->sub_sku)}}">
-                                                    <img class="img img-responsive" src="@foreach($variation->media as $media){{ $media->display_url }}@endforeach" alt="">
+                                                    <img class="img img-responsive"
+                                                         src="@foreach($variation->media as $media){{ $media->display_url }}@endforeach"
+                                                         alt="">
                                                 </a>
                                             </div>
                                             <div class="description">
@@ -109,9 +111,11 @@
 
                                                     {{-- <p>{{$variation->media[0]->path}}</p> --}}
                                                     <div class="kalimati"><small>Kalimati Price
-                                                            :Rs. {{ number_format($variation->market_price,2) }}</small></div>
+                                                            :Rs. {{ number_format($variation->market_price,2) }}</small>
+                                                    </div>
 
-                                                    <div class="offer">Price : Rs.{{ number_format($variation->sell_price_inc_tax,2) }}
+                                                    <div class="offer">Price :
+                                                        Rs.{{ number_format($variation->sell_price_inc_tax,2) }}
                                                         /{{$variation->product->unit->short_name}}</div>
                                                 </div>
                                                 <button class="btn btn-success" id="add_to_carts"
@@ -145,20 +149,20 @@
     <script src="{{asset('cms/js/shop.js')}}"></script>
     @if (session()->has('success'))
         <script>
-            $(document).ready(function(){
-            Swal.fire({
-                position: 'top-end',
-                icon: 'success',
-                title: 'Order Added Successfully',
-                showConfirmButton: false,
-                timer: 5000
-            })
+            $(document).ready(function () {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Order Added Successfully',
+                    showConfirmButton: false,
+                    timer: 5000
+                })
             })
         </script>
     @endif
     @if (session()->has('error'))
         <script>
-            $(document).ready(function(){
+            $(document).ready(function () {
                 Swal.fire({
                     position: 'top-end',
                     icon: 'error',
@@ -169,4 +173,44 @@
             })
         </script>
     @endif
+    <script>
+        $(function () {
+            autocomplete('#searchTextLg', {}, [{
+                source: function (request, response) {
+                    $.ajax({
+                        url: '{{route('autocomplete.search')}}',
+                        type: 'GET',
+                        dataType: 'json',
+                        data: {
+                            query: $('#searchTextLg').val(),
+                        },
+                        success: function (data) {
+                            response($.map(data, function (obj) {
+
+                                if(obj.variation_name !== "DUMMY"){
+                                    return {
+                                        name: obj.name +' '+obj.variation_name,
+                                        slug: obj.sub_sku,
+                                    };
+                                }
+                                return {
+                                    name: obj.name,
+                                    slug: obj.sub_sku,
+                                };
+                            }));
+                        }
+                    });
+                },
+                displayKey: 'name',
+                template: {
+                    header: '<div class="aa-suggestions-category">Products</div>',
+                    suggestions: function (suggestion) {
+                        return  '<span></span>';
+                    }
+                },
+                empty: '<div class="aa-empty">No matching players</div>',
+
+            }]);
+        });
+    </script>
 @endsection

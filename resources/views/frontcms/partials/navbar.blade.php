@@ -8,7 +8,7 @@
                         @if(Request::segment(1) != 'shop')
                             <div class="col-md-10">
                                 @else
-                                    <div class="col-md-8">
+                                    <div class="col-md-7">
                                         @endif
                                         <nav class="navbar navbar-default">
 
@@ -86,7 +86,7 @@
                                             </div>
                                         </div>
                                     @else
-                                        <div class="col-md-4 shop-options">
+                                        <div class="col-md-5 shop-options">
                                             <nav class="navbar navbar-default">
                                                 <ul class="nav d-sm-flex flex-row navbar-nav">
                                                     {{--<ul class="nav  navbar-nav">--}}
