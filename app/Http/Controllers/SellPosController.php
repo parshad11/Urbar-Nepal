@@ -1109,9 +1109,10 @@ class SellPosController extends Controller
                 DB::beginTransaction();
             
                 $transaction = $this->transactionUtil->updateSellTransaction($id, $business_id, $input, $invoice_total, $user_id,$assign_delivery);
-          
+              
                 //Update Sell lines
                 $deleted_lines = $this->transactionUtil->createOrUpdateSellLines($transaction, $input['products'], $input['location_id'], true, $status_before);
+                $deleted_lines=[$deleted_lines];
 
                 //Update update lines
                 $is_credit_sale = isset($input['is_credit_sale']) && $input['is_credit_sale'] == 1 ? true : false;

@@ -49,11 +49,13 @@ class ShopController extends Controller
 							->get();
 		$user=Auth::guard('customerapi')->user();
 		$total_price = Cart::where('user_id', $user_id)->sum('total_price');
-
+		$data=collect($cart_items->toArray());
+		$price=[];
+		$price['total_price']=$total_price;
+		$total_price=collect([$price]);
 		return response()->json([
-			'cart_item'=>$cart_items,
-			'user'=>$user,
-			'total_price'=>$total_price,
+			'data'=>$data,
+			'price'=>$total_price
 		]);
 	}
 
