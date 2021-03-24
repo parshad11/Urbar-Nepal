@@ -41,7 +41,8 @@ Route::namespace('Front')->group(function () {
     Route::get('/shop/category/{slug}', 'ShopController@categoryProduct')->name('product_category');
     Route::get('/shop/category/{slug}/{sub_slug}', 'ShopController@subcategoryProduct')->name('product_subcategory');
     Route::get('/shop', 'ShopController@index')->name('shop');
-    
+    Route::get('/shop/auto-complete', 'ShopController@autoComplete')->name('autocomplete.search');
+
     Route::get('/shop/product/{slug}', 'ShopController@product')->name('product_single');
 
 

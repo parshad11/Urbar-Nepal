@@ -28,7 +28,7 @@ class CartController extends Controller
 							'p.id as product_id',
 							'v.name as variation_name',
 							'p.name as product_name',
-							DB::raw("CONCAT('$path','/',m.file_name) as product_image"),
+							DB::raw("CONCAT('$path','/',m.file_name) as product_image")
 						)
 						->get();
 					
