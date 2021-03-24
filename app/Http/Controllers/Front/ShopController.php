@@ -83,11 +83,11 @@ class ShopController extends Controller
     {
         $user_id = Auth::guard('customer')->user()->id;
         $cart_items = Cart::with('variation')->where('user_id', $user_id)->get();
-       
+
         $user = Auth::guard('customer')->user();
         $total_price = Cart::where('user_id', $user_id)->sum('total_price');
 //        dd($cart_items);
-        if(count($cart_items)<=0){
+        if (count($cart_items) <= 0) {
             request()->session()->flash('error', 'Your cart is empty. Please add product into cart');
             return redirect()->route('shop');
         }
@@ -137,6 +137,64 @@ class ShopController extends Controller
         $orders = Transaction::with(['sell_lines.variations','delivery'])->where('contact_id', $user_id)->where('is_ecommerce_order',1)->get();
         return view('ecommerce.user_account')->with(compact('customer', 'orders'));
 
+    }
+
+    public function autoComplete(Request $request)
+    {
+        $term = $request->get('query');
+        $location = BusinessLocation::where('location_id', 'BL0001')->first();
+        $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
+        $products = Product::leftJoin('variations', 'products.id', '=', 'variations.product_id')
+            ->whereIn('products.id', $variation_location_product_ids)
+            ->where(function ($query) use ($term) {
+                $query->where('products.name', 'like', '%' . $term . '%');
+                $query->orWhere('products.sku', 'like', '%' . $term . '%');
+            })
+            ->select(
+                'products.name as name',
+                'variations.name as variation_name',
+                'variations.sub_sku as sub_sku'
+            )
+            ->get();
+        //$products = Product::with(['variations'])->whereIn('id', $variation_location_product_ids)->where('name', 'like', '%' . $term . '%')->orWhere('sku', 'like', '%' . $term . '%')->get();
+        /*$products_array = array();
+        foreach ($products as $key => $product){
+            $products_array[$product->id]['name']=$product->name;
+            $products_array[$product->id]['type'] = $product->type;
+            $products_array[$product->id]['variations']=$product->variations;
+        }
+        $result = [];
+        $i = 1;
+        $no_of_records = $products->count();
+        if (!empty($products_array)) {
+            foreach ($products_array as $key => $value) {
+                if ($value['type'] != 'single') {
+                    $result[] = [
+                        'id' => $i,
+                        'text' => $value['name'],
+                        'variation_id' => 0,
+                        'product_id' => $key
+                    ];
+                }
+                $name = $value['name'];
+                foreach ($value['variations'] as $variation) {
+                    $text = $name;
+                    if ($value['type'] == 'variable') {
+                        $text = $text.' '.$variation['name'];
+                    }
+                    $i++;
+                    $result[] = [
+                        'id' => $i,
+                        'text' => $text,
+                        'product_id' => $key,
+                        'variation_id' => $variation['variation_id'],
+                        'slug' => $variation['sub_sku'],
+                    ];
+                }
+                $i++;
+            }
+        }*/
+        return response()->json($products);
     }
 
     /**
@@ -211,7 +269,7 @@ class ShopController extends Controller
             }
 
             $input['products'] = $products;
-         
+
             if (!empty($input['products'])) {
 
                 $transaction = $this->transactionUtil->createSellTransaction($business_id, $input, $invoice_total, 1, $assign_delivery);
@@ -315,6 +373,7 @@ class ShopController extends Controller
 
         return $output;
     }
+
 
     /**
      * Display the specified resource.

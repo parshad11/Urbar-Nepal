@@ -334,7 +334,7 @@
                         <div class="features-box values-box">
                             <div class="values-icon features-icon">
                                 {{-- <i class="glyphicon glyphicon-user"></i> --}}
-                                <img class="value_img" src="{{asset('cms/images/values/empowerment.jpg')}}" alt="">
+                                <img class="value_img" src="{{asset('cms/images/values/empowerment.png')}}" alt="">
                             </div>
                             <div class="value features-content">
                                 <h3 class="title">EMPOWERMENT</h3>

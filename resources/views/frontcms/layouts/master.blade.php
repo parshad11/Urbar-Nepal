@@ -196,6 +196,11 @@
 <script src="{{ asset('cms/js/jquery.filterizr.min.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
+
+<!-- Include AlgoliaSearch JS Client v3 and autocomplete.js library -->
+<script src="https://cdn.jsdelivr.net/npm/algoliasearch@3/dist/algoliasearchLite.min.js"></script>
+<script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.min.js"></script>
+
 <!-- Custom Js -->
 <script src="{{ asset('cms/js/main.js') }}"></script>
 
