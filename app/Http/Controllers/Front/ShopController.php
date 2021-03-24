@@ -221,8 +221,6 @@ class ShopController extends Controller
 
                 $is_credit_sale = isset($input['is_credit_sale']) && $input['is_credit_sale'] == 1 ? true : false;
 
-
-
 	            $this->notificationUtil->autoSendNotification($business_id, 'new_sale', $transaction, $user);
 	            $admin = User::where('user_type', 'admin')->first();
 

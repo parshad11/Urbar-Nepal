@@ -630,6 +630,7 @@ class ProductController extends Controller
         }
 
         try {
+           
             $business_id = $request->session()->get('user.business_id');
             $product_details = $request->only(['name', 'brand_id', 'unit_id', 'category_id', 'tax', 'barcode_type', 'sku', 'alert_quantity', 'tax_type', 'weight', 'product_custom_field1', 'product_custom_field2', 'product_custom_field3', 'product_custom_field4', 'product_description', 'sub_unit_ids']);
 

@@ -230,7 +230,7 @@ class TransactionUtil extends Util
                 $this->editSellLine($product, $location_id, $status_before, $multiplier);
 
                 //update or create modifiers for existing sell lines
-	            return $product['transaction_sell_lines_id'];
+	            
                 if ($this->isModuleEnabled('modifiers')) {
                     if (!empty($product['modifier'])) {
                         foreach ($product['modifier'] as $key => $value) {
@@ -330,11 +330,10 @@ class TransactionUtil extends Util
                 }
 
                 $lines_formatted[] = new TransactionSellLine($line);
-
+              
                 $sell_line_warranties[] = !empty($product['warranty_id']) ? $product['warranty_id'] : 0;
             }
         }
-
         if (!is_object($transaction)) {
             $transaction = Transaction::findOrFail($transaction);
         }
@@ -346,6 +345,7 @@ class TransactionUtil extends Util
                     ->whereNotIn('id', $edit_ids)
                     //->whereNull('parent_sell_line_id')
                     ->select('id')->get()->toArray();
+                    
             $combo_delete_lines = TransactionSellLine::whereIn('parent_sell_line_id', $deleted_lines)->where('children_type', 'combo')->select('id')->get()->toArray();
             $deleted_lines = array_merge($deleted_lines, $combo_delete_lines);
 
@@ -355,9 +355,7 @@ class TransactionUtil extends Util
         }
 
         $combo_lines = [];
-
         if (!empty($lines_formatted)) {
-
             $transaction->sell_lines()->saveMany($lines_formatted);
 
             //Add corresponding modifier sell lines if exists
@@ -393,7 +391,7 @@ class TransactionUtil extends Util
         // if (!empty($modifiers_formatted)) {
         //     $transaction->sell_lines()->saveMany($modifiers_formatted);
         // }
-
+        
         if ($return_deleted) {
             return $deleted_lines;
         }
