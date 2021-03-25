@@ -52,6 +52,6 @@ Route::namespace('Api')->middleware(['cors'])->group(function () {
 
 });
 Route::get('/products', 'Api\ProductController@products');
-Route::get('/categories', 'Api\CategoryController@categories');
+Route::get('/categories', 'Api\ProductController@categories');
 Route::get('product/{slug}', 'Api\ProductController@product');
 Route::get('variation/{slug}', 'Api\ProductController@variation');
