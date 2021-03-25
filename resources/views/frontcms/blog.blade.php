@@ -8,16 +8,6 @@
     @if(isset($about_info))
     <img class="jarallax-img" src="{{asset('uploads/img/home/about/'.$about_info->banner_image)}}" alt="">
     @endif
-    {{-- <div class="container">
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <div class="page-heading-col border-hover">
-                    <h2>Our blog</h2>
-                    <p><a href="{{ route('front_dashboard') }}">Home</a> / <a href="{{route('blog')}}">blog</a></p>
-                </div>
-            </div>
-        </div>
-    </div> --}}
 </section>
 
 <!-- Blog Start -->
@@ -40,7 +30,7 @@
                                     </ul>
                                     <h3 class="post-title"><a href="{{ route('blog_single', $blog->slug) }}">{{$blog->title}}</a></h3>
                                     <div class="post-description">
-                                        {!! substr($blog->description, 0, 100) !!}...
+                                        {!! substr($blog->description, 0, 100) !!}
                                     </div>
                                     <a class="btn btn-default theme-btn btn-hover" href="{{ route('blog_single', $blog->slug) }}">Read More</a>
                                 </div>
@@ -50,7 +40,6 @@
                         @endif
                     </div>
                     {!! $blogs->links('frontcms.pagination') !!}
-
                 </div>
                 <div class="col-md-4">
                     <div class="sidebar">
@@ -93,14 +82,6 @@
                                 @endif
                             </ul>
                         </div>
-                        {{-- @if(isset($vido_link))
-                        <div class="blog-video">
-                            <h3 class="sedebar-title">Video Preview</h3>
-                            <div class="embed-responsive embed-responsive-16by9">
-                                <iframe src="https://youtu.be/fD6SzYIRr4c" allowfullscreen=""></iframe>
-                            </div>
-                        </div>
-                        @endif --}}
                     </div>
                 </div>
             </div>

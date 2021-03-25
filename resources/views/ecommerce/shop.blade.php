@@ -53,10 +53,10 @@
                             <ul class="category-list">
 
                                 @foreach ($categories as $category)
-                                    <li class="main"><a
-                                                href="{{route('product_category',$category->slug)}}">{{$category->name}} </a>
+                                    <li class="main">
+                                        <span><a href="{{route('product_category',$category->slug)}}">{{$category->name}} </a>
+                                        &nbsp;<i class="fa fa-chevron-right" aria-hidden="true"style="float: right; margin:auto"></i></span>
                                         @if($category->sub_categories!= null)
-                                            &nbsp;<i class="fa fa-chevron-right" aria-hidden="true"style="float: right; margin:auto"></i>
                                             <ul class="sub">
                                                 @foreach ($category->sub_categories as $sub_category)
 
@@ -79,7 +79,7 @@
                     <!-- SEARCH BOX -->
                     <div class="search-box">
                         <div class="input-group">
-                            <input type="text" class="form-control" name="query" placeholder="Search ...."
+                            <input type="text" class="form-control" name="query" id="searchTextLg" placeholder="Search ...."
                                    aria-describedby="basic-addon2">
 
                             <span class="input-group-addon btn btn-success" id="basic-addon2">Search &nbsp;<i
@@ -175,7 +175,7 @@
     @endif
     <script>
         $(function () {
-            autocomplete('#searchTextLg', {}, [{
+            autocomplete('#searchTextLg', {}, {
                 source: function (request, response) {
                     $.ajax({
                         url: '{{route('autocomplete.search')}}',
@@ -202,15 +202,15 @@
                     });
                 },
                 displayKey: 'name',
-                template: {
-                    header: '<div class="aa-suggestions-category">Products</div>',
-                    suggestions: function (suggestion) {
-                        return  '<span></span>';
+                templates: {
+                    // header: '<div class="aa-suggestions-category">Products</div>',
+                    suggestion: function (suggestion) {
+                        return  '<a href="{{ url('/') }}/shop/product/' + suggestion.slug + '">' + suggestion.name+
+                        '</a>';
                     }
-                },
-                empty: '<div class="aa-empty">No matching players</div>',
+                }
 
-            }]);
+            });
         });
     </script>
 @endsection
