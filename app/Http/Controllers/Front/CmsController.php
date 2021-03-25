@@ -888,4 +888,8 @@ class CmsController extends Controller
             return redirect()->route('cms_career')->with('status', $output);
         }
     }
+
+    public function createFile(){
+        return view('frontcms.file.form');
+    }
 }
