@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Product;
 use App\Category;
 use App\Front\Cart;
+use App\Front\Document;
 use App\InvoiceLayout;
 use App\InvoiceScheme;
 use App\Notifications\OrderCreatedNotification;
@@ -56,16 +57,18 @@ class ShopController extends Controller
     {
         $location = BusinessLocation::where('location_id', 'BL0001')->first();
         $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
-        $products = Product::with(['product_variations.variations.product', 'unit'])->whereIn('id', $variation_location_product_ids)->get();
+        $products = Product::with(['product_variations.variations.product', 'unit'])->whereIn('id', $variation_location_product_ids)->paginate();
         $special_cat = Category::with('sub_categories')->where('name', 'like', '%special%')->where('parent_id', 0)->first();
         if ($special_cat == null) {
             $all_categories = Category::with('sub_categories')->where('parent_id', 0)->get();
         } else {
             $all_categories = Category::with('sub_categories')->where('parent_id', 0)->where('id', '!=', $special_cat->id)->get();
         }
+        $banner_image = Document::where('file_type','banner')->first();
         return view('ecommerce.shop')->with('products', $products)
             ->with('special_category', $special_cat)
-            ->with('categories', $all_categories);
+            ->with('categories', $all_categories)
+            ->with('banner', $banner_image);
     }
 
     public function product($slug)
@@ -74,7 +77,7 @@ class ShopController extends Controller
         $product_cat = $product->product->category_id;
         $location = BusinessLocation::where('location_id', 'BL0001')->first();
         $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
-        $products = Product::with(['product_variations.variations.product', 'unit'])->where('category_id', $product_cat)->whereIn('id', $variation_location_product_ids)->get();
+        $products = Product::with(['product_variations.variations.product', 'unit'])->where('category_id', $product_cat)->where('id', '!=',$product->id)->whereIn('id', $variation_location_product_ids)->take(5)->latest()->get();
         return view('ecommerce.product_single')->with('variation', $product)
             ->with('products', $products);
     }
@@ -86,7 +89,6 @@ class ShopController extends Controller
 
         $user = Auth::guard('customer')->user();
         $total_price = Cart::where('user_id', $user_id)->sum('total_price');
-//        dd($cart_items);
         if (count($cart_items) <= 0) {
             request()->session()->flash('error', 'Your cart is empty. Please add product into cart');
             return redirect()->route('shop');
@@ -99,7 +101,7 @@ class ShopController extends Controller
         $category = Category::where('slug', $slug)->first();
         $location = BusinessLocation::where('location_id', 'BL0001')->first();
         $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
-        $products = Product::with(['product_variations.variations.product', 'unit'])->where('category_id', $category->id)->whereIn('id', $variation_location_product_ids)->get();
+        $products = Product::with(['product_variations.variations.product', 'unit'])->where('category_id', $category->id)->whereIn('id', $variation_location_product_ids)->paginate();
         $special_cat = Category::with('sub_categories')->where('name', 'like', '%special%')->where('parent_id', 0)->first();
         if ($special_cat == null) {
             $all_categories = Category::with('sub_categories')->where('parent_id', 0)->get();
@@ -118,7 +120,7 @@ class ShopController extends Controller
         $category = Category::where('slug', $sub_cat_slug)->first();
         $location = BusinessLocation::where('location_id', 'BL0001')->first();
         $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
-        $products = Product::with(['product_variations.variations.product', 'unit'])->where('sub_category_id', $category->id)->whereIn('id', $variation_location_product_ids)->get();
+        $products = Product::with(['product_variations.variations.product', 'unit'])->where('sub_category_id', $category->id)->whereIn('id', $variation_location_product_ids)->paginate();
         $special_cat = Category::with('sub_categories')->where('name', 'like', '%special%')->where('parent_id', 0)->first();
         if ($special_cat == null) {
             $all_categories = Category::with('sub_categories')->where('parent_id', 0)->get();

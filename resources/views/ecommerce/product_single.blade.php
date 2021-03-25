@@ -66,7 +66,7 @@
                     <div class="product">
                         <div class="img">
                             <a href="{{route('product_single',$variation->sub_sku)}}">
-                                <img class="img img-responsive" src="@foreach($variation->media as $media){{ $media->display_url }}@endforeach" alt="">
+                                <img class="img img-responsive lazy_load_image" data-original="@foreach($variation->media as $media){{ $media->display_url }}@endforeach" alt="">
                             </a>
                         </div>
                         <div class="description">
@@ -74,7 +74,12 @@
                                         &nbsp;{{ $variation->name != "DUMMY" ? $variation->name : '' }}</a></b>
                             </div>
                             <div class="price">
-                                <div class="kalimati"><small>Kalimati Price :Rs. {{ number_format($variation->market_price,2) }}</small></div>
+                                @if($variation->market_price>0 || $variation->market_price!= null)
+                                <div class="kalimati">
+                                    <small>Market Price :Rs. {{ number_format($variation->market_price,2) }}</small>
+                                </div>
+                                @endif
+                                {{-- <div class="kalimati"><small>Kalimati Price :Rs. {{ number_format($variation->market_price,2) }}</small></div> --}}
 
                                 <div class="offer">Price : Rs.{{ number_format($variation->sell_price_inc_tax,2) }}</div>
                             </div>
