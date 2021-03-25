@@ -33,6 +33,7 @@ class CartController extends Controller
 						->get();
 					
 		$total_price = Cart::where('user_id', auth()->guard('customerapi')->user()->id)->sum('total_price');
+		$total_price=(string)$total_price;
 		return response()->json([
 			'cart_item'=>$cart_items,
 			'total_price'=>$total_price,

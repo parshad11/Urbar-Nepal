@@ -72,7 +72,7 @@ class ShopController extends Controller
     {
         $product = Variation::with('product')->where('sub_sku', $slug)->first();
         $product_cat = $product->product->category_id;
-        $location = BusinessLocation::where('name', 'freshktm')->first();
+        $location = BusinessLocation::where('location_id', 'BL0001')->first();
         $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
         $products = Product::with(['product_variations.variations.product', 'unit'])->where('category_id', $product_cat)->whereIn('id', $variation_location_product_ids)->get();
         return view('ecommerce.product_single')->with('variation', $product)
