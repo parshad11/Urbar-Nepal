@@ -62,6 +62,7 @@ class ProductController extends Controller
         } else {
             $all_categories = Category::with('sub_categories')->where('parent_id', 0)->where('id', '!=', $special_cat->id)->get();
         }
+		
 		return response()->json([
 			'categories' => $all_categories,
 			'special_category'=>$special_cat
