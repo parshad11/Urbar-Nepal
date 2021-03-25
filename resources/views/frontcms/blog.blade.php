@@ -39,6 +39,7 @@
                         @endforeach
                         @endif
                     </div>
+
                     {!! $blogs->links('frontcms.pagination') !!}
                 </div>
                 <div class="col-md-4">
