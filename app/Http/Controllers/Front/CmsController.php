@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Front;
 use App\Front\Blog;
 use App\Front\BlogCategory;
 use App\Front\Career;
+use App\Front\Document;
 use App\Front\Faq;
 use App\Front\FrontAbout;
 use App\Front\HomeSetting;
@@ -891,5 +892,31 @@ class CmsController extends Controller
 
     public function createFile(){
         return view('frontcms.file.form');
+    }
+
+    public function storeFile(Request $request){
+       $files= $request->file();
+        $file_name = null;
+        foreach ($files as $file) {
+        if ($file->getSize() <= config('constants.document_size_limit')) {
+            $new_file_name = time() . '_' . mt_rand() . '_' . $file->getClientOriginalName();
+            if ($file->storeAs('/shop', $new_file_name)) {
+                $file_name = $new_file_name;
+            }
+        }
+    }
+    $file_type=$request->file_type;
+   if($file_type=='banner'){
+    $banner=Document::where('file_type',$file_type)->first();
+   }
+    if(isset($banner)){
+        $banner->delete();
+    }
+    $document=new Document();
+    $document->file_type=$request->file_type;
+    $document->file_name=$file_name;
+    $document->save();
+    return view('frontcms.file.form');
+    
     }
 }
