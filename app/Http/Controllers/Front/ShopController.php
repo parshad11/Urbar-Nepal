@@ -109,7 +109,8 @@ class ShopController extends Controller
         //$all_categories = Category::with('sub_categories')->where('parent_id', 0)->where('id', '!=', $special_cat->id)->get();
         return view('ecommerce.shop')->with('products', $products)
             ->with('special_category', $special_cat)
-            ->with('categories', $all_categories);
+            ->with('categories', $all_categories)
+            ->with('category', $category);
     }
 
     public function subcategoryProduct($slug, $sub_cat_slug)
@@ -127,7 +128,8 @@ class ShopController extends Controller
         //$all_categories = Category::with('sub_categories')->where('parent_id', 0)->where('id', '!=', $special_cat->id)->get();
         return view('ecommerce.shop')->with('products', $products)
             ->with('special_category', $special_cat)
-            ->with('categories', $all_categories);
+            ->with('categories', $all_categories)
+            ->with('category', $category);
     }
 
     public function getCustomer()

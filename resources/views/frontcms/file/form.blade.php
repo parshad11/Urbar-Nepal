@@ -4,7 +4,7 @@
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
-    <h1>Team Member Add</h1>
+    <h1>File Form</h1>
 </section>
 
 <!-- Main content -->
@@ -30,7 +30,8 @@
 
             <div class="row" style="margin-bottom: 10px;">
                 <div class="col-md-6" style="padding:0 10px 0 0;">
-                    <label for="team_name" class="control-label">Choose File :</label>
+                    <label for="team_name" class="control-label">Choose File :</label><br>
+                    <small><label for="file_type" class="control-label">In case of image, dimension : 1600*450</label></small>
                     <input type="file" name="file" class="form-control" required>
                 </div>
             </div>

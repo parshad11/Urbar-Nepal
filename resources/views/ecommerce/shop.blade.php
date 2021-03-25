@@ -8,17 +8,22 @@
     <div class="shop">
 
         <!-- OVERLAY -->
-        {{-- <div class="banner">
-            <img class="img img-responsive" src="" alt="">
-        </div> --}}
+        @if(Request::segment(2)!='category')
     <div class="banner">
         <div class="img img-responsive"><img src="https://merogroceries.com/images/media/2020/10/YXFgk16107.png" alt=""></div>
-        <!-- <div class="overlay"></div> -->
-        <!-- <a href="#content" class="btn btn-success">Shop Now</a> -->
     </div>
+        @endif
 
     <!-- CONTENT -->
         <div class="content container" id="content">
+            @if(Request::segment(2)=='category')
+
+            <ol class="breadcrumb">
+                <li><a href="http://127.0.0.1:8000">Home</a></li>
+                <li><a href="http://127.0.0.1:8000/shop">Shop</a></li>
+                <li class="active">{{$category->name}}</li>
+            </ol>
+            @endif
             <div class="row">
                 <div class=" col-md-3 left">
                     <div class="download">
@@ -88,7 +93,7 @@
                     </div>
 
                     <!-- PRODUCTS -->
-                    <div class="row">
+                    <div class="row" style="display:flex;flex-wrap: wrap;">
 
                         @forelse($products as $product)
                             @foreach ($product->product_variations as $product_variation)
@@ -110,9 +115,11 @@
                                                 <div class="price">
 
                                                     {{-- <p>{{$variation->media[0]->path}}</p> --}}
-                                                    <div class="kalimati"><small>Kalimati Price
+                                                    @if($variation->market_price>0)
+                                                    <div class="kalimati"><small>Market Price
                                                             :Rs. {{ number_format($variation->market_price,2) }}</small>
                                                     </div>
+                                                    @endif
 
                                                     <div class="offer">Price :
                                                         Rs.{{ number_format($variation->sell_price_inc_tax,2) }}

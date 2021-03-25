@@ -890,33 +890,69 @@ class CmsController extends Controller
         }
     }
 
-    public function createFile(){
+    public function viewFile(){
+        $files = Document::paginate(5);
+        return view('frontcms.file.index')->with('files', $files);
+    }
+    public function createFile()
+    {
         return view('frontcms.file.form');
     }
 
-    public function storeFile(Request $request){
-       $files= $request->file();
+    public function storeFile(Request $request)
+    {
+        $files = $request->file();
         $file_name = null;
         foreach ($files as $file) {
-        if ($file->getSize() <= config('constants.document_size_limit')) {
-            $new_file_name = time() . '_' . mt_rand() . '_' . $file->getClientOriginalName();
-            if ($file->storeAs('/shop', $new_file_name)) {
-                $file_name = $new_file_name;
+            if ($file->getSize() <= config('constants.document_size_limit')) {
+                $new_file_name = time() . '_' . mt_rand() . '_' . $file->getClientOriginalName();
+                if ($file->storeAs('/shop', $new_file_name)) {
+                    $file_name = $new_file_name;
+                }
             }
         }
+        $file_type = $request->file_type;
+        if ($file_type == 'banner') {
+            $banner = Document::where('file_type', $file_type)->first();
+        }
+        if (isset($banner)) {
+            $banner->delete();
+        }
+        $document = new Document();
+        $document->file_type = $request->file_type;
+        $document->file_name = $file_name;
+
+        $status = $document->save();;
+        if ($status) {
+            $output = [
+                'success' => 1,
+                'msg' => 'File added Successfully'
+            ];
+            return redirect()->route('ecom_file')->with('status', $output);
+        }
+
     }
-    $file_type=$request->file_type;
-   if($file_type=='banner'){
-    $banner=Document::where('file_type',$file_type)->first();
-   }
-    if(isset($banner)){
-        $banner->delete();
+
+    public function editFile($id){
+        return 'Sorry The Work Is Still On Progress';
     }
-    $document=new Document();
-    $document->file_type=$request->file_type;
-    $document->file_name=$file_name;
-    $document->save();
-    return view('frontcms.file.form');
-    
+    public function deleteFile($id){
+        $file = Document::findOrFail($id);
+        if (!$file) {
+            $output = [
+                'error' => 1,
+                'msg' => 'Document does not Found'
+            ];
+            return redirect()->route('ecom_file')->with('status', $output);
+        }
+        $file_name = $file->file_name;
+        $status = $file->delete();
+        if ($status) {
+            $output = [
+                'success' => 1,
+                'msg' => 'File deleted Successfuly'
+            ];
+            return redirect()->route('ecom_file')->with('status', $output);
+        }
     }
 }
