@@ -715,6 +715,11 @@ class AdminSidebarMenu
                             'Pages Setting',
                             ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'frontcms' && request()->segment(2) == 'pages']
                         );
+                        $sub->url(
+                            route('ecom_file_form'),
+                            'File Setting',
+                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'frontcms' && request()->segment(2) == 'ecom']
+                        );
                     },
                     ['icon' => 'fa fas fa-house-damage', 'id' => 'tour_step6']
                 )->order(90);

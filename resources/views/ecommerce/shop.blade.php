@@ -8,14 +8,14 @@
     <div class="shop">
 
         <!-- OVERLAY -->
-        <div class="banner">
+        {{-- <div class="banner">
             <img class="img img-responsive" src="" alt="">
-        </div>
-    {{--<div class="shop-banner">
-        <div class="image"><img src="https://merogroceries.com/images/media/2020/10/YXFgk16107.png" alt=""></div>
+        </div> --}}
+    <div class="banner">
+        <div class="img img-responsive"><img src="https://merogroceries.com/images/media/2020/10/YXFgk16107.png" alt=""></div>
         <!-- <div class="overlay"></div> -->
         <!-- <a href="#content" class="btn btn-success">Shop Now</a> -->
-    </div>--}}
+    </div>
 
     <!-- CONTENT -->
         <div class="content container" id="content">
@@ -54,8 +54,8 @@
 
                                 @foreach ($categories as $category)
                                     <li class="main">
-                                        <span><a href="{{route('product_category',$category->slug)}}">{{$category->name}} </a>
-                                        &nbsp;<i class="fa fa-chevron-right" aria-hidden="true"style="float: right; margin:auto"></i></span>
+                                        <span style="display: contents;"><a href="{{route('product_category',$category->slug)}}">{{$category->name}} </a>
+                                        &nbsp;<i class="fa fa-chevron-right" style="margin:auto 0 auto auto;" aria-hidden="true"style="float: right; margin:auto"></i></span>
                                         @if($category->sub_categories!= null)
                                             <ul class="sub">
                                                 @foreach ($category->sub_categories as $sub_category)

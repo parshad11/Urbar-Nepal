@@ -467,5 +467,13 @@ Route::namespace('Front')->middleware(['setData', 'auth', 'SetSessionData', 'lan
     Route::get('/frontcms/career/{id}/edit', 'CmsController@editCareer')->name('cms_career_edit');
     Route::put('/frontcms/career/{id}', 'CmsController@updateCareer')->name('cms_career_update');
     Route::delete('/frontcms/career/{id}/destroy', 'CmsController@deleteCareer')->name('cms_career_delete');
+
+    //Ecommerce files
+    Route::get('/frontcms/ecom/file', 'CmsController@viewFile')->name('ecom_file');
+    Route::get('/frontcms/ecom/file/create', 'CmsController@createFile')->name('ecom_file_form');
+    Route::post('/frontcms/ecom/file', 'CmsController@storeFile')->name('ecom_file_store');
+    Route::get('/frontcms/ecom/file/{id}/edit', 'CmsController@editFile')->name('ecom_file_edit');
+    Route::put('/frontcms/ecom/file/{id}', 'CmsController@updateFile')->name('ecom_file_update');
+    Route::delete('/frontcms/ecom/file/{id}/destroy', 'CmsController@deleteFile')->name('ecom_file_delete');
 });
 

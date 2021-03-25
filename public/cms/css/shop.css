@@ -465,6 +465,10 @@
         /* display: none; */
         display: block;
     }
+
+    .shop .content .left .category ul li>span{
+        display: flex!important;
+    }
     .shop .content .left .category ul li ul {
         position: revert;
       }
