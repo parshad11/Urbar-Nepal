@@ -50,7 +50,7 @@
     </div>
 
     <div class="row">
-        <div class="col-sm-4">
+        <!-- <div class="col-sm-4">
             <div class="form-group">
                 <div class="checkbox">
                   <label>
@@ -59,7 +59,7 @@
                   </label>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <div class="col-sm-4">
             <div class="form-group">
