@@ -9,7 +9,7 @@
 
 <!-- Main content -->
 <section class="content">
-<form action="{{ route('cms_team_store')}}" class="form" method="POST" enctype="multipart/form-data">
+<form action="{{ route('ecom_file_store')}}" class="form" method="POST" enctype="multipart/form-data">
     @csrf
     @component('components.widget', ['class' => 'box-primary'])
     <div class="row form-group">

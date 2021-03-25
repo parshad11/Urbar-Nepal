@@ -55,6 +55,20 @@ class ProductController extends Controller
 		]);
 	}
 
+	public function categories(){
+		$special_cat = Category::with('sub_categories')->where('name', 'like', '%special%')->where('parent_id', 0)->first();
+        if ($special_cat == null) {
+            $all_categories = Category::with('sub_categories')->where('parent_id', 0)->get();
+        } else {
+            $all_categories = Category::with('sub_categories')->where('parent_id', 0)->where('id', '!=', $special_cat->id)->get();
+        }
+		
+		return response()->json([
+			'categories' => $all_categories,
+			'special_category'=>$special_cat
+		]);
+	}
+
 	public function product($slug)
 	{
 		$path=asset('/uploads/media/');
