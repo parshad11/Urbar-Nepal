@@ -21,12 +21,34 @@ class ProductController extends Controller
 
 	public function products()
 	{
-
-//		$location = BusinessLocation::where('name', 'freshktm')->first();
-//		$variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
-//		$products = Product::with('product_variations.variations.product')->whereIn('id', $variation_location_product_ids)->get();
-		$products = Product::with('product_variations.variations.product')->get();
-//		dd($products);
+		$path=asset('/uploads/media/');
+		$location = BusinessLocation::where('location_id', 'BL0001')->first();
+        $variation_location_variation_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('variation_id')->toArray();
+		$products = Product::leftJoin('variations as v','products.id','=','v.product_id')
+					->leftJoin('categories as c','products.category_id','=','c.id')
+					->leftJoin('categories as sc','products.sub_category_id','=','sc.id')
+					->leftJoin('media as m','m.model_id','=','v.id')
+					->whereIn('v.id', $variation_location_variation_ids)
+					->select(
+						'products.id',
+						'products.name',
+						'products.type',
+						'products.product_description',
+						'v.id as variation_id',
+						'v.name as variation_name',
+						'v.sub_sku',
+						'v.market_price',
+						'v.default_sell_price as unit_price',
+						'v.sell_price_inc_tax as unit_price_with_tax',
+						'v.id as variation_id',
+						'c.id as category_id',
+						'c.name as category_name',
+						'sc.id as sub_category_id',
+						'sc.name as sub_category_name',
+						'sc.parent_id',
+						DB::raw("CONCAT('$path','/',m.file_name) as product_image")
+					)
+					->get();
 
 		return response()->json([
 			'product' => $products,
@@ -35,7 +57,24 @@ class ProductController extends Controller
 
 	public function product($slug)
 	{
-		$product = Variation::with('product')->where('sub_sku', $slug)->first();
+		$path=asset('/uploads/media/');
+		$product = Product::leftJoin('variations as v','products.id','=','v.product_id')
+					->leftJoin('media as m','m.model_id','=','v.id')
+					->where('v.sub_sku', $slug)
+					->select(
+						'products.id',
+						'products.name',
+						'products.type',
+						'products.product_description',
+						'v.id as variation_id',
+						'v.name as variation_name',
+						'v.sub_sku',
+						'v.market_price',
+						'v.default_sell_price as unit_price',
+						'v.sell_price_inc_tax as unit_price_with_tax',
+						DB::raw("CONCAT('$path','/',m.file_name) as product_image")
+					)
+					->get();
 
 		if (!$product) {
 			return response()->json(["message" => 'Product Not Found!']);

@@ -13,6 +13,7 @@ use App\Utils\NotificationUtil;
 use App\Http\Controllers\Controller;
 use App\Notifications\OrderCreatedNotification;
 use App\User;
+use App\Variation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -64,7 +65,7 @@ class ShopController extends Controller
 	{
 			try {
 			$input = $request->except('_token');
-
+				
 			$location = BusinessLocation::where('location_id', 'BL0001')->first();
 			$input['status'] = 'draft';
 			$input['location_id']=$location->id;
@@ -93,34 +94,32 @@ class ShopController extends Controller
 			$product=[];
 			$products=[];
 			foreach($cart_items as $item){
-				$product['product_type']=$item['variation']['product']['type'];
-				$product['unit_price']=$item['variation']['default_sell_price'];
+				$variation=Variation::with('product')->where('id',$item['product_id'])->first();
+				$product['product_type']=$variation->product->type;
+				$product['unit_price']=$variation->default_sell_price;
 				$product['line_discount_price']='fixed';
 				$product['line_discount_amount']=0;
 				$product['item_tax']=0;
 				$product['tax_id']=null;
 				$product['sell_line_note']=null;
 				$product['lot_no_line_id']=null;
-				$product['product_id']=$item['variation']['product']['id'];
-				$product['variation_id']=$item['variation']['id'];
-				$product['enable_stock']=$item['variation']['product']['enable_stock'];
+				$product['product_id']=$variation->product->id;
+				$product['variation_id']=$variation->id;
+				$product['enable_stock']=$variation->product->enable_stock;
 				$product['quantity']=$item['quantity'];
-				$product['product_unit_id']=$item['variation']['product']['unit_id'];
-				$product['sub_unit_id']=$item['variation']['product']['unit_id'];
+				$product['product_unit_id']=$variation->product->unit_id;
+				$product['sub_unit_id']=$variation->product->unit_id;
 				$product['base_unit_multiplier']=1;
-				$product['unit_price_inc_tax']=$item['variation']['sell_price_inc_tax'];
+				$product['unit_price_inc_tax']=$variation->sell_price_inc_tax;
 				array_push($products,$product);
 			}
-
 			$input['products']=$products;
-
 			if (!empty($input['products'])) {
-
 				$transaction = $this->transactionUtil->createSellTransaction($business_id, $input, $invoice_total,1,$assign_delivery,$uf_data = true);
-				$this->transactionUtil->createOrUpdateSellLines($transaction, $input['products'], $input['location_id']);
 				
+				$this->transactionUtil->createOrUpdateSellLines($transaction, $input['products'], $input['location_id']);
 				$is_credit_sale = isset($input['is_credit_sale']) && $input['is_credit_sale'] == 1 ? true : false;
-				$this->notificationUtil->autoSendNotification($business_id, 'new_sale', $transaction, $user);
+				//$this->notificationUtil->autoSendNotification($business_id, 'new_sale', $transaction, $user);
 
 				$admin=User::where('user_type','admin')->first();
 
