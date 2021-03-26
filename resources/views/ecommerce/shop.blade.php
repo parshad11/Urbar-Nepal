@@ -120,7 +120,7 @@
                                                 </div>
                                                 <div class="price">
 
-                                                    @if($variation->market_price>0 || $variation->market_price!= null)
+                                                    @if($variation->market_price>0)
                                                     <div class="kalimati"><small>Market Price
                                                             :Rs. {{ number_format($variation->market_price,2) }}</small>
                                                     </div>
