@@ -12,7 +12,7 @@
             <img class="img img-responsive" src="" alt="">
         </div> --}}
     <div class="banner">
-        <div class="img img-responsive"><img src="https://merogroceries.com/images/media/2020/10/YXFgk16107.png" alt=""></div>
+        <div class="img img-responsive"><img src="#" alt=""></div>
         <!-- <div class="overlay"></div> -->
         <!-- <a href="#content" class="btn btn-success">Shop Now</a> -->
     </div>
@@ -25,9 +25,9 @@
                         <div class="title"> Catalogue</div>
 
                         <div class="download-options">
-                            <button>Catalogue 1&nbsp;<i class="fa fa-download" aria-hidden="true"></i></button>
-
-                            <button>Catalogue 2&nbsp;<i class="fa fa-download" aria-hidden="true"></i></button>
+                        @foreach ($catalogues as $key => $catalogue )
+                        <a href="{{route('downloadfile',$catalogue->id)}}"><button>Catalogue {{$key+1}}&nbsp;<i class="fa fa-download" aria-hidden="true"></i></button></a> 
+                        @endforeach
                         </div>
                     </div>
                     @if (isset($special_category))

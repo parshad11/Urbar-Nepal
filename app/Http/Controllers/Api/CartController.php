@@ -42,7 +42,6 @@ class CartController extends Controller
 
 	public function addToCart(Request $request)
 	{
-
 		$user_id = Auth::guard('customerapi')->user()->id;
 		$cart_items = Cart::where('user_id', $user_id)->get();
 		$variation_product = Variation::with('product')->find($request->product_id);

@@ -51,7 +51,8 @@
     },
     "autoload": {
         "files": [
-            "app/Http/helpers.php"
+            "app/Http/helpers.php",
+            "app/Helpers/file_separator.php"
         ],
         "classmap": [
             "database"

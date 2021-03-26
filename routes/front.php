@@ -44,6 +44,7 @@ Route::namespace('Front')->group(function () {
     Route::get('/shop/auto-complete', 'ShopController@autoComplete')->name('autocomplete.search');
 
     Route::get('/shop/product/{slug}', 'ShopController@product')->name('product_single');
+    Route::get('/download/file/{fileId}', 'ShopController@downloadFile')->name('downloadfile');
 
 
     Route::get('/{slug}', 'FrontendController@getPages')->name('pages');

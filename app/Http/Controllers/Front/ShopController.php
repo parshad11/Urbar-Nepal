@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Product;
 use App\Category;
 use App\Front\Cart;
+use App\Front\Document;
 use App\InvoiceLayout;
 use App\InvoiceScheme;
 use App\Notifications\OrderCreatedNotification;
@@ -57,15 +58,15 @@ class ShopController extends Controller
         $location = BusinessLocation::where('location_id', 'BL0001')->first();
         $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
         $products = Product::with(['product_variations.variations.product', 'unit'])->whereIn('id', $variation_location_product_ids)->get();
-        $special_cat = Category::with('sub_categories')->where('name', 'like', '%special%')->where('parent_id', 0)->first();
-        if ($special_cat == null) {
-            $all_categories = Category::with('sub_categories')->where('parent_id', 0)->get();
+        $special_category = Category::with('sub_categories')->where('name', 'like', '%special%')->where('parent_id', 0)->first();
+        if ($special_category == null) {
+            $categories = Category::with('sub_categories')->where('parent_id', 0)->get();
         } else {
-            $all_categories = Category::with('sub_categories')->where('parent_id', 0)->where('id', '!=', $special_cat->id)->get();
+            $categories = Category::with('sub_categories')->where('parent_id', 0)->where('id', '!=', $special_category->id)->get();
         }
-        return view('ecommerce.shop')->with('products', $products)
-            ->with('special_category', $special_cat)
-            ->with('categories', $all_categories);
+        $catalogues=Document::where('file_type','catalogue')->limit('2')->latest()->get();
+
+        return view('ecommerce.shop')->with(compact('products', 'special_category','categories','catalogues'));
     }
 
     public function product($slug)
@@ -77,6 +78,13 @@ class ShopController extends Controller
         $products = Product::with(['product_variations.variations.product', 'unit'])->where('category_id', $product_cat)->whereIn('id', $variation_location_product_ids)->get();
         return view('ecommerce.product_single')->with('variation', $product)
             ->with('products', $products);
+    }
+
+    public function downloadFile($fileId){
+        $file = Document::where('id',$fileId)->first();
+        $myfile = public_path('uploads/shop').'/'.$file->file_name;
+        $myfile=path_fixer($myfile);
+        return response()->download($myfile);
     }
 
     public function checkout()
