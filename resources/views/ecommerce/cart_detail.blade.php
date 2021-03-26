@@ -9,7 +9,7 @@
             @endphp
             <div class="row productInCart">
                 <div class="col-xs-2">
-                    <img class="img img-responsive" src="@foreach($item->variation->media as $media){{ $media->display_url }}@endforeach" alt="">
+                    <img class="img img-responsive lazy_load_image" data-original="@foreach($item->variation->media as $media){{ $media->display_url }}@endforeach" alt="">
                     {{--<img class="img-responsive" src="@if($item->variation->name != "DUMMY")
                     @foreach($item->variation->media as $media)
                      {!! $media->thumbnail([300, 300]) !!}
