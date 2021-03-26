@@ -8,17 +8,24 @@
     <div class="shop">
 
         <!-- OVERLAY -->
-        {{-- <div class="banner">
-            <img class="img img-responsive" src="" alt="">
-        </div> --}}
-    <div class="banner">
-        <div class="img img-responsive"><img src="#" alt=""></div>
-        <!-- <div class="overlay"></div> -->
-        <!-- <a href="#content" class="btn btn-success">Shop Now</a> -->
-    </div>
+        @if(Request::segment(2)!='category')
+        @isset($banner)
+        <div class="banner">
+            <div class="img img-responsive"><img data-original="{{ asset('uploads/shop').'/'.$banner->file_name }}" class="lazy_load_image" alt="Freshktm shop banner image"></div>
+        </div>
+            
+        @endisset
+        @endif
 
     <!-- CONTENT -->
         <div class="content container" id="content">
+            @if(Request::segment(2)=='category')
+            <ol class="breadcrumb">
+                <li><a href="http://127.0.0.1:8000">Home</a></li>
+                <li><a href="http://127.0.0.1:8000/shop">Shop</a></li>
+                <li class="active">{{$category->name}}</li>
+            </ol>
+            @endif
             <div class="row">
                 <div class=" col-md-3 left">
                     <div class="download">
@@ -51,7 +58,11 @@
                             <div class="title"> Categories</div>
 
                             <ul class="category-list">
+                                <li class="main">
+                                    <span style="display: contents;"><a href="{{route('shop')}}">All Category </a>
+                                        &nbsp;<i class="fa fa-chevron-right" style="margin:auto 0 auto auto;" aria-hidden="true"style="float: right; margin:auto"></i></span>
 
+                                </li>
                                 @foreach ($categories as $category)
                                     <li class="main">
                                         <span style="display: contents;"><a href="{{route('product_category',$category->slug)}}">{{$category->name}} </a>
@@ -88,7 +99,7 @@
                     </div>
 
                     <!-- PRODUCTS -->
-                    <div class="row">
+                    <div class="row" style="display:flex;flex-wrap: wrap;">
 
                         @forelse($products as $product)
                             @foreach ($product->product_variations as $product_variation)
@@ -97,8 +108,8 @@
                                         <div class="product">
                                             <div class="img">
                                                 <a href="{{route('product_single',$variation->sub_sku)}}">
-                                                    <img class="img img-responsive"
-                                                         src="@foreach($variation->media as $media){{ $media->display_url }}@endforeach"
+                                                    <img class="img img-responsive lazy_load_image"
+                                                         data-original="@foreach($variation->media as $media){{ $media->display_url }}@endforeach"
                                                          alt="">
                                                 </a>
                                             </div>
@@ -109,10 +120,11 @@
                                                 </div>
                                                 <div class="price">
 
-                                                    {{-- <p>{{$variation->media[0]->path}}</p> --}}
-                                                    <div class="kalimati"><small>Kalimati Price
+                                                    @if($variation->market_price>0 || $variation->market_price!= null)
+                                                    <div class="kalimati"><small>Market Price
                                                             :Rs. {{ number_format($variation->market_price,2) }}</small>
                                                     </div>
+                                                    @endif
 
                                                     <div class="offer">Price :
                                                         Rs.{{ number_format($variation->sell_price_inc_tax,2) }}
@@ -137,7 +149,7 @@
                             </div>
                         @endforelse
                     </div>
-                    {{-- {{$product->links()}} --}}
+                    {!! $products->links('frontcms.pagination') !!}
                 </div>
             </div>
 
