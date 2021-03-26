@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\BusinessLocation;
 use App\Front\Cart;
+use App\Front\Document;
 use App\InvoiceScheme;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -60,6 +61,24 @@ class ShopController extends Controller
 			'price'=>$total_price
 		]);
 	}
+
+	public function documents(){
+		$banner = Document::where('file_type','banner')->first();
+		$catalogues=Document::where('file_type','catalogue')->limit('2')->latest()->get();
+						
+		return response()->json([
+			'banner' => $banner,
+			'catalogues' => $catalogues,
+		]);
+	}
+
+	public function downloadFile($fileId){
+        $file = Document::where('id',$fileId)->first();
+        $myfile = public_path('uploads/shop').'/'.$file->file_name;
+        $myfile=path_fixer($myfile);
+        return response()->download($myfile);
+    }
+
 
 	public function store(Request $request)
 	{
