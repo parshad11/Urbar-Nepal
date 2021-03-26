@@ -327,9 +327,7 @@
 
 
               var id = {{ $delivery->delivery_person->id }};
-              $.post('{{ route('delivery.track',$delivery->delivery_person->id) }}', {
-                  _token: '{{ @csrf_token() }}',
-                  id: id,
+              $.get('{{ route('delivery.location',$delivery->delivery_person->id) }}', {
               }, function (data) {
                   $('#delivery_location').removeClass('hidden');
                   mapboxgl.accessToken = 'pk.eyJ1IjoicHJhbW9kbGFtc2FsIiwiYSI6ImNqenp2d25xZjIyZnozbG1saXJvdzY4encifQ.JnhenWIopEkt6RAp5ukfCA';
