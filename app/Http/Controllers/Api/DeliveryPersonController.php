@@ -14,44 +14,38 @@ use Auth;
 class DeliveryPersonController extends Controller
 {
 
-	public function GetAllDeliveryPeople(){
-        $delivery_person=User::where('id',Auth::user()->id)->get();
-        return response()->json([
-            'data'=>$delivery_person
-        ]);
-    }
+	public function GetAllDeliveryPeople()
+	{
+		$delivery_person = User::where('id', Auth::user()->id)->get();
+		return response()->json([
+			'data' => $delivery_person
+		]);
+	}
 
-    public function getLocation(){
+	public function getLocation($id)
+	{
+		$delivery_person=DeliveryPerson::find($id);
+		$latitude = $delivery_person->latitude;
+		$longitude = $delivery_person->longitude;
+		$location = [
+			'latitude' => $latitude,
+			'longitude' => $longitude
+		];
+		return response()->json([
+			'data' => $location
+		]);
+	}
 
-	    $latitude=27.68519336;
-	    $longitude=85.34866242;
-	    $location=[
-		    'latitude'=>$latitude,
-		    'longitude'=>$longitude
-	    ];
-	    return response()->json([
-		    'data'=>$location
-	    ]);
-    }
-
-    public function getDeliveryPersonLocation(Request $request,$id){
-
-//    	$client=new Client([
-//		    'base_uri' => 'http://freshktm.loc/',
-//		    ]);
-//    	$res=$client->get('api/delivery/location',[
-//		    'verify' => true,
-//    		'form_params'=>[
-//    			'id'=>$id
-//		    ]
-//	    ]);
-
-//	    $res=Http::get('http://freshktm.loc/api/delivery/location');
-//		dd($res);
-//    	$result=$res->getBody();
-//    	dd($result);
-	    $ip = request()->ip();
-	    $data = \Location::get($ip);
-	    return $data;
-    }
+	public function updateLocation(Request $request){
+		$user_id = Auth::user()->id;
+		$delivery_person=DeliveryPerson::where('user_id',$user_id)->first();
+		DeliveryPerson::where('user_id',$user_id)->update([
+			'latitude'=>$request->latitude,
+			'longitude'=>$request->longitude
+		]);
+		$delivery_person=DeliveryPerson::where('user_id',$user_id)->first();
+		return response()->json([
+			'data' => $delivery_person
+		]);
+	}
 }
