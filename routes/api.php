@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 Route::namespace('Api')->middleware(['cors'])->group(function () {
 	route::post('/login', 'LoginController@login')->name('delivery.login');
 	route::post('ecommerce/login', 'EcommerceLoginController@login');
-	// route::post('/login', 'LoginController@ecommerceLogin')->name('ecommerce.login');
+
 
 
 
@@ -33,6 +33,7 @@ Route::namespace('Api')->middleware(['cors'])->group(function () {
 		route::get('/delivery-people', 'DeliveryPersonController@GetAllDeliveryPeople');
 		route::get('/task', 'TaskController@index');
 		route::put('/task/{id}', 'TaskController@update');
+		route::post('update/delivery/location','DeliveryPersonController@updateLocation');
 	});
 	/*Ecommerce*/
 	Route::middleware(['auth:customerapi'])->group(function () {
@@ -43,14 +44,17 @@ Route::namespace('Api')->middleware(['cors'])->group(function () {
 		Route::get('/shop/checkout', 'ShopController@checkout');
 		Route::post('/shop/checkout', 'ShopController@store');
 	});
-	route::get('/delivery/location', 'DeliveryPersonController@getLocation')->name('delivery.location');
-	route::post('/delivery_person/track/{id}', 'DeliveryPersonController@getDeliveryPersonLocation')
-		->name('delivery.track');
+		route::get('/delivery/location/{id}', 'DeliveryPersonController@getLocation')->name('delivery.location');
+
 
 
 
 
 });
+
+//Non-Authenticated Routes
+Route::get('/documents', 'Api\ShopController@documents');
+Route::get('/download/file/{fileId}', 'ShopController@downloadFile')->name('downloadfile');
 Route::get('/products', 'Api\ProductController@products');
 Route::get('/categories', 'Api\ProductController@categories');
 Route::get('product/{slug}', 'Api\ProductController@product');

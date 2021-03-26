@@ -49,7 +49,7 @@ class ProductController extends Controller
 						DB::raw("CONCAT('$path','/',m.file_name) as product_image")
 					)
 					->get();
-
+						
 		return response()->json([
 			'product' => $products,
 		]);
