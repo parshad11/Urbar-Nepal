@@ -9,34 +9,44 @@
 
         <!-- OVERLAY -->
         @if(Request::segment(2)!='category')
-        @isset($banner)
-        <div class="banner">
-            <div class="img img-responsive"><img data-original="{{ asset('uploads/shop').'/'.$banner->file_name }}" class="lazy_load_image" alt="Freshktm shop banner image"></div>
-        </div>
-            
+            @isset($banner)
+                <div class="banner">
+                    <div class="img img-responsive"><img
+                                data-original="{{ asset('uploads/shop').'/'.$banner->file_name }}"
+                                class="lazy_load_image" alt="Freshktm shop banner image"></div>
+                </div>
+
         @endisset
-        @endif
+    @endif
 
     <!-- CONTENT -->
         <div class="content container" id="content">
             @if(Request::segment(2)=='category')
-            <ol class="breadcrumb">
-                <li><a href="http://127.0.0.1:8000">Home</a></li>
-                <li><a href="http://127.0.0.1:8000/shop">Shop</a></li>
-                <li class="active">{{$category->name}}</li>
-            </ol>
+                <ol class="breadcrumb">
+                    <li><a href="http://127.0.0.1:8000">Home</a></li>
+                    <li><a href="http://127.0.0.1:8000/shop">Shop</a></li>
+                    <li class="active">{{$category->name}}</li>
+                </ol>
             @endif
+
             <div class="row">
                 <div class=" col-md-3 left">
-                    <div class="download">
-                        <div class="title"> Catalogue</div>
 
-                        <div class="download-options">
-                        @foreach ($catalogues as $key => $catalogue )
-                        <a href="{{route('downloadfile',$catalogue->id)}}"><button>Catalogue {{$key+1}}&nbsp;<i class="fa fa-download" aria-hidden="true"></i></button></a> 
-                        @endforeach
+                    @isset($catalogues)
+                        <div class="download">
+                            <div class="title"> Catalogue</div>
+
+                            <div class="download-options">
+                                @foreach ($catalogues as $key => $catalogue )
+                                    <a href="{{route('downloadfile',$catalogue->id)}}">
+                                        <button>Catalogue {{$key+1}}&nbsp;<i class="fa fa-download"
+                                                                             aria-hidden="true"></i></button>
+                                    </a>
+                                @endforeach
+                            </div>
                         </div>
-                    </div>
+
+                    @endisset
                     @if (isset($special_category))
                         <div class="category">
                             <div class="title"> SPECIAL SALE</div>
@@ -60,13 +70,16 @@
                             <ul class="category-list">
                                 <li class="main">
                                     <span style="display: contents;"><a href="{{route('shop')}}">All Category </a>
-                                        &nbsp;<i class="fa fa-chevron-right" style="margin:auto 0 auto auto;" aria-hidden="true"style="float: right; margin:auto"></i></span>
+                                        &nbsp;<i class="fa fa-chevron-right" style="margin:auto 0 auto auto;"
+                                                 aria-hidden="true" style="float: right; margin:auto"></i></span>
 
                                 </li>
                                 @foreach ($categories as $category)
                                     <li class="main">
-                                        <span style="display: contents;"><a href="{{route('product_category',$category->slug)}}">{{$category->name}} </a>
-                                        &nbsp;<i class="fa fa-chevron-right" style="margin:auto 0 auto auto;" aria-hidden="true"style="float: right; margin:auto"></i></span>
+                                        <span style="display: contents;"><a
+                                                    href="{{route('product_category',$category->slug)}}">{{$category->name}} </a>
+                                        &nbsp;<i class="fa fa-chevron-right" style="margin:auto 0 auto auto;"
+                                                 aria-hidden="true" style="float: right; margin:auto"></i></span>
                                         @if($category->sub_categories!= null)
                                             <ul class="sub">
                                                 @foreach ($category->sub_categories as $sub_category)
@@ -90,7 +103,8 @@
                     <!-- SEARCH BOX -->
                     <div class="search-box">
                         <div class="input-group">
-                            <input type="text" class="form-control" name="query" id="searchTextLg" placeholder="Search ...."
+                            <input type="text" class="form-control" name="query" id="searchTextLg"
+                                   placeholder="Search ...."
                                    aria-describedby="basic-addon2">
 
                             <span class="input-group-addon btn btn-success" id="basic-addon2">Search &nbsp;<i
@@ -121,9 +135,9 @@
                                                 <div class="price">
 
                                                     @if($variation->market_price>0)
-                                                    <div class="kalimati"><small>Market Price
-                                                            :Rs. {{ number_format($variation->market_price,2) }}</small>
-                                                    </div>
+                                                        <div class="kalimati"><small>Market Price
+                                                                :Rs. {{ number_format($variation->market_price,2) }}</small>
+                                                        </div>
                                                     @endif
 
                                                     <div class="offer">Price :
@@ -199,9 +213,9 @@
                         success: function (data) {
                             response($.map(data, function (obj) {
 
-                                if(obj.variation_name !== "DUMMY"){
+                                if (obj.variation_name !== "DUMMY") {
                                     return {
-                                        name: obj.name +' '+obj.variation_name,
+                                        name: obj.name + ' ' + obj.variation_name,
                                         slug: obj.sub_sku,
                                     };
                                 }
@@ -217,8 +231,8 @@
                 templates: {
                     // header: '<div class="aa-suggestions-category">Products</div>',
                     suggestion: function (suggestion) {
-                        return  '<a href="{{ url('/') }}/shop/product/' + suggestion.slug + '">' + suggestion.name+
-                        '</a>';
+                        return '<a href="{{ url('/') }}/shop/product/' + suggestion.slug + '">' + suggestion.name +
+                            '</a>';
                     }
                 }
 
