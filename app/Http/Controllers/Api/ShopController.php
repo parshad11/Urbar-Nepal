@@ -72,7 +72,7 @@ class ShopController extends Controller
 				  ->first();
 		$catalogues=Document::where('file_type','catalogue')->limit('2')->latest()->get();
 		$document=[];
-		$document['banner']=$banner;	
+		$document=$banner;	
 		$banner=collect([$document]);	
 		return response()->json([
 			'banner' => $banner,
