@@ -28,14 +28,14 @@
     <div class="container-fluid">
         <div class="row eq-height-row">
             <div class="col-md-5 col-sm-5 hidden-xs left-col eq-height-col" >
-                <div class="left-col-content login-header"> 
+                <div class="left-col-content login-header">
                     <div style="margin-top: 50%;">
                     <a href="/">
                     @if(file_exists(public_path('uploads/logo.png')))
                         <img src="/uploads/logo.png" class="img-rounded" alt="Logo" width="150">
                     @else
                        {{ config('app.name', 'ultimatePOS') }}
-                    @endif 
+                    @endif
                     </a>
                     <br/>
                     @if(!empty(config('constants.app_title')))
@@ -49,10 +49,10 @@
                 <div class="col-md-3 col-xs-4" style="text-align: left;">
                     <select class="form-control input-sm" id="change_lang" style="margin: 10px;">
                     @foreach(config('constants.langs') as $key => $val)
-                        <option value="{{$key}}" 
-                            @if( (empty(request()->lang) && config('app.locale') == $key) 
-                            || request()->lang == $key) 
-                                selected 
+                        <option value="{{$key}}"
+                            @if( (empty(request()->lang) && config('app.locale') == $key)
+                            || request()->lang == $key)
+                                selected
                             @endif
                         >
                             {{$val['full_name']}}

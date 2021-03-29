@@ -150,10 +150,12 @@ class ShopController extends Controller
 
     public function autoComplete(Request $request)
     {
+        $path=asset('/uploads/media/');
         $term = $request->get('query');
         $location = BusinessLocation::where('location_id', 'BL0001')->first();
         $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
         $products = Product::leftJoin('variations', 'products.id', '=', 'variations.product_id')
+            ->leftJoin('media as m','m.model_id','=','variations.id')
             ->whereIn('products.id', $variation_location_product_ids)
             ->where(function ($query) use ($term) {
                 $query->where('products.name', 'like', '%' . $term . '%');
@@ -162,7 +164,8 @@ class ShopController extends Controller
             ->select(
                 'products.name as name',
                 'variations.name as variation_name',
-                'variations.sub_sku as sub_sku'
+                'variations.sub_sku as sub_sku',
+                DB::raw("CONCAT('$path','/',m.file_name) as product_image")
             )
             ->get();
         //$products = Product::with(['variations'])->whereIn('id', $variation_location_product_ids)->where('name', 'like', '%' . $term . '%')->orWhere('sku', 'like', '%' . $term . '%')->get();
