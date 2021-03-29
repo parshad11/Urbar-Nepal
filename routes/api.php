@@ -43,7 +43,7 @@ Route::namespace('Api')->middleware(['cors'])->group(function () {
 		Route::get('/shop/remov-from-cart/{id}', 'CartController@removeFromCart');
 		Route::get('/shop/checkout', 'ShopController@checkout');
 		Route::post('/shop/checkout', 'ShopController@store');
-		Route::post('/shop/search','ProductController@search');
+
 	});
 		route::get('/delivery/location/{id}', 'DeliveryPersonController@getLocation')->name('delivery.location');
 
@@ -57,6 +57,7 @@ Route::namespace('Api')->middleware(['cors'])->group(function () {
 Route::get('/documents', 'Api\ShopController@documents');
 Route::get('/download/file/{fileId}', 'ShopController@downloadFile')->name('downloadfile');
 Route::get('/products', 'Api\ProductController@products');
+Route::post('/product/search','ProductController@search');
 Route::get('/categories', 'Api\ProductController@categories');
 Route::get('product/{slug}', 'Api\ProductController@product');
 Route::get('variation/{slug}', 'Api\ProductController@variation');
