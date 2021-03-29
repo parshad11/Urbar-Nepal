@@ -58,6 +58,7 @@ Route::get('/documents', 'Api\ShopController@documents');
 Route::get('/download/file/{fileId}', 'ShopController@downloadFile')->name('downloadfile');
 Route::get('/products', 'Api\ProductController@products');
 Route::post('/product/search','Api\ProductController@search');
+Route::get('/product/searchByCategroy/{id}','Api\ProductController@searchByCategory');
 Route::get('/categories', 'Api\ProductController@categories');
 Route::get('product/{slug}', 'Api\ProductController@product');
 Route::get('variation/{slug}', 'Api\ProductController@variation');
