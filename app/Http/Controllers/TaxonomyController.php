@@ -126,11 +126,10 @@ class TaxonomyController extends Controller
             } else {
                 $input['parent_id'] = 0;
             }
-            $inout['status'] = !empty($request->input('is_active')) ? 'active' : 'inactive';
+            $input['status'] = !empty($request->input('is_active')) ? 'active' : 'inactive';
             $input['slug'] = Str::slug($request->name);
             $input['business_id'] = $request->session()->get('user.business_id');
             $input['created_by'] = $request->session()->get('user.id');
-         
             $category = Category::create($input);
             $output = ['success' => true,
                             'data' => $category,
