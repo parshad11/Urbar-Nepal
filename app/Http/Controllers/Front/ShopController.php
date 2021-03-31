@@ -103,21 +103,7 @@ class ShopController extends Controller
 
     public function categoryProduct($slug)
     {
-        $category = Category::where('slug', $slug)->first();
-        $location = BusinessLocation::where('location_id', 'BL0001')->first();
-        $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
-        $products = Product::with(['product_variations.variations.product', 'unit'])->where('category_id', $category->id)->whereIn('id', $variation_location_product_ids)->paginate();
-        $special_cat = Category::with('sub_categories')->where('name', 'like', '%special%')->where('parent_id', 0)->first();
-        if ($special_cat == null) {
-            $all_categories = Category::with('sub_categories')->where('parent_id', 0)->get();
-        } else {
-            $all_categories = Category::with('sub_categories')->where('parent_id', 0)->where('id', '!=', $special_cat->id)->get();
-        }
-        //$all_categories = Category::with('sub_categories')->where('parent_id', 0)->where('id', '!=', $special_cat->id)->get();
-        return view('ecommerce.shop')->with('products', $products)
-            ->with('special_category', $special_cat)
-            ->with('categories', $all_categories)
-            ->with('category', $category);
+        return view('ecommerce.category');
     }
 
     public function subcategoryProduct($slug, $sub_cat_slug)

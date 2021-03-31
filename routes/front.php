@@ -27,6 +27,9 @@ Route::namespace('Front')->group(function () {
     // Route::get('/careers', 'FrontendController@getCareers')->name('careers');
 
     // E-commerce Routes
+    Route::get('/category/{slug}', 'ShopController@categoryProduct')->name('product_category');
+
+
     Route::get('/shop/cart-item', 'CartController@updateNavCart')->name('cart.nav_cart');
     Route::get('/shop/remov-from-cart', 'CartController@removeFromCart')->name('removefromcart')->middleware('auth:customer');
     Route::get('/shop/addtocart', 'CartController@addToCart')->name('addtocart')->middleware(['auth:customer','SetCustomerSessionData']);
@@ -37,9 +40,7 @@ Route::namespace('Front')->group(function () {
     Route::get('/shop/user-account', 'ShopController@getCustomer')->name('customer.account')->middleware('auth:customer');
     Route::get('/shop/checkout', 'ShopController@checkout')->name('product.checkout')->middleware(['auth:customer','SetCustomerSessionData']);
     Route::post('/shop/checkout', 'ShopController@store')->name('order.store')->middleware(['auth:customer','SetCustomerSessionData']);
-    Route::get('/shop/category/{slug}', 'ShopController@categoryProduct')->name('product_category');
     Route::get('/shop/category/{slug}/{sub_slug}', 'ShopController@subcategoryProduct')->name('product_subcategory');
-    Route::get('/shop', 'ShopController@index')->name('shop');
     Route::get('/shop/auto-complete', 'ShopController@autoComplete')->name('autocomplete.search');
 
     Route::get('/shop/product/{slug}', 'ShopController@product')->name('product_single');
