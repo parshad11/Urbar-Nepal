@@ -30,7 +30,7 @@ class FrontendController extends Controller
 
     public function getBlog()
     {
-        return view('ecommerce.blogs');
+        return view('ecommerce.blog');
     }
 
     public function mailRequest(Request $request)

@@ -86,7 +86,7 @@
 
     <!-- custom scroll -->
     <script src="{{ asset('ecom/js/slick.min.js') }}"></script>
-
+    @stack('scripts')
 
     <!-- CUSTOM JS -->
     <script src="{{ asset('ecom/js/app.min.js') }}"></script>
