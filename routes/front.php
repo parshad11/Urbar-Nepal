@@ -18,14 +18,13 @@ Route::get('/shop/logout', 'Auth\LoginController@customerLogout')->name('user.lo
 Route::namespace('Front')->group(function () {
     Route::get('/', 'FrontendController@index')->name('front_dashboard');
     Route::get('/about-us', 'FrontendController@getAbout')->name('front_about');
-    Route::get('/blog', 'FrontendController@getBlog')->name('blog');
+    Route::get('/blogs', 'FrontendController@getBlog')->name('blog');
+    Route::get('/contact-us', 'FrontendController@getContact')->name('contact');
     Route::get('/blog/{slug}', 'FrontendController@getSingleBlog')->name('blog_single');
-    Route::get('/team', 'FrontendController@getTeam')->name('teams');
-    Route::get('/contact', 'FrontendController@getContact')->name('contact');
     Route::post('/vendor/request', 'FrontendController@mailRequest')->name('vendor.request');
     Route::get('/faqs', 'FrontendController@getFaqs')->name('faqs');
-    Route::get('/buy-sell', 'FrontendController@getBuyOrSell')->name('buy_sell');
-    Route::get('/careers', 'FrontendController@getCareers')->name('careers');
+    // Route::get('/buy-sell', 'FrontendController@getBuyOrSell')->name('buy_sell');
+    // Route::get('/careers', 'FrontendController@getCareers')->name('careers');
 
     // E-commerce Routes
     Route::get('/shop/cart-item', 'CartController@updateNavCart')->name('cart.nav_cart');
