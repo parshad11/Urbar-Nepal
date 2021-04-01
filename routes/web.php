@@ -404,76 +404,33 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone'])
     Route::get('/show-notification/{id}', 'HomeController@showNotification');
 });
 
-// Routes for frontCMS
+// Routes for ecommerce
 Route::namespace('Front')->middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 'AdminSidebarMenu', 'CheckUserLogin'])->group(function () {
-    Route::resource('frontcms-settings', 'CmsController');
+    Route::resource('homepage-setting', 'CmsController');
 
-    // about page
-    Route::get('frontcms/about-settings/create', 'CmsController@createAbout')->name('frontcms_about_form');
-    Route::post('frontcms/about-settings/store', 'CmsController@storeAbout')->name('frontcms_about_store');
-    Route::get('frontcms/about-settings', 'CmsController@editAbout')->name('frontcms_about_edit');
-    Route::post('frontcms/about-settings/update/', 'CmsController@updateAbout')->name('frontcms_about_update');
+    // Blog Section
+    Route::get('/ecommerce/blogs', 'CmsController@viewBlog')->name('ecom_blog');
+    Route::get('/ecommerce/blogs/create', 'CmsController@createBlog')->name('ecom_blog_form');
+    Route::post('/ecommerce/blogs', 'CmsController@storeBlog')->name('ecom_blog_store');
+    Route::get('/ecommerce/blogs/{id}/edit', 'CmsController@editBlog')->name('ecom_blog_edit');
+    Route::put('/ecommerce/blogs/{id}', 'CmsController@updateBlog')->name('ecom_blog_update');
+    Route::delete('/ecommerce/blogs/{id}', 'CmsController@deleteBlog')->name('ecom_blog_delete');
 
-    // team section
-    Route::get('/frontcms/teams', 'CmsController@viewTeam')->name('cms_team');
-    Route::get('/frontcms/teams/create', 'CmsController@createTeam')->name('cms_team_form');
-    Route::post('/frontcms/teams', 'CmsController@storeTeam')->name('cms_team_store');
-    Route::get('/frontcms/teams/{id}/edit', 'CmsController@editTeam')->name('cms_team_edit');
-    Route::put('/frontcms/teams/{id}', 'CmsController@updateTeam')->name('cms_team_update');
-    Route::delete('/frontcms/teams/{id}', 'CmsController@deleteTeam')->name('cms_team_delete');
+    // Blog Category Section
+    Route::get('/ecommerce/blogs-category', 'CmsController@viewBlogCat')->name('ecom_blogcat');
+    Route::get('/ecommerce/blogs-category/create', 'CmsController@createBlogCat')->name('ecom_blogcat_form');
+    Route::post('/ecommerce/blogs-category', 'CmsController@storeBlogCat')->name('ecom_blogcat_store');
+    Route::get('/ecommerce/blogs-category/{id}/edit', 'CmsController@editBlogCat')->name('ecom_blogcat_edit');
+    Route::put('/ecommerce/blogs-category/{id}', 'CmsController@updateBlogCat')->name('ecom_blogcat_update');
+    Route::delete('/ecommerce/blogs-category/{id}', 'CmsController@deleteBlogCat')->name('ecom_blogcat_delete');
 
-    // service section
-    Route::get('/frontcms/services', 'CmsController@viewServices')->name('cms_service');
-    Route::get('/frontcms/services/create', 'CmsController@createServices')->name('cms_service_form');
-    Route::post('/frontcms/services', 'CmsController@storeServices')->name('cms_service_store');
-    Route::get('/frontcms/services/{id}/edit', 'CmsController@editServices')->name('cms_service_edit');
-    Route::put('/frontcms/services/{id}', 'CmsController@updateServices')->name('cms_service_update');
-    Route::delete('/frontcms/services/{id}', 'CmsController@deleteServices')->name('cms_service_delete');
 
-    // Blog section
-    Route::get('/frontcms/blogs', 'CmsController@viewBlog')->name('cms_blog');
-    Route::get('/frontcms/blogs/create', 'CmsController@createBlog')->name('cms_blog_form');
-    Route::post('/frontcms/blogs', 'CmsController@storeBlog')->name('cms_blog_store');
-    Route::get('/frontcms/blogs/{id}/edit', 'CmsController@editBlog')->name('cms_blog_edit');
-    Route::put('/frontcms/blogs/{id}', 'CmsController@updateBlog')->name('cms_blog_update');
-    Route::delete('/frontcms/blogs/{id}', 'CmsController@deleteBlog')->name('cms_blog_delete');
-    // Blog Category section
-    Route::get('/frontcms/blogs-category', 'CmsController@viewBlogCat')->name('cms_blogcat');
-    Route::get('/frontcms/blogs-category/create', 'CmsController@createBlogCat')->name('cms_blogcat_form');
-    Route::post('/frontcms/blogs-category', 'CmsController@storeBlogCat')->name('cms_blogcat_store');
-    Route::get('/frontcms/blogs-category/{id}/edit', 'CmsController@editBlogCat')->name('cms_blogcat_edit');
-    Route::put('/frontcms/blogs-category/{id}', 'CmsController@updateBlogCat')->name('cms_blogcat_update');
-    Route::delete('/frontcms/blogs-category/{id}', 'CmsController@deleteBlogCat')->name('cms_blogcat_delete');
-   
-    //Testimonial section 
-    Route::get('/frontcms/testimonial', 'CmsController@viewTestimonial')->name('cms_testimonial');
-    Route::get('/frontcms/testimonial/create', 'CmsController@createTestimonial')->name('cms_testimonial_form');
-    Route::post('/frontcms/testimonial', 'CmsController@storeTestimonial')->name('cms_testimonial_store');
-    Route::get('/frontcms/testimonial/{id}/edit', 'CmsController@editTestimonial')->name('cms_testimonial_edit');
-    Route::put('/frontcms/testimonial/{id}', 'CmsController@updateTestimonial')->name('cms_testimonial_update');
-    Route::delete('/frontcms/testimonial/{id}', 'CmsController@deleteTestimonial')->name('cms_testimonial_delete');
+    // Pages Section
+    Route::get('/ecommerce/pages', 'CmsController@viewPages')->name('ecom_pages');
+    Route::get('/ecommerce/pages/create', 'CmsController@createPages')->name('ecom_pages_form');
+    Route::post('/ecommerce/pages', 'CmsController@storePages')->name('ecom_pages_store');
+    Route::get('/ecommerce/pages/{id}/edit', 'CmsController@editPages')->name('ecom_pages_edit');
+    Route::put('/ecommerce/pages/{id}', 'CmsController@updatePages')->name('ecom_pages_update');
+    Route::delete('/ecommerce/pages/{id}/destroy', 'CmsController@deletePages')->name('ecom_pages_delete');
 
-    //Pages Section
-    Route::get('/frontcms/pages', 'CmsController@viewPages')->name('cms_pages');
-    Route::get('/frontcms/pages/create', 'CmsController@createPages')->name('cms_pages_form');
-    Route::post('/frontcms/pages', 'CmsController@storePages')->name('cms_pages_store');
-    Route::get('/frontcms/pages/{id}/edit', 'CmsController@editPages')->name('cms_pages_edit');
-    Route::put('/frontcms/pages/{id}', 'CmsController@updatePages')->name('cms_pages_update');
-    Route::delete('/frontcms/pages/{id}/destroy', 'CmsController@deletePages')->name('cms_pages_delete');
-    //Career Section
-    Route::get('/frontcms/career', 'CmsController@viewCareer')->name('cms_career');
-    Route::get('/frontcms/career/create', 'CmsController@createCareer')->name('cms_career_form');
-    Route::post('/frontcms/career', 'CmsController@storeCareer')->name('cms_career_store');
-    Route::get('/frontcms/career/{id}/edit', 'CmsController@editCareer')->name('cms_career_edit');
-    Route::put('/frontcms/career/{id}', 'CmsController@updateCareer')->name('cms_career_update');
-    Route::delete('/frontcms/career/{id}/destroy', 'CmsController@deleteCareer')->name('cms_career_delete');
-
-    //Ecommerce files
-    Route::get('/frontcms/ecom/file', 'CmsController@viewFile')->name('ecom_file');
-    Route::get('/frontcms/ecom/file/create', 'CmsController@createFile')->name('ecom_file_form');
-    Route::post('/frontcms/ecom/file', 'CmsController@storeFile')->name('ecom_file_store');
-    Route::get('/frontcms/ecom/file/{id}/edit', 'CmsController@editFile')->name('ecom_file_edit');
-    Route::put('/frontcms/ecom/file/{id}', 'CmsController@updateFile')->name('ecom_file_update');
-    Route::delete('/frontcms/ecom/file/{id}/destroy', 'CmsController@deleteFile')->name('ecom_file_delete');
 });
-

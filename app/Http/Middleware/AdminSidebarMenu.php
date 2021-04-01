@@ -673,52 +673,22 @@ class AdminSidebarMenu
             //Fornt CMS Setting
             if (in_array('frontcms', $enabled_modules) && auth()->user()->can('upload.front_cms') ) {
                 $menu->dropdown(
-                    'FrontCMS',
+                    'Homepage Settings',
                     function ($sub) {
                         $sub->url(
                             action('Front\CmsController@index'),
                             'Homepage Settings',
-                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'frontcms-settings' && request()->segment(2) == 'create']
+                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'homepage-setting' && request()->segment(2) == 'create']
                         );
                         $sub->url(
-                            route('frontcms_about_edit'),
-                            'About Settings',
-                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'frontcms' && request()->segment(2) == 'about-settings']
-                        );
-                        $sub->url(
-                            route('cms_team'),
-                            'Team Setting',
-                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'frontcms' && request()->segment(2) == 'teams']
-                        );
-                        $sub->url(
-                            route('cms_service'),
-                            'Services Setting',
-                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'frontcms' && request()->segment(2) == 'services']
-                        );
-                        $sub->url(
-                            route('cms_blog'),
+                            route('ecom_blog'),
                             'Blog Setting',
-                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'frontcms' && request()->segment(2) == 'blogs']
+                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'ecommerce' && request()->segment(2) == 'blogs']
                         );
                         $sub->url(
-                            route('cms_testimonial'),
-                            'Testimonial Setting',
-                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'frontcms' && request()->segment(2) == 'testimonial']
-                        );
-                        $sub->url(
-                            route('cms_career'),
-                            'Careers Setting',
-                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'frontcms' && request()->segment(2) == 'career']
-                        );
-                        $sub->url(
-                            route('cms_pages'),
+                            route('ecom_pages'),
                             'Pages Setting',
-                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'frontcms' && request()->segment(2) == 'pages']
-                        );
-                        $sub->url(
-                            route('ecom_file'),
-                            'File Setting',
-                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'frontcms' && request()->segment(2) == 'ecom']
+                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'ecommerce' && request()->segment(2) == 'pages']
                         );
                     },
                     ['icon' => 'fa fas fa-house-damage', 'id' => 'tour_step6']

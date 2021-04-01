@@ -154,44 +154,6 @@ class ShopController extends Controller
                 DB::raw("CONCAT('$path','/',m.file_name) as product_image")
             )
             ->get();
-        //$products = Product::with(['variations'])->whereIn('id', $variation_location_product_ids)->where('name', 'like', '%' . $term . '%')->orWhere('sku', 'like', '%' . $term . '%')->get();
-        /*$products_array = array();
-        foreach ($products as $key => $product){
-            $products_array[$product->id]['name']=$product->name;
-            $products_array[$product->id]['type'] = $product->type;
-            $products_array[$product->id]['variations']=$product->variations;
-        }
-        $result = [];
-        $i = 1;
-        $no_of_records = $products->count();
-        if (!empty($products_array)) {
-            foreach ($products_array as $key => $value) {
-                if ($value['type'] != 'single') {
-                    $result[] = [
-                        'id' => $i,
-                        'text' => $value['name'],
-                        'variation_id' => 0,
-                        'product_id' => $key
-                    ];
-                }
-                $name = $value['name'];
-                foreach ($value['variations'] as $variation) {
-                    $text = $name;
-                    if ($value['type'] == 'variable') {
-                        $text = $text.' '.$variation['name'];
-                    }
-                    $i++;
-                    $result[] = [
-                        'id' => $i,
-                        'text' => $text,
-                        'product_id' => $key,
-                        'variation_id' => $variation['variation_id'],
-                        'slug' => $variation['sub_sku'],
-                    ];
-                }
-                $i++;
-            }
-        }*/
         return response()->json($products);
     }
 
