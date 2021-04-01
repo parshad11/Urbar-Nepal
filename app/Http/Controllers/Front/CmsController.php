@@ -145,6 +145,7 @@ class CmsController extends Controller
 
     public function viewBlog()
     {
+        return 'blog';
         $blogs = Blog::with('category')->orderBy('id', "desc")->paginate(4);
         return view('ecommerce.blog.index')->with('blogs', $blogs);
     }
