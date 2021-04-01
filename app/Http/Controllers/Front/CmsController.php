@@ -4,37 +4,25 @@ namespace App\Http\Controllers\Front;
 
 use App\Front\Blog;
 use App\Front\BlogCategory;
-use App\Front\Document;
-use App\Front\FrontAbout;
 use App\Front\HomeSetting;
 use App\Front\PageSetting;
-use App\Front\Service;
-use App\Front\Team;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Utils\Util;
 use Illuminate\Support\Str;
 
-use function GuzzleHttp\json_decode;
 use function GuzzleHttp\json_encode;
-use function GuzzleHttp\Promise\all;
 
 class CmsController extends Controller
 {
     protected $setting;
     protected $util;
-    protected $about;
-    protected $team;
-    protected $service;
     protected $blog;
 
-    public function __construct(HomeSetting $settings, Util $util, FrontAbout $frontAbout, Team $team, Service $service, Blog $blog)
+    public function __construct(HomeSetting $settings, Util $util, Blog $blog)
     {
         $this->setting = $settings;
         $this->util = $util;
-        $this->about = $frontAbout;
-        $this->team = $team;
-        $this->service = $service;
         $this->blog = $blog;
     }
 
@@ -164,12 +152,11 @@ class CmsController extends Controller
     public function createBlog()
     {
         $categories = BlogCategory::orderBy('id', 'desc')->get();
-        return view('ecommerce.blog.blog_form')->with('categories', $categories);
+        return view('ecommerce.blog.form')->with('categories', $categories);
     }
 
     public function storeBlog(Request $request)
     {
-        // dd($request->all());
         $data['title'] = $request->title;
         $data['slug'] = Str::slug($request->title);
         $data['category_id'] = $request->category_id;
@@ -194,7 +181,7 @@ class CmsController extends Controller
     {
         $categories = BlogCategory::orderBy('id', 'desc')->get();
         $this->blog = $this->blog->where('id', $id)->first();
-        return view('ecommerce.blog.blog_edit')->with('blog_info', $this->blog)
+        return view('ecommerce.blog.edit')->with('blog_info', $this->blog)
             ->with('categories', $categories);
     }
 
@@ -238,7 +225,7 @@ class CmsController extends Controller
                 'error' => 1,
                 'msg' => 'Blog does not Found'
             ];
-            return redirect()->route('cms_blog')->with('status', $output);
+            return redirect()->route('ecom_blog')->with('status', $output);
         }
         $status = $blog->delete();
         if ($status) {
@@ -256,7 +243,7 @@ class CmsController extends Controller
     public function viewBlogCat()
     {
         $categories = BlogCategory::orderBy('id', 'desc')->get();
-        return view('frontcms.blog.category-form')->with('categories', $categories);
+        return view('ecommerce.blog.category_index')->with('categories', $categories);
     }
 
     public function storeBlogCat(Request $request)
@@ -279,12 +266,12 @@ class CmsController extends Controller
     public function viewPages()
     {
         $pages = PageSetting::paginate();
-        return view('ecom.pages.index')->with('pages', $pages);
+        return view('ecommerce.pages.index')->with('pages', $pages);
     }
 
     public function createPages()
     {
-        return view('ecom.pages.form');
+        return view('ecommerce.pages.form');
     }
 
     public function storePages(Request $request)
@@ -307,7 +294,7 @@ class CmsController extends Controller
     public function editPages($id)
     {
         $page_setting = PageSetting::findOrFail($id);
-        return view('ecom.pages.edit')->with('page_setting', $page_setting);
+        return view('ecommerce.pages.edit')->with('page_setting', $page_setting);
     }
 
     public function updatePages(Request $request, $id)

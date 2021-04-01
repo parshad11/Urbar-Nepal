@@ -408,14 +408,6 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone'])
 Route::namespace('Front')->middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 'AdminSidebarMenu', 'CheckUserLogin'])->group(function () {
     Route::resource('homepage-setting', 'CmsController');
 
-    // Blog Section
-    Route::get('/ecommerce/blogs', 'CmsController@viewBlog')->name('ecom_blog');
-    Route::get('/ecommerce/blogs/create', 'CmsController@createBlog')->name('ecom_blog_form');
-    Route::post('/ecommerce/blogs', 'CmsController@storeBlog')->name('ecom_blog_store');
-    Route::get('/ecommerce/blogs/{id}/edit', 'CmsController@editBlog')->name('ecom_blog_edit');
-    Route::put('/ecommerce/blogs/{id}', 'CmsController@updateBlog')->name('ecom_blog_update');
-    Route::delete('/ecommerce/blogs/{id}', 'CmsController@deleteBlog')->name('ecom_blog_delete');
-
     // Blog Category Section
     Route::get('/ecommerce/blogs-category', 'CmsController@viewBlogCat')->name('ecom_blogcat');
     Route::get('/ecommerce/blogs-category/create', 'CmsController@createBlogCat')->name('ecom_blogcat_form');
@@ -424,6 +416,13 @@ Route::namespace('Front')->middleware(['setData', 'auth', 'SetSessionData', 'lan
     Route::put('/ecommerce/blogs-category/{id}', 'CmsController@updateBlogCat')->name('ecom_blogcat_update');
     Route::delete('/ecommerce/blogs-category/{id}', 'CmsController@deleteBlogCat')->name('ecom_blogcat_delete');
 
+    // Blog Section
+    Route::get('/ecommerce/blogs', 'CmsController@viewBlog')->name('ecom_blog');
+    Route::get('/ecommerce/blogs/create', 'CmsController@createBlog')->name('ecom_blog_form');
+    Route::post('/ecommerce/blogs', 'CmsController@storeBlog')->name('ecom_blog_store');
+    Route::get('/ecommerce/blogs/{id}/edit', 'CmsController@editBlog')->name('ecom_blog_edit');
+    Route::put('/ecommerce/blogs/{id}', 'CmsController@updateBlog')->name('ecom_blog_update');
+    Route::delete('/ecommerce/blogs/{id}', 'CmsController@deleteBlog')->name('ecom_blog_delete');
 
     // Pages Section
     Route::get('/ecommerce/pages', 'CmsController@viewPages')->name('ecom_pages');
