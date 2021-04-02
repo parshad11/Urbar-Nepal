@@ -38,7 +38,7 @@
                                 <div class="user-login">
                                     <ul class="user_login_ul">
                                         <li class="user_login_li relative">
-                                            <a href="" class="user-login-link ">
+                                            <a href="{{ route('front_login')}}" class="user-login-link">
                                                 <span>Login & SignUp</span>
                                                 <i class="far fa-user" style="display: none"></i>
                                             </a>
@@ -50,8 +50,6 @@
                                             </ul>
                                         </li>
                                     </ul>
-
-
                                 </div>
                                 <div class="user-cart">
                                     <a href="" class="user-cart-link">
@@ -62,7 +60,6 @@
                                     </a>
                                     <div class="user_cart_dd">
                                         <ul class="user_cart_ul">
-
                                             <li>
                                                 <figure style="float: left; margin-right: 10px; width: 50px;">
                                                     <img src="http://stat.homeshop18.com/homeshop18/images/productImages/81/lava-a67-dual-sim-android-mobile-phone-medium_3a86d70832ad27694f49cea1aba8dd81.jpg"
@@ -129,19 +126,25 @@
                         <div class="user-login">
                             <ul class="user_login_ul">
                                 <li class="user_login_li relative">
-                                    <a href="loginpage.html" class="user-login-link ">
+                                @if(Auth::guard('customer')->check())
+                                     {{Auth::guard('customer')->user()->name}}
+                                     <ul class="user_login_ul sub_ul">
+                                        <li class="sub_li"><a href="account.html">Account</a></li>
+                                        <li class="sub_li"><a href="account.html">Wishlist</a></li>
+                                        <li class="sub_li"><a href="account.html">Order</a></li>
+                                        <li class="sub_li"><a href=" {{Route('user.logout')}} ">Logout</a></li>
+                                    </ul>
+                                @else
+                                <a href="{{ Route('front_login')}}" class="user-login-link ">
                                         <span style="
     background: #e6191b;
     color: white;
     padding: 10px;
     ">Login &amp; SignUp</span>
                                     </a>
-                                    <ul class="user_login_ul sub_ul">
-                                        <li class="sub_li"><a href="account.html">Account</a></li>
-                                        <li class="sub_li"><a href="account.html">Wishlist</a></li>
-                                        <li class="sub_li"><a href="account.html">Order</a></li>
-                                        <li class="sub_li"><a href="account.html">Logout</a></li>
-                                    </ul>
+                                @endif
+
+
                                 </li>
                             </ul>
 

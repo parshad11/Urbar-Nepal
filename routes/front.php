@@ -11,9 +11,9 @@
 |
 */
 
-Route::get('/shop/login', 'Auth\LoginController@showCustomerLoginForm')->name('front_login');
-Route::post('/shop/login', 'Auth\LoginController@customerLogin')->name('post_front_login');
-Route::get('/shop/logout', 'Auth\LoginController@customerLogout')->name('user.logout');
+Route::get('/ecommerce/login', 'Auth\LoginController@showCustomerLoginForm')->name('front_login');
+Route::post('/ecommerce/index', 'Auth\LoginController@customerLogin')->name('post_front_login');
+Route::get('/ecommerce/logout', 'Auth\LoginController@customerLogout')->name('user.logout');
 
 Route::namespace('Front')->group(function () {
     Route::get('/', 'FrontendController@index')->name('front_dashboard');

@@ -54,7 +54,7 @@ class FrontendController extends Controller
     public function getPages($slug)
     {
         $page_info = PageSetting::where('slug', $slug)->first();
-        return view('frontcms.page');
+        return view('ecommerce.login');
     }
 
     /**

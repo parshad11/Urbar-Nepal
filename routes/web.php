@@ -432,4 +432,5 @@ Route::namespace('Front')->middleware(['setData', 'auth', 'SetSessionData', 'lan
     Route::put('/ecommerce/pages/{id}', 'CmsController@updatePages')->name('ecom_pages_update');
     Route::delete('/ecommerce/pages/{id}/destroy', 'CmsController@deletePages')->name('ecom_pages_delete');
 
+
 });
