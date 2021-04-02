@@ -64,7 +64,7 @@
                             </div>
                         </li>
 
-                        <li class="li-has-children"><a href="">Fungus<span class="float-right"
+                        <!-- <li class="li-has-children"><a href="">Fungus<span class="float-right"
                                     uk-icon="icon: chevron-right"></span> <span class="clearfix"></span></a>
                             <div class="hover-side-menu">
                                 <div class="sub-category-block">
@@ -81,7 +81,7 @@
                                 </div>
 
                             </div>
-                        </li>
+                        </li> -->
 
                         <li class="li-has-children"><a href="">Local & Organic<span class="float-right"
                                     uk-icon="icon: chevron-right"></span> <span class="clearfix"></span></a>
@@ -213,13 +213,20 @@
                 <div class="main-slider">
                     <div class="banner owl-carousel owl-theme ">
 
-                        <div class="slider-images"><img src="/img/banner2.jpg" alt="gadgets">
+                    
+                        @if(isset($banners))
+                            @foreach($banners as $banner)
+                            <div class="slider-images">
+                                <img src="{{ asset('uploads/img/home/banners/'.$banner->image) }}">
+                            </div>  
+                            @endforeach
 
-                        </div>
+                        @endif
 
-                        <div class="slider-images"><img src="img/banner1.jpg" alt="gadgets">
+                        <!-- <div class="slider-images">
+                         <img src="img/banner1.jpg" alt="gadgets">
 
-                        </div>
+                        </div> -->
 
 
                     </div>

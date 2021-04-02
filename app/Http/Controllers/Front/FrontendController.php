@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\VendorRequestMail;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
+use App\Front\Banner;
 
 use function GuzzleHttp\json_decode;
 
@@ -20,7 +21,8 @@ class FrontendController extends Controller
      */
     public function index()
     {
-        return view('ecommerce.index');
+        $banners = Banner::where('status', 'active')->latest()->get();
+        return view('ecommerce.index',compact('banners'));
     }
 
     public function getAbout()

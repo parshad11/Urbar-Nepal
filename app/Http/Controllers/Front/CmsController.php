@@ -6,6 +6,7 @@ use App\Front\Blog;
 use App\Front\BlogCategory;
 use App\Front\HomeSetting;
 use App\Front\PageSetting;
+use App\Front\Banner;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Utils\Util;
@@ -18,12 +19,15 @@ class CmsController extends Controller
     protected $setting;
     protected $util;
     protected $blog;
+    protected $banner;
 
-    public function __construct(HomeSetting $settings, Util $util, Blog $blog)
+
+    public function __construct(HomeSetting $settings, Util $util, Blog $blog, Banner $banner)
     {
         $this->setting = $settings;
         $this->util = $util;
         $this->blog = $blog;
+        $this->banner = $banner;
     }
 
     /**
@@ -145,7 +149,6 @@ class CmsController extends Controller
 
     public function viewBlog()
     {
-        return 'blog';
         $blogs = Blog::with('category')->orderBy('id', "desc")->paginate(4);
         return view('ecommerce.blog.index')->with('blogs', $blogs);
     }
@@ -331,6 +334,97 @@ class CmsController extends Controller
                 'msg' => 'Page deleted Successfuly'
             ];
             return redirect()->route('ecom_pages')->with('status', $output);
+        }
+    }
+
+
+    //Banner Section
+    public function bannerIndex()
+    {
+        $banners = Banner::paginate(2);
+        return view('ecommerce.banner.bannerView')->with('banners', $banners);
+        // return view('ecommerce.banner.bannerCreate');
+    }
+
+    public function createBanner()
+    {
+        // $banners = Banner::orderBy('id', 'desc')->get();
+        return view('ecommerce.banner.bannerCreate')->with('banners', $banners);
+    }
+
+    public function storeBanner(Request $request)
+    {
+    //    dd($request->hasFile('banner_image'));
+        if ($request->hasFile('banner_image')) {
+            $data['image'] = $this->util->uploadHomeFile($request->banner_image, config('constants.product_img_path') . '/home/banners');
+       
+        }
+        $this->banner->fill($data);
+        $status = $this->banner->save();
+        // dd($status);
+        if ($status) {
+            $output = [
+                'success' => 1,
+                'msg' => 'banner Added Successfuly'
+            ];
+            return redirect()->route('banner_index')->with('status', $output);
+        }
+    }
+
+    public function editBanner($id)
+    {
+        $banners = Banner::findOrFail($id);
+        return view('ecommerce.banner.bannerEdit')->with('banners', $banners);
+    }
+
+    public function updateBanner(Request $request, $id)
+    {
+        $banner = banner::findOrFail($id);
+        $banner_image = $banner->image;
+        $banner->status = $request->status;
+        $banner->image = $request->previous_banner_image;
+        if (!isset($request->previous_banner_image)) {
+            if (!empty($banner_image) && file_exists(public_path() . '/uploads/img/home/banners/' . $banner_image)) {
+                unlink(public_path() . '/uploads/img/home/banners/' . $banner_image);
+            }
+        }
+        if ($request->hasFile('banner_image')) {
+            $banner->image = $this->util->uploadHomeFile($request->banner_image, config('constants.product_img_path') . '/home/banners');
+            if (!empty($banner_image) && file_exists(public_path() . '/uploads/img/home/banners/' . $banner_image)) {
+                unlink(public_path() . '/uploads/img/home/banners/' . $banner_image);
+            }
+        }
+        $status = $banner->save();
+        if ($status) {
+            $output = [
+                'success' => 1,
+                'msg' => 'banner Updated Successfully'
+            ];
+            return redirect()->route('banner_index')->with('status', $output);
+        }
+    }
+
+    public function deleteBanner($id)
+    {
+        $banner = Banner::find($id);
+        $banner_image = $banner->image;
+        if (!$banner) {
+            $output = [
+                'error' => 1,
+                'msg' => 'banner does not Found'
+            ];
+            return redirect()->route('banner_index')->with('status', $output);
+        }
+        $status = $banner->delete();
+        if ($status) {
+            if (!empty($banner_image) && file_exists(public_path() . '/uploads/img/home/banners/' . $banner_image)) {
+                unlink(public_path() . '/uploads/img/home/banners/' . $banner_image);
+            }
+            $output = [
+                'success' => 1,
+                'msg' => 'banner deleted Successfully'
+            ];
+            return redirect()->route('banner_index')->with('status', $output);
         }
     }
   

@@ -690,6 +690,11 @@ class AdminSidebarMenu
                             'Pages Setting',
                             ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'ecommerce' && request()->segment(2) == 'pages']
                         );
+                        $sub->url(
+                            route('banner_index'),
+                            'Homepage Banner',
+                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'ecommerce' && request()->segment(2) == 'banners']
+                        );
                     },
                     ['icon' => 'fa fas fa-house-damage', 'id' => 'tour_step6']
                 )->order(90);

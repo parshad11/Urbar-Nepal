@@ -416,6 +416,16 @@ Route::namespace('Front')->middleware(['setData', 'auth', 'SetSessionData', 'lan
     Route::put('/ecommerce/blogs-category/{id}', 'CmsController@updateBlogCat')->name('ecom_blogcat_update');
     Route::delete('/ecommerce/blogs-category/{id}', 'CmsController@deleteBlogCat')->name('ecom_blogcat_delete');
 
+
+    //Home page banner Section
+    Route::get('/ecommerce/banners', 'CmsController@bannerIndex')->name('banner_index');
+    Route::get('/ecommerce/banners/create', 'CmsController@createBanner')->name('ecom_banner_form');
+    Route::post('/ecommerce/banners', 'CmsController@storeBanner')->name('ecom_banner_store');
+    Route::get('/ecommerce/banners/edit/{id}', 'CmsController@editBanner')->name('ecom_banner_edit');
+    Route::post('/ecommerce/banners/update/{id}', 'CmsController@updateBanner')->name('ecom_banner_update');
+    Route::get('/ecommerce/banners/delete/{id}', 'CmsController@deleteBanner')->name('ecom_banner_delete');
+
+    
     // Blog Section
     Route::get('/ecommerce/blogs', 'CmsController@viewBlog')->name('ecom_blog');
     Route::get('/ecommerce/blogs/create', 'CmsController@createBlog')->name('ecom_blog_form');
