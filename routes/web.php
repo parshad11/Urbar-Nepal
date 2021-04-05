@@ -425,6 +425,15 @@ Route::namespace('Front')->middleware(['setData', 'auth', 'SetSessionData', 'lan
     Route::post('/ecommerce/banners/update/{id}', 'CmsController@updateBanner')->name('ecom_banner_update');
     Route::get('/ecommerce/banners/delete/{id}', 'CmsController@deleteBanner')->name('ecom_banner_delete');
 
+
+    //SliderPage banner Section
+    Route::get('/ecommerce/slider-banners', 'CmsController@sliderbannerIndex')->name('slider_banner_index');
+    Route::get('/ecommerce/slider-banners/create', 'CmsController@slidercreateBanner')->name('slider_banner_form');
+    Route::post('/ecommerce/slider-banners', 'CmsController@sliderstoreBanner')->name('slider_banner_store');
+    Route::get('/ecommerce/slider-banners/edit/{id}', 'CmsController@slidereditBanner')->name('slider_banner_edit');
+    Route::post('/ecommerce/slider-banners/update/{id}', 'CmsController@sliderupdateBanner')->name('slider_banner_update');
+    Route::get('/ecommerce/slider-banners/delete/{id}', 'CmsController@sliderdeleteBanner')->name('slider_banner_delete');
+
     
     // Blog Section
     Route::get('/ecommerce/blogs', 'CmsController@viewBlog')->name('ecom_blog');

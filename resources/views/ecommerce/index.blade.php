@@ -272,11 +272,6 @@
 
 
 
-
-
-
-
-
                                         <figure>
                                             <a href="singlepage.html">
                                                 <div class="product-image">
@@ -977,16 +972,17 @@
 
     <div class="container-fluid">
         <div class="row col-three owl-carousel">
+            @foreach($slider_banners as $slider_banner)
             <div class="column">
-                <a href=""><img
-                        src="https://techsathi.com/wp-content/uploads/2019/07/Best-Agricultural-Apps.jpg"
-                        alt=""></a>
+                <a href="">
+                 <img src="{{ asset('uploads/img/home/slider_banners/'.$slider_banner->image) }}"alt="">
+                  </a>
             </div>
-            <div class="column">
+            @endforeach
+            <!-- <div class="column">
                 <a href=""><img src="https://assets-cdn.kathmandupost.com/uploads/source/news/2020/money/17.jpg"
                         alt=""></a>
             </div>
-
             <div class="column">
                 <a href=""><img
                         src="https://techsathi.com/wp-content/uploads/2019/07/Best-Agricultural-Apps.jpg"
@@ -996,7 +992,7 @@
                 <a href=""><img
                         src="https://myrepublica.nagariknetwork.com/uploads/media/2019/May/Farmers%20in%20Kokhana.jpg"
                         alt=""></a>
-            </div>
+            </div> -->
 
         </div>
     </div>

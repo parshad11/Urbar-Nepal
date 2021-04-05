@@ -695,6 +695,12 @@ class AdminSidebarMenu
                             'Homepage Banner',
                             ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'ecommerce' && request()->segment(2) == 'banners']
                         );
+
+                        $sub->url(
+                            route('slider_banner_index'),
+                            'Slider Banner',
+                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'ecommerce' && request()->segment(2) == 'slider_banners']
+                        );
                     },
                     ['icon' => 'fa fas fa-house-damage', 'id' => 'tour_step6']
                 )->order(90);

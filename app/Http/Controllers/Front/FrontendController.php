@@ -9,6 +9,7 @@ use App\Mail\VendorRequestMail;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
 use App\Front\Banner;
+use App\Front\SliderBanner;
 
 use function GuzzleHttp\json_decode;
 
@@ -22,7 +23,8 @@ class FrontendController extends Controller
     public function index()
     {
         $banners = Banner::where('status', 'active')->latest()->get();
-        return view('ecommerce.index',compact('banners'));
+        $slider_banners = SliderBanner::where('status', 'active')->latest()->get();
+        return view('ecommerce.index',compact('banners','slider_banners'));
     }
 
     public function getAbout()

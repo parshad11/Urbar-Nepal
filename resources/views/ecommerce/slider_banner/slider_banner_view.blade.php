@@ -1,17 +1,17 @@
 @extends('layouts.app')
-@section('title','Blog Setting')
+@section('title','Slider Banner Setting')
 @section('content')
 
     <!-- Content Header (Page header) -->
     <section class="content-header">
-        <h1>Home Banners</h1>
+        <h1>Slider Banners</h1>
     </section>
 
     <!-- Main content -->
     <section class="content">
         <div class="row">
             <div class="col-md-12">
-                <a href="{{ url('/ecommerce/banners/create')}}" class="btn btn-sm btn-success">Add Banner</a>
+                <a href="{{ url('/ecommerce/slider-banners/create')}}" class="btn btn-sm btn-success">Add Banner</a>
                 <hr>
                 <table class="table table-striped table-sm">
                     <thead class="thead-light">
@@ -23,23 +23,23 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($banners as $banner)
+                    @foreach($silder_banners as $slider_banner)
                     <tr class="row">
-                        <th scope="row"  class="col-2">{{$banner->id}}</th>
-                        <td class='col-4'><img src="{{ asset('uploads/img/home/banners/'.$banner->image) }}" width="300" height="100"></td>
+                        <th scope="row"  class="col-2">{{$slider_banner->id}}</th>
+                        <td class='col-4'><img src="{{ asset('uploads/img/home/slider_banners/'.$slider_banner->image) }}" width="300" height="100"></td>
                         <td class='col-3'>
-                            <span class="badge label label-{{ $banner->status == 'active' ? 'success' : 'danger'}}">{{ $banner->status == 'active' ? 'Active' : 'Inactive'}}</span>
+                            <span class="badge label label-{{ $slider_banner->status == 'active' ? 'success' : 'danger'}}">{{ $slider_banner->status == 'active' ? 'Active' : 'Inactive'}}</span>
                         </td>
                         <td class='col-3'>
-                            <a href="{{ url('/ecommerce/banners/edit/'.$banner->id)}}"  class="btn btn-sm btn-border-success"><i class="fa fa-paper-plane"></i> Edit</a>
-                            <a href="{{ url('/ecommerce/banners/delete/'.$banner->id)}}"  class="btn btn-sm btn-border-danger"><i class="fa fa-paper-plane"></i>Delete</a>
+                            <a href="{{ url('/ecommerce/slider-banners/edit/'.$slider_banner->id)}}"  class="btn btn-sm btn-border-success"><i class="fa fa-paper-plane"></i> Edit</a>
+                            <a href="{{ url('/ecommerce/slider-banners/delete/'.$slider_banner->id)}}"  class="btn btn-sm btn-border-danger"><i class="fa fa-paper-plane"></i>Delete</a>
                         </td>
                     </tr>
                     @endforeach
                     </tbody>
                 </table>
                     @isset($banners)
-                        {{$banners->links()}}
+                        {{$slider_banners->links()}}
                     @endisset
             </div>
         </div>

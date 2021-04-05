@@ -7,6 +7,7 @@ use App\Front\BlogCategory;
 use App\Front\HomeSetting;
 use App\Front\PageSetting;
 use App\Front\Banner;
+use App\Front\SliderBanner;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Utils\Util;
@@ -20,14 +21,16 @@ class CmsController extends Controller
     protected $util;
     protected $blog;
     protected $banner;
+    protected $slider_banner;
 
 
-    public function __construct(HomeSetting $settings, Util $util, Blog $blog, Banner $banner)
+    public function __construct(HomeSetting $settings, Util $util, Blog $blog, Banner $banner, SliderBanner $slider_banner)
     {
         $this->setting = $settings;
         $this->util = $util;
         $this->blog = $blog;
         $this->banner = $banner;
+        $this->slider_banner = $slider_banner;
     }
 
     /**
@@ -341,15 +344,13 @@ class CmsController extends Controller
     //Banner Section
     public function bannerIndex()
     {
-        $banners = Banner::paginate(2);
+        $banners = Banner::paginate(5);
         return view('ecommerce.banner.bannerView')->with('banners', $banners);
-        // return view('ecommerce.banner.bannerCreate');
     }
 
     public function createBanner()
     {
-        // $banners = Banner::orderBy('id', 'desc')->get();
-        return view('ecommerce.banner.bannerCreate')->with('banners', $banners);
+        return view('ecommerce.banner.bannerCreate');
     }
 
     public function storeBanner(Request $request)
@@ -425,6 +426,96 @@ class CmsController extends Controller
                 'msg' => 'banner deleted Successfully'
             ];
             return redirect()->route('banner_index')->with('status', $output);
+        }
+    }
+
+
+
+    //Slider Banner Section
+    public function sliderbannerIndex()
+    {
+        $silder_banners = SliderBanner::paginate(5);
+        return view('ecommerce.slider_banner.slider_banner_view')->with('silder_banners', $silder_banners);
+    }
+
+    public function slidercreateBanner()
+    {
+        return view('ecommerce.slider_banner.slider_banner_create');
+    }
+
+    public function sliderstoreBanner(Request $request)
+    {
+    //    dd($request->hasFile('banner_image'));
+        if ($request->hasFile('slider_banner_image')) {
+            $data['image'] = $this->util->uploadHomeFile($request->slider_banner_image, config('constants.product_img_path') . '/home/slider_banners');
+       
+        }
+        $this->slider_banner->fill($data);
+        $status = $this->slider_banner->save();
+        // dd($status);
+        if ($status) {
+            $output = [
+                'success' => 1,
+                'msg' => 'Slider Banner Added Successfuly'
+            ];
+            return redirect()->route('slider_banner_index')->with('status', $output);
+        }
+    }
+
+    public function slidereditBanner($id)
+    {
+        $slider_banners = SliderBanner::findOrFail($id);
+        return view('ecommerce.slider_banner.slider_banner_edit')->with('slider_banners', $slider_banners);
+    }
+
+    public function sliderupdateBanner(Request $request, $id)
+    {
+        $slider_banner = SliderBanner::findOrFail($id);
+        $slider_banner_image = $slider_banner->image;
+        $slider_banner->status = $request->status;
+        $slider_banner->image = $request->previous_slider_banner_image;
+        if (!isset($request->previous_slider_banner_image)) {
+            if (!empty($slider_banner_image) && file_exists(public_path() . '/uploads/img/home/slider_banners/' . $slider_banner_image)) {
+                unlink(public_path() . '/uploads/img/home/slider_banners/' . $slider_banner_image);
+            }
+        }
+        if ($request->hasFile('slider_banner_image')) {
+            $slider_banner->image = $this->util->uploadHomeFile($request->slider_banner_image, config('constants.product_img_path') . '/home/slider_banners');
+            if (!empty($slider_banner_image) && file_exists(public_path() . '/uploads/img/home/slider_banners/' . $slider_banner_image)) {
+                unlink(public_path() . '/uploads/img/home/slider_banners/' . $slider_banner_image);
+            }
+        }
+        $status = $slider_banner->save();
+        if ($status) {
+            $output = [
+                'success' => 1,
+                'msg' => 'banner Updated Successfully'
+            ];
+            return redirect()->route('slider_banner_index')->with('status', $output);
+        }
+    }
+
+    public function sliderdeleteBanner($id)
+    {
+        $slider_banner = SliderBanner::find($id);
+        $slider_banner_image = $slider_banner->image;
+        if (!$slider_banner) {
+            $output = [
+                'error' => 1,
+                'msg' => 'banner does not Found'
+            ];
+            return redirect()->route('slider_banner_index')->with('status', $output);
+        }
+        $status = $slider_banner->delete();
+        if ($status) {
+            if (!empty($slider_banner_image) && file_exists(public_path() . '/uploads/img/home/slider_banners/' . $slider_banner_image)) {
+                unlink(public_path() . '/uploads/img/home/slider_banners/' . $slider_banner_image);
+            }
+            $output = [
+                'success' => 1,
+                'msg' => 'banner deleted Successfully'
+            ];
+            return redirect()->route('slider_banner_index')->with('status', $output);
         }
     }
   
