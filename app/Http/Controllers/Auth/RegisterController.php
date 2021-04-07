@@ -80,6 +80,8 @@ class RegisterController extends Controller
     {
         
         $createdBy = User::select('id')->where('user_type','=','admin')->first()->id;
+        $type=contact::findorfail($req->name);
+        dd($type);
         $req->validate(
             [
                 'name'              =>      'required|string|max:20',
@@ -89,6 +91,7 @@ class RegisterController extends Controller
                 'address'           =>      'required|string'
             ]
         );
+        
         $dataArray      =       array(
             "name"              =>          $req->name,
             "email"             =>          $req->email,
