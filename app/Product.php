@@ -88,7 +88,7 @@ class Product extends Model
     {
         return $this->belongsTo(\App\Category::class, 'sub_category_id', 'id');
     }
-    
+
     /**
      * Get the brand associated with the product.
      */

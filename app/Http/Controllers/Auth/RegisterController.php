@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\Contact;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
@@ -68,5 +70,44 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+    }
+
+    public function RegisterUserPage(){
+        return view('ecommerce.register');
+    }
+
+    public function store(Request $req)
+    {
+        
+        $createdBy = User::select('id')->where('user_type','=','admin')->first()->id;
+        $req->validate(
+            [
+                'name'              =>      'required|string|max:20',
+                'email'             =>      'required|email|unique:users,email',
+                'phone'             =>      'required|numeric|min:10',
+                'password'          =>      'required|string|min:8',
+                'address'           =>      'required|string'
+            ]
+        );
+        $dataArray      =       array(
+            "name"              =>          $req->name,
+            "email"             =>          $req->email,
+            "mobile"            =>          $req->phone,
+            "shipping_address"   =>          $req->address,
+            "password"          =>          Hash::make($req['password']),
+            "type"              =>          'customer',
+            "business_id"       =>          '1',
+            "created_by"        =>          $createdBy,
+            "contact_id"        =>          'CON'.rand(1111,9999)
+        );
+        $contact           =       Contact::create($dataArray);
+        if(!is_null($contact)) {
+            return back()->with("success", "Success! Registration completed");
+        }
+
+        else {
+            return back()->with("failed", "Alert! Failed to register");
+        }
+
     }
 }

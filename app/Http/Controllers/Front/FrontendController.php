@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\VendorRequestMail;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
+use App\Category;
 
 use function GuzzleHttp\json_decode;
 

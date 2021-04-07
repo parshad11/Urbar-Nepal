@@ -71,7 +71,7 @@
               <button type="submit" class="uk-button view-cart center">Log in</button>
             </div>
             <a href="forget.html" class="form-forgotten-password">Forgotten password &middot;</a>
-            <a href="registerpage.html" class="form-create-an-account">Create an account &rarr;</a>
+            <a href="{{route('registerr_user')}}" class="form-create-an-account">Create an account &rarr;</a>
 
           </div>
 
