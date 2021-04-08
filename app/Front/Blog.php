@@ -6,9 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Blog extends Model
 {
-    protected $fillable = [
-        'title', 'slug', 'category_id', 'summary', 'description', 'image', 'added_by', 'status'
-    ];
+    protected $guarded = [
+          ];
     public function category(){
         return $this->hasOne(BlogCategory::class, 'id', 'category_id');
     }

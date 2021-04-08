@@ -157,17 +157,19 @@ class CmsController extends Controller
 
     public function storeBlog(Request $request)
     {
+      // dd($request->hasFile('banner_image'));
         $data['title'] = $request->title;
         $data['slug'] = Str::slug($request->title);
         $data['category_id'] = $request->category_id;
         $data['summary'] = $request->summary;
         $data['description'] = $request->description;
         if ($request->hasFile('blog_image')) {
-            $data['image'] = $this->util->uploadHomeFile($request->blog_image[0], config('constants.product_img_path') . '/home/blogs');
+            $data['image'] = $this->util->uploadHomeFile($request->blog_image, config('constants.product_img_path') . '/home/blogs');
+       
         }
-        $data['added_by'] = $request->session()->get('user.id');
         $this->blog->fill($data);
         $status = $this->blog->save();
+        // dd($status);
         if ($status) {
             $output = [
                 'success' => 1,
@@ -260,7 +262,30 @@ class CmsController extends Controller
             ];
             return redirect()->back()->with('status', $output);
         }
+    }
+    
+    public function editBlogCat($id)
+    {
 
+        $categories = BlogCategory::findorfail($id);
+        return view('ecommerce.blog.category_form')->with($categories);
+
+
+    }
+   
+    public function updateBlogCat(Request $request , $id)
+    {
+            // $data=$request->all();
+            $categories=BlogCategory::find($id);
+            // return $data; 
+            $categories->update($data);
+            return redirect()->route('ecommerce.blog.category_index');
+    }
+        public function deleteBlogCat($id)
+        {
+        $blog_cat = BlogCategory::findorfail($id);
+        $blog_cat->delete();
+        return back();
     }
 
     public function viewPages()

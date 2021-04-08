@@ -11,7 +11,7 @@
         }
     </style>
 @endsection
-@section('content')
+@section('content') 
  <!-- Account Start -->
  <section class="account-area jarallax overlay-white">
     <img class="jarallax-img" src="images/bg/6.jpg" alt="">

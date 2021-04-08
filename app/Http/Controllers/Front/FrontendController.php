@@ -8,6 +8,9 @@ use App\Http\Controllers\Controller;
 use App\Mail\VendorRequestMail;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
+use App\Front\BlogCategory;
+use App\Front\Blog;
+
 
 use function GuzzleHttp\json_decode;
 
@@ -25,30 +28,42 @@ class FrontendController extends Controller
 
     public function getAbout()
     {
-        return view('ecommerce.about_us');
+        return view('ecommerce.about');
     }
 
     public function getBlog()
     {
-        return view('ecommerce.blog');
+        $categories = BlogCategory::latest()->get();
+        $blogs = Blog::where('status','active')->latest()->get();
+        //return response()->json($blogs);
+        return view('ecommerce.blog',compact('categories','blogs'));
+       
     }
-
+    
     public function mailRequest(Request $request)
     {
         Mail::to(Config::get('mail.from.address'))->send(new VendorRequestMail($request));
         return redirect()->back();
     }
-
-
-
     public function getSingleBlog($slug)
     {
-        return view('ecommerce.blog_single');
+        //$about_details = FrontAbout::select('banner_image')->first();
+        $categories = BlogCategory::with('news')->orderBy('id', 'desc')->get();
+        $blog_single = Blog::where('slug', $slug)->first();
+        $blogs = Blog::orderBy('created_at', 'desc')->take(5)->get();
+      //  return response()->json($categories);
+        return view('ecommerce.blog_single')
+           // ->with('about_info', $about_details)
+            ->with('blog_single', $blog_single)
+            ->with('categories', $categories)
+            
+            ->with('blogs', $blogs);
+       
     }
 
     public function getContact()
     {
-        return view('ecommerce.contact_us');
+        return view('ecommerce.contact');
     }
 
     public function getPages($slug)

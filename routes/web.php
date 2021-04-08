@@ -413,14 +413,15 @@ Route::namespace('Front')->middleware(['setData', 'auth', 'SetSessionData', 'lan
     Route::get('/ecommerce/blogs-category/create', 'CmsController@createBlogCat')->name('ecom_blogcat_form');
     Route::post('/ecommerce/blogs-category', 'CmsController@storeBlogCat')->name('ecom_blogcat_store');
     Route::get('/ecommerce/blogs-category/{id}/edit', 'CmsController@editBlogCat')->name('ecom_blogcat_edit');
-    Route::put('/ecommerce/blogs-category/{id}', 'CmsController@updateBlogCat')->name('ecom_blogcat_update');
-    Route::delete('/ecommerce/blogs-category/{id}', 'CmsController@deleteBlogCat')->name('ecom_blogcat_delete');
+    Route::put('/ecommerce/blogs-category/{id}/update', 'CmsController@updateBlogCat')->name('ecom_blogcat_update');
+    Route::GET('/ecommerce/blogs-category/{id}/delete', 'CmsController@deleteBlogCat')->name('ecom_blogcat_delete');
 
     // Blog Section
     Route::get('/ecommerce/blogs', 'CmsController@viewBlog')->name('ecom_blog');
     Route::get('/ecommerce/blogs/create', 'CmsController@createBlog')->name('ecom_blog_form');
     Route::post('/ecommerce/blogs', 'CmsController@storeBlog')->name('ecom_blog_store');
     Route::get('/ecommerce/blogs/{id}/edit', 'CmsController@editBlog')->name('ecom_blog_edit');
+    Route::get('/ecommerce/blogs/more','CmsController@moreBlog')->name('ecom_blog_more');
     Route::put('/ecommerce/blogs/{id}', 'CmsController@updateBlog')->name('ecom_blog_update');
     Route::delete('/ecommerce/blogs/{id}', 'CmsController@deleteBlog')->name('ecom_blog_delete');
 
