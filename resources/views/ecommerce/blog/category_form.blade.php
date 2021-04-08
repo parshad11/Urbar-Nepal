@@ -1,83 +1,20 @@
-@extends('layouts.app')
-@section('title','Blog Category Setting')
-@section('content')
-
-<!-- Content Header (Page header) -->
-<section class="content-header">
-    <h1>Blog Category</h1>
-</section>
-
-<!-- Main content -->
-<section class="content">
-    <a href="{{ route('ecom_blog_form') }}" class="btn btn-sm btn-success">Back to Blog</a><br><br>
-<div class="row">
-    <div class="col-md-4">
-        <form action="{{ route('ecom_blogcat_store')}}" class="form" method="POST" enctype="multipart/form-data">
-            @csrf
-            @component('components.widget', ['class' => 'box-primary'])
-            <div class="row form-group">
-                <label for="blog" class="control-label">Category Name :</label>
-
-                <div class="col-md-12" style="padding:0 10px 0 0;">
-                    <input type="text" name="title" class="form-control" placeholder="Category Title..." required>
-                </div>
+<div class="modal-dialog modal-md" role="document" id="categoryModal">
+    <div class="modal-content">
+        <form action="{{route('ecom_blogcat')}}">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Add Category</h4>
             </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="text-center">  
-                        <button type="submit" value="submit" class="btn btn-primary submit_product_form">Save</button>
-                    </div>
-                </div>
+            <div class="modal-body">
+           
+            <input type="text" name="title" class="form-control" value="">
+            
             </div>
-            @endcomponent
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Update</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
         </form>
-    </div>
-    <div class="col-md-6">
-        @component('components.widget', ['class' => 'box-primary'])
 
-        <table class="table table-striped table-sm">
-            <thead class="thead-light">
-              <tr>
-                <th>S.N</th>
-                <th>Category</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-                @if(isset($categories) && count($categories) > 0)
-                @foreach ($categories as $key => $category)
-                    <tr>
-                        <td>{{$key+1}}</td>
-                        <td>{{$category->title}}</td>
-                        <td>
-                            <a href="{{ route('ecom_blogcat_edit', $category->id) }}" class="btn btn-sm btn-border-success"  data-toggle="modal" data-target="#categoryModal"><i class="fa fa-paper-plane"></i>&nbsp;Edit</a>
-                            <a href="{{ route('ecom_blogcat_delete', $category->id) }}" class="btn btn-sm btn-border-danger"><i class="fa fa-trash"></i>&nbsp;Delete</a>
-                        </td>
-                    </tr>
-                @endforeach
-                @else
-                <tr>
-                    <td colspan="3">No Data Found</td>
-                </tr>
-                @endif
-            </tbody>
-          </table>
-
-          @endcomponent
-    </div>
-</div>
-</section>
-<!-- /.content -->
-
-<div class="modal fade" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
-	@include('ecommerce.blog.category_form_modal')
-</div>
-
-@endsection
-@section('javascript')
-    <script>
-         $(document).ready(function(){
-
-         });
-    </script>
-@endsection
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->

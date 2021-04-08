@@ -21,7 +21,7 @@ Route::namespace('Front')->group(function () {
     Route::get('/about-us', 'FrontendController@getAbout')->name('front_about');
     Route::get('/blogs', 'FrontendController@getBlog')->name('blog');
     Route::get('/contact-us', 'FrontendController@getContact')->name('contact');
-    Route::get('/blog/{slug}', 'FrontendController@getSingleBlog')->name('blog_single');
+    Route::get('/blog/single/{slug}', 'FrontendController@getSingleBlog')->name('blog_single');
     Route::post('/vendor/request', 'FrontendController@mailRequest')->name('vendor.request');
     Route::get('/faqs', 'FrontendController@getFaqs')->name('faqs');
     // Route::get('/buy-sell', 'FrontendController@getBuyOrSell')->name('buy_sell');

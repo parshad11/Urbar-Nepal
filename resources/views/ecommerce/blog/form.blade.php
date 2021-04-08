@@ -22,9 +22,14 @@
         </div>
         <div class="col-md-10">
             <div class="row" style="margin-bottom: 10px;">
+<<<<<<< HEAD
                 <label for="blog_image" class="control-label">Image Dimension :500*500</label>
                 <div id="blog_img">
 
+=======
+                <label for="blog_image" class="control-label">Image Dimension :800*320</label>
+                <div id="ecom_blog_img">
+>>>>>>> biju
                 </div>
             </div>
             <div class="row" style="margin-bottom: 10px;">
@@ -44,6 +49,7 @@
                         </select>
 						<span class="input-group-btn">
                             <a href="{{ route('ecom_blogcat') }}" class="btn btn-default bg-white btn-flat"><i class="fa fa-plus-circle text-primary fa-lg"></i></a>
+                            {{-- <a href="{{ route('ecom_blogcat_form') }}" class="btn btn-default bg-white btn-flat" data-toggle="modal" data-target="#categoryModal"><i class="fa fa-plus-circle text-primary fa-lg"></i></a> --}}
 						</span>
 					</div>
 				</div>
@@ -61,9 +67,19 @@
                 </div>
             </div>
             <div class="row" style="margin-bottom: 10px;">
+                <div class="col-md-2" style="padding:0 10px 0 0;">
+                    <label for="service_status" class="control-label">Status :</label>
+                    <select class="form-control" name="status" id="service_status">
+                        <option value="" selected>-- Select Any --</option>
+                        <option value="active" {{ isset($blog_info->status) && $blog_info->status == 'active' ? 'selected' : ''}}>Active</option>
+                        <option value="inactive" {{ isset($blog_info->status) && $blog_info->status == 'inactive' ? 'selected' : ''}}>Inactive</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom: 10px;">
                 <div class="col-md-12" style="padding:0 10px 0 0;">
                     <label for="blog_description" class="control-label">Description :</label>
-                    <textarea name="description" class="form-control" id="editor" required></textarea>
+                    <textarea name="description" class="form-control" id="" required></textarea>
                 </div>
             </div>
         </div>
@@ -78,9 +94,17 @@
         </div>
     </div>
 
+    {{-- <div class="row">
+        <div class="col-sm-12">
+            <button type="button" class="btn btn-default bg-white btn-flat" data-toggle="modal" data-target="#categoryModal"><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
+        </div>
+    </div> --}}
 </form>  
 </section>
 <!-- /.content -->
+<div class="modal fade" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
+	@include('ecommerce.blog.category_form')
+</div>
 @endsection
 @section('javascript')
     <script src="{{ asset('ecom/spartan/dist/js/spartan-multi-image-picker-min.js') }}"></script>
@@ -89,11 +113,11 @@
     <script>
          $(document).ready(function(){
             $('#editor').summernote({
-                height: 200,
+                height: 300,
             });
-
-            $("#blog_img").spartanMultiImagePicker({
-                fieldName:        'blog_image[]',
+            
+            $("#ecom_blog_img").spartanMultiImagePicker({
+                fieldName:        'blog_image',
                 maxCount:         1,
                 rowHeight:        '200px',
                 groupClassName:   'col-md-3 col-sm-4 col-xs-6',
@@ -104,9 +128,6 @@
                     console.log(index, file,  'extension err');
                     alert('Please only input png Type file')
                 }
-            });
-            $('.remove-files').on('click', function(){
-                $(this).parents(".col-md-3").remove();
             });
          });
     </script>

@@ -50,8 +50,8 @@
                         <td>{{$key+1}}</td>
                         <td>{{$category->title}}</td>
                         <td>
-                            <a href="{{ route('ecom_blogcat_edit', $category->id) }}" class="btn btn-sm btn-border-success"  data-toggle="modal" data-target="#categoryModal"><i class="fa fa-paper-plane"></i>&nbsp;Edit</a>
-                            <a href="{{ route('ecom_blogcat_delete', $category->id) }}" class="btn btn-sm btn-border-danger"><i class="fa fa-trash"></i>&nbsp;Delete</a>
+                            <!-- <a href="{{ route('ecom_blogcat_edit', $category->id) }}" class="btn btn-sm btn-border-success"  data-toggle="modal" data-target="#categoryModal"><i class="fa fa-paper-plane"></i>&nbsp;Edit</a> -->
+                            <a href="{{ route('ecom_blogcat_delete', $category->id) }}" class="">Delete</a>
                         </td>
                     </tr>
                 @endforeach
@@ -70,7 +70,7 @@
 <!-- /.content -->
 
 <div class="modal fade" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
-	@include('ecommerce.blog.category_form_modal')
+	@include('ecommerce.blog.category_form')
 </div>
 
 @endsection

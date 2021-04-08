@@ -6,14 +6,10 @@
                     <h5 class="text-white">Flash Sale 2021 ! <a href="#!">20% Discount</a></h5>
                 </div>
                 <div class="top-header-contact d-flex align-items-center justify-content-around">
-
-
                     <div class="text-white" id="top-header-close"><i class="fas fa-times"></i></div>
                 </div>
             </div>
         </div>
-
-
     </div>
     <div class="mid-header " style="z-index: 1000;" uk-sticky="top: 100;  animation: uk-animation-slide-top">
         <div class="container-fluid">

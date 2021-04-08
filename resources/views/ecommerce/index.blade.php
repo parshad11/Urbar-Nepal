@@ -109,32 +109,23 @@
                                 <div class="sub-category-block">
                                     <div class="sub-nav-main-category"><a href="">Mushroom</a></div>
                                     <ul class="side-sub-nav-category-ul">
-
                                         <li class="sub-nav-li"><a href="">Gobre Chyau</a></li>
                                         <li class="sub-nav-li"><a href="">Gobre Chyau</a></li>
                                         <li class="sub-nav-li"><a href="">Gobre Chyau</a></li>
                                         <li class="sub-nav-li"><a href="">Gobre Chyau</a></li>
-
-
                                     </ul>
                                 </div>
-
                             </div>
                         </li>
-
                         <li class="li-has-children"><a href="">Local & Organic<span class="float-right"
                                     uk-icon="icon: chevron-right"></span> <span class="clearfix"></span></a>
                             <div class="hover-side-menu">
                                 <div class="sub-category-block">
                                     <div class="sub-nav-main-category"><a href="">Tomato</a>
-
                                     </div>
                                     <ul class="side-sub-nav-category-ul">
-
                                         <li class="sub-nav-li"><a href=""> Jhapali Tomato</a></li>
                                         <li class="sub-nav-li"><a href=""> Rato Tamatar</a></li>
-
-
                                     </ul>
                                 </div>
 

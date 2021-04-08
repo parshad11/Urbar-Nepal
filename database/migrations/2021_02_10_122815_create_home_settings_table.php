@@ -21,7 +21,7 @@ class CreateHomeSettingsTable extends Migration
             $table->string('email');
             $table->text('social_links')->nullable();
             $table->string('google_map_link')->nullable();
-            $table->text('about_content')->nullable();
+            $table->text('about_content')->nullable(); 
             $table->string('created_by');
             $table->timestamps();
         });
