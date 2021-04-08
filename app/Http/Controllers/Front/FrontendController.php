@@ -10,6 +10,14 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
 use App\Front\Banner;
 use App\Front\SliderBanner;
+use App\BusinessLocation;
+use App\VariationLocationDetails;
+use App\Category;
+use App\Front\Cart;
+use App\Front\Document;
+
+use App\Product;
+
 
 use function GuzzleHttp\json_decode;
 
@@ -24,7 +32,12 @@ class FrontendController extends Controller
     {
         $banners = Banner::where('status', 'active')->latest()->get();
         $slider_banners = SliderBanner::where('status', 'active')->latest()->get();
-        return view('ecommerce.index',compact('banners','slider_banners'));
+        $location = BusinessLocation::where('location_id', 'BL0001')->first();
+        $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
+        $products = Product::with(['product_variations.variations.product', 'unit'])->whereIn('id', $variation_location_product_ids)->latest()->get();
+        
+        return view('ecommerce.index')->with(compact('banners','slider_banners','products'));
+        // return view('ecommerce.index',compact('banners','slider_banners'));
     }
 
     public function getAbout()

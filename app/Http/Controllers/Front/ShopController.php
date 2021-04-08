@@ -76,8 +76,9 @@ class ShopController extends Controller
         $location = BusinessLocation::where('location_id', 'BL0001')->first();
         $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
         $products = Product::with(['product_variations.variations.product', 'unit'])->where('category_id', $product_cat)->where('id', '!=',$product->id)->whereIn('id', $variation_location_product_ids)->take(5)->latest()->get();
-        return view('ecommerce.product_single')->with('variation', $product)
+        return view('ecommerce.product_details')->with('variation', $product)
             ->with('products', $products);
+        return view('ecommerce.product_details');
     }
 
     public function downloadFile($fileId){
