@@ -1,5 +1,6 @@
 @extends('ecommerce.layouts.master')
 @section('content')
+
 <section id="mega-nav--slider">
     <div class="slider">
         <div class="row">
@@ -33,10 +34,10 @@
                                     <div class="sub-nav-main-category"><a href="">Mushroom</a></div>
                                     <ul class="side-sub-nav-category-ul">
 
-                                        <li class="sub-nav-li"><a href="">Gobre Chyau</a></li>
-                                        <li class="sub-nav-li"><a href="">Gobre Chyau</a></li>
-                                        <li class="sub-nav-li"><a href="">Gobre Chyau</a></li>
-                                        <li class="sub-nav-li"><a href="">Gobre Chyau</a></li>
+                                        <li class="sub-nav-li"><a href="">Gobre&nbspChyau</a></li>
+                                        <li class="sub-nav-li"><a href="">Gobre&nbspChyau</a></li>
+                                        <li class="sub-nav-li"><a href="">Gobre&nbspChyau</a></li>
+                                        <li class="sub-nav-li"><a href="">Gobre&nbspChyau</a></li>
 
 
                                     </ul>
@@ -71,10 +72,10 @@
                                     <div class="sub-nav-main-category"><a href="">Mushroom</a></div>
                                     <ul class="side-sub-nav-category-ul">
 
-                                        <li class="sub-nav-li"><a href="">Gobre Chyau</a></li>
-                                        <li class="sub-nav-li"><a href="">Gobre Chyau</a></li>
-                                        <li class="sub-nav-li"><a href="">Gobre Chyau</a></li>
-                                        <li class="sub-nav-li"><a href="">Gobre Chyau</a></li>
+                                        <li class="sub-nav-li"><a href="">Gobre&nbspChyau</a></li>
+                                        <li class="sub-nav-li"><a href="">Gobre&nbspChyau</a></li>
+                                        <li class="sub-nav-li"><a href="">Gobre&nbspChyau</a></li>
+                                        <li class="sub-nav-li"><a href="">Gobre&nbspChyau</a></li>
 
 
                                     </ul>
@@ -201,7 +202,7 @@
 
 
 
-                        <li class="li-has-children"><a href="allcategory.html"> <i
+                        <li class="li-has-children"><a href="{{Route('show_all_category')}}"> <i
                                     class="fas fa-plus-square"></i>
                                 All Category</a></li>
                     </ul>

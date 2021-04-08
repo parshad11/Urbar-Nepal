@@ -101,10 +101,7 @@ class ShopController extends Controller
         return view('ecommerce.checkout')->with(compact('cart_items', 'user', 'total_price'));
     }
 
-    public function categoryProduct($slug)
-    {
-        return view('ecommerce.category');
-    }
+
 
     public function subcategoryProduct($slug, $sub_cat_slug)
     {
@@ -119,19 +116,34 @@ class ShopController extends Controller
             $all_categories = Category::with('sub_categories')->where('parent_id', 0)->where('id', '!=', $special_cat->id)->get();
         }
         //$all_categories = Category::with('sub_categories')->where('parent_id', 0)->where('id', '!=', $special_cat->id)->get();
-        return view('ecommerce.shop')->with('products', $products)
+        return view('ecommerce.index')->with('products', $products)
             ->with('special_category', $special_cat)
             ->with('categories', $all_categories)
             ->with('category', $category);
+            
     }
-
+    public function showAllCategory(){
+        $category = Category::with('sub_categories')->where('parent_id','=',0)->get();
+        $sub_category = Category::with('sub_categories')->where('parent_id','!=',0)->get();
+        return view('ecommerce.all-category')->with('categories', $category)
+                                             ->with('sub_categoreis',$sub_category);
+    }
+    public function sub_category_Product($slug , $id)
+    {
+        $sub_category = Product::where('sub_category_id','=',$id)->get();
+        return view('ecommerce.sub-catagories')->with('sub_category',$sub_category);
+    }
+    public function Show_category_list($slugg , $idd){
+        $category = Product::where('category_id','=',$idd)->get();
+        return view('ecommerce.category')->with('category',$category);
+                                      
+    }
     public function getCustomer()
     {
         $user_id = Auth::guard('customer')->user()->id;
         $customer = Contact::where('id', $user_id)->first();
         $orders = Transaction::with(['sell_lines.variations','delivery'])->where('contact_id', $user_id)->where('is_ecommerce_order',1)->get();
         return view('ecommerce.user_account')->with(compact('customer', 'orders'));
-
     }
 
     public function autoComplete(Request $request)
@@ -379,4 +391,5 @@ class ShopController extends Controller
     {
         //
     }
+
 }

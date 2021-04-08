@@ -10,10 +10,11 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/shop/login', 'Auth\LoginController@showCustomerLoginForm')->name('front_login');
-Route::post('/shop/login', 'Auth\LoginController@customerLogin')->name('post_front_login');
-Route::get('/shop/logout', 'Auth\LoginController@customerLogout')->name('user.logout');
+Route::get('/ecommerce/register','Auth\RegisterController@RegisterUserPage')->name('registerr_user');
+Route::post('/ecommerce/login','Auth\RegisterController@store')->name('registerCustomer');
+Route::get('/ecommerce/login', 'Auth\LoginController@showCustomerLoginForm')->name('front_login');
+Route::post('/ecommerce/index', 'Auth\LoginController@customerLogin')->name('post_front_login');
+Route::get('/ecommerce/logout', 'Auth\LoginController@customerLogout')->name('user.logout');
 
 Route::namespace('Front')->group(function () {
     Route::get('/', 'FrontendController@index')->name('front_dashboard');
@@ -27,7 +28,10 @@ Route::namespace('Front')->group(function () {
     // Route::get('/careers', 'FrontendController@getCareers')->name('careers');
 
     // E-commerce Routes
-    Route::get('/category/{slug}', 'ShopController@categoryProduct')->name('product_category');
+    Route::get('/category/{slugg}/{idd}','ShopController@Show_category_list')->name('categories_product_list');
+    Route::get('/sub-catagories/{slug}/{id}', 'ShopController@sub_category_Product')->name('product_sub_category');
+    Route::get('/all-category','ShopController@showAllCategory')->name('show_all_category');
+
 
 
     Route::get('/shop/cart-item', 'CartController@updateNavCart')->name('cart.nav_cart');
@@ -48,4 +52,5 @@ Route::namespace('Front')->group(function () {
 
 
     Route::get('/{slug}', 'FrontendController@getPages')->name('pages');
+
 });

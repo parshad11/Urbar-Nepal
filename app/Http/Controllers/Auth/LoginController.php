@@ -52,7 +52,7 @@ class LoginController extends Controller
     public function showCustomerLoginForm()
     {
         if (Auth::guard('customer')->check()) {
-            return redirect('/shop');
+            return redirect('ecommerce.login');
         }
         return view('ecommerce.login');
     }
@@ -73,7 +73,7 @@ class LoginController extends Controller
         $request->validate($rules, $messages);
 
         if (Auth::guard('customer')->attempt(['email' => $request->email, 'password' => $request->password])) {
-            return redirect()->intended('/shop');
+            return redirect()->intended();
         }
         $request->session()->flash('error', 'Invalid Credentials');
         return back()->withInput($request->only('email'));
@@ -161,4 +161,5 @@ class LoginController extends Controller
 
         return '/home';
     }
+
 }

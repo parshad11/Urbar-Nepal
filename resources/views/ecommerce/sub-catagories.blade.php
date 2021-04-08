@@ -1,7 +1,9 @@
 @extends('ecommerce.layouts.master')
 @section('content')
 <!--  category -->
-
+<?php
+    // dd($sub_category);
+?>
 <section id="category-filter">
     <div class="w-100 mx-auto">
         <div class="row my-4">
@@ -58,7 +60,6 @@
                         </div>
 
                     </div>
-
                     <div class="product_sort_by ">
                         <div class="d-flex align-items-center">
                             <div class="heading">
@@ -75,8 +76,8 @@
                     </div>
                 </div>
                 <div class="product-category white-product">
-                @if(isset($category))
-                @foreach($category as $category)
+                @if(isset($sub_category))
+                @foreach($sub_category as $sub_category)
                     <article class="product mt-2 instock sale purchasable">
                         <div class="product-wrap">
                             <div class="product-top">
@@ -100,19 +101,15 @@
                                 <div class="product-meta">
                                     <div class="title-wrap">
                                         <p class="product-title">
-                                            <a href="singlepage.html">{{$category->name}} </a>
+                                            <a href="singlepage.html">{{$sub_category->name}} </a>
                                         </p>
                                     </div>
                                 </div>
                                 <div class="d-flex align-items-center justify-content-between">
-
                                     <div class="product_price">
                                         <div class="product_price-actual">
-                                        
+                                            Rs.50
                                         </div>
-                                        
-                                        
-                                        
                                         <div class="product_price-discount">
                                             <span class="line-through">
                                                 Rs.70
@@ -120,8 +117,6 @@
                                             <span>-20%</span>
                                         </div>
                                     </div>
-                                   
-                                    
                                     <div class="product_cart">
                                         <a href="javascript:void(0)">
                                             <ion-icon name="cart" uk-tooltip=" Add to Cart"></ion-icon>

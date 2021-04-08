@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
 use App\Front\Banner;
 use App\Front\SliderBanner;
+use App\Category;
 
 use function GuzzleHttp\json_decode;
 
@@ -58,7 +59,7 @@ class FrontendController extends Controller
     public function getPages($slug)
     {
         $page_info = PageSetting::where('slug', $slug)->first();
-        return view('frontcms.page');
+        return view('ecommerce.login');
     }
 
     /**
