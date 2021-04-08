@@ -1249,6 +1249,7 @@
                         </div>
                     </div>
                 </article>
+                
                 <article class="product instock sale purchasable">
                     <div class="product-wrap">
                         <div class="product-top">
@@ -1333,57 +1334,66 @@
         <div class="product-category white-product">
 
             <div class="category--slider owl-carousel ">
+                @forelse($products as $product)
+                    @foreach ($product->product_variations as $product_variation)
+                        @foreach ($product_variation->variations as $variation)
+                            <article class="product instock sale purchasable">
+                                <div class="product-wrap">
+                                    <div class="product-top">
+                                        <span class="product-label discount">new</span>
+                                        <figure>
+                                            <a href="{{route('product_single',$variation->sub_sku)}}">
+                                                <div class="product-image">
+                                                    <img width="320" height="320"
+                                                        src="@foreach($variation->media as $media){{ $media->display_url }}@endforeach"
+                                                        class="attachment-shop_catalog size-shop_catalog" alt="">
+                                                </div>
+                                            </a>
+                                        </figure>
 
-                <article class="product instock sale purchasable">
-                    <div class="product-wrap">
-                        <div class="product-top">
-                            <span class="product-label discount">new</span>
 
-
-                            <figure>
-                                <a href="singlepage.html">
-                                    <div class="product-image">
-                                        <img width="320" height="320"
-                                            src="https://cdn.shopify.com/s/files/1/0108/7370/0415/products/Shop-1.png"
-                                            class="attachment-shop_catalog size-shop_catalog" alt="">
                                     </div>
-                                </a>
-                            </figure>
+                                    <div class="product-description">
 
-
-                        </div>
-                        <div class="product-description">
-
-                            <div class="product-meta">
-                                <div class="title-wrap">
-                                    <p class="product-title">
-                                        <a href="singlepage.html">Water Melon || Per KG</a>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="product_price">
-                                    <div class="product_price-actual">
-                                        Rs.50
+                                        <div class="product-meta">
+                                            <div class="title-wrap">
+                                                <p class="product-title">
+                                                    <a href="singlepage.html">{{$variation->product->name}}
+                                                            &nbsp;{{$variation->name != "DUMMY" ? $variation->name : ''}}</a>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <div class="product_price">
+                                                <div class="product_price-actual">
+                                                    Rs. {{ number_format($variation->sell_price_inc_tax,2) }}
+                                                        /{{$variation->product->unit->short_name}}
+                                                </div>
+                                            @if($variation->market_price>0)
+                                                <div class="product_price-discount">
+                                                    <span class="line-through">
+                                                        Rs. {{ number_format($variation->market_price,2) }}
+                                                    </span>
+                                                    <!-- <span>-20%</span> -->
+                                                </div>
+                                            @endif
+                                            </div>
+                                            <div class="product_cart">
+                                                <a href="javascript:void(0)">
+                                                    <ion-icon name="cart" uk-tooltip=" Add to Cart"></ion-icon>
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="product_price-discount">
-                                        <span class="line-through">
-                                            Rs.70
-                                        </span>
-                                        <span>-20%</span>
-                                    </div>
                                 </div>
-                                <div class="product_cart">
-                                    <a href="javascript:void(0)">
-                                        <ion-icon name="cart" uk-tooltip=" Add to Cart"></ion-icon>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </article>
+                            </article>
+                        @endforeach
+                    @endforeach
+                    @empty
+                @endforelse
 
-                <article class="product instock sale purchasable">
+
+                <!-- <article class="product instock sale purchasable">
                     <div class="product-wrap">
                         <div class="product-top">
                             <span class="product-label discount">new</span>
@@ -1576,6 +1586,7 @@
                         </div>
                     </div>
                 </article>
+
                 <article class="product instock sale purchasable">
                     <div class="product-wrap">
                         <div class="product-top">
@@ -1623,7 +1634,7 @@
                             </div>
                         </div>
                     </div>
-                </article>
+                </article> -->
 
 
 

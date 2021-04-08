@@ -18,6 +18,8 @@ Route::get('/ecommerce/logout', 'Auth\LoginController@customerLogout')->name('us
 
 Route::namespace('Front')->group(function () {
     Route::get('/', 'FrontendController@index')->name('front_dashboard');
+    Route::get('/shop/auto-complete', 'FrontendController@autoComplete')->name('autocomplete.search');
+
     Route::get('/about-us', 'FrontendController@getAbout')->name('front_about');
     Route::get('/blogs', 'FrontendController@getBlog')->name('blog');
     Route::get('/contact-us', 'FrontendController@getContact')->name('contact');
