@@ -104,7 +104,7 @@ class CartController extends Controller
         if ($cart_item) {
             $cart_item->delete();
             $cart_items = Cart::with('variation')->where('user_id', $user_id)->get();
-            return view('ecommerce.cart_detail')->with('cart_items', $cart_items);
+            return view('ecommerce.cart')->with('cart_items', $cart_items);
         }
     }
 

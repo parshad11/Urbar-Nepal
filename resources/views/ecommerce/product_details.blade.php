@@ -103,7 +103,7 @@
                                 <div class="d-flex qty-number">
                                     <div class="btn-minus plus-minus px-2 pl-0"><i class="fas fa-minus"></i>
                                     </div>
-                                    <input value="1">
+                                    <input value="1" class="input_quantity"/>
                                     <div class="btn-plus plus-minus px-2"><i class="fas fa-plus"></i>
                                     </div>
                                 </div>
@@ -115,9 +115,12 @@
                                 <div
                                     class="d-flex justify-content-between   flex-column flex-lg-row flex-md-row align-items-start align-items-lg-center align-items-md-center align-items-sm-start">
                                     <div class="btn_add-to-cart my-sm-2 my-2 my-md-0 my-lg-0">
-                                        <a href="#!"><button class=" uk-button view-cart">Add to Cart&nbsp;<i
+                                        <!-- <a href="#!">
+                                         <button class=" uk-button view-cart">Add to Cart&nbsp;<i
                                                     class="fas fa-cart-plus"></i></button>
-                                        </a>
+                                        </a> -->
+                                        <button class="uk-button view-cart" id="add_to_carts" product_id="{{$variation->id}}">Add to Cart&nbsp;<i
+                                        class="fas fa-cart-plus"></i></button>
                                     </div>
 
                                     <div class="btn_add-to-cart my-sm-2 my-2 my-md-0 my-lg-0">
@@ -399,4 +402,7 @@
 
 </div>
 
+@endsection
+@section('scripts')
+    
 @endsection

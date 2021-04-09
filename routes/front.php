@@ -11,8 +11,8 @@
 |
 */
 Route::get('/ecommerce/register','Auth\RegisterController@RegisterUserPage')->name('registerr_user');
-Route::post('/ecommerce/login','Auth\RegisterController@store')->name('registerCustomer');
 Route::get('/ecommerce/login', 'Auth\LoginController@showCustomerLoginForm')->name('front_login');
+Route::post('/ecommerce/login','Auth\RegisterController@store')->name('registerCustomer');
 Route::post('/ecommerce/index', 'Auth\LoginController@customerLogin')->name('post_front_login');
 Route::get('/ecommerce/logout', 'Auth\LoginController@customerLogout')->name('user.logout');
 

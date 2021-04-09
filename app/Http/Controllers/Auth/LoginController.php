@@ -52,7 +52,7 @@ class LoginController extends Controller
     public function showCustomerLoginForm()
     {
         if (Auth::guard('customer')->check()) {
-            return redirect('ecommerce.login');
+            return redirect()->route('front_dashboard');
         }
         return view('ecommerce.login');
     }

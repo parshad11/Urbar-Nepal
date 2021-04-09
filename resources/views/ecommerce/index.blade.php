@@ -1358,7 +1358,7 @@
                                         <div class="product-meta">
                                             <div class="title-wrap">
                                                 <p class="product-title">
-                                                    <a href="singlepage.html">{{$variation->product->name}}
+                                                    <a href="{{route('product_single',$variation->sub_sku)}}">{{$variation->product->name}}
                                                             &nbsp;{{$variation->name != "DUMMY" ? $variation->name : ''}}</a>
                                                 </p>
                                             </div>
@@ -1379,7 +1379,7 @@
                                             @endif
                                             </div>
                                             <div class="product_cart">
-                                                <a href="javascript:void(0)">
+                                                <a href="javascript:void(0)" id="add_to_carts" product_id="{{$variation->id}}">
                                                     <ion-icon name="cart" uk-tooltip=" Add to Cart"></ion-icon>
                                                 </a>
                                             </div>

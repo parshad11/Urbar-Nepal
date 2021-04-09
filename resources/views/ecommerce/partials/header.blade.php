@@ -148,11 +148,12 @@
                         </div>
 
                         <div class="user-cart">
-                            <a href="" class="user-cart-link">
-
+                            <a href="{{route('product.cart')}}" class="user-cart-link">
                                 <img src="https://cdn.iconscout.com/icon/premium/png-256-thumb/shop-cart-5-664052.png"
                                     alt="">
-                                <span class="user-cart-link_no">1</span>
+                                    @auth('customer')
+                                        <span class="user-cart-link_no" id="cart_count">0</span>
+                                    @endauth
                             </a>
                             <div class="user_cart_dd">
                                 <ul class="user_cart_ul">
