@@ -130,12 +130,13 @@ class ShopController extends Controller
     }
     public function sub_category_Product($slug , $id)
     {
-        $sub_category = Product::where('sub_category_id','=',$id)->get();
-        return view('ecommerce.sub-catagories')->with('sub_category',$sub_category);
+        $sub_category_products = Product::with(['product_variations.variations.product', 'unit'])->where('sub_category_id', $id)->get();
+        return view('ecommerce.sub-catagories')->with(compact('sub_category_products'));
+                                               
     }
     public function Show_category_list($slugg , $idd){
-        $category = Product::where('category_id','=',$idd)->get();
-        return view('ecommerce.category')->with('category',$category);
+        $category_products = Product::with(['product_variations.variations.product', 'unit'])->where('category_id', $idd)->get();
+        return view('ecommerce.category')->with(compact('category_products'));
                                       
     }
     public function getCustomer()
