@@ -1,6 +1,9 @@
 @extends('ecommerce.layouts.master')
 @section('content')
 <!--  category -->
+<?php
+// dd($category_products);
+?>
 
 <section id="category-filter">
     <div class="w-100 mx-auto">
@@ -74,9 +77,12 @@
 
                     </div>
                 </div>
+                
                 <div class="product-category white-product">
-                @if(isset($category))
-                @foreach($category as $category)
+                
+                @forelse($category_products as $product)
+                @foreach ($product->product_variations as $product_variation)
+                @foreach ($product_variation->variations as $variation)
                     <article class="product mt-2 instock sale purchasable">
                         <div class="product-wrap">
                             <div class="product-top">
@@ -96,31 +102,31 @@
 
                             </div>
                             <div class="product-description">
-
                                 <div class="product-meta">
                                     <div class="title-wrap">
                                         <p class="product-title">
-                                            <a href="singlepage.html">{{$category->name}} </a>
+                                            <a href="singlepage.html">{{$variation->product->name}}
+                                                            &nbsp;{{$variation->name != "DUMMY" ? $variation->name : ''}} </a>
                                         </p>
                                     </div>
                                 </div>
+                                
                                 <div class="d-flex align-items-center justify-content-between">
-
+                                
                                     <div class="product_price">
+                                    @if($variation->market_price>0)
                                         <div class="product_price-actual">
-                                        
+                                         Price
+                                                                :Rs. {{ number_format($variation->market_price,2) }}
                                         </div>
-                                        
-                                        
-                                        
-                                        <div class="product_price-discount">
+                                        @endif
+                                        <!-- <div class="product_price-discount">
                                             <span class="line-through">
                                                 Rs.70
                                             </span>
                                             <span>-20%</span>
-                                        </div>
+                                        </div> -->
                                     </div>
-                                   
                                     
                                     <div class="product_cart">
                                         <a href="javascript:void(0)">
@@ -132,8 +138,9 @@
                         </div>
                     </article>
                     @endforeach
-                    @endif
-                    
+                    @endforeach
+                    @empty
+                @endforelse
                 </div>
 
             </div>
