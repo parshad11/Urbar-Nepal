@@ -1266,7 +1266,7 @@
                                 </a>
                             </figure>
 
-                        @endif
+                        
 
                         </div>
                         
