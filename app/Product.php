@@ -31,6 +31,8 @@ class Product extends Model
      */
     public function getImageUrlAttribute()
     {
+        
+
         if (!empty($this->image)) {
             $image_url = asset('/uploads/img/' . rawurlencode($this->image));
         } else {

@@ -9,7 +9,6 @@
 <section class="content-header">
     <h1>Blog Form</h1>
 </section>
-
 <!-- Main content -->
 <section class="content">
 <form action="{{ route('ecom_blog_store')}}" class="form" method="POST" enctype="multipart/form-data">
