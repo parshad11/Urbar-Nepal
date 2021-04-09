@@ -24,6 +24,8 @@ class LoginController extends Controller
         $tokenResult = $user->createToken('Personal Access Token');
         return $this->loginSuccess($tokenResult, $user);
     }
+
+
     protected function loginSuccess($tokenResult, $user)
     {
         $token = $tokenResult->token;

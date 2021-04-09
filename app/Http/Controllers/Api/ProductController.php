@@ -29,6 +29,7 @@ class ProductController extends Controller
 					->leftJoin('categories as sc','products.sub_category_id','=','sc.id')
 					->leftJoin('media as m','m.model_id','=','v.id')
 					->whereIn('v.id', $variation_location_variation_ids)
+					->where('c.status','active')
 					->select(
 						'products.id',
 						'products.name',
@@ -48,27 +49,37 @@ class ProductController extends Controller
 						'sc.parent_id',
 						DB::raw("CONCAT('$path','/',m.file_name) as product_image")
 					)
-					->get();
-						
+					->orderBy('set_featured','DESC')->orderBy('id','DESC')
+					->paginate(14);
+			$items=[];
+			$items=$products;
+			$products=collect([$items]);			
 		return response()->json([
 			'product' => $products,
 		]);
 	}
 
 	public function categories(){
-		$special_cat = Category::with('sub_categories')->where('name', 'like', '%special%')->where('parent_id', 0)->first();
-        if ($special_cat == null) {
-            $all_categories = Category::with('sub_categories')->where('parent_id', 0)->get();
-        } else {
-            $all_categories = Category::with('sub_categories')->where('parent_id', 0)->where('id', '!=', $special_cat->id)->get();
-        }
 		
+		$special_categories = Category::with(['sub_categories','sub_categories.sub_category_products.variations.media','products.variations.media'])->where('name', 'like', '%special%')->where('parent_id', 0)->first();
+        
+		if ($special_categories == null) {
+            $all_categories = Category::with(['sub_categories','sub_categories.sub_category_products.variations.media','products.variations.media'])->where('parent_id', 0)
+										->active()->orderBy('display_order')->get();
+        } else {
+            $all_categories = Category::with(['sub_categories','sub_categories.sub_category_products.variations.media','products.variations.media'])
+										->where('id', '!=', $special_categories->id)->where('parent_id', 0)->active()->orderBy('display_order')->get();
+        }
+		$items=[];
+		$items=$special_categories;
+		$special_categories=collect([$items]);	
 		return response()->json([
 			'categories' => $all_categories,
-			'special_category'=>$special_cat
+			'special_category'=>$special_categories
 		]);
 	}
 
+	
 	public function product($slug)
 	{
 		$path=asset('/uploads/media/');
@@ -116,34 +127,28 @@ class ProductController extends Controller
 
 	public function search(Request $request){
 		$path=asset('/uploads/media/');
+		$term = $request->get('query');
 		$location = BusinessLocation::where('location_id', 'BL0001')->first();
-		$variation_location_variation_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('variation_id')->toArray();
-		$products = Product::leftJoin('variations as v','products.id','=','v.product_id')
-			->leftJoin('categories as c','products.category_id','=','c.id')
-			->leftJoin('categories as sc','products.sub_category_id','=','sc.id')
-			->leftJoin('media as m','m.model_id','=','v.id')
-			->where('products.name', 'like', '%' . $request->get('query') . '%')
-			->whereIn('v.id', $variation_location_variation_ids)
-			->select(
-				'products.id',
-				'products.name',
-				'products.type',
-				'products.product_description',
-				'v.id as variation_id',
-				'v.name as variation_name',
-				'v.sub_sku',
-				'v.market_price',
-				'v.default_sell_price as unit_price',
-				'v.sell_price_inc_tax as unit_price_with_tax',
-				'v.id as variation_id',
-				'c.id as category_id',
-				'c.name as category_name',
-				'sc.id as sub_category_id',
-				'sc.name as sub_category_name',
-				'sc.parent_id',
-				DB::raw("CONCAT('$path','/',m.file_name) as product_image")
-			)
-			->get();
+		$variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('variation_id')->toArray();
+		$products = Product::leftJoin('variations', 'products.id', '=', 'variations.product_id')
+		->leftJoin('media as m','m.model_id','=','variations.id')
+		->whereIn('products.id', $variation_location_product_ids)
+		->where(function ($query) use ($term) {
+			$query->where('products.name', 'like', '%' . $term . '%');
+			$query->orWhere('products.sku', 'like', '%' . $term . '%');
+		})
+		->select(
+			'products.name as name',
+			'variations.name as variation_name',
+			'products.product_description',
+			'variations.market_price',
+			'variations.id as variation_id',
+			'variations.sub_sku as sub_sku',
+			'variations.default_sell_price as unit_price',
+			'variations.sell_price_inc_tax as unit_price_with_tax',
+			DB::raw("CONCAT('$path','/',m.file_name) as product_image")
+		)
+		->get();
 		if(count($products)>0){
 		return response()->json([
 			'product' => $products,
