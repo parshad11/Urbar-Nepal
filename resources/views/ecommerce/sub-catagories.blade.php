@@ -2,7 +2,7 @@
 @section('content')
 <!--  category -->
 <?php
-    // dd($variations);
+    // dd($category_of_product);
 ?>
 
 <section id="category-filter">
@@ -12,22 +12,31 @@
                 <aside class="left__side mb mt-3">
 
                     <ul uk-accordion="multiple: true">
+                    
+                    @if(isset($category_of_product))
+                    @foreach($category_of_product as $category_of_product)
                         <li class="">
-                            <a class="uk-accordion-title" href="#">
-                                <h5> Category</h5>
+                            <a class="uk-accordion-title" href="{{route('categories_product_list',['idd' => $category_of_product->id, 'slugg' => $category_of_product->slug])}}">
+                                <h5> {{$category_of_product->name}}</h5>
                             </a>
                             <div class="uk-accordion-content">
                                 <div class="scrollbar   mCustomScrollbar">
                                     <ul>
-                                        <li class="category-list"><a class="link-category" href="#">category 1
+                                    @foreach($sub_caategory_of_product as $sub_caategory_of_product)
+                                    @if($sub_caategory_of_product->parent_id==$category_of_product->id)
+                                        <li class="category-list"><a class="link-category" href="{{route('product_sub_category', ['id' => $sub_caategory_of_product->id ,'slug' => $sub_caategory_of_product->slug])}}">{{$sub_caategory_of_product->name}}
                                             </a></li>
-                                        <li class="category-list"><a class="link-category" href="#">category 2
-                                            </a></li>
+                                            @endif
+                                            @endforeach
 
                                     </ul>
                                 </div>
                             </div>
                         </li>
+                        @endforeach 
+                        @endif
+                        </li>
+                        
                         <li class=" ">
                             <a class="uk-accordion-title" href="#">
                                 <h5> Price</h5>

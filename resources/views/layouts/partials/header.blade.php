@@ -33,12 +33,7 @@
                 @endif
             @endif
 
-            <button id="btnCalculator" title="@lang('lang_v1.calculator')" type="button"
-                    class="btn btn-success btn-flat pull-left m-8 hidden-xs btn-sm mt-10 popover-default"
-                    data-toggle="popover" data-trigger="click" data-content='@include("layouts.partials.calculator")'
-                    data-html="true" data-placement="bottom">
-                <strong><i class="fa fa-calculator fa-lg" aria-hidden="true"></i></strong>
-            </button>
+            
 
             @if($request->segment(1) == 'pos')
                 @can('view_cash_register')
@@ -70,7 +65,6 @@
                     </a>
                 @endcan
             @endif
-
             @if(Module::has('Repair'))
                 @includeIf('repair::layouts.partials.header')
             @endif
@@ -82,6 +76,13 @@
                     <strong><i class="fas fa-money-bill-alt fa-lg"></i></strong>
                 </button>
             @endcan
+            <button id="btnCalculator" title="@lang('lang_v1.calculator')" type="button"
+                    class="btn btn-success btn-flat pull-left m-8 hidden-xs btn-sm mt-10 popover-default"
+                    data-toggle="popover" data-trigger="click" data-content='@include("layouts.partials.calculator")'
+                    data-html="true" data-placement="bottom">
+                <strong><i class="fa fa-calculator fa-lg" aria-hidden="true"></i></strong>
+            </button>
+
 
         <!-- Help Button -->
             @if(auth()->user()->hasRole('Admin#' . auth()->user()->business_id))

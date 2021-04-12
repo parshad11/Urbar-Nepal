@@ -1,6 +1,8 @@
 @extends('ecommerce.layouts.master')
 @section('content')
-
+<?php
+// dd($category);
+?>
 <section id="mega-nav--slider">
     <div class="slider">
         <div class="row">
@@ -8,191 +10,31 @@
 
                 <div class="side-nav-category">
                     <ul class="side-nav-category-ul">
-                        <li class="li-has-children"><a href="">Local & Organic<span class="float-right"
+                    @if(isset($category))
+                    @foreach($category as $category)
+                        <li class="li-has-children"><a href="{{route('categories_product_list',['idd' => $category->id, 'slugg' => $category->slug])}}">{{$category->name}}<span class="float-right"
                                     uk-icon="icon: chevron-right"></span> <span class="clearfix"></span></a>
                             <div class="hover-side-menu">
                                 <div class="sub-category-block">
-                                    <div class="sub-nav-main-category"><a href="">Tomato</a>
+                                    <div class="sub-nav-main-category"><a href="{{route('categories_product_list',['idd' => $category->id, 'slugg' => $category->slug])}}">{{$category->name}}</a>
 
                                     </div>
+                                    @foreach ($sub_category as $subcategory)
+                            @if ( $subcategory->parent_id == $category->id )
                                     <ul class="side-sub-nav-category-ul">
 
-                                        <li class="sub-nav-li"><a href=""> Jhapali Tomato</a></li>
-                                        <li class="sub-nav-li"><a href=""> Rato Tamatar</a></li>
+                                        <li class="sub-nav-li"><a href="{{route('product_sub_category', ['id' => $subcategory->id ,'slug' => $subcategory->slug])}}"> {{$subcategory->name}}</a></li>
 
 
                                     </ul>
+                                    @endif
+                               @endforeach
                                 </div>
 
                             </div>
                         </li>
-
-                        <li class="li-has-children"><a href="">Fungus<span class="float-right"
-                                    uk-icon="icon: chevron-right"></span> <span class="clearfix"></span></a>
-                            <div class="hover-side-menu">
-                                <div class="sub-category-block">
-                                    <div class="sub-nav-main-category"><a href="">Mushroom</a></div>
-                                    <ul class="side-sub-nav-category-ul">
-
-                                        <li class="sub-nav-li"><a href="">Gobre&nbspChyau</a></li>
-                                        <li class="sub-nav-li"><a href="">Gobre&nbspChyau</a></li>
-                                        <li class="sub-nav-li"><a href="">Gobre&nbspChyau</a></li>
-                                        <li class="sub-nav-li"><a href="">Gobre&nbspChyau</a></li>
-
-
-                                    </ul>
-                                </div>
-
-                            </div>
-                        </li>
-
-                        <li class="li-has-children"><a href="">Local & Organic<span class="float-right"
-                                    uk-icon="icon: chevron-right"></span> <span class="clearfix"></span></a>
-                            <div class="hover-side-menu">
-                                <div class="sub-category-block">
-                                    <div class="sub-nav-main-category"><a href="">Tomato</a>
-
-                                    </div>
-                                    <ul class="side-sub-nav-category-ul">
-
-                                        <li class="sub-nav-li"><a href=""> Jhapali Tomato</a></li>
-                                        <li class="sub-nav-li"><a href=""> Rato Tamatar</a></li>
-
-
-                                    </ul>
-                                </div>
-
-                            </div>
-                        </li>
-
-                        <!-- <li class="li-has-children"><a href="">Fungus<span class="float-right"
-                                    uk-icon="icon: chevron-right"></span> <span class="clearfix"></span></a>
-                            <div class="hover-side-menu">
-                                <div class="sub-category-block">
-                                    <div class="sub-nav-main-category"><a href="">Mushroom</a></div>
-                                    <ul class="side-sub-nav-category-ul">
-
-                                        <li class="sub-nav-li"><a href="">Gobre&nbspChyau</a></li>
-                                        <li class="sub-nav-li"><a href="">Gobre&nbspChyau</a></li>
-                                        <li class="sub-nav-li"><a href="">Gobre&nbspChyau</a></li>
-                                        <li class="sub-nav-li"><a href="">Gobre&nbspChyau</a></li>
-
-
-                                    </ul>
-                                </div>
-
-                            </div>
-                        </li> -->
-
-                        <li class="li-has-children"><a href="">Local & Organic<span class="float-right"
-                                    uk-icon="icon: chevron-right"></span> <span class="clearfix"></span></a>
-                            <div class="hover-side-menu">
-                                <div class="sub-category-block">
-                                    <div class="sub-nav-main-category"><a href="">Tomato</a>
-
-                                    </div>
-                                    <ul class="side-sub-nav-category-ul">
-
-                                        <li class="sub-nav-li"><a href=""> Jhapali Tomato</a></li>
-                                        <li class="sub-nav-li"><a href=""> Rato Tamatar</a></li>
-
-
-                                    </ul>
-                                </div>
-
-                            </div>
-                        </li>
-
-                        <li class="li-has-children"><a href="">Fungus<span class="float-right"
-                                    uk-icon="icon: chevron-right"></span> <span class="clearfix"></span></a>
-                            <div class="hover-side-menu">
-                                <div class="sub-category-block">
-                                    <div class="sub-nav-main-category"><a href="">Mushroom</a></div>
-                                    <ul class="side-sub-nav-category-ul">
-                                        <li class="sub-nav-li"><a href="">Gobre Chyau</a></li>
-                                        <li class="sub-nav-li"><a href="">Gobre Chyau</a></li>
-                                        <li class="sub-nav-li"><a href="">Gobre Chyau</a></li>
-                                        <li class="sub-nav-li"><a href="">Gobre Chyau</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="li-has-children"><a href="">Local & Organic<span class="float-right"
-                                    uk-icon="icon: chevron-right"></span> <span class="clearfix"></span></a>
-                            <div class="hover-side-menu">
-                                <div class="sub-category-block">
-                                    <div class="sub-nav-main-category"><a href="">Tomato</a>
-                                    </div>
-                                    <ul class="side-sub-nav-category-ul">
-                                        <li class="sub-nav-li"><a href=""> Jhapali Tomato</a></li>
-                                        <li class="sub-nav-li"><a href=""> Rato Tamatar</a></li>
-                                    </ul>
-                                </div>
-
-                            </div>
-                        </li>
-
-                        <li class="li-has-children"><a href="">Fungus<span class="float-right"
-                                    uk-icon="icon: chevron-right"></span> <span class="clearfix"></span></a>
-                            <div class="hover-side-menu">
-                                <div class="sub-category-block">
-                                    <div class="sub-nav-main-category"><a href="">Mushroom</a></div>
-                                    <ul class="side-sub-nav-category-ul">
-
-                                        <li class="sub-nav-li"><a href="">Gobre Chyau</a></li>
-                                        <li class="sub-nav-li"><a href="">Gobre Chyau</a></li>
-                                        <li class="sub-nav-li"><a href="">Gobre Chyau</a></li>
-                                        <li class="sub-nav-li"><a href="">Gobre Chyau</a></li>
-
-
-                                    </ul>
-                                </div>
-
-                            </div>
-                        </li>
-
-                        <li class="li-has-children"><a href="">Local & Organic<span class="float-right"
-                                    uk-icon="icon: chevron-right"></span> <span class="clearfix"></span></a>
-                            <div class="hover-side-menu">
-                                <div class="sub-category-block">
-                                    <div class="sub-nav-main-category"><a href="">Tomato</a>
-
-                                    </div>
-                                    <ul class="side-sub-nav-category-ul">
-
-                                        <li class="sub-nav-li"><a href=""> Jhapali Tomato</a></li>
-                                        <li class="sub-nav-li"><a href=""> Rato Tamatar</a></li>
-
-
-                                    </ul>
-                                </div>
-
-                            </div>
-                        </li>
-
-                        <li class="li-has-children"><a href="">Fungus<span class="float-right"
-                                    uk-icon="icon: chevron-right"></span> <span class="clearfix"></span></a>
-                            <div class="hover-side-menu">
-                                <div class="sub-category-block">
-                                    <div class="sub-nav-main-category"><a href="">Mushroom</a></div>
-                                    <ul class="side-sub-nav-category-ul">
-
-                                        <li class="sub-nav-li"><a href="">Gobre Chyau</a></li>
-                                        <li class="sub-nav-li"><a href="">Gobre Chyau</a></li>
-                                        <li class="sub-nav-li"><a href="">Gobre Chyau</a></li>
-                                        <li class="sub-nav-li"><a href="">Gobre Chyau</a></li>
-
-
-                                    </ul>
-                                </div>
-
-                            </div>
-                        </li>
-
-
-
-
-
+                        @endforeach
+                    @endif
                         <li class="li-has-children"><a href="{{Route('show_all_category')}}"> <i
                                     class="fas fa-plus-square"></i>
                                 All Category</a></li>
@@ -959,37 +801,7 @@
 
 
 
-<!-- BRANDS WITH US -->
-<section class="three-columns mb">
 
-    <div class="container-fluid">
-        <div class="row col-three owl-carousel">
-            @foreach($slider_banners as $slider_banner)
-            <div class="column">
-                <a href="">
-                 <img src="{{ asset('uploads/img/home/slider_banners/'.$slider_banner->image) }}"alt="">
-                  </a>
-            </div>
-            @endforeach
-            <!-- <div class="column">
-                <a href=""><img src="https://assets-cdn.kathmandupost.com/uploads/source/news/2020/money/17.jpg"
-                        alt=""></a>
-            </div>
-            <div class="column">
-                <a href=""><img
-                        src="https://techsathi.com/wp-content/uploads/2019/07/Best-Agricultural-Apps.jpg"
-                        alt=""></a>
-            </div>
-            <div class="column">
-                <a href=""><img
-                        src="https://myrepublica.nagariknetwork.com/uploads/media/2019/May/Farmers%20in%20Kokhana.jpg"
-                        alt=""></a>
-            </div> -->
-
-        </div>
-    </div>
-</section>
-<!-- END OF BRAND WITH US -->
 
  <!--FEATURED PRODUCTS-->
 <section id="popular-category">

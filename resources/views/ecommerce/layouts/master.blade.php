@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="{{ asset('ecom/css/bootstrap.min.css') }}">
     <!-- font awesome -->
     <script src="https://kit.fontawesome.com/7989320092.js" crossorigin="anonymous"></script>
+    
+
 
     <!-- owl css -->
     <link rel="stylesheet" href="{{ asset('ecom/css/owl.carousel.min.css') }}">

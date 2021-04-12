@@ -450,10 +450,10 @@ class ProductController extends Controller
             $common_settings = session()->get('business.common_settings');
 
             $product_details['warranty_id'] = !empty($request->input('warranty_id')) ? $request->input('warranty_id') : null;
-
             DB::beginTransaction();
 
             $product = Product::create($product_details);
+            
 
             if (empty(trim($request->input('sku')))) {
                 $sku = $this->productUtil->generateProductSku($product->id);

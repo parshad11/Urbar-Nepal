@@ -31,13 +31,15 @@ class FrontendController extends Controller
      */
     public function index()
     {
+        $category = Category::with('sub_categories')->where('parent_id','=',0)->get();
+        $sub_category = Category::with('sub_categories')->where('parent_id','!=',0)->get();
         $banners = Banner::where('status', 'active')->latest()->get();
         $slider_banners = SliderBanner::where('status', 'active')->latest()->get();
         $location = BusinessLocation::where('location_id', 'BL0001')->first();
         $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
         $products = Product::with(['product_variations.variations.product', 'unit'])->whereIn('id', $variation_location_product_ids)->latest()->get();
         
-        return view('ecommerce.index')->with(compact('banners','slider_banners','products'));
+        return view('ecommerce.index')->with(compact('banners','slider_banners','products','category','sub_category'));
         // return view('ecommerce.index',compact('banners','slider_banners'));
     }
 
