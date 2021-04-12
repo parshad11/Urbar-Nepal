@@ -410,8 +410,8 @@ class ProductController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        // try {
-      
+        try {
+            
             $business_id = $request->session()->get('user.business_id');
             $form_fields = ['name', 'brand_id', 'unit_id', 'category_id', 'tax', 'type', 'barcode_type', 'sku', 'alert_quantity', 'tax_type', 'weight', 'product_custom_field1', 'product_custom_field2', 'product_custom_field3', 'product_custom_field4', 'product_description', 'sub_unit_ids'];
 
@@ -511,31 +511,31 @@ class ProductController extends Controller
             $output = ['success' => 1,
                             'msg' => __('product.product_added_success')
                         ];
-        // } catch (\Exception $e) {
-        //     DB::rollBack();
-        //     \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
             
-        //     $output = ['success' => 0,
-        //                     'msg' => __("messages.something_went_wrong")
-        //                 ];
-        //     return redirect('products')->with('status', $output);
-        // }
+            $output = ['success' => 0,
+                            'msg' => __("messages.something_went_wrong")
+                        ];
+            return redirect('products')->with('status', $output);
+        }
 
-        // if ($request->input('submit_type') == 'submit_n_add_opening_stock') {
-        //     return redirect()->action(
-        //         'OpeningStockController@add',
-        //         ['product_id' => $product->id]
-        //     );
-        // } elseif ($request->input('submit_type') == 'submit_n_add_selling_prices') {
-        //     return redirect()->action(
-        //         'ProductController@addSellingPrices',
-        //         [$product->id]
-        //     );
-        // } elseif ($request->input('submit_type') == 'save_n_add_another') {
-        //     return redirect()->action(
-        //         'ProductController@create'
-        //     )->with('status', $output);
-        // }
+        if ($request->input('submit_type') == 'submit_n_add_opening_stock') {
+            return redirect()->action(
+                'OpeningStockController@add',
+                ['product_id' => $product->id]
+            );
+        } elseif ($request->input('submit_type') == 'submit_n_add_selling_prices') {
+            return redirect()->action(
+                'ProductController@addSellingPrices',
+                [$product->id]
+            );
+        } elseif ($request->input('submit_type') == 'save_n_add_another') {
+            return redirect()->action(
+                'ProductController@create'
+            )->with('status', $output);
+        }
 
         return redirect('products')->with('status', $output);
     }
