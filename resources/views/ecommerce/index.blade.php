@@ -991,7 +991,7 @@
 </section>
 <!-- END OF BRAND WITH US -->
 
-<!-- FEATURED PRODUCTS -->
+ <!--FEATURED PRODUCTS-->
 <section id="popular-category">
     <div class="container-fluid">
         <div class="d-flex align-items-center justify-content-between ">
@@ -1266,55 +1266,20 @@
                                 </a>
                             </figure>
 
+                        
 
                         </div>
-                        <div class="product-description">
-
-                            <div class="product-meta">
-                                <div class="title-wrap">
-                                    <p class="product-title">
-                                        <a href="singlepage.html">White Potato || Per KG</a>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="product_price">
-                                    <div class="product_price-actual">
-                                        Rs.150
-                                    </div>
-                                    <div class="product_price-discount">
-                                        <span class="line-through">
-                                            Rs.180
-                                        </span>
-                                        <span>-20%</span>
-                                    </div>
-                                </div>
-                                <div class="product_cart">
-                                    <a href="javascript:void(0)">
-                                        <ion-icon name="cart" uk-tooltip=" Add to Cart"></ion-icon>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </article>
-
-
-
-
+                        
+            <div>
+            <a href="category.html" class="m-2 uk-button view-cart">view more</a>
             </div>
-        </div>
-
-        <div class="w-100 text-right align-items-center justify-content-between">
-
-            <div><a href="category.html" class="m-2 uk-button view-cart">view more</a></div>
         </div>
 
 
     </div>
 
 
-</section>
+</section> 
 
 <!-- END FEATURED PRODUCTS -->
 

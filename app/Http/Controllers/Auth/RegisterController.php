@@ -78,10 +78,26 @@ class RegisterController extends Controller
 
     public function store(Request $req)
     {
-        
+       
         $createdBy = User::select('id')->where('user_type','=','admin')->first()->id;
-        $type=contact::findorfail($req->name);
-        dd($type);
+        $contact= Contact::where('email',$req->email)->first();
+        $type='customer';
+        if(!is_null($contact) && $contact->type=='supplier'){
+            $type='both';
+        }
+        elseif(!is_null($contact) && $contact->type!='supplier'){
+            return back()->with("User already exist");
+        }
+        // Unique contact id generation
+        $contact_id = 'CO'.rand(1111,9999);
+        $contact_id_fetch=contact::where('contact_id',$contact_id)->first();
+        if(!is_null($contact_id_fetch)){
+            return $contact_id;
+        }
+        $unique_contact_id=$contact_id;
+
+            
+        
         $req->validate(
             [
                 'name'              =>      'required|string|max:20',
@@ -98,14 +114,18 @@ class RegisterController extends Controller
             "mobile"            =>          $req->phone,
             "shipping_address"   =>          $req->address,
             "password"          =>          Hash::make($req['password']),
-            "type"              =>          'customer',
+            "type"              =>          $type,
             "business_id"       =>          '1',
             "created_by"        =>          $createdBy,
-            "contact_id"        =>          'CON'.rand(1111,9999)
+            "contact_id"        =>          $unique_contact_id
         );
-        $contact           =       Contact::create($dataArray);
+        $contact           =       Contact::updateOrCreate(
+            ['email'=> $req->email],
+            $dataArray
+        );
+
         if(!is_null($contact)) {
-            return back()->with("success", "Success! Registration completed");
+            return view('ecommerce.login')->with("success", "Success! Registration completed");
         }
 
         else {
