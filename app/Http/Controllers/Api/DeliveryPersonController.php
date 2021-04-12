@@ -10,6 +10,7 @@ use App\DeliveryPerson;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Http;
 use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class DeliveryPersonController extends Controller
 {

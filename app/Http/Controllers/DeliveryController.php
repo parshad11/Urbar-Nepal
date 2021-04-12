@@ -13,6 +13,7 @@ use App\User;
 use App\Utils\ModuleUtil;
 use App\Utils\TransactionUtil;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -473,7 +474,7 @@ class DeliveryController extends Controller
 
             $business_id = $request->session()->get('user.business_id');
             $transaction=Transaction::findOrFail($input['transaction_id']);
-            $user_id = $request->session()->get('user.id');
+            $user_id = Auth::user()->id;
             DB::beginTransaction();
             $delivery = Delivery::create([
                 'transaction_id' => $input['transaction_id'],
@@ -579,7 +580,14 @@ class DeliveryController extends Controller
         return view('delivery.show', compact('delivery', 'delivery_person'));
     }
 
-
+    public function trackDeliveryPeople(Request $request)
+    {
+        if (!auth()->user()->can('delivery.view')) {
+            abort(403, 'Unauthorized action.');
+        }
+        $delivery_people=DeliveryPerson::getAllDeliveryPeople();
+        return view('delivery.track',compact('delivery_people'));
+    }
 
     /**
      * Show the form for editing the specified resource.

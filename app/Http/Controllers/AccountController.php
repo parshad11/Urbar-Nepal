@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Yajra\DataTables\Facades\DataTables;
 use App\Media;
+use Illuminate\Support\Facades\Auth;
 
 class AccountController extends Controller
 {
@@ -179,7 +180,7 @@ class AccountController extends Controller
 			try {
 				$input = $request->only(['name', 'account_number', 'note', 'account_type_id']);
 				$business_id = $request->session()->get('user.business_id');
-				$user_id = $request->session()->get('user.id');
+				$user_id = Auth::user()->id;
 				$input['business_id'] = $business_id;
 				$input['created_by'] = $user_id;
 

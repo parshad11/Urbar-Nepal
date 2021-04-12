@@ -11,6 +11,7 @@ use App\Front\SliderBanner;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Utils\Util;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 use function GuzzleHttp\json_encode;
@@ -70,7 +71,7 @@ class CmsController extends Controller
         $data['about_content'] = $request->about_content;
         $data['social_links'] = json_encode(array_combine($request->site, $request->sitelink));
         $data['google_map_link'] = $request->google_map_link;
-        $data['created_by'] = $request->session()->get('user.id');
+        $data['created_by'] = Auth::user()->id;
         $this->setting->fill($data);
         $status = $this->setting->save();
         if ($status) {
@@ -126,7 +127,7 @@ class CmsController extends Controller
         $data['about_content'] = $request->welcome_description;
         $data['social_links'] = json_encode(array_combine($request->site, $request->sitelink));
         $data['google_map_link'] = $request->google_map_link;
-        $data['created_by'] = $request->session()->get('user.id');
+        $data['created_by'] = Auth::user()->id;
         $this->setting->fill($data);
         // dd($this->setting);
         $status = $this->setting->save();
@@ -312,7 +313,7 @@ class CmsController extends Controller
         $page->title = $request->title;
         $page->slug = Str::slug($request->title);
         $page->body = $request->body;
-        $page->added_by = $request->session()->get('user.id');
+        $page->added_by = Auth::user()->id;
         $status = $page->save();
         if ($status) {
             $output = [
