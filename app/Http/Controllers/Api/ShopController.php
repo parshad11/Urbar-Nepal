@@ -46,7 +46,7 @@ class ShopController extends Controller
 								'p.id as product_id',
 								'v.name as variation_name',
 								'p.name as product_name',
-								DB::raw("CONCAT('$path','/',m.file_name) as product_image"),
+								DB::raw("CONCAT('$path','/',m.file_name) as product_image")
 							)
 							->get();
 		$user=Auth::guard('customerapi')->user();
@@ -67,7 +67,7 @@ class ShopController extends Controller
 		$banner = Document::where('file_type','banner')
 				  ->select(
 					  'documents.id',
-					  DB::raw("CONCAT('$path','/',documents.file_name) as banner_image"),
+					  DB::raw("CONCAT('$path','/',documents.file_name) as banner_image")
 				  )
 				  ->first();
 		$catalogues=Document::where('file_type','catalogue')->limit('2')->latest()->get();

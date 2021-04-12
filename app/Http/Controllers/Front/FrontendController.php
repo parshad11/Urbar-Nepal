@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Front;
 
+use App\CategoryVisit;
 use App\Front\PageSetting;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -29,6 +30,8 @@ class FrontendController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
+
+
     public function index()
     {
         $banners = Banner::where('status', 'active')->latest()->get();
@@ -36,9 +39,9 @@ class FrontendController extends Controller
         $location = BusinessLocation::where('location_id', 'BL0001')->first();
         $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
         $products = Product::with(['product_variations.variations.product', 'unit'])->whereIn('id', $variation_location_product_ids)->latest()->get();
-        
-        return view('ecommerce.index')->with(compact('banners','slider_banners','products'));
-        // return view('ecommerce.index',compact('banners','slider_banners'));
+        $category=Category::orderBy('view','desc')->orderBY('created_at','desc')->limit(3)->get();
+        $category_product=Product::with(['product_variations.variations.product', 'unit'])->whereIn('id', $variation_location_product_ids)->where('category_id','!=',null)->latest()->get();
+            return view('ecommerce.index')->with(compact('banners','slider_banners','products','category','category_product'));
     }
 
     public function getAbout()
