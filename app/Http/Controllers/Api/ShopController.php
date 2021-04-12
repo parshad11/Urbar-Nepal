@@ -46,7 +46,7 @@ class ShopController extends Controller
 								'p.id as product_id',
 								'v.name as variation_name',
 								'p.name as product_name',
-								DB::raw("CONCAT('$path','/',m.file_name) as product_image"),
+								DB::raw("CONCAT('$path','/',m.file_name) as product_image")
 							)
 							->get();
 		$user=Auth::guard('customerapi')->user();
@@ -61,7 +61,6 @@ class ShopController extends Controller
 			'price'=>$total_price
 		]);
 	}
-
 	// public function documents(){
 	// 	$path=asset('/uploads/shop/');
 	// 	$banner = Document::where('file_type','banner')

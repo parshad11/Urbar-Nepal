@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\BusinessLocation;
+use App\CategoryVisit;
 use App\Contact;
 use App\Transaction;
 use App\VariationLocationDetails;
@@ -80,14 +81,15 @@ class ShopController extends Controller
 
     public function product($slug)
     {
+
         $product = Variation::with('product')->where('sub_sku', $slug)->first();
         $product_cat = $product->product->category_id;
+        $popular_category=Category::popularcategory($product_cat);
         $location = BusinessLocation::where('location_id', 'BL0001')->first();
         $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
         $products = Product::with(['product_variations.variations.product', 'unit'])->where('category_id', $product_cat)->where('id', '!=',$product->id)->whereIn('id', $variation_location_product_ids)->take(5)->latest()->get();
         return view('ecommerce.product_details')->with('variation', $product)
             ->with('products', $products);
-        return view('ecommerce.product_details');
     }
 
     // public function downloadFile($fileId){
@@ -134,16 +136,23 @@ class ShopController extends Controller
     public function showAllCategory(){
         $category = Category::with('sub_categories')->where('parent_id','=',0)->get();
         $sub_category = Category::with('sub_categories')->where('parent_id','!=',0)->get();
-        return view('ecommerce.all-category')->with('categories', $category)
+        $location = BusinessLocation::where('location_id', 'BL0001')->first();
+        $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
+        $products = Product::with(['product_variations.variations.product', 'unit'])->whereIn('id', $variation_location_product_ids)->latest()->get();
+        $popular_category=Category::orderBy('view','desc')->orderBY('created_at','desc')->limit(3)->get();
+        $category_product=Product::with(['product_variations.variations.product', 'unit'])->whereIn('id', $variation_location_product_ids)->where('category_id','!=',null)->latest()->get();
+        return view('ecommerce.all-category',compact('popular_category','category_product','products'))->with('categories', $category)
                                              ->with('sub_categoreis',$sub_category);
                                              
     }
     public function sub_category_Product($slug , $id)
     {
         $sub_category_products = Product::with(['product_variations.variations.product', 'unit'])->where('sub_category_id', $id)->get();
+
         $category_id = Category::where('id',$id)->pluck('parent_id')->toArray();
         $category_of_product = Category::with('sub_categories')->where('id',$category_id)->get();
         $sub_caategory_of_product = Category::with('sub_categories')->where('parent_id','!=',0)->get();
+        $popular_category=Category::popularcategory($id);
         return view('ecommerce.sub-catagories')->with(compact('sub_category_products','category_of_product','sub_caategory_of_product'));
         // dd($product_category);
         // if(count($sub_category_products)!=0){
@@ -156,13 +165,16 @@ class ShopController extends Controller
         //     return view('ecommerce.sub-catagories')->with(compact('sub_category_products'));
         // }
 
+
                                                
     }
     public function Show_category_list($slugg , $idd){
         $category_products = Product::with(['product_variations.variations.product', 'unit'])->where('category_id', $idd)->get();
+
         $category_of_product = Category::with('sub_categories')->where('id',$idd)->get();
         $sub_caategory_of_product = Category::with('sub_categories')->where('parent_id','!=',0)->get();
-        return view('ecommerce.category')->with(compact('category_products','category_of_product','sub_caategory_of_product'));                              
+        $popular_category=Category::popularcategory($idd);
+        return view('ecommerce.category')->with(compact('category_products','category_of_product','sub_caategory_of_product'));
     }
     public function getCustomer()
     {

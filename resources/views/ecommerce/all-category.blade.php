@@ -37,237 +37,153 @@
                 <h3> Popular Categories</h3>
                 <nav class=" popular-category-tabs">
                     <ul class="nav nav-pills " id="nav-tab">
-
-                        <li> <a class="nav-item nav-link active" data-toggle="tab" href="#nav-seasonal">Seasonal</a>
+                        <li><a class="nav-item nav-link active" data-toggle="tab"
+                               href="#all" aria-controls="all">All</a>
                         </li>
-                        <li> <a class="nav-item nav-link" data-toggle="tab" href="#nav-alltime">All Time</a></li>
-                        <li> <a class="nav-item nav-link " data-toggle="tab" href="#nav-green">Green</a></li>
+                        @foreach($popular_category as $category)
+                            <li><a class="nav-item nav-link " data-toggle="tab"
+                                   href="#{{$category->slug}}" aria-controls="{{$category->slug}}">{{$category->name}}</a>
+                            </li>
+                        @endforeach
                     </ul>
+                    <?php
+                    $category = App\Category::orderBy('view', 'asc')->orderBY('created_at', 'asc')->get();
+                    foreach ($category as $category) {
+                        $active_category = $category->find($category->id);
+                    }
+                    ?>
                 </nav>
                 <div class="tab-content popular-category" id="nav-tabContent">
-
-                    <div class="tab-pane active fade show" id="nav-seasonal" role="tabpanel"
-                        aria-labelledby="nav-profile-tab">
+                    <div class="tab-pane active show  fade "
+                         id="all" role="tabpanel"
+                         aria-labelledby="nav-all-tab">
                         <div class="product-category white-product">
+                            <div class="category--slider owl-carousel">
+                                @foreach($products as $product)
+                                    @foreach($category_product->where('category_id',App\Category::find($product->category_id)->id) as $product)
+                                        @foreach ($product->product_variations as $product_variation)
+                                            @foreach ($product_variation->variations as $variation)
+                                                <article class="product instock sale purchasable">
+                                                    <div class="product-wrap">
+                                                        <div class="product-top">
+                                                            <span class="product-label discount">new</span>
+                                                            <figure>
+                                                                <a href="{{route('product_single',$variation->sub_sku)}}">
+                                                                    <div class="product-image">
+                                                                        <img width="320" height="320"
+                                                                             src="@foreach($variation->media as $media){{ $media->display_url }}@endforeach"
+                                                                             class="attachment-shop_catalog size-shop_catalog"
+                                                                             alt="">
+                                                                    </div>
+                                                                </a>
+                                                            </figure>
+                                                        </div>
+                                                        <div class="product-description">
 
-                            <div class="category--slider owl-carousel ">
-
-                                <article class="product instock sale purchasable">
-                                    <div class="product-wrap">
-                                        <div class="product-top">
-                                            <span class="product-label discount">new</span>
-
-
-                                            <figure>
-                                                <a href="singlepage.html">
-                                                    <div class="product-image">
-                                                        <img width="320" height="320"
-                                                            src="https://cdn.shopify.com/s/files/1/0108/7370/0415/products/Shop-1.png"
-                                                            class="attachment-shop_catalog size-shop_catalog" alt="">
+                                                            <div class="product-meta">
+                                                                <div class="title-wrap">
+                                                                    <p class="product-title">
+                                                                        <a href="{{route('product_single',$variation->sub_sku)}}">{{$product->name}}</a>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="d-flex align-items-center justify-content-between">
+                                                                <div class="product_price">
+                                                                    <div class="product_price-actual">
+                                                                        Rs. {{ number_format($variation->sell_price_inc_tax,2) }}
+                                                                        /{{$variation->product->unit->short_name}}
+                                                                    </div>
+                                                                    <div class="product_price-discount">
+                                                <span class="line-through">
+                                                   <span class="line-through">
+                                                        Rs. {{ number_format($variation->market_price,2) }}
+                                                    </span>
+                                                </span>
+                                                                        {{--<span>-20%</span>--}}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="product_cart">
+                                                                    <a href="javascript:void(0)">
+                                                                        <ion-icon name="cart"
+                                                                                  uk-tooltip=" Add to Cart"></ion-icon>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </a>
-                                            </figure>
-
-
-                                        </div>
-                                        <div class="product-description">
-
-                                            <div class="product-meta">
-                                                <div class="title-wrap">
-                                                    <p class="product-title">
-                                                        <a href="singlepage.html">Water Melon || Per KG</a>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center justify-content-between">
-                                                <div class="product_price">
-                                                    <div class="product_price-actual">
-                                                        Rs.50
-                                                    </div>
-                                                    <div class="product_price-discount">
-                                                        <span class="line-through">
-                                                            Rs.70
-                                                        </span>
-                                                        <span>-20%</span>
-                                                    </div>
-                                                </div>
-                                                <div class="product_cart">
-                                                    <a href="javascript:void(0)">
-                                                        <ion-icon name="cart" uk-tooltip=" Add to Cart"></ion-icon>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </article>
-
-
-
+                                                </article>
+                                            @endforeach
+                                        @endforeach
+                                    @endforeach
+                                @endforeach
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="nav-alltime" role="tabpanel" aria-labelledby="nav-contact-tab">
-                        <div class="product-category white-product">
+                    @foreach($category_product as $product)
+                        <div class="tab-pane fade "
+                             id="{{App\Category::find($product->category_id)->slug}}" role="tabpanel"
+                             aria-labelledby="nav-{{App\Category::find($product->category_id)->slug}}-tab">
+                            <div class="product-category white-product">
+                                <div class="category--slider owl-carousel">
+                                    @foreach($category_product->where('category_id',App\Category::find($product->category_id)->id) as $product)
+                                        @foreach ($product->product_variations as $product_variation)
+                                            @foreach ($product_variation->variations as $variation)
+                                                <article class="product instock sale purchasable">
+                                                    <div class="product-wrap">
+                                                        <div class="product-top">
+                                                            <span class="product-label discount">new</span>
+                                                            <figure>
+                                                                <a href="{{route('product_single',$variation->sub_sku)}}">
+                                                                    <div class="product-image">
+                                                                        <img width="320" height="320"
+                                                                             src="@foreach($variation->media as $media){{ $media->display_url }}@endforeach"
+                                                                             class="attachment-shop_catalog size-shop_catalog"
+                                                                             alt="">
+                                                                    </div>
+                                                                </a>
+                                                            </figure>
+                                                        </div>
+                                                        <div class="product-description">
 
-                            <div class="category--slider owl-carousel ">
-                                <article class="product instock sale purchasable">
-                                    <div class="product-wrap">
-                                        <div class="product-top">
-                                            <span class="product-label discount">new</span>
-
-
-                                            <figure>
-                                                <a href="singlepage.html">
-                                                    <div class="product-image">
-                                                        <img width="320" height="320"
-                                                            src="https://cdn.shopify.com/s/files/1/0108/7370/0415/products/Shop-4.png"
-                                                            class="attachment-shop_catalog size-shop_catalog" alt="">
+                                                            <div class="product-meta">
+                                                                <div class="title-wrap">
+                                                                    <p class="product-title">
+                                                                        <a href="{{route('product_single',$variation->sub_sku)}}">{{$product->name}}</a>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="d-flex align-items-center justify-content-between">
+                                                                <div class="product_price">
+                                                                    <div class="product_price-actual">
+                                                                        Rs. {{ number_format($variation->sell_price_inc_tax,2) }}
+                                                                        /{{$variation->product->unit->short_name}}
+                                                                    </div>
+                                                                    <div class="product_price-discount">
+                                                <span class="line-through">
+                                                   <span class="line-through">
+                                                        Rs. {{ number_format($variation->market_price,2) }}
+                                                    </span>
+                                                </span>
+                                                                        {{--<span>-20%</span>--}}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="product_cart">
+                                                                    <a href="javascript:void(0)">
+                                                                        <ion-icon name="cart"
+                                                                                  uk-tooltip=" Add to Cart"></ion-icon>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </a>
-                                            </figure>
-
-
-                                        </div>
-                                        <div class="product-description">
-
-                                            <div class="product-meta">
-                                                <div class="title-wrap">
-                                                    <p class="product-title">
-                                                        <a href="singlepage.html">Hen EGG || Per Caret</a>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center justify-content-between">
-                                                <div class="product_price">
-                                                    <div class="product_price-actual">
-                                                        Rs.380
-                                                    </div>
-                                                    <div class="product_price-discount">
-                                                        <span class="line-through">
-                                                            Rs.400
-                                                        </span>
-                                                        <span>-20%</span>
-                                                    </div>
-                                                </div>
-                                                <div class="product_cart">
-                                                    <a href="javascript:void(0)">
-                                                        <ion-icon name="cart" uk-tooltip=" Add to Cart"></ion-icon>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </article>
-
-                                <article class="product instock sale purchasable">
-                                    <div class="product-wrap">
-                                        <div class="product-top">
-                                            <span class="product-label discount">new</span>
-
-
-                                            <figure>
-                                                <a href="singlepage.html">
-                                                    <div class="product-image">
-                                                        <img width="320" height="320"
-                                                            src="https://m.economictimes.com/thumb/height-450,width-600,imgsize-111140,msid-72862126/potato-getty.jpg"
-                                                            class="attachment-shop_catalog size-shop_catalog" alt="">
-                                                    </div>
-                                                </a>
-                                            </figure>
-
-
-                                        </div>
-                                        <div class="product-description">
-
-                                            <div class="product-meta">
-                                                <div class="title-wrap">
-                                                    <p class="product-title">
-                                                        <a href="singlepage.html">White Potato || Per KG</a>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center justify-content-between">
-                                                <div class="product_price">
-                                                    <div class="product_price-actual">
-                                                        Rs.150
-                                                    </div>
-                                                    <div class="product_price-discount">
-                                                        <span class="line-through">
-                                                            Rs.180
-                                                        </span>
-                                                        <span>-20%</span>
-                                                    </div>
-                                                </div>
-                                                <div class="product_cart">
-                                                    <a href="javascript:void(0)">
-                                                        <ion-icon name="cart" uk-tooltip=" Add to Cart"></ion-icon>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </article>
-
-
-
+                                                </article>
+                                            @endforeach
+                                        @endforeach
+                                    @endforeach
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="tab-pane fade" id="nav-green" role="tabpanel" aria-labelledby="nav-home-tab">
-                        <div class="product-category white-product">
-                            <div class="category--slider owl-carousel ">
-
-                                <article class="product instock sale purchasable">
-                                    <div class="product-wrap">
-                                        <div class="product-top">
-                                            <span class="product-label discount">new</span>
-                                            <figure>
-                                                <a href="singlepage.html">
-                                                    <div class="product-image">
-                                                        <img width="320" height="320"
-                                                            src="https://post.healthline.com/wp-content/uploads/2020/09/benefits-of-kale-732x549-thumbnail-732x549.jpg"
-                                                            class="attachment-shop_catalog size-shop_catalog" alt="">
-                                                    </div>
-                                                </a>
-                                            </figure>
-
-
-                                        </div>
-                                        <div class="product-description">
-
-                                            <div class="product-meta">
-                                                <div class="title-wrap">
-                                                    <p class="product-title">
-                                                        <a href="singlepage.html">Gree Veggies || Per KG</a>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center justify-content-between">
-                                                <div class="product_price">
-                                                    <div class="product_price-actual">
-                                                        Rs.100
-                                                    </div>
-                                                    <div class="product_price-discount">
-                                                        <span class="line-through">
-                                                            Rs.120
-                                                        </span>
-                                                        <span>-20%</span>
-                                                    </div>
-                                                </div>
-                                                <div class="product_cart">
-                                                    <a href="javascript:void(0)">
-                                                        <ion-icon name="cart" uk-tooltip=" Add to Cart"></ion-icon>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </article>
-
-
-                            </div>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
 
                 <div class="w-100 text-right align-items-center justify-content-between">

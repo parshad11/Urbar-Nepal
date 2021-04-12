@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Front;
 
+use App\CategoryVisit;
 use App\Front\PageSetting;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -29,6 +30,8 @@ class FrontendController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
+
+
     public function index()
     {
         $home_settings = HomeSetting::first();
@@ -52,7 +55,11 @@ class FrontendController extends Controller
         }
         // $catalogues=Document::where('file_type','catalogue')->limit('2')->latest()->get();
         // $banner = Document::where('file_type','banner')->first();
-        return view('ecommerce.index')->with(compact('products', 'special_category','categories','banners','slider_banners','cart_items','home_settings','category','sub_category'));
+        $popular_category=Category::orderBy('view','desc')->orderBY('created_at','desc')->limit(3)->get();
+        $category_product=Product::with(['product_variations.variations.product', 'unit'])->whereIn('id', $variation_location_product_ids)->where('category_id','!=',null)->latest()->get();
+
+        return view('ecommerce.index')->with(compact('products', 'special_category','categories','banners','slider_banners','cart_items','home_settings','category','sub_category','popular_category','category_product'));
+
     }
 
     public function getAbout()

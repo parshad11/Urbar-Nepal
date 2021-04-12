@@ -120,4 +120,18 @@ class Category extends Model
     {
         return $query->where('parent_id', 0);
     }
+
+    public static function popularcategory($id){
+        $category=Category::findorfail($id);
+        $view=$category->view+1;
+//        $data=[
+//            $view=$view
+//        ];
+        $data=null;
+        $data['view']=$view;
+        $category=Category::findorfail($category->id);
+        $category->fill($data);
+        $category->save();
+    }
+
 }
