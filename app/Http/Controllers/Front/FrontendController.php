@@ -32,6 +32,8 @@ class FrontendController extends Controller
     public function index()
     {
         $home_settings = HomeSetting::first();
+        $category = Category::with('sub_categories')->where('parent_id','=',0)->get();
+        $sub_category = Category::with('sub_categories')->where('parent_id','!=',0)->get();
         $banners = Banner::where('status', 'active')->latest()->get();
         $slider_banners = SliderBanner::where('status', 'active')->latest()->get();
         $location = BusinessLocation::where('location_id', 'BL0001')->first();
@@ -50,7 +52,7 @@ class FrontendController extends Controller
         }
         // $catalogues=Document::where('file_type','catalogue')->limit('2')->latest()->get();
         // $banner = Document::where('file_type','banner')->first();
-        return view('ecommerce.index')->with(compact('products', 'special_category','categories','banners','slider_banners','cart_items','home_settings'));
+        return view('ecommerce.index')->with(compact('products', 'special_category','categories','banners','slider_banners','cart_items','home_settings','category','sub_category'));
     }
 
     public function getAbout()

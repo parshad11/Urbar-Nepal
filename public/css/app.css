@@ -244,9 +244,11 @@ legend {
   padding: 6px 52px !important;
 }
 .right-col {
-  background-color: #243949;
+  background: linear-gradient(0deg,rgba(0, 0, 0, 0.76),rgba(51, 51, 51, 0.32)),url(../img/home-bg.jpg);
   height: 100%;
   min-height: 100vh;
+  background-size: cover;
+  background-position: center;
 }
 
 .right-col label {
@@ -303,7 +305,7 @@ legend {
   max-height: 350px;
 }
 .bg-aqua-lite {
-  background-color: #7FFFD4;
+  background-color: #f0713d;
 }
 .navbar-nav>.notifications-menu>.dropdown-menu>li .menu>li>a {
   white-space: normal;
