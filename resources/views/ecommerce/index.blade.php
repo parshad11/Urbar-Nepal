@@ -12,18 +12,24 @@
                         <ul class="side-nav-category-ul">
                             @if(isset($category))
                                 @foreach($category as $category)
-                                    <li class="li-has-children"><a href="{{route('categories_product_list',['idd' => $category->id, 'slugg' => $category->slug])}}">{{$category->name}}<span class="float-right"
-                                                                                                                                                                                             uk-icon="icon: chevron-right"></span> <span class="clearfix"></span></a>
+                                    <li class="li-has-children"><a
+                                                href="{{route('categories_product_list',['idd' => $category->id, 'slugg' => $category->slug])}}">{{$category->name}}
+                                            <span class="float-right"
+                                                  uk-icon="icon: chevron-right"></span> <span
+                                                    class="clearfix"></span></a>
                                         <div class="hover-side-menu">
                                             <div class="sub-category-block">
-                                                <div class="sub-nav-main-category"><a href="{{route('categories_product_list',['idd' => $category->id, 'slugg' => $category->slug])}}">{{$category->name}}</a>
+                                                <div class="sub-nav-main-category"><a
+                                                            href="{{route('categories_product_list',['idd' => $category->id, 'slugg' => $category->slug])}}">{{$category->name}}</a>
 
                                                 </div>
                                                 @foreach ($sub_category as $subcategory)
                                                     @if ( $subcategory->parent_id == $category->id )
                                                         <ul class="side-sub-nav-category-ul">
 
-                                                            <li class="sub-nav-li"><a href="{{route('product_sub_category', ['id' => $subcategory->id ,'slug' => $subcategory->slug])}}"> {{$subcategory->name}}</a></li>
+                                                            <li class="sub-nav-li"><a
+                                                                        href="{{route('product_sub_category', ['id' => $subcategory->id ,'slug' => $subcategory->slug])}}"> {{$subcategory->name}}</a>
+                                                            </li>
 
 
                                                         </ul>
@@ -85,8 +91,10 @@
                             <div id="the-final-countdown">
                                 <ul class="liststyle--none">
 
-                                    <li><span id="hours"></span></li>:
-                                    <li><span id="minutes"></span></li>:
+                                    <li><span id="hours"></span></li>
+                                    :
+                                    <li><span id="minutes"></span></li>
+                                    :
                                     <li><span id="seconds"></span></li>
                                 </ul>
                             </div>
@@ -102,7 +110,6 @@
                                     <div class="product-wrap">
                                         <div class="product-top">
                                             <span class="product-label discount">new</span>
-
 
 
                                             <figure>
@@ -155,12 +162,6 @@
                                             <span class="product-label discount">new</span>
 
 
-
-
-
-
-
-
                                             <figure>
                                                 <a href="singlepage.html">
                                                     <div class="product-image">
@@ -209,12 +210,6 @@
                                     <div class="product-wrap">
                                         <div class="product-top">
                                             <span class="product-label discount">new</span>
-
-
-
-
-
-
 
 
                                             <figure>
@@ -305,7 +300,7 @@
                     <div class="product-category white-product">
                         <div class="category--slider owl-carousel">
                             @foreach($products as $product)
-                                @foreach($category_product->where('category_id',App\Category::find($product->category_id)->id) as $product)
+                                @foreach($category_product as $product)
                                     @foreach ($product->product_variations as $product_variation)
                                         @foreach ($product_variation->variations as $variation)
                                             <article class="product instock sale purchasable">
@@ -722,7 +717,6 @@
                                 </figure>
 
 
-
                             </div>
 
                             <div>
@@ -799,7 +793,8 @@
                                                     @endif
                                                 </div>
                                                 <div class="product_cart">
-                                                    <a href="javascript:void(0)" id="add_to_carts" product_id="{{$variation->id}}">
+                                                    <a href="javascript:void(0)" id="add_to_carts"
+                                                       product_id="{{$variation->id}}">
                                                         <ion-icon name="cart" uk-tooltip=" Add to Cart"></ion-icon>
                                                     </a>
                                                 </div>
@@ -1025,8 +1020,6 @@
                         </div>
                     </div>
                 </article> -->
-
-
 
 
                 </div>
