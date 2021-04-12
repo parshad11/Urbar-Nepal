@@ -142,8 +142,14 @@
                         <div class="user-login">
                             <ul class="user_login_ul">
                                 <li class="user_login_li relative">
+
                                 @if(Auth::guard('customer')->check())
-                                     {{Auth::guard('customer')->user()->name}}
+                               <div class='text-center pt-3'> <span class='text-center w-100'><i class="fas fa-user-alt"></i></span>
+                               <br>
+<span>                                {{Auth::guard('customer')->user()->name}}
+</span>                            </div>
+
+                                     
                                      <ul class="user_login_ul sub_ul">
                                         <li class="sub_li"><a href="{{route('customer.account')}}">Account</a></li>
                                         <!-- <li class="sub_li"><a href="account.html">Wishlist</a></li> -->

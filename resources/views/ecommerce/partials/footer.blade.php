@@ -34,9 +34,9 @@
                                     $result = json_decode($home_settings->social_links, true);
                                 @endphp
                             <a href="{{ $result['facebook'] }}" uk-icon="facebook" class="facebook"></a>
-                            <a href="{{ $result['twitter'] }}" uk-icon="google-plus" class="google-plus"></a>
-                            <a href="{{ $result['instagram'] }}" uk-icon="twitter" class="twitter"></a>
-                            <a href="{{ $result['google'] }}" uk-icon="instagram" class="instagram"></a>
+                            <a href="{{ $result['google'] }}" uk-icon="google-plus" class="google-plus"></a>
+                            <a href="{{ $result['twitter'] }}" uk-icon="twitter" class="twitter"></a>
+                            <a href="{{ $result['instagram'] }}" uk-icon="instagram" class="instagram"></a>
                         @endif
                         </li>
                     </ul>
