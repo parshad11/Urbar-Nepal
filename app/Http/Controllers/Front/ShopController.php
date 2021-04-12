@@ -64,9 +64,9 @@ class ShopController extends Controller
         } else {
             $categories = Category::with('sub_categories')->where('parent_id', 0)->where('id', '!=', $special_category->id)->active()->orderBy('display_order')->get();
         }
-        $catalogues=Document::where('file_type','catalogue')->limit('2')->latest()->get();
-        $banner = Document::where('file_type','banner')->first();
-        return view('ecommerce.shop')->with(compact('products', 'special_category','categories','catalogues','banner'));
+        // $catalogues=Document::where('file_type','catalogue')->limit('2')->latest()->get();
+        // $banner = Document::where('file_type','banner')->first();
+        return view('ecommerce.shop')->with(compact('products', 'special_category','categories'));
     }
 
     public function product($slug)
@@ -81,12 +81,12 @@ class ShopController extends Controller
         return view('ecommerce.product_details');
     }
 
-    public function downloadFile($fileId){
-        $file = Document::where('id',$fileId)->first();
-        $myfile = public_path('uploads/shop').'/'.$file->file_name;
-        $myfile=path_fixer($myfile);
-        return response()->download($myfile);
-    }
+    // public function downloadFile($fileId){
+    //     $file = Document::where('id',$fileId)->first();
+    //     $myfile = public_path('uploads/shop').'/'.$file->file_name;
+    //     $myfile=path_fixer($myfile);
+    //     return response()->download($myfile);
+    // }
 
     public function checkout()
     {

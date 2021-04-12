@@ -82,6 +82,7 @@ class Category extends Model
         $categories = Category::where('business_id', $business_id)
                             ->where('parent_id', 0)
                             ->where('category_type', $type)
+                            ->where('status','active')
                             ->select(DB::raw('IF(short_code IS NOT NULL, CONCAT(name, "-", short_code), name) as name'), 'id')
                             ->orderBy('name', 'asc')
                             ->get();
@@ -94,6 +95,14 @@ class Category extends Model
     public function sub_categories()
     {
         return $this->hasMany(\App\Category::class, 'parent_id');
+    }
+
+    public function products(){
+        return $this->hasMany(\App\Product::class,'category_id');
+    }
+
+    public function sub_category_products(){
+        return $this->hasMany(\App\Product::class,'sub_category_id');
     }
 
     public function scopeActive($query)

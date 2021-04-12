@@ -53,8 +53,8 @@ Route::namespace('Api')->middleware(['cors'])->group(function () {
 });
 
 //Non-Authenticated Routes
-Route::get('/documents', 'Api\ShopController@documents');
-Route::get('/download/file/{fileId}', 'ShopController@downloadFile')->name('downloadfile');
+// Route::get('/documents', 'Api\ShopController@documents');
+// Route::get('/download/file/{fileId}', 'ShopController@downloadFile')->name('downloadfile');
 Route::get('/products', 'Api\ProductController@products');
 Route::get('/product/search','Api\ProductController@search');
 Route::get('/product/searchByCategroy/{id}','Api\ProductController@searchByCategory');
