@@ -85,13 +85,13 @@
                 </div>
                 <div class="contact_us-ul">
                     <ul>
-                        <li>Phone: 720.974.7878</li>
-                        <li> Toll Free: 1.877.929.7878</li>
-                        <li>Email: info@choicescreening.com</li>
+                        <li>Phone: {{ isset($home_settings) ? $home_settings->phone : '' }}</li>
+                        <li> Address: {{ isset($home_settings) ? $home_settings->address : ''}}</li>
+                        <li>Email: {{isset($home_settings) ? $home_settings->email : ''}}</li>
                     </ul>
                 </div>
                 <div class="contact_us-map">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d14133.189959106627!2d85.3355668232668!3d27.677198877423333!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1snext%20near%20Koteshwor%2C%20Kathmandu%2C%20Nepal!5e0!3m2!1sen!2snp!4v1617337323779!5m2!1sen!2snp" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    <iframe src="{!! isset($home_settings) ? $home_settings->google_map_link : '' !!}" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
                 </div>
 
             </div>
@@ -108,30 +108,41 @@
                         </div>
                     </div>
 
-                    <form role="form" method="post" >
-
+                  
+                    <form role="form" id="ajax-contact" method="post" action="{{action('Front\FrontendController@mailRequest')}}">
+                        @csrf
+                        
                         <div class="row">
-                            <div class="col-sm-12 form-group">
-                                <label for="message">
-                                    Message:</label>
-                                <textarea class="form-control" type="textarea" id="message" name="message"
-                                          maxlength="6000"
-                                          rows="7"></textarea>
+                            <div class="col-sm-6 form-group">
+                                <label for="name">
+                                    Your Name:</label>
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Your Name" required="">
+                            </div>
+                            <div class="col-sm-6 form-group">
+                                <label for="email">
+                                    Email:</label>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Your Email" required="">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-6 form-group">
                                 <label for="name">
-                                    Your Name:</label>
-                                <input type="text" class="form-control" id="name" name="name" required="">
+                                    Phone no.:</label>
+                                <input type="text" class="form-control" id="phone" name="phone" placeholder="phone Number" required="">
                             </div>
                             <div class="col-sm-6 form-group">
-                                <label for="email">
-                                    Email:</label>
-                                <input type="email" class="form-control" id="email" name="email" required="">
+                                <label for="name">
+                                    Subject:</label>
+                                <input type="text" class="form-control" id="subject" name="subject" placeholder="Subject " required="">
                             </div>
                         </div>
-
+                        <div class="row">
+                            <div class="col-sm-12 form-group">
+                                <label for="message">
+                                    message:</label>
+                                <textarea class="form-control" type="textarea" id="message" name="message" rows="5"></textarea>
+                            </div>
+                        </div>
 
                         <div class="row">
                             <div class="col-sm-12 form-group">
@@ -139,6 +150,7 @@
                             </div>
                         </div>
 
+                        
                     </form>
                     <div id="success_message" style="width:100%; height:100%; display:none; ">
                         <h3>Posted your message successfully!</h3>

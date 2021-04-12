@@ -22,14 +22,8 @@
         </div>
         <div class="col-md-10">
             <div class="row" style="margin-bottom: 10px;">
-<<<<<<< HEAD
-                <label for="blog_image" class="control-label">Image Dimension :500*500</label>
-                <div id="blog_img">
-
-=======
                 <label for="blog_image" class="control-label">Image Dimension :800*320</label>
                 <div id="ecom_blog_img">
->>>>>>> biju
                 </div>
             </div>
             <div class="row" style="margin-bottom: 10px;">

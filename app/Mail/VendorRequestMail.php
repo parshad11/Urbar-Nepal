@@ -34,7 +34,6 @@ class VendorRequestMail extends Mailable
             'name'=>$this->request->name,
             'email'=>$this->request->email,
             'phone'=>$this->request->phone,
-            'address'=>$this->request->address,
             'message'=>$this->request->message,
         ]);
     }

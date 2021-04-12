@@ -25,9 +25,13 @@
                                 <i class="fas fa-bars"></i>
                             </a>
                             <a class="logo-link" href="{{ route('front_dashboard')}}">
+                                @if(isset($home_settings))
+                                    <img src="{{ asset('uploads/img/home/'.$home_settings->logo_image) }}"
+                                            alt="">
+                                @else
                                 <img src="{{ asset('ecom/img/logo-main.png') }}" class="" alt="Urbar Nepal logo">
+                                @endif
                             </a>
-
                         </div>
                         <div class="mobile_screen" style="display: none">
                             <div class="users">
@@ -108,14 +112,30 @@
                     </div>
                 </div>
                 <div class="col-md-6 ">
+
+
+
+                <!-- SEARCH BOX -->
+                    <div class="search-box">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="query" id="searchTextLg"
+                                   placeholder="Search ...."
+                                   aria-describedby="basic-addon2">
+
+                            <span class="input-group-addon btn btn-success" id="basic-addon2">Search &nbsp;<i
+                                        class="fa fa-search" aria-hidden="true"></i></span>
+                        </div>
+                    </div>
+<!-- 
                     <div class="search-box">
                         <div class="uk-margin">
                             <form class="uk-search uk-search-default ">
                                 <span class="uk-search-icon-flip" uk-search-icon></span>
-                                <input class="uk-search-input" type="search" placeholder="Search...">
+                                <input class="uk-search-input w-100" type="text" name="query" id="searchTextLg" placeholder="Search...">
                             </form>
                         </div>
-                    </div>
+                    </div> -->
+                    
                 </div>
                 <div class="col-md-3">
                     <div class="users big-screen">
@@ -125,9 +145,9 @@
                                 @if(Auth::guard('customer')->check())
                                      {{Auth::guard('customer')->user()->name}}
                                      <ul class="user_login_ul sub_ul">
-                                        <li class="sub_li"><a href="account.html">Account</a></li>
-                                        <li class="sub_li"><a href="account.html">Wishlist</a></li>
-                                        <li class="sub_li"><a href="account.html">Order</a></li>
+                                        <li class="sub_li"><a href="{{route('customer.account')}}">Account</a></li>
+                                        <!-- <li class="sub_li"><a href="account.html">Wishlist</a></li> -->
+                                        <li class="sub_li"><a href="{{route('customer.account')}}">Order</a></li>
                                         <li class="sub_li"><a href=" {{Route('user.logout')}} ">Logout</a></li>
                                     </ul>
                                 @else
@@ -155,50 +175,67 @@
                                         <span class="user-cart-link_no" id="cart_count">0</span>
                                     @endauth
                             </a>
-                            <div class="user_cart_dd">
-                                <ul class="user_cart_ul">
+                            
+                                <div class="user_cart_dd">
+                                        @if(isset($cart_items) && count($cart_items)>0)
+                                        @php
+                                            $total_sum = 0;
+                                        @endphp
+                                        @foreach ($cart_items as $key=>$item)
+                                        @php
+                                            $total_sum = $total_sum + $item['total_price'];
+                                        @endphp
+                                            <ul class="user_cart_ul">
 
-                                    <li>
-                                        <figure style="float: left; margin-right: 10px; width: 50px;"><img
-                                                src="https://images.unsplash.com/photo-1555704574-f9ecf4717298?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
-                                                alt=""></figure>
-                                        <p class="text-left">
-                                            <span> Name of PRoduct that is in the cart</span><br>
-                                            <span>1</span> <span>*</span> <span>2000</span>
+                                                <li>
+                                                    <figure style="float: left; margin-right: 10px; width: 50px;"><img
+                                                            src="@foreach($item->variation->media as $media){{ $media->display_url }}@endforeach"
+                                                            alt=""></figure>
+                                                    <p class="text-left">
+                                                        <span> 
+                                                            {{$item->variation->product->name}}&nbsp;{{$item->variation->name != "DUMMY" ? $item->variation->name : ''}}
+                                                        </span><br>
+                                                        <span>1</span> <span>*</span> <span>
+                                                        {{ number_format($item->total_price,2) }}
+                                                        </span>
 
-                                        </p>
+                                                    </p>
+                                                    <div class="clearfix"></div>
+                                                    <hr>
+                                                </li>
+                                                <!-- <li>
+                                                    <figure style="float: left; margin-right: 10px; width: 50px;"><img
+                                                            src="https://images.unsplash.com/photo-1555704574-f9ecf4717298?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+                                                            alt=""></figure>
+                                                    <p class="text-left">
+                                                        <span> Name of PRoduct</span><br>
+                                                        <span>1</span> <span>*</span> <span>2000</span>
+
+                                                    </p>
+                                                    <div class="clearfix"></div>
+                                                    <hr>
+                                                </li> -->
+
+                                            </ul>
+                                    @endforeach
+                                    <div class="cart_subtotal">
+                                        <div class="float-left">Subtotal</div>
+                                        <div class="float-right"><span class=""><span
+                                                    class="">Rs.</span>{{ number_format($total_sum,2) }}</span>
+                                        </div>
                                         <div class="clearfix"></div>
                                         <hr>
-                                    </li>
-                                    <li>
-                                        <figure style="float: left; margin-right: 10px; width: 50px;"><img
-                                                src="https://images.unsplash.com/photo-1555704574-f9ecf4717298?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
-                                                alt=""></figure>
-                                        <p class="text-left">
-                                            <span> Name of PRoduct</span><br>
-                                            <span>1</span> <span>*</span> <span>2000</span>
-
-                                        </p>
-                                        <div class="clearfix"></div>
-                                        <hr>
-                                    </li>
-
-                                </ul>
-                                <div class="cart_subtotal">
-                                    <div class="float-left">Subtotal</div>
-                                    <div class="float-right"><span class=""><span
-                                                class="">Rs.</span>38.00</span>
                                     </div>
+                                    @else
+                                        <h4>No items left in cart</h4>
+                                    @endif
+                                    <a href="{{route('product.cart')}}" class="btn  btn-default view-cart float-left">View
+                                        Cart</a>
+                                        
+                                    <a href="{{route('product.checkout')}}"
+                                        class="btn btn-danger checkout float-right">Checkout</a>
                                     <div class="clearfix"></div>
-                                    <hr>
                                 </div>
-                                <a href="cartpage.html" class="btn  btn-default view-cart float-left">View
-                                    Cart</a>
-                                <a href="checkoutpage.html"
-                                    class="btn btn-danger checkout float-right">Checkout</a>
-                                <div class="clearfix"></div>
-                            </div>
-
                         </div>
 
 
@@ -207,8 +244,11 @@
                     <div class="phone-header text-center pt-4">
                         <a href="#">
                             <span class="block">
-                                <i class="fas fa-phone-alt"></i> &nbsp;<span class="items" dir="ltr">+977
-                                    9808666456</span>
+                                <i class="fas fa-phone-alt"></i> &nbsp;<span class="items" dir="ltr">
+                                    @if(isset($home_settings))
+                                    {{ $home_settings->phone }}
+                                    @endif
+                                </span>
                             </span>
                         </a>
                     </div>

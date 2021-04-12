@@ -93,6 +93,10 @@
     <script src="{{ asset('ecom/js/sweetalert2.js') }}"></script>
     <script src="{{ asset('ecom/js/new.js') }}"></script>
 
+    <!-- Include AlgoliaSearch JS Client v3 and autocomplete.js library -->
+    <script src="{{ asset('ecom/js/algoliasearchLite.min.js') }}"></script>
+    <script src="{{ asset('ecom/js/autocomplete.min.js') }}"></script>
+
 @yield('scripts')
 
 <script>
@@ -147,7 +151,6 @@
                     }
                 },
                 error: function (response) {
-                    console.log(response);
                     if (response.responseJSON.error=="Unauthenticated.") {
                         window.location.href = document.location.origin + '/ecommerce/login';
                     }
@@ -175,6 +178,48 @@
         });
     });
 </script>
+
+    <script>
+        $(function () {
+            autocomplete('#searchTextLg', {}, {
+                // console.log('hello');
+                source: function (request, response) {
+                    $.ajax({
+                        url: '{{route('autocomplete.search')}}',
+                        type: 'GET',
+                        dataType: 'json',
+                        data: {
+                            query: $('#searchTextLg').val(),
+                        },
+                        success: function (data) {
+                            response($.map(data, function (obj) {
+
+                                if (obj.variation_name !== "DUMMY") {
+                                    return {
+                                        name: obj.name + ' ' + obj.variation_name,
+                                        slug: obj.sub_sku,
+                                    };
+                                }
+                                return {
+                                    name: obj.name,
+                                    slug: obj.sub_sku,
+                                };
+                            }));
+                        }
+                    });
+                },
+                displayKey: 'name',
+                templates: {
+                    // header: '<div class="aa-suggestions-category">Products</div>',
+                    suggestion: function (suggestion) {
+                        return '<a href="{{ url('/') }}/shop/product/' + suggestion.slug + '">' + suggestion.name +
+                            '</a>';
+                    }
+                }
+
+            });
+        });
+    </script>
 </body>
 
 </html>

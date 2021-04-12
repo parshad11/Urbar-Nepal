@@ -46,7 +46,10 @@ Route::namespace('Front')->group(function () {
     Route::get('/shop/user-account', 'ShopController@getCustomer')->name('customer.account')->middleware('auth:customer');
     Route::get('/shop/checkout', 'ShopController@checkout')->name('product.checkout')->middleware(['auth:customer','SetCustomerSessionData']);
     Route::post('/shop/checkout', 'ShopController@store')->name('order.store')->middleware(['auth:customer','SetCustomerSessionData']);
+    Route::get('/shop/category/{slug}', 'ShopController@categoryProduct')->name('product_category');
     Route::get('/shop/category/{slug}/{sub_slug}', 'ShopController@subcategoryProduct')->name('product_subcategory');
+    // Route::get('/', 'ShopController@index')->name('front_dashboard');
+    Route::get('/shop', 'ShopController@index')->name('shop');
     Route::get('/shop/auto-complete', 'ShopController@autoComplete')->name('autocomplete.search');
 
     Route::get('/shop/product/{slug}', 'ShopController@product')->name('product_single');
