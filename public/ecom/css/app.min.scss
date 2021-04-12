@@ -5,7 +5,9 @@ $primary-color: #006230;
 $secondary-color:#f0713d;
 
 
-
+.algolia-autocomplete{
+  width: 100%!important;
+}
 .center {
   display: table !important;
   margin-right: auto;

@@ -9,6 +9,8 @@ use App\VariationLocationDetails;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Product;
+use App\Front\Banner;
+use App\Front\SliderBanner;
 use App\Category;
 use App\Front\Cart;
 use App\Front\Document;
@@ -55,6 +57,8 @@ class ShopController extends Controller
      */
     public function index()
     {
+        $banners = Banner::where('status', 'active')->latest()->get();
+        $slider_banners = SliderBanner::where('status', 'active')->latest()->get();
         $location = BusinessLocation::where('location_id', 'BL0001')->first();
         $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
         $products = Product::with(['product_variations.variations.product', 'unit'])->whereIn('id', $variation_location_product_ids)->paginate();
@@ -64,9 +68,14 @@ class ShopController extends Controller
         } else {
             $categories = Category::with('sub_categories')->where('parent_id', 0)->where('id', '!=', $special_category->id)->active()->orderBy('display_order')->get();
         }
+        $cart_items=null;
+        if(auth()->guard('customer')->user()){
+           
+            $cart_items = Cart::with('variation')->where('user_id', auth()->guard('customer')->user()->id)->get();
+        }
         // $catalogues=Document::where('file_type','catalogue')->limit('2')->latest()->get();
         // $banner = Document::where('file_type','banner')->first();
-        return view('ecommerce.shop')->with(compact('products', 'special_category','categories'));
+        return view('ecommerce.shop')->with(compact('products', 'special_category','categories','banners','slider_banners','cart_items'));
     }
 
     public function product($slug)
@@ -91,15 +100,14 @@ class ShopController extends Controller
     public function checkout()
     {
         $user_id = Auth::guard('customer')->user()->id;
-        $cart_items = Cart::with('variation')->where('user_id', $user_id)->get();
-
-        $user = Auth::guard('customer')->user();
+        $cart_items = Cart::with('variation.product')->where('user_id', $user_id)->get();
+        $customer = Auth::guard('customer')->user();
         $total_price = Cart::where('user_id', $user_id)->sum('total_price');
         if (count($cart_items) <= 0) {
             request()->session()->flash('error', 'Your cart is empty. Please add product into cart');
             return redirect()->route('shop');
         }
-        return view('ecommerce.checkout')->with(compact('cart_items', 'user', 'total_price'));
+        return view('ecommerce.checkout')->with(compact('cart_items', 'customer', 'total_price'));
     }
 
 
@@ -189,7 +197,9 @@ class ShopController extends Controller
      */
     public function store(Request $request)
     {
+     
         try {
+            // dd($request->all());
             $input = $request->except('_token');
             $location = BusinessLocation::where('location_id', 'BL0001')->first();
             $input['status'] = 'draft';
@@ -209,7 +219,7 @@ class ShopController extends Controller
             $input['is_save_and_print'] = 1;
             $input['is_ecommerce_order'] = 1;
             $input['transaction_date'] = Carbon::now()->format('Y-m-d H:i:s');
-
+            $input['shipping_address']= implode(' ', [$input['address_line_1'], $input['city'], $input['state'], $input['zip_code']]);
             DB::beginTransaction();
             //Customer group details
             $contact_id = $user->id;
@@ -243,11 +253,8 @@ class ShopController extends Controller
             }
 
             $input['products'] = $products;
-
             if (!empty($input['products'])) {
-
                 $transaction = $this->transactionUtil->createSellTransaction($business_id, $input, $invoice_total, 1, $assign_delivery);
-
                 $this->transactionUtil->createOrUpdateSellLines($transaction, $input['products'], $input['location_id']);
 
                 $is_credit_sale = isset($input['is_credit_sale']) && $input['is_credit_sale'] == 1 ? true : false;
@@ -255,7 +262,7 @@ class ShopController extends Controller
 	           // $this->notificationUtil->autoSendNotification($business_id, 'new_sale', $transaction, $user);
 
 	            $admin = User::where('user_type', 'admin')->first();
-
+              
 	            $admin->notify(new OrderCreatedNotification($transaction->contact->name,$transaction));
                 $cart_items = Cart::where('user_id', $transaction->contact_id)->get();
                 if ($cart_items) {
@@ -283,7 +290,8 @@ class ShopController extends Controller
             $request->session()->flash('error', 'something went wrong');
         }
         $request->session()->flash('success', 'Order created successfully');
-        return redirect()->action('Front\ShopController@index');
+        // return redirect()->action('Front\ShopController@index');
+        return redirect('/');
     }
 
     private function receiptContent(

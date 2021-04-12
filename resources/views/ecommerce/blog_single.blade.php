@@ -1,7 +1,7 @@
 @extends('ecommerce.layouts.master')
 @section('content')
     <!-- MOBILE NAV START -->
-    <div id="offcanvas-flip" uk-offcanvas="flip: true; overlay: true">
+    <!-- <div id="offcanvas-flip" uk-offcanvas="flip: true; overlay: true">
       <div class="uk-offcanvas-bar">
         <button class="uk-offcanvas-close" type="button" uk-close style="color: #ef3e42;"></button>
         <section class="mobile-nav">
@@ -35,7 +35,7 @@
           </ul>
         </section>
       </div>
-    </div>
+    </div> -->
     <!-- MOBILE NAV END -->
     <!-- END OF HEADER -->
     <!-- BLOG Single START -->

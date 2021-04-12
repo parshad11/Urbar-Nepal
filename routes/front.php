@@ -11,8 +11,8 @@
 |
 */
 Route::get('/ecommerce/register','Auth\RegisterController@RegisterUserPage')->name('registerr_user');
-Route::post('/ecommerce/login','Auth\RegisterController@store')->name('registerCustomer');
 Route::get('/ecommerce/login', 'Auth\LoginController@showCustomerLoginForm')->name('front_login');
+Route::post('/ecommerce/login','Auth\RegisterController@store')->name('registerCustomer');
 Route::post('/ecommerce/index', 'Auth\LoginController@customerLogin')->name('post_front_login');
 Route::get('/ecommerce/logout', 'Auth\LoginController@customerLogout')->name('user.logout');
 
@@ -46,7 +46,10 @@ Route::namespace('Front')->group(function () {
     Route::get('/shop/user-account', 'ShopController@getCustomer')->name('customer.account')->middleware('auth:customer');
     Route::get('/shop/checkout', 'ShopController@checkout')->name('product.checkout')->middleware(['auth:customer','SetCustomerSessionData']);
     Route::post('/shop/checkout', 'ShopController@store')->name('order.store')->middleware(['auth:customer','SetCustomerSessionData']);
+    Route::get('/shop/category/{slug}', 'ShopController@categoryProduct')->name('product_category');
     Route::get('/shop/category/{slug}/{sub_slug}', 'ShopController@subcategoryProduct')->name('product_subcategory');
+    // Route::get('/', 'ShopController@index')->name('front_dashboard');
+    Route::get('/shop', 'ShopController@index')->name('shop');
     Route::get('/shop/auto-complete', 'ShopController@autoComplete')->name('autocomplete.search');
 
     Route::get('/shop/product/{slug}', 'ShopController@product')->name('product_single');

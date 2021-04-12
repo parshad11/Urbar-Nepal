@@ -6,7 +6,6 @@ Someone has just contacted you from freshktm contact field with following detail
 Name: {{$name}}<br>
 Email: {{$email}}<br>
 Phone Number: {{$phone}}<br>
-Address: {{$address}}<br>
 Message: {{$message}}
 @endcomponent
 
