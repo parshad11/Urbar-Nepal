@@ -5,13 +5,16 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Auth;
+use App\Contact;
+use App\User;
+use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 
 class LoginController extends Controller
 {
     public function login(Request $request)
     {
-        $data=$request->validate([
+        $data = $request->validate([
             'username' => 'required|string',
             'password' => 'required|string',
             'remember_me' => 'boolean'
@@ -73,11 +76,54 @@ class LoginController extends Controller
                 'costom field 2' => $user->costom_field_2,
                 'costom field 3' => $user->costom_field_3,
                 'costom field 4' => $user->costom_field_4,
-                'bank detail'=> $user->bank_details,
-                'id proof name'=>$user->id_proof_name,
-                'id proof number'=>$user->id_proof_number,
-                ]
+                'bank detail' => $user->bank_details,
+                'id proof name' => $user->id_proof_name,
+                'id proof number' => $user->id_proof_number,
+            ]
         ]);
 
+    }
+
+    public function register(Request $request)
+    {
+        $request->validate(
+            [
+                'name' => 'required|string|max:20',
+                'email' => 'required|email|unique:users,email',
+                'phone' => 'required|numeric|min:10',
+                'password' => 'required|string|min:8',
+                'address' => 'required|string'
+            ]
+        );
+        $contact_id = 'CO' . rand(1111, 9999);
+        $contact_id_fetch = contact::where('contact_id', $contact_id)->first();
+        if (!is_null($contact_id_fetch)) {
+            return $contact_id;
+        }
+        $unique_contact_id = $contact_id;
+        $customer = Contact::create([
+            "name" => $request->name,
+            "email" => $request->email,
+            "mobile" => $request->phone,
+            "shipping_address" => $request->address,
+            "password" => Hash::make($request['password']),
+            "type" => 'customer',
+            "business_id" => '1',
+            "created_by" => User::select('id')->where('user_type','=','admin')->first()->id,
+            "contact_id" => $unique_contact_id
+        ]);
+//        $contact=Contact::create($customer);
+//        $contact->save();
+        if(!is_null($customer)) {
+            return response()->json([
+                'message'=>'Success! Registration completed'
+            ]);
+        }
+
+        else {
+            return response()->json([
+                'message'=>'Alert! Failed to register'
+            ]);
+        }
     }
 }

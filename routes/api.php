@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Route;
 Route::namespace('Api')->middleware(['cors'])->group(function () {
     route::post('/login', 'LoginController@login')->name('delivery.login');
     route::post('ecommerce/login', 'EcommerceLoginController@login');
+    route::post('/register', 'LoginController@register')->name('ecommerce.login');
 
 
 

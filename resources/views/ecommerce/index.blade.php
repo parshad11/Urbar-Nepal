@@ -343,9 +343,9 @@
                                                                 </div>
                                                             </div>
                                                             <div class="product_cart">
-                                                                <a href="javascript:void(0)">
-                                                                    <ion-icon name="cart"
-                                                                              uk-tooltip=" Add to Cart"></ion-icon>
+                                                                <a href="javascript:void(0)" id="add_to_carts"
+                                                                   product_id="{{$variation->id}}">
+                                                                    <ion-icon name="cart" uk-tooltip=" Add to Cart"></ion-icon>
                                                                 </a>
                                                             </div>
                                                         </div>
@@ -408,9 +408,9 @@
                                                                 </div>
                                                             </div>
                                                             <div class="product_cart">
-                                                                <a href="javascript:void(0)">
-                                                                    <ion-icon name="cart"
-                                                                              uk-tooltip=" Add to Cart"></ion-icon>
+                                                                <a href="javascript:void(0)" id="add_to_carts"
+                                                                   product_id="{{$variation->id}}">
+                                                                    <ion-icon name="cart" uk-tooltip=" Add to Cart"></ion-icon>
                                                                 </a>
                                                             </div>
                                                         </div>
