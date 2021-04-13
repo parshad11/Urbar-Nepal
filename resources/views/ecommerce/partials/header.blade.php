@@ -1,5 +1,5 @@
 <header class="header" id="header">
-    <div class="top-header py-1 ">
+    <!-- <div class="top-header py-1 ">
         <div class="container-fluid">
             <div class=" d-flex align-items-center justify-content-between ">
                 <div class="top-header-welcome--text text-center w-75 py-1  ">
@@ -10,7 +10,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
     <div class="mid-header " style="z-index: 1000;" uk-sticky="top: 100;  animation: uk-animation-slide-top">
         <div class="container-fluid">
             <!-- TOP HEAD SECTION    -->
@@ -39,18 +39,17 @@
                                     <ul class="user_login_ul">
                                         <li class="user_login_li relative">
                                         @if(Auth::guard('customer')->check())
-                                
-    <i class="far fa-user" style="display: none"><span style="
-    background: #f0713d;
-    color: white;
-    padding: 10px 15px;
-    border-radius:5px;
-    ">{{Auth::guard('customer')->user()->name}}</span></i>
+                                            <i class="far fa-user" style="display: none"><span style="
+                                            background: #f0713d;
+                                            color: white;
+                                            padding: 10px 15px;
+                                            border-radius:5px;
+                                            ">{{Auth::guard('customer')->user()->name}}</span></i>
                                             <ul class="user_login_ul sub_ul">
-                                                <li class="sub_li"><a href="#">Account</a></li>
-                                                <li class="sub_li"><a href="#">Wishlist</a></li>
-                                                <li class="sub_li"><a href="#">Order</a></li>
-                                                <li class="sub_li"><a href="#">Logout</a></li>
+                                                <li class="sub_li"><a href="{{route('customer.account')}}">Account</a></li>
+                                                <!-- <li class="sub_li"><a href="#">Wishlist</a></li> -->
+                                                <li class="sub_li"><a href="{{route('customer.account')}}">Order</a></li>
+                                                <li class="sub_li"><a href="{{Route('user.logout')}}">Logout</a></li>
                                             </ul>
                                             @else
                                             <a href="{{ route('front_login')}}" class="user-login-link">
@@ -62,60 +61,15 @@
                                     </ul>
                                 </div>
                                 <div class="user-cart">
-                                    <a href="" class="user-cart-link">
+                                    <a href="{{route('product.cart')}}" class="user-cart-link">
 
                                         <img src="https://cdn.iconscout.com/icon/premium/png-256-thumb/shop-cart-5-664052.png"
                                             alt="">
-                                        <span class="user-cart-link_no">1</span>
+                                            @auth('customer')
+                                                <span class="user-cart-link_no" id="mobile_cart_count">0</span>
+                                            @endauth
                                     </a>
-                                    <div class="user_cart_dd">
-                                        <ul class="user_cart_ul">
-                                            <li>
-                                                <figure style="float: left; margin-right: 10px; width: 50px;">
-                                                    <img src="http://stat.homeshop18.com/homeshop18/images/productImages/81/lava-a67-dual-sim-android-mobile-phone-medium_3a86d70832ad27694f49cea1aba8dd81.jpg"
-                                                        alt="">
-                                                </figure>
-                                                <p class="text-left">
-                                                    <span> Name of PRoduct that is in the cart</span><br>
-                                                    <span>1</span> <span>*</span> <span>2000</span>
-
-                                                </p>
-                                                <div class="clearfix"></div>
-                                                <hr>
-                                            </li>
-                                            <li>
-                                                <figure style="float: left; margin-right: 10px; width: 50px;">
-                                                    <img src="http://stat.homeshop18.com/homeshop18/images/productImages/81/lava-a67-dual-sim-android-mobile-phone-medium_3a86d70832ad27694f49cea1aba8dd81.jpg"
-                                                        alt="">
-                                                </figure>
-                                                <p class="text-left">
-                                                    <span> Name of PRoduct</span><br>
-                                                    <span>1</span> <span>*</span> <span>2000</span>
-
-                                                </p>
-                                                <div class="clearfix"></div>
-                                                <hr>
-                                            </li>
-
-                                        </ul>
-                                        <div class="cart_subtotal">
-                                            <div class="float-left">Subtotal</div>
-                                            <div class="float-right"><span class=""><span
-                                                        class="">Rs.</span>38.00</span>
-                                            </div>
-                                            <div class="clearfix"></div>
-                                            <hr>
-                                        </div>
-                                        <a href="cartpage.html" class="uk-button view-cart float-left">View
-                                            Cart</a>
-                                        <a href="checkoutpage.html"
-                                            class="uk-button checkout float-right">Checkout</a>
-                                        <div class="clearfix"></div>
-                                    </div>
-
                                 </div>
-
-
                             </div>
                         </div>
 
@@ -136,7 +90,7 @@
                                         class="fa fa-search" aria-hidden="true"></i></span>
                         </div>
                     </div>
-<!-- 
+                <!-- 
                     <div class="search-box">
                         <div class="uk-margin">
                             <form class="uk-search uk-search-default ">
@@ -155,11 +109,9 @@
 
                                 @if(Auth::guard('customer')->check())
                                <div class='text-center pt-3'> <span class='text-center w-100'><i class="fas fa-user-alt"></i></span>
-                               <br>
-<span>                                {{Auth::guard('customer')->user()->name}}
-</span>                            </div>
-
-                                     
+                                    <br>
+                                     <span> {{Auth::guard('customer')->user()->name}} </span>                          
+                                </div>
                                      <ul class="user_login_ul sub_ul">
                                         <li class="sub_li"><a href="{{route('customer.account')}}">Account</a></li>
                                         <!-- <li class="sub_li"><a href="account.html">Wishlist</a></li> -->
@@ -169,17 +121,14 @@
                                 @else
                                 <a href="{{ Route('front_login')}}" class="user-login-link ">
                                         <span style="
-    background: #e6191b;
-    color: white;
-    padding: 10px;
-    ">Login &amp; SignUp</span>
+                                        background: #e6191b;
+                                        color: white;
+                                        padding: 10px;
+                                        ">Login &amp; SignUp</span>
                                     </a>
                                 @endif
-
-
                                 </li>
                             </ul>
-
 
                         </div>
 
@@ -219,18 +168,6 @@
                                                     <div class="clearfix"></div>
                                                     <hr>
                                                 </li>
-                                                <!-- <li>
-                                                    <figure style="float: left; margin-right: 10px; width: 50px;"><img
-                                                            src="https://images.unsplash.com/photo-1555704574-f9ecf4717298?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
-                                                            alt=""></figure>
-                                                    <p class="text-left">
-                                                        <span> Name of PRoduct</span><br>
-                                                        <span>1</span> <span>*</span> <span>2000</span>
-
-                                                    </p>
-                                                    <div class="clearfix"></div>
-                                                    <hr>
-                                                </li> -->
 
                                             </ul>
                                     @endforeach
@@ -271,29 +208,30 @@
                 </div>
             </div>
 
-        </div>
-        <div class="clearfix"></div>
-    </div>
-    <div class="bottom-header ">
-        <div class="container">
-            <div class="row">
-                <div class="nav-category">
-                    <a href="{{Route('show_all_category')}}" uk-toggle class="	">
-                        <i class="fas fa-tasks mr-2"></i><span>Categories</span>
-                    </a>
-                    <a href="" class="pl-3"> All category</a>
-
-                </div>
-                <ul class="nav-list-items d-flex">
-                    <li><a href="{{ route('front_dashboard')}}">Home</a></li>
-                    <li><a href="{{ route('front_about')}}">About us</a></li>
-                    <li><a href="{{ route('contact')}}">Contact us</a></li>
-                    <li><a href="{{ route('blog')}}">Blogs</a></li>
-                </ul>
             </div>
+            <div class="clearfix"></div>
         </div>
 
-    </div>
+        <div class="bottom-header ">
+            <div class="container">
+                <div class="row">
+                    <div class="nav-category">
+                        <a href="allcategory.html" uk-toggle class="	">
+                            <i class="fas fa-tasks mr-2"></i><span>Categories</span>
+                        </a>
+                        <a href="allcategory.html" class="pl-3"> All category</a>
+
+                    </div>
+                    <ul class="nav-list-items d-flex">
+                        <li><a href="{{ route('front_dashboard')}}">Home</a></li>
+                        <li><a href="{{ route('front_about')}}">About us</a></li>
+                        <li><a href="{{ route('contact')}}">Contact us</a></li>
+                        <li><a href="{{ route('blog')}}">Blogs</a></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
 </header>
 
 <!-- MOBILE NAV START -->
@@ -304,35 +242,37 @@
         <section class="mobile-nav">
             <form class="uk-search uk-search-default">
                 <button type="button" class="uk-search-icon-flip" uk-search-icon style="top:0;"></button>
-                <input class="uk-search-input" type="search" placeholder="Search...">
+                <input class="uk-search-input" type="text" name="query" id="mobileSearchText" placeholder="Search...">
             </form>
             <ul class="metismenu" id="menu">
                 <div class="panel-group">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <a data-toggle="collapse" href="#collapse1">Home</a>
+                            <a href="{{ route('front_dashboard')}}">Home</a>
                         </div>
-                        <div id="collapse1" class="panel-collapse collapse">
-                            <ul class="list-group">
-
-                            </ul>
-                        </div>
-
-
                     </div>
-
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <a data-toggle="collapse" href="#collapse2">Categories</a>
-                        </div>
-                        <div id="collapse2" class="panel-collapse collapse">
-                            <ul class="list-group ">
-                                <li class="list-group-item bg-transparent border-0">One</li>
-                                <li class="list-group-item bg-transparent border-0">Two</li>
-                                <li class="list-group-item bg-transparent border-0">Three</li>
-                            </ul>
+                            <a href="{{ route('show_all_category')}}">Catelogies</a>
                         </div>
                     </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <a href="{{ route('front_about')}}">About us</a>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <a href="{{ route('contact')}}">Contact us</a>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <a href="{{ route('blog')}}">Blogs</a>
+                        </div>
+                    </div>
+                    
+
             </ul>
         </section>
     </div>

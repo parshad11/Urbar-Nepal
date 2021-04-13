@@ -38,7 +38,7 @@
                             @foreach ($categories as $item)
                                 <option value="{{$item->id}}">{{$item->title}}</option>
                             @endforeach
-                            @endif
+                            @endif 
                         </select>
 						<span class="input-group-btn">
                             <a href="{{ route('ecom_blogcat') }}" class="btn btn-default bg-white btn-flat"><i class="fa fa-plus-circle text-primary fa-lg"></i></a>

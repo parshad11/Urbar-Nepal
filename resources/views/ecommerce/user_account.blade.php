@@ -130,6 +130,7 @@
               </div>
               <hr>
               <!-- <button class="btn btn-success mt-5">Edit</button> -->
+              <a class="btn btn-success mt-5" href="{{route('customer.account_edit')}}">Edit</a>
             </div>
           </div>
 

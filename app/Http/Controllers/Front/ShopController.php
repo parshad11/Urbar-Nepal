@@ -88,8 +88,14 @@ class ShopController extends Controller
         $location = BusinessLocation::where('location_id', 'BL0001')->first();
         $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
         $products = Product::with(['product_variations.variations.product', 'unit'])->where('category_id', $product_cat)->where('id', '!=',$product->id)->whereIn('id', $variation_location_product_ids)->take(5)->latest()->get();
+        $cart_items=null;
+        if(auth()->guard('customer')->user()){
+           
+            $cart_items = Cart::with('variation')->where('user_id', auth()->guard('customer')->user()->id)->get();
+        }
         return view('ecommerce.product_details')->with('variation', $product)
-            ->with('products', $products);
+            ->with('products', $products)
+            ->with('cart_items', $cart_items);
     }
 
     // public function downloadFile($fileId){
@@ -158,7 +164,11 @@ class ShopController extends Controller
                                         ->orWhere('categories.status','active');
                                     })                    
                                     ->latest()->get();
-        return view('ecommerce.all-category',compact('popular_category','category_product','products'))->with('categories', $category)
+        $cart_items=null;
+        if(auth()->guard('customer')->user()){
+            $cart_items = Cart::with('variation')->where('user_id', auth()->guard('customer')->user()->id)->get();
+        }
+        return view('ecommerce.all-category',compact('popular_category','category_product','products'))->with('categories', $category)->with('cart_items', $cart_items)
                                              ->with('sub_categoreis',$sub_category);
                                              
     }
@@ -170,7 +180,11 @@ class ShopController extends Controller
         $category_of_product = Category::with('sub_categories')->where('id',$category_id)->get();
         $sub_caategory_of_product = Category::with('sub_categories')->where('parent_id','!=',0)->get();
         $popular_category=Category::popularcategory($id);
-        return view('ecommerce.sub-catagories')->with(compact('sub_category_products','category_of_product','sub_caategory_of_product'));
+        $cart_items=null;
+        if(auth()->guard('customer')->user()){
+            $cart_items = Cart::with('variation')->where('user_id', auth()->guard('customer')->user()->id)->get();
+        }
+        return view('ecommerce.sub-catagories')->with(compact('sub_category_products','category_of_product','sub_caategory_of_product','cart_items'));
 
 
                                                
@@ -181,16 +195,27 @@ class ShopController extends Controller
         $category_of_product = Category::with('sub_categories')->where('id',$idd)->get();
         $sub_caategory_of_product = Category::with('sub_categories')->where('parent_id','!=',0)->get();
         $popular_category=Category::popularcategory($idd);
-        return view('ecommerce.category')->with(compact('category_products','category_of_product','sub_caategory_of_product'));
+        $cart_items=null;
+        if(auth()->guard('customer')->user()){
+            $cart_items = Cart::with('variation')->where('user_id', auth()->guard('customer')->user()->id)->get();
+        }
+        return view('ecommerce.category')->with(compact('category_products','category_of_product','sub_caategory_of_product','cart_items'));
     }
     public function getCustomer()
     {
         $user_id = Auth::guard('customer')->user()->id;
         $customer = Contact::where('id', $user_id)->first();
         $orders = Transaction::with(['sell_lines.variations','delivery'])->where('contact_id', $user_id)->where('is_ecommerce_order',1)->get();
-        return view('ecommerce.user_account')->with(compact('customer', 'orders'));
+        if(auth()->guard('customer')->user()){
+            $cart_items = Cart::with('variation')->where('user_id', auth()->guard('customer')->user()->id)->get();
+        }
+        return view('ecommerce.user_account')->with(compact('customer', 'orders','cart_items'));
     }
-
+    public function getCustomerEdit()
+    {
+        return view('ecommerce.user_account_edit');
+    }
+    
     public function autoComplete(Request $request)
     {
         $path=asset('/uploads/media/');
