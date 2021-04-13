@@ -145,7 +145,13 @@ class ShopController extends Controller
                             })
                     ->latest()->get();
 
-        $popular_category=Category::orderBy('view','desc')->orderBY('created_at','desc')->active()->limit(3)->get();
+        $popular_category=$popular_category=Category::with(['products' => function ($query) {
+            $location = BusinessLocation::where('location_id', 'BL0001')->first();
+            $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
+            $query->whereIn('products.id', $variation_location_product_ids);
+        }])
+            ->whereHas('products')
+            ->orderBy('view', 'Desc')->orderBY('created_at', 'desc')->limit(3)->where('deleted_at', NULL)->active()->get();
         $category_product=Product::with(['product_variations.variations.product', 'unit'])->whereIn('id', $variation_location_product_ids)->where('category_id','!=',null)
                                     ->whereHas('category',function($query){
                                         $query->where('categories.deleted_at',NULL)
