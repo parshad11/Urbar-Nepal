@@ -18,6 +18,8 @@ use App\VariationLocationDetails;
 use App\Front\Cart;
 use App\Front\Document;
 use App\Product;
+use App\Front\FrontAbout;
+use App\Front\HomeSetting;
 
 
 use function GuzzleHttp\json_decode;
@@ -36,14 +38,19 @@ class FrontendController extends Controller
         $location = BusinessLocation::where('location_id', 'BL0001')->first();
         $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
         $products = Product::with(['product_variations.variations.product', 'unit'])->whereIn('id', $variation_location_product_ids)->latest()->get();
-        
-        return view('ecommerce.index')->with(compact('banners','slider_banners','products'));
+        $featured_products =Product::whereIn('id', $variation_location_product_ids)->where('set_featured',1)->get();
+      
+         
+        return view('ecommerce.index')->with(compact('banners','slider_banners','products','featured_products'));
         // return view('ecommerce.index',compact('banners','slider_banners'));
     }
 
     public function getAbout()
     {
-        return view('ecommerce.about');
+         $home_settings = HomeSetting::select('welcome_description')->first();
+        $about_details = FrontAbout::first();
+        return view('ecommerce.about_page')->with('about_info', $about_details)
+            ->with('about_content', $home_settings->welcome_description);
     }
 
     public function getBlog()
@@ -92,6 +99,7 @@ class FrontendController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    
     public function create()
     {
         //

@@ -405,6 +405,7 @@ class ProductController extends Controller
     public function store(Request $request)
     {
     
+        // return $request->all();
         if (!auth()->user()->can('product.create')) {
             abort(403, 'Unauthorized action.');
         }
@@ -444,17 +445,17 @@ class ProductController extends Controller
             if (!empty($request->input('enable_sr_no')) &&  $request->input('enable_sr_no') == 1) {
                 $product_details['enable_sr_no'] = 1 ;
             }
-
-            //upload document
+                
+                            //upload document
             $product_details['image'] = $this->productUtil->uploadFile($request, 'image', config('constants.product_img_path'), 'image');
             $common_settings = session()->get('business.common_settings');
 
             $product_details['warranty_id'] = !empty($request->input('warranty_id')) ? $request->input('warranty_id') : null;
-
+            //  dd($product_details);
             DB::beginTransaction();
 
             $product = Product::create($product_details);
-
+            // dd($product);
             if (empty(trim($request->input('sku')))) {
                 $sku = $this->productUtil->generateProductSku($product->id);
                 $product->sku = $sku;

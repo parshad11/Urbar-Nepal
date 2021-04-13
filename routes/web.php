@@ -452,5 +452,11 @@ Route::namespace('Front')->middleware(['setData', 'auth', 'SetSessionData', 'lan
     Route::put('/ecommerce/pages/{id}', 'CmsController@updatePages')->name('ecom_pages_update');
     Route::delete('/ecommerce/pages/{id}/destroy', 'CmsController@deletePages')->name('ecom_pages_delete');
 
+    //About Section
+    Route::get('ecommerce/about-settings/create', 'CmsController@createAbout')->name('ecommerce_about_form');
+    Route::post('ecommerce/about-settings/store', 'CmsController@storeAbout')->name('ecommerce_about_store');
+    Route::get('ecommerce/about-settings', 'CmsController@editAbout')->name('ecommerce_about_edit');
+    Route::post('ecommerce/about-settings/update/', 'CmsController@updateAbout')->name('ecommerce_about_update');
+
 
 });

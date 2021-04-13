@@ -78,10 +78,7 @@ class RegisterController extends Controller
 
     public function store(Request $req)
     {
-        
         $createdBy = User::select('id')->where('user_type','=','admin')->first()->id;
-        $type=contact::findorfail($req->name);
-        dd($type);
         $req->validate(
             [
                 'name'              =>      'required|string|max:20',
@@ -105,7 +102,7 @@ class RegisterController extends Controller
         );
         $contact           =       Contact::create($dataArray);
         if(!is_null($contact)) {
-            return back()->with("success", "Success! Registration completed");
+            return view('ecommerce.login')->with("success", "Success! Registration completed");
         }
 
         else {
