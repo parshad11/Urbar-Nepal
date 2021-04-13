@@ -20,6 +20,7 @@ use App\Front\Cart;
 use App\Front\Document;
 use App\Product;
 use App\Front\HomeSetting;
+use phpDocumentor\Reflection\Types\Null_;
 
 use function GuzzleHttp\json_decode;
 
@@ -35,13 +36,18 @@ class FrontendController extends Controller
     public function index()
     {
         $home_settings = HomeSetting::first();
-        $category = Category::with('sub_categories')->where('parent_id','=',0)->get();
+        $category = Category::with('sub_categories')->where('parent_id','=',0)->active()->get();
         $sub_category = Category::with('sub_categories')->where('parent_id','!=',0)->get();
         $banners = Banner::where('status', 'active')->latest()->get();
         $slider_banners = SliderBanner::where('status', 'active')->latest()->get();
         $location = BusinessLocation::where('location_id', 'BL0001')->first();
         $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
-        $products = Product::with(['product_variations.variations.product', 'unit'])->whereIn('id', $variation_location_product_ids)->paginate();
+        $products = Product::with(['product_variations.variations.product', 'unit'])->whereIn('id', $variation_location_product_ids)
+                            ->whereHas('category',function($query){
+                                $query->where('categories.deleted_at',NULL)
+                                ->orWhere('categories.status','active');
+                            })
+                            ->latest()->get();;
         $special_category = Category::with('sub_categories')->where('name', 'like', '%special%')->where('parent_id', 0)->first();
         if ($special_category == null) {
             $categories = Category::with('sub_categories')->where('parent_id', 0)->active()->orderBy('display_order')->get();
@@ -55,8 +61,13 @@ class FrontendController extends Controller
         }
         // $catalogues=Document::where('file_type','catalogue')->limit('2')->latest()->get();
         // $banner = Document::where('file_type','banner')->first();
-        $popular_category=Category::orderBy('view','desc')->orderBY('created_at','desc')->limit(3)->get();
-        $category_product=Product::with(['product_variations.variations.product', 'unit'])->whereIn('id', $variation_location_product_ids)->where('category_id','!=',null)->latest()->get();
+        $popular_category=Category::orderBy('view','desc')->orderBY('created_at','desc')->limit(3)->where('deleted_at', NULL)->active()->get();
+        $category_product=Product::with(['product_variations.variations.product', 'unit'])->whereIn('id', $variation_location_product_ids)->where('category_id','!=',null)
+                                    ->whereHas('category',function($query){
+                                        $query->where('categories.deleted_at',NULL)
+                                        ->orWhere('categories.status','active');
+                                    })
+                                    ->latest()->get();
 
         return view('ecommerce.index')->with(compact('products', 'special_category','categories','banners','slider_banners','cart_items','home_settings','category','sub_category','popular_category','category_product'));
 

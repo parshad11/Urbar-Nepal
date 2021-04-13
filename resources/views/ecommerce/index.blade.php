@@ -27,7 +27,7 @@
                                                     @if ( $subcategory->parent_id == $category->id )
                                                         <ul class="side-sub-nav-category-ul">
 
-                                                            <li class="sub-nav-li"><a
+                                                            <li class="sub-nav-li border-bottom"><a
                                                                         href="{{route('product_sub_category', ['id' => $subcategory->id ,'slug' => $subcategory->slug])}}"> {{$subcategory->name}}</a>
                                                             </li>
 
@@ -79,7 +79,7 @@
     </section>
 
 
-    <section class="product-grid dealofday">
+    <!-- <section class="product-grid dealofday">
         <div class="container">
             <div class="row">
                 <div class="col-md-3">
@@ -265,7 +265,7 @@
         </div>
 
 
-    </section>
+    </section> -->
 
 
     <!-- POPULAR PRODUCTS -->
@@ -360,7 +360,7 @@
                     </div>
                 </div>
                 @foreach($category_product as $product)
-                    <div class="tab-pane fade "
+                    <div class="tab-pane fade"
                          id="{{App\Category::find($product->category_id)->slug}}" role="tabpanel"
                          aria-labelledby="nav-{{App\Category::find($product->category_id)->slug}}-tab">
                         <div class="product-category white-product">
@@ -384,7 +384,6 @@
                                                         </figure>
                                                     </div>
                                                     <div class="product-description">
-
                                                         <div class="product-meta">
                                                             <div class="title-wrap">
                                                                 <p class="product-title">
