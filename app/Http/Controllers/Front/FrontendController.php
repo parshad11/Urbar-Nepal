@@ -59,9 +59,13 @@ class FrontendController extends Controller
            
             $cart_items = Cart::with('variation')->where('user_id', auth()->guard('customer')->user()->id)->get();
         }
-        // $catalogues=Document::where('file_type','catalogue')->limit('2')->latest()->get();
-        // $banner = Document::where('file_type','banner')->first();
-        $popular_category=Category::orderBy('view','desc')->orderBY('created_at','desc')->limit(3)->where('deleted_at', NULL)->active()->get();
+        $popular_category=Category::with(['products' => function ($query) {
+            $location = BusinessLocation::where('location_id', 'BL0001')->first();
+            $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
+            $query->whereIn('products.id', $variation_location_product_ids);
+        }])
+            ->whereHas('products')
+            ->orderBy('view', 'Desc')->orderBY('created_at', 'desc')->limit(3)->where('deleted_at', NULL)->active()->get();
         $category_product=Product::with(['product_variations.variations.product', 'unit'])->whereIn('id', $variation_location_product_ids)->where('category_id','!=',null)
                                     ->whereHas('category',function($query){
                                         $query->where('categories.deleted_at',NULL)
