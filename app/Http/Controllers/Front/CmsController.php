@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Front\Blog;
-use App\Front\Frontabout;
+use App\Front\FrontAbout;
 use App\Front\BlogCategory;
 use App\Front\HomeSetting;
 use App\Front\PageSetting;
