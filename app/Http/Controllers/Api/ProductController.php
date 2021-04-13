@@ -150,6 +150,7 @@ class ProductController extends Controller
                 'products.name',
                 'products.type',
                 'products.product_description',
+                'products.category_id',
                 'v.id as variation_id',
                 'v.name as variation_name',
                 'v.sub_sku',
@@ -158,11 +159,12 @@ class ProductController extends Controller
                 'v.sell_price_inc_tax as unit_price_with_tax',
                 DB::raw("CONCAT('$path','/',m.file_name) as product_image")
             )
-            ->get();
-
+            ->first();
         if (!$product) {
             return response()->json(["message" => 'Product Not Found!']);
         }
+        $product_cat=$product->category_id;
+        $popular_category=Category::popularcategory($product_cat);
 
         return response()->json([
             'product' => $product

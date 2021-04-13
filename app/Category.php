@@ -124,9 +124,6 @@ class Category extends Model
     public static function popularcategory($id){
         $category=Category::findorfail($id);
         $view=$category->view+1;
-//        $data=[
-//            $view=$view
-//        ];
         $data=null;
         $data['view']=$view;
         $category=Category::findorfail($category->id);
