@@ -124,7 +124,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3 col-3 text-right">
-                                                    <h6><span>$</span>{{ number_format($item->variation->sell_price_inc_tax,2) }}</h6>
+                                                    <h6><span>Rs</span>{{ number_format($item->variation->sell_price_inc_tax,2) }}</h6>
                                                 </div>
                                                 <div class="clearfix"></div>
                                           </div>
@@ -166,7 +166,7 @@
                                     <div class="row" style="padding: 0 0 10px">
                                         <div class="col-12">
                                             <strong>Order Total</strong>
-                                            <div class="float-right"><span>$</span><span>
+                                            <div class="float-right"><span>Rs</span><span>
                                               {{ number_format($total_price,2) }}
                                             </span></div>
                                             <div class="clearfix"></div>

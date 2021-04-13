@@ -53,7 +53,7 @@
                                         <button type="submit" class="btn btn-sm btn-border-danger"><i
                                                     class="fa fa-trash"></i>Delete
                                         </button>
-                                    </form>
+                                        </form>
                                 </td>
                             </tr>
                         @endforeach

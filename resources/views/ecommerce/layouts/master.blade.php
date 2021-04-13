@@ -48,6 +48,7 @@
         <!-- header -->
         @include('ecommerce.partials.header')
         <!-- END OF HEADER -->
+        
 
         @yield('content')
 

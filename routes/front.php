@@ -21,6 +21,7 @@ Route::namespace('Front')->group(function () {
     Route::get('/shop/auto-complete', 'FrontendController@autoComplete')->name('autocomplete.search');
 
     Route::get('/latest-product', 'FrontendController@latestProduct')->name('latest_product');
+    Route::get('/feature-product', 'FrontendController@featureProduct')->name('feature_product');
     Route::get('/about-us', 'FrontendController@getAbout')->name('front_about');
     Route::get('/blogs', 'FrontendController@getBlog')->name('blog');
     Route::get('/contact-us', 'FrontendController@getContact')->name('contact');
@@ -45,6 +46,7 @@ Route::namespace('Front')->group(function () {
 
 
     Route::get('/shop/user-account', 'ShopController@getCustomer')->name('customer.account')->middleware('auth:customer');
+    Route::get('/shop/user-account-edit', 'ShopController@getCustomerEdit')->name('customer.account_edit')->middleware('auth:customer');
     Route::get('/shop/checkout', 'ShopController@checkout')->name('product.checkout')->middleware(['auth:customer','SetCustomerSessionData']);
     Route::post('/shop/checkout', 'ShopController@store')->name('order.store')->middleware(['auth:customer','SetCustomerSessionData']);
     Route::get('/shop/category/{slug}', 'ShopController@categoryProduct')->name('product_category');

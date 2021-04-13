@@ -700,6 +700,11 @@ class AdminSidebarMenu
                             ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'ecommerce' && request()->segment(2) == 'blogs']
                         );
                         $sub->url(
+                            route('ecommerce_about_edit'),
+                            'About Settings',
+                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'ecommerce' && request()->segment(2) == 'about']
+                        );
+                        $sub->url(
                             route('ecom_pages'),
                             'Pages Setting',
                             ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'ecommerce' && request()->segment(2) == 'pages']

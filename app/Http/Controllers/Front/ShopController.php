@@ -190,7 +190,11 @@ class ShopController extends Controller
         }
         return view('ecommerce.user_account')->with(compact('customer', 'orders','cart_items'));
     }
-
+    public function getCustomerEdit()
+    {
+        return view('ecommerce.user_account_edit');
+    }
+    
     public function autoComplete(Request $request)
     {
         $path=asset('/uploads/media/');

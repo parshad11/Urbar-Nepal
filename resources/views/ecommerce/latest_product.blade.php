@@ -132,11 +132,22 @@
                                     @empty
                             @endforelse
                         </div>
-                        @isset($products)
-                            {{$products->links()}}
-                        @endisset
+                     
+                            {{ $products -> links() }}
+                        
                     </div>
                 </div>
             </div>
         </section>
 @endsection
+<script>
+    $(document).ready(function () {
+    
+    $("#view").load("pages/1.html");
+  
+    $("#routeLinks li a").click(function () {
+       $("#view").load("pages/" + $(this).attr("data-load") + ".html");
+         return false;
+    });
+});
+    </script>
