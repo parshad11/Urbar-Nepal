@@ -134,13 +134,24 @@ class ShopController extends Controller
             
     }
     public function showAllCategory(){
-        $category = Category::with('sub_categories')->where('parent_id','=',0)->get();
+        $category = Category::with('sub_categories')->where('parent_id','=',0)->active()->get();
         $sub_category = Category::with('sub_categories')->where('parent_id','!=',0)->get();
         $location = BusinessLocation::where('location_id', 'BL0001')->first();
         $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
-        $products = Product::with(['product_variations.variations.product', 'unit'])->whereIn('id', $variation_location_product_ids)->latest()->get();
-        $popular_category=Category::orderBy('view','desc')->orderBY('created_at','desc')->limit(3)->get();
-        $category_product=Product::with(['product_variations.variations.product', 'unit'])->whereIn('id', $variation_location_product_ids)->where('category_id','!=',null)->latest()->get();
+        $products = Product::with(['product_variations.variations.product', 'unit'])->whereIn('id', $variation_location_product_ids)
+                            ->whereHas('category',function($query){
+                                $query->where('categories.deleted_at',NULL)
+                                ->orWhere('categories.status','active');
+                            })
+                    ->latest()->get();
+
+        $popular_category=Category::orderBy('view','desc')->orderBY('created_at','desc')->active()->limit(3)->get();
+        $category_product=Product::with(['product_variations.variations.product', 'unit'])->whereIn('id', $variation_location_product_ids)->where('category_id','!=',null)
+                                    ->whereHas('category',function($query){
+                                        $query->where('categories.deleted_at',NULL)
+                                        ->orWhere('categories.status','active');
+                                    })                    
+                                    ->latest()->get();
         return view('ecommerce.all-category',compact('popular_category','category_product','products'))->with('categories', $category)
                                              ->with('sub_categoreis',$sub_category);
                                              
