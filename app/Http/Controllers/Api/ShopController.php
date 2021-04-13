@@ -101,12 +101,11 @@ class ShopController extends Controller
     {
         try {
             $input = $request->except('_token');
-
             $location = BusinessLocation::where('location_id', 'BL0001')->first();
             $input['status'] = 'draft';
             $input['location_id'] = $location->id;
             $assign_delivery = 1;
-            $user = Auth::guard('customerapi')->user();
+            $user = Auth::guard('customer')->user();
             $input['contact_id'] = $user->id;
             $business_id = $user->business_id;
             $input['commission_agent'] = !empty($request->input('commission_agent')) ? $request->input('commission_agent') : null;
@@ -118,57 +117,59 @@ class ShopController extends Controller
             $input['final_total'] = $invoice_total;
             $input['is_direct_sale'] = 1;
             $input['is_save_and_print'] = 1;
+            $input['is_ecommerce_order'] = 1;
             $input['transaction_date'] = Carbon::now()->format('Y-m-d H:i:s');
+            $input['shipping_address']= implode(' ', [$input['address_line_1'], $input['city'], $input['state'], $input['zip_code']]);
             DB::beginTransaction();
             //Customer group details
             $contact_id = $user->id;
-
             $cg = $this->contactUtil->getCustomerGroup($business_id, $contact_id);
             $input['customer_group_id'] = (empty($cg) || empty($cg->id)) ? null : $cg->id;
+
+
             $invoice = InvoiceScheme::where('name', 'Default')->first();
             $input['invoice_scheme_id'] = $invoice->id;
             $product = [];
             $products = [];
             foreach ($cart_items as $item) {
-                $variation = Variation::with('product')->where('id', $item['product_id'])->first();
-                $product['product_type'] = $variation->product->type;
-                $product['unit_price'] = $variation->default_sell_price;
+
+                $product['product_type'] = $item['variation']['product']['type'];
+                $product['unit_price'] = $item['variation']['default_sell_price'];
                 $product['line_discount_price'] = 'fixed';
                 $product['line_discount_amount'] = 0;
                 $product['item_tax'] = 0;
                 $product['tax_id'] = null;
                 $product['sell_line_note'] = null;
                 $product['lot_no_line_id'] = null;
-                $product['product_id'] = $variation->product->id;
-                $product['variation_id'] = $variation->id;
-                $product['enable_stock'] = $variation->product->enable_stock;
+                $product['product_id'] = $item['variation']['product']['id'];
+                $product['variation_id'] = $item['variation']['id'];
+                $product['enable_stock'] = $item['variation']['product']['enable_stock'];
                 $product['quantity'] = $item['quantity'];
-                $product['product_unit_id'] = $variation->product->unit_id;
-                $product['sub_unit_id'] = $variation->product->unit_id;
+                $product['product_unit_id'] = $item['variation']['product']['unit_id'];
+                $product['sub_unit_id'] = $item['variation']['product']['unit_id'];
                 $product['base_unit_multiplier'] = 1;
-                $product['unit_price_inc_tax'] = $variation->sell_price_inc_tax;
+                $product['unit_price_inc_tax'] = $item['variation']['sell_price_inc_tax'];
                 array_push($products, $product);
             }
+
             $input['products'] = $products;
             if (!empty($input['products'])) {
-                $transaction = $this->transactionUtil->createSellTransaction($business_id, $input, $invoice_total, 1, $assign_delivery, $uf_data = true);
-
+                $transaction = $this->transactionUtil->createSellTransaction($business_id, $input, $invoice_total, 1, $assign_delivery);
                 $this->transactionUtil->createOrUpdateSellLines($transaction, $input['products'], $input['location_id']);
+
                 $is_credit_sale = isset($input['is_credit_sale']) && $input['is_credit_sale'] == 1 ? true : false;
-                //$this->notificationUtil->autoSendNotification($business_id, 'new_sale', $transaction, $user);
+
+                // $this->notificationUtil->autoSendNotification($business_id, 'new_sale', $transaction, $user);
 
                 $admin = User::where('user_type', 'admin')->first();
 
-                $admin->notify(new OrderCreatedNotification($transaction->contact->name, $transaction));
-
+                $admin->notify(new OrderCreatedNotification($transaction->contact->name,$transaction));
                 $cart_items = Cart::where('user_id', $transaction->contact_id)->get();
                 if ($cart_items) {
-
                     foreach ($cart_items as $item) {
                         $item->delete();
                     }
                 }
-
                 DB::commit();
 
                 $msg = trans("sale.order_added");

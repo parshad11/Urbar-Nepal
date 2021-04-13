@@ -53,8 +53,10 @@ Route::namespace('Api')->middleware(['cors'])->group(function () {
 //Non-Authenticated Routes
 Route::get('/banners', 'Api\ShopController@banner');
 Route::get('/products', 'Api\ProductController@products');
+Route::get('featured/products', 'Api\ProductController@FeatureProduct');
 Route::get('/product/search', 'Api\ProductController@search');
 Route::get('/product/searchByCategroy/{id}', 'Api\ProductController@searchByCategory');
 Route::get('/categories', 'Api\ProductController@categories');
+Route::get('/popular/categories', 'Api\ProductController@PopularCategories');
 Route::get('product/{slug}', 'Api\ProductController@product');
 Route::get('variation/{slug}', 'Api\ProductController@variation');
