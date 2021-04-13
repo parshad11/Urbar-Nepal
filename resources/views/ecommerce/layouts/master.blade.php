@@ -121,6 +121,7 @@
     function updateNavCart() {
         $.get('{{ route('cart.nav_cart') }}', {_token: '{{ csrf_token() }}'}, function (data) {
             $('#cart_count').html(data);
+            $('#mobile_cart_count').html(data);
         });
     }
 </script>
@@ -182,10 +183,9 @@
     });
 </script>
 
-    <script>
+<script>
         $(function () {
             autocomplete('#searchTextLg', {}, {
-                // console.log('hello');
                 source: function (request, response) {
                     $.ajax({
                         url: '{{route('autocomplete.search')}}',
@@ -220,11 +220,50 @@
                     }
                 }
 
-                
+            });
+        });
+</script>
+<!-- mobile search -->
+<script>
+        $(function () {
+            autocomplete('#mobileSearchText', {}, {
+                source: function (request, response) {
+                    $.ajax({
+                        url: '{{route('autocomplete.search')}}',
+                        type: 'GET',
+                        dataType: 'json',
+                        data: {
+                            query: $('#mobileSearchText').val(),
+                        },
+                        success: function (data) {
+                            response($.map(data, function (obj) {
+
+                                if (obj.variation_name !== "DUMMY") {
+                                    return {
+                                        name: obj.name + ' ' + obj.variation_name,
+                                        slug: obj.sub_sku,
+                                    };
+                                }
+                                return {
+                                    name: obj.name,
+                                    slug: obj.sub_sku,
+                                };
+                            }));
+                        }
+                    });
+                },
+                displayKey: 'name',
+                templates: {
+                    // header: '<div class="aa-suggestions-category">Products</div>',
+                    suggestion: function (suggestion) {
+                        return '<a href="{{ url('/') }}/shop/product/' + suggestion.slug + '">' + suggestion.name +
+                            '</a>';
+                    }
+                }
 
             });
         });
-    </script>
+</script>
 </body>
 
 </html>

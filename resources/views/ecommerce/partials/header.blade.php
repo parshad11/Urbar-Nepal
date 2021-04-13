@@ -39,13 +39,12 @@
                                     <ul class="user_login_ul">
                                         <li class="user_login_li relative">
                                         @if(Auth::guard('customer')->check())
-                                
-    <i class="far fa-user" style="display: none"><span style="
-    background: #f0713d;
-    color: white;
-    padding: 10px 15px;
-    border-radius:5px;
-    ">{{Auth::guard('customer')->user()->name}}</span></i>
+                                            <i class="far fa-user" style="display: none"><span style="
+                                            background: #f0713d;
+                                            color: white;
+                                            padding: 10px 15px;
+                                            border-radius:5px;
+                                            ">{{Auth::guard('customer')->user()->name}}</span></i>
                                             <ul class="user_login_ul sub_ul">
                                                 <li class="sub_li"><a href="{{route('customer.account')}}">Account</a></li>
                                                 <!-- <li class="sub_li"><a href="#">Wishlist</a></li> -->
@@ -67,61 +66,10 @@
                                         <img src="https://cdn.iconscout.com/icon/premium/png-256-thumb/shop-cart-5-664052.png"
                                             alt="">
                                             @auth('customer')
-                                                <span class="user-cart-link_no" id="cart_count">0</span>
+                                                <span class="user-cart-link_no" id="mobile_cart_count">0</span>
                                             @endauth
                                     </a>
-                                    <div class="user_cart_dd">
-                                        @if(isset($cart_items) && count($cart_items)>0)
-                                        @php
-                                            $total_sum = 0;
-                                        @endphp
-                                        @foreach ($cart_items as $key=>$item)
-                                        @php
-                                            $total_sum = $total_sum + $item['total_price'];
-                                        @endphp
-                                            <ul class="user_cart_ul">
-
-                                                <li>
-                                                    <figure style="float: left; margin-right: 10px; width: 50px;"><img
-                                                            src="@foreach($item->variation->media as $media){{ $media->display_url }}@endforeach"
-                                                            alt=""></figure>
-                                                    <p class="text-left">
-                                                        <span> 
-                                                            {{$item->variation->product->name}}&nbsp;{{$item->variation->name != "DUMMY" ? $item->variation->name : ''}}
-                                                        </span><br>
-                                                        <span>1</span> <span>*</span> <span>
-                                                        {{ number_format($item->total_price,2) }}
-                                                        </span>
-
-                                                    </p>
-                                                    <div class="clearfix"></div>
-                                                    <hr>
-                                                </li>
-
-                                            </ul>
-                                    @endforeach
-                                    <div class="cart_subtotal">
-                                        <div class="float-left">Subtotal</div>
-                                        <div class="float-right"><span class=""><span
-                                                    class="">Rs.</span>{{ number_format($total_sum,2) }}</span>
-                                        </div>
-                                        <div class="clearfix"></div>
-                                        <hr>
-                                    </div>
-                                    @else
-                                        <h4>No items left in cart</h4>
-                                    @endif
-                                    <a href="{{route('product.cart')}}" class="btn  btn-default view-cart float-left">View
-                                        Cart</a>
-                                        
-                                    <a href="{{route('product.checkout')}}"
-                                        class="btn btn-danger checkout float-right">Checkout</a>
-                                    <div class="clearfix"></div>
                                 </div>
-
-                                </div>
-
-
                             </div>
                         </div>
 
@@ -142,7 +90,7 @@
                                         class="fa fa-search" aria-hidden="true"></i></span>
                         </div>
                     </div>
-<!-- 
+                <!-- 
                     <div class="search-box">
                         <div class="uk-margin">
                             <form class="uk-search uk-search-default ">
@@ -161,11 +109,9 @@
 
                                 @if(Auth::guard('customer')->check())
                                <div class='text-center pt-3'> <span class='text-center w-100'><i class="fas fa-user-alt"></i></span>
-                               <br>
-<span>                                {{Auth::guard('customer')->user()->name}}
-</span>                            </div>
-
-                                     
+                                    <br>
+                                     <span> {{Auth::guard('customer')->user()->name}} </span>                          
+                                </div>
                                      <ul class="user_login_ul sub_ul">
                                         <li class="sub_li"><a href="{{route('customer.account')}}">Account</a></li>
                                         <!-- <li class="sub_li"><a href="account.html">Wishlist</a></li> -->
@@ -175,17 +121,14 @@
                                 @else
                                 <a href="{{ Route('front_login')}}" class="user-login-link ">
                                         <span style="
-    background: #e6191b;
-    color: white;
-    padding: 10px;
-    ">Login &amp; SignUp</span>
+                                        background: #e6191b;
+                                        color: white;
+                                        padding: 10px;
+                                        ">Login &amp; SignUp</span>
                                     </a>
                                 @endif
-
-
                                 </li>
                             </ul>
-
 
                         </div>
 
@@ -265,29 +208,30 @@
                 </div>
             </div>
 
-        </div>
-        <div class="clearfix"></div>
-    </div>
-    <div class="bottom-header ">
-        <div class="container">
-            <div class="row">
-                <div class="nav-category">
-                    <a href="allcategory.html" uk-toggle class="	">
-                        <i class="fas fa-tasks mr-2"></i><span>Categories</span>
-                    </a>
-                    <a href="allcategory.html" class="pl-3"> All category</a>
-
-                </div>
-                <ul class="nav-list-items d-flex">
-                    <li><a href="{{ route('front_dashboard')}}">Home</a></li>
-                    <li><a href="{{ route('front_about')}}">About us</a></li>
-                    <li><a href="{{ route('contact')}}">Contact us</a></li>
-                    <li><a href="{{ route('blog')}}">Blogs</a></li>
-                </ul>
             </div>
+            <div class="clearfix"></div>
         </div>
 
-    </div>
+        <div class="bottom-header ">
+            <div class="container">
+                <div class="row">
+                    <div class="nav-category">
+                        <a href="allcategory.html" uk-toggle class="	">
+                            <i class="fas fa-tasks mr-2"></i><span>Categories</span>
+                        </a>
+                        <a href="allcategory.html" class="pl-3"> All category</a>
+
+                    </div>
+                    <ul class="nav-list-items d-flex">
+                        <li><a href="{{ route('front_dashboard')}}">Home</a></li>
+                        <li><a href="{{ route('front_about')}}">About us</a></li>
+                        <li><a href="{{ route('contact')}}">Contact us</a></li>
+                        <li><a href="{{ route('blog')}}">Blogs</a></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
 </header>
 
 <!-- MOBILE NAV START -->
@@ -298,7 +242,7 @@
         <section class="mobile-nav">
             <form class="uk-search uk-search-default">
                 <button type="button" class="uk-search-icon-flip" uk-search-icon style="top:0;"></button>
-                <input class="uk-search-input" type="search" placeholder="Search...">
+                <input class="uk-search-input" type="text" name="query" id="mobileSearchText" placeholder="Search...">
             </form>
             <ul class="metismenu" id="menu">
                 <div class="panel-group">
@@ -306,23 +250,29 @@
                         <div class="panel-heading">
                             <a href="{{ route('front_dashboard')}}">Home</a>
                         </div>
-                      
-
-
                     </div>
-
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <a data-toggle="collapse" href="#collapse2">Categories</a>
-                        </div>
-                        <div id="collapse2" class="panel-collapse collapse">
-                            <ul class="list-group ">
-                                <li class="list-group-item bg-transparent border-0">One</li>
-                                <li class="list-group-item bg-transparent border-0">Two</li>
-                                <li class="list-group-item bg-transparent border-0">Three</li>
-                            </ul>
+                            <a href="{{ route('show_all_category')}}">Catelogies</a>
                         </div>
                     </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <a href="{{ route('front_about')}}">About us</a>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <a href="{{ route('contact')}}">Contact us</a>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <a href="{{ route('blog')}}">Blogs</a>
+                        </div>
+                    </div>
+                    
+
             </ul>
         </section>
     </div>
