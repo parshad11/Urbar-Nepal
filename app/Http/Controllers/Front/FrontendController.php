@@ -47,7 +47,7 @@ class FrontendController extends Controller
                                 $query->where('categories.deleted_at',NULL)
                                 ->orWhere('categories.status','active');
                             })
-                            ->latest()->get();;
+                            ->latest()->get();
         $special_category = Category::with('sub_categories')->where('name', 'like', '%special%')->where('parent_id', 0)->first();
         if ($special_category == null) {
             $categories = Category::with('sub_categories')->where('parent_id', 0)->active()->orderBy('display_order')->get();
