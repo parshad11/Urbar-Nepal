@@ -85,9 +85,14 @@ class ShopController extends Controller
         $location = BusinessLocation::where('location_id', 'BL0001')->first();
         $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
         $products = Product::with(['product_variations.variations.product', 'unit'])->where('category_id', $product_cat)->where('id', '!=',$product->id)->whereIn('id', $variation_location_product_ids)->take(5)->latest()->get();
+        $cart_items=null;
+        if(auth()->guard('customer')->user()){
+           
+            $cart_items = Cart::with('variation')->where('user_id', auth()->guard('customer')->user()->id)->get();
+        }
         return view('ecommerce.product_details')->with('variation', $product)
-            ->with('products', $products);
-        return view('ecommerce.product_details');
+            ->with('products', $products)
+            ->with('cart_items', $cart_items);
     }
 
     // public function downloadFile($fileId){
@@ -134,7 +139,12 @@ class ShopController extends Controller
     public function showAllCategory(){
         $category = Category::with('sub_categories')->where('parent_id','=',0)->get();
         $sub_category = Category::with('sub_categories')->where('parent_id','!=',0)->get();
+        $cart_items=null;
+        if(auth()->guard('customer')->user()){
+            $cart_items = Cart::with('variation')->where('user_id', auth()->guard('customer')->user()->id)->get();
+        }
         return view('ecommerce.all-category')->with('categories', $category)
+                                             ->with('cart_items', $cart_items)
                                              ->with('sub_categoreis',$sub_category);
                                              
     }
@@ -144,7 +154,10 @@ class ShopController extends Controller
         $category_id = Category::where('id',$id)->pluck('parent_id')->toArray();
         $category_of_product = Category::with('sub_categories')->where('id',$category_id)->get();
         $sub_caategory_of_product = Category::with('sub_categories')->where('parent_id','!=',0)->get();
-        return view('ecommerce.sub-catagories')->with(compact('sub_category_products','category_of_product','sub_caategory_of_product'));
+        if(auth()->guard('customer')->user()){
+            $cart_items = Cart::with('variation')->where('user_id', auth()->guard('customer')->user()->id)->get();
+        }
+        return view('ecommerce.sub-catagories')->with(compact('sub_category_products','category_of_product','sub_caategory_of_product','cart_items'));
         // dd($product_category);
         // if(count($sub_category_products)!=0){
         //     $sub_category_products_ids = Product::where('sub_category_id', $id)->pluck('category_id')->toArray();
@@ -162,14 +175,20 @@ class ShopController extends Controller
         $category_products = Product::with(['product_variations.variations.product', 'unit'])->where('category_id', $idd)->get();
         $category_of_product = Category::with('sub_categories')->where('id',$idd)->get();
         $sub_caategory_of_product = Category::with('sub_categories')->where('parent_id','!=',0)->get();
-        return view('ecommerce.category')->with(compact('category_products','category_of_product','sub_caategory_of_product'));                              
+        if(auth()->guard('customer')->user()){
+            $cart_items = Cart::with('variation')->where('user_id', auth()->guard('customer')->user()->id)->get();
+        }
+        return view('ecommerce.category')->with(compact('category_products','category_of_product','sub_caategory_of_product','cart_items'));                              
     }
     public function getCustomer()
     {
         $user_id = Auth::guard('customer')->user()->id;
         $customer = Contact::where('id', $user_id)->first();
         $orders = Transaction::with(['sell_lines.variations','delivery'])->where('contact_id', $user_id)->where('is_ecommerce_order',1)->get();
-        return view('ecommerce.user_account')->with(compact('customer', 'orders'));
+        if(auth()->guard('customer')->user()){
+            $cart_items = Cart::with('variation')->where('user_id', auth()->guard('customer')->user()->id)->get();
+        }
+        return view('ecommerce.user_account')->with(compact('customer', 'orders','cart_items'));
     }
 
     public function autoComplete(Request $request)

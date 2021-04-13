@@ -38,7 +38,7 @@ class FrontendController extends Controller
         $slider_banners = SliderBanner::where('status', 'active')->latest()->get();
         $location = BusinessLocation::where('location_id', 'BL0001')->first();
         $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
-        $products = Product::with(['product_variations.variations.product', 'unit'])->whereIn('id', $variation_location_product_ids)->paginate();
+        $products = Product::with(['product_variations.variations.product', 'unit'])->whereIn('id', $variation_location_product_ids)->orderBy('id','desc')->get();
         $special_category = Category::with('sub_categories')->where('name', 'like', '%special%')->where('parent_id', 0)->first();
         if ($special_category == null) {
             $categories = Category::with('sub_categories')->where('parent_id', 0)->active()->orderBy('display_order')->get();
@@ -57,15 +57,44 @@ class FrontendController extends Controller
 
     public function getAbout()
     {
-        return view('ecommerce.about');
+        $cart_items=null;
+        if(auth()->guard('customer')->user()){
+            $cart_items = Cart::with('variation')->where('user_id', auth()->guard('customer')->user()->id)->get();
+        }
+        return view('ecommerce.about')->with(compact('cart_items'));
+    }
+
+    public function latestProduct()
+    {
+        $category = Category::with('sub_categories')->where('parent_id','=',0)->get();
+        $sub_category = Category::with('sub_categories')->where('parent_id','!=',0)->get();
+        $location = BusinessLocation::where('location_id', 'BL0001')->first();
+        $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
+        $products = Product::with(['product_variations.variations.product', 'unit'])->whereIn('id', $variation_location_product_ids)->orderBy('id','desc')->paginate(2);
+        $special_category = Category::with('sub_categories')->where('name', 'like', '%special%')->where('parent_id', 0)->first();
+        if ($special_category == null) {
+            $categories = Category::with('sub_categories')->where('parent_id', 0)->active()->orderBy('display_order')->get();
+        } else {
+            $categories = Category::with('sub_categories')->where('parent_id', 0)->where('id', '!=', $special_category->id)->active()->orderBy('display_order')->get();
+        }
+        $cart_items=null;
+        if(auth()->guard('customer')->user()){
+           
+            $cart_items = Cart::with('variation')->where('user_id', auth()->guard('customer')->user()->id)->get();
+        }
+        
+        return view('ecommerce.latest_product')->with(compact('products', 'special_category','categories','cart_items','category','sub_category'));
     }
 
     public function getBlog()
     {
         $categories = BlogCategory::latest()->get();
         $blogs = Blog::where('status','active')->latest()->get();
-        //return response()->json($blogs);
-        return view('ecommerce.blog',compact('categories','blogs'));
+        $cart_items=null;
+        if(auth()->guard('customer')->user()){
+            $cart_items = Cart::with('variation')->where('user_id', auth()->guard('customer')->user()->id)->get();
+        }
+        return view('ecommerce.blog',compact('categories','blogs','cart_items'));
        
     }
     
@@ -88,12 +117,15 @@ class FrontendController extends Controller
         $categories = BlogCategory::with('news')->orderBy('id', 'desc')->get();
         $blog_single = Blog::where('slug', $slug)->first();
         $blogs = Blog::orderBy('created_at', 'desc')->take(5)->get();
-      //  return response()->json($categories);
+        $cart_items=null;
+        if(auth()->guard('customer')->user()){
+            $cart_items = Cart::with('variation')->where('user_id', auth()->guard('customer')->user()->id)->get();
+        }
         return view('ecommerce.blog_single')
            // ->with('about_info', $about_details)
             ->with('blog_single', $blog_single)
             ->with('categories', $categories)
-            
+            ->with('cart_items', $cart_items)
             ->with('blogs', $blogs);
        
     }
@@ -101,7 +133,11 @@ class FrontendController extends Controller
     public function getContact()
     {
         $home_settings = HomeSetting::first();
-        return view('ecommerce.contact',compact('home_settings'));
+        $cart_items=null;
+        if(auth()->guard('customer')->user()){
+            $cart_items = Cart::with('variation')->where('user_id', auth()->guard('customer')->user()->id)->get();
+        }
+        return view('ecommerce.contact',compact('home_settings','cart_items'));
     }
 
     public function getPages($slug)
