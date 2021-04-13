@@ -219,14 +219,14 @@
 
                     </div>
 
-                    <div class="phone-header text-center pt-4">
+                    <!-- <div class="phone-header text-center pt-4">
                         <a href="#">
                             <span class="block">
                                 <i class="fas fa-phone-alt"></i> &nbsp;<span class="items" dir="ltr">+977
                                     9808666456</span>
                             </span>
                         </a>
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
@@ -237,10 +237,10 @@
         <div class="container">
             <div class="row">
                 <div class="nav-category">
-                    <a href="allcategory.html" uk-toggle class="	">
+                    <a href="{{Route('show_all_category')}}" uk-toggle class="	">
                         <i class="fas fa-tasks mr-2"></i><span>Categories</span>
                     </a>
-                    <a href="allcategory.html" class="pl-3"> All category</a>
+                    <a href="" class="pl-3"> All category</a>
 
                 </div>
                 <ul class="nav-list-items d-flex">
