@@ -53,7 +53,7 @@ class AdminSidebarMenu
                             );
                         }
                     },
-                    ['icon' => 'fa fas fa-users']
+                    ['icon' => 'fa fas fa-tasks'] 
                 )->order(10);
             }
 
@@ -111,7 +111,7 @@ class AdminSidebarMenu
                             );
                         }
                     },
-                    ['icon' => 'fa fas fa-address-book', 'id' => "tour_step4"]
+                    ['icon' => 'fa fas fa-address-card', 'id' => "tour_step4"]
                 )->order(15);
             }
 
@@ -198,7 +198,7 @@ class AdminSidebarMenu
                         //     ['icon' => 'fa fas fa-shield-alt', 'active' => request()->segment(1) == 'warranties']
                         // );
                     },
-                    ['icon' => 'fa fas fa-cubes', 'id' => 'tour_step5']
+                    ['icon' => 'fa fas fa-weight-hanging', 'id' => 'tour_step5']
                 )->order(20);
             }
 
@@ -332,58 +332,7 @@ class AdminSidebarMenu
                 )->order(30);
             }
 
-            //Delivery Dropdown
-            if (in_array('delivery', $enabled_modules) && (auth()->user()->can('delivery.view') || auth()->user()->can('delivery.create') || auth()->user()->can('delivery.update')||auth()->user()->can('task.assign')||auth()->user()->can('task.view')||auth()->user()->can('view_own_delivery') || auth()->user()->can('view_own_task'))) {
-                $menu->dropdown(
-                    __('delivery.delivery'),
-                    function ($sub) {
-                            if (auth()->user()->can('task.view') || auth()->user()->can('delivery.view')) {
-                                $sub->url(
-                                    action('DeliveryController@trackDeliveryPeople'),
-                                    __('delivery.track_delivery_people'),
-                                        ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'track' && request()->segment(2) == 'all-delivery-people' ]
-                                );
-                            }
-                        if (auth()->user()->can('delivery.assign')) {
-                            $sub->url(
-                                action('DeliveryController@listDeliveryTransaction'),
-                                __('delivery.assign_delivery'),
-	                                ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'delivery-transaction' ]
-                            );
-                        }
-                        if (auth()->user()->can('delivery.view') ||  auth()->user()->can('view_own_delivery')) {
-                            $sub->url(
-                                action('DeliveryController@index'),
-                                __('delivery.all_deliveries'),
-                                ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'delivery' && request()->segment(2) == null]
-                            );
-                        }
-                        if (auth()->user()->can('task.assign')) {
-                            $sub->url(
-                                action('TaskController@create'),
-                                __('lang_v1.assign_task'),
-                                ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'task' && request()->segment(2) == 'create']
-                            );
-                        }
-                        if (auth()->user()->can('task.view') ||  auth()->user()->can('view_own_task')) {
-                            $sub->url(
-                                action('TaskController@index'),
-                                __('lang_v1.all_tasks'),
-                                ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'task' && request()->segment(2) == null]
-                            );
-                        }
-                        if (auth()->user()->can('task.view') || auth()->user()->can('delivery.view') || auth()->user()->can('view_own_delivery')||auth()->user()->can('view_own_task')) {
-                            $sub->url(
-                                action('DeliveryController@getActiveWork'),
-                                __('lang_v1.current_work'),
-                                ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'active' && request()->segment(2) =='work']
-                            );
-                        }
-                    },
-                    ['icon' => 'fa fas fa-shipping-fast']
-                )->order(35);
-            }
-
+            
             //Stock transfer dropdown
             if (in_array('stock_transfers', $enabled_modules) && (auth()->user()->can('purchase.view') || auth()->user()->can('purchase.create'))) {
                 $menu->dropdown(
@@ -404,7 +353,7 @@ class AdminSidebarMenu
                             );
                         }
                     },
-                    ['icon' => 'fa fas fa-truck']
+                    ['icon' => 'fa fas fa-dolly']
                 )->order(40);
             }
 
@@ -428,34 +377,55 @@ class AdminSidebarMenu
                             );
                         }
                     },
-                    ['icon' => 'fa fas fa-database']
+                    ['icon' => 'fa fas fa-adjust']
                 )->order(45);
             }
-
-            //Expense dropdown
-            if (in_array('expenses', $enabled_modules) && (auth()->user()->can('expense.access') || auth()->user()->can('view_own_expense'))) {
-                $menu->dropdown(
-                    __('expense.expenses'),
-                    function ($sub) {
-                        $sub->url(
-                            action('ExpenseController@index'),
-                            __('lang_v1.list_expenses'),
-                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'expenses' && request()->segment(2) == null]
-                        );
-                        $sub->url(
-                            action('ExpenseController@create'),
-                            __('expense.add_expense'),
-                            ['icon' => 'fa fas fa-plus-circle', 'active' => request()->segment(1) == 'expenses' && request()->segment(2) == 'create']
-                        );
-                        $sub->url(
-                            action('ExpenseCategoryController@index'),
-                            __('expense.expense_categories'),
-                            ['icon' => 'fa fas fa-circle', 'active' => request()->segment(1) == 'expense-categories']
-                        );
-                    },
-                    ['icon' => 'fa fas fa-minus-circle']
-                )->order(50);
+//Delivery Dropdown
+if (in_array('delivery', $enabled_modules) && (auth()->user()->can('delivery.view') || auth()->user()->can('delivery.create') || auth()->user()->can('delivery.update')||auth()->user()->can('task.assign')||auth()->user()->can('task.view')||auth()->user()->can('view_own_delivery') || auth()->user()->can('view_own_task'))) {
+    $menu->dropdown(
+        __('delivery.delivery'),
+        function ($sub) {
+            if (auth()->user()->can('delivery.assign')) {
+                $sub->url(
+                    action('DeliveryController@listDeliveryTransaction'),
+                    __('delivery.assign_delivery'),
+                        ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'delivery-transaction' ]
+                );
             }
+            if (auth()->user()->can('delivery.view') ||  auth()->user()->can('view_own_delivery')) {
+                $sub->url(
+                    action('DeliveryController@index'),
+                    __('delivery.all_deliveries'),
+                    ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'delivery' && request()->segment(2) == null]
+                );
+            }
+            if (auth()->user()->can('task.assign')) {
+                $sub->url(
+                    action('TaskController@create'),
+                    __('lang_v1.assign_task'),
+                    ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'task' && request()->segment(2) == 'create']
+                );
+            }
+            if (auth()->user()->can('task.view') ||  auth()->user()->can('view_own_task')) {
+                $sub->url(
+                    action('TaskController@index'),
+                    __('lang_v1.all_tasks'),
+                    ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'task' && request()->segment(2) == null]
+                );
+            }
+            if (auth()->user()->can('task.view') || auth()->user()->can('delivery.view') || auth()->user()->can('view_own_delivery')||auth()->user()->can('view_own_task')) {
+                $sub->url(
+                    action('DeliveryController@getActiveWork'),
+                    __('lang_v1.current_work'),
+                    ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'active' && request()->segment(2) =='work']
+                );
+            }
+        },
+        ['icon' => 'fa fas fa-truck-loading']
+    )->order(47);
+}
+
+           
             //Accounts dropdown
             if (auth()->user()->can('account.access') && in_array('account', $enabled_modules)) {
                 $menu->dropdown(
@@ -487,10 +457,34 @@ class AdminSidebarMenu
                             ['icon' => 'fa fas fa-file-alt', 'active' => request()->segment(1) == 'account' && request()->segment(2) == 'payment-account-report']
                         );
                     },
-                    ['icon' => 'fa fas fa-money-check-alt']
+                    ['icon' => 'fas fa-hand-holding-usd']
                 )->order(55);
             }
 
+             //Expense dropdown
+             if (in_array('expenses', $enabled_modules) && (auth()->user()->can('expense.access') || auth()->user()->can('view_own_expense'))) {
+                $menu->dropdown(
+                    __('expense.expenses'),
+                    function ($sub) {
+                        $sub->url(
+                            action('ExpenseController@index'),
+                            __('lang_v1.list_expenses'),
+                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'expenses' && request()->segment(2) == null]
+                        );
+                        $sub->url(
+                            action('ExpenseController@create'),
+                            __('expense.add_expense'),
+                            ['icon' => 'fa fas fa-plus-circle', 'active' => request()->segment(1) == 'expenses' && request()->segment(2) == 'create']
+                        );
+                        $sub->url(
+                            action('ExpenseCategoryController@index'),
+                            __('expense.expense_categories'),
+                            ['icon' => 'fa fas fa-circle', 'active' => request()->segment(1) == 'expense-categories']
+                        );
+                    },
+                    ['icon' => 'fa fas fa-rupee-sign']
+                )->order(57);
+            }
             //Reports dropdown
             if (auth()->user()->can('purchase_n_sell_report.view') || auth()->user()->can('contacts_report.view')
                 || auth()->user()->can('stock_report.view') || auth()->user()->can('tax_report.view')
@@ -653,7 +647,7 @@ class AdminSidebarMenu
                             );
                         }
                     },
-                    ['icon' => 'fa fas fa-chart-bar', 'id' => 'tour_step8']
+                    ['icon' => 'fa fas fa-copy', 'id' => 'tour_step8']
                 )->order(60);
             }
 
@@ -679,15 +673,10 @@ class AdminSidebarMenu
                 $menu->url(action('Restaurant\OrderController@index'), __('restaurant.orders'), ['icon' => 'fa fas fa-list-alt', 'active' => request()->segment(1) == 'modules' && request()->segment(2) == 'orders'])->order(80);
             }
 
-            //Notification template menu
-            if (auth()->user()->can('send_notifications')) {
-                $menu->url(action('NotificationTemplateController@index'), __('lang_v1.notification_templates'), ['icon' => 'fa fas fa-envelope', 'active' => request()->segment(1) == 'notification-templates'])->order(85);
-            }
-
             //Fornt CMS Setting
             if (in_array('frontcms', $enabled_modules) && auth()->user()->can('upload.front_cms') ) {
                 $menu->dropdown(
-                    'Homepage Settings',
+                    'Home Settings',
                     function ($sub) {
                         $sub->url(
                             action('Front\CmsController@index'),
@@ -716,12 +705,13 @@ class AdminSidebarMenu
                             ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'ecommerce' && request()->segment(2) == 'slider_banners']
                         );
                     },
-                    ['icon' => 'fa fas fa-house-damage', 'id' => 'tour_step6']
+                    ['icon' => 'fas fa-cogs', 'id' => 'tour_step6']
                 )->order(90);
             }
 
             //Settings Dropdown
             if (auth()->user()->can('business_settings.access') ||
+                (auth()->user()->can('send_notifications')) ||
                 auth()->user()->can('barcode_settings.access') ||
                 auth()->user()->can('invoice_settings.access') ||
                 auth()->user()->can('tax_rate.view') ||
@@ -741,6 +731,12 @@ class AdminSidebarMenu
                                 __('business.business_locations'),
                                 ['icon' => 'fa fas fa-map-marker', 'active' => request()->segment(1) == 'business-location']
                             );
+                        }
+                        if (auth()->user()->can('send_notifications')) {
+                            $sub->url(action('NotificationTemplateController@index'),
+                             __('lang_v1.notification_templates'),
+                             ['icon' => 'fa fas fa-lis', 'active' => request()->segment(1) == 'notification-templates']
+                             )->order(85);
                         }
                         if (auth()->user()->can('invoice_settings.access')) {
                             $sub->url(

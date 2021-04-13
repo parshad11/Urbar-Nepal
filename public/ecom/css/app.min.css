@@ -284,7 +284,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .algolia-autocomplete{
-  width: 60%;
+  width: 75%;
+}
+
+@media screen and (Max-width:769px) {
+  .algolia-autocomplete{
+    width: 60%;
+  } 
 }
 
 .algolia-autocomplete input{

@@ -165,16 +165,6 @@ class ShopController extends Controller
         $sub_caategory_of_product = Category::with('sub_categories')->where('parent_id','!=',0)->get();
         $popular_category=Category::popularcategory($id);
         return view('ecommerce.sub-catagories')->with(compact('sub_category_products','category_of_product','sub_caategory_of_product'));
-        // dd($product_category);
-        // if(count($sub_category_products)!=0){
-        //     $sub_category_products_ids = Product::where('sub_category_id', $id)->pluck('category_id')->toArray();
-        //     $category_of_product = Category::with('sub_categories')->where('id',$sub_category_products_ids)->first();
-        //     $sub_caategory_of_product = Category::with('sub_categories')->where('parent_id',$sub_category_products_ids)->get();
-        //     return view('ecommerce.sub-catagories')->with(compact('sub_category_products','category_of_product','sub_caategory_of_product'));
-        // }
-        // else{
-        //     return view('ecommerce.sub-catagories')->with(compact('sub_category_products'));
-        // }
 
 
                                                

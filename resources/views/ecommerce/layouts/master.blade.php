@@ -12,6 +12,7 @@
 
     <link rel="stylesheet" href="{{ asset('ecom/css/bootstrap.min.css') }}">
     <!-- font awesome -->
+    <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/7989320092.js" crossorigin="anonymous"></script>
     
 
