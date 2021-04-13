@@ -120,6 +120,15 @@ class ProductController extends Controller
 		]);
 	}
 
+	public function PopularCategories(){
+        $popular_category=Category::with('products')->orderBy('view','Desc')->orderBY('created_at','desc')->limit(3)->where('deleted_at', NULL)->active()->get();
+        return response()->json([
+            'data'=>[
+                'popular_category' => $popular_category
+            ]
+        ]);
+    }
+
 	
 	public function product($slug)
 	{
