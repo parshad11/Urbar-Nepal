@@ -2,7 +2,7 @@
 @section('content')
 <!--  category -->
 <?php
-// dd($sub_caategory_of_product);
+// dd($range_id);
 ?>
 
 <section id="category-filter">
@@ -44,10 +44,18 @@
 
 
                                     <h6>Range :</h6>
-                                    <form action="" class="price-range mt-2 mx-auto d-flex">
-                                        <input type="number" placeholder="Min." min="1">
+                                    
+                                    <form action="{{route('categories_product_list',['idd' => $range_id, 'slugg' => $range_slug])}}" method="Get" class="price-range mt-2 mx-auto d-flex flex-column">
+                                    <div class="form-row mx-auto">
+                                    <input type="number" name="min_price" placeholder="Min." min="1">
                                         &nbsp; - &nbsp;
-                                        <input type="number" placeholder="Max." min="1">
+                                        <input type="number" name="max_price" placeholder="Max." min="1">
+                                        </div>
+                                        
+                                        
+                                        <div class="form-row mx-auto mt-2">
+                                            <button type="submit" class="center uk-button view-cart">Go</button>
+                                        </div>
                                     </form>
                                 </div>
                             </div>
@@ -64,21 +72,6 @@
                     <div class="Name__of__category mt-2">
                         <div class="heading d-flex">
                             <h3>Category Products </h3>
-                        </div>
-
-                    </div>
-
-                    <div class="product_sort_by ">
-                        <div class="d-flex align-items-center">
-                            <div class="heading">
-                                <h5>Sort by: &nbsp;</h5>
-
-                            </div>
-                            <select name="" class="uk-select" style="width: 100px">
-                                <option value="">New</option>
-                                <option value="">Price</option>
-                                <option value="">Popular</option>
-                            </select>
                         </div>
 
                     </div>

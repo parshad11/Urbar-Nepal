@@ -91,14 +91,6 @@
                 <input class="uk-input" type="number" name="phone">
               </label>
             </div>
-            <div class="form-row">
-              <label>
-                <span>address</span>
-                <input class="uk-input" type="text" name="address">
-              </label>
-            </div>
-
-
             <div class="mb">
               <label for=""> <input type="checkbox" class="uk-checkbox" name="checkbox" checked>
                 I agree to the <a href="#">terms and conditions</a></label>

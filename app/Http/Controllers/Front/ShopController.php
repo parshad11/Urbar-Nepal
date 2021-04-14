@@ -130,21 +130,46 @@ class ShopController extends Controller
                                              ->with('sub_categoreis',$sub_category);
                                              
     }
-    public function sub_category_Product($slug , $id)
+    public function sub_category_Product($slug , $id, Request $req)
     {
-        $sub_category_products = Product::with(['product_variations.variations.product', 'unit'])->where('sub_category_id', $id)->get();
+        
+        if($req->max_price != 0){
+            $max_price=(int)$req->max_price;
+            $min_price=(int)$req->min_price;
+            $sub_category_products_id = Product::with(['product_variations.variations.product', 'unit'])->where('sub_category_id', $id)->pluck('id')->toArray();
+            $variation_compare = Variation::whereIn('product_id',$sub_category_products_id)->whereBetween('market_price',[$min_price,$max_price])->pluck('product_id')->toArray();
+            $sub_category_products = Product::with(['product_variations.variations.product', 'unit'])->whereIn('id', $variation_compare)->get();
+        }
+        else{
+            $sub_category_products = Product::with(['product_variations.variations.product', 'unit'])->where('sub_category_id', $id)->get();
+        }
         $category_id = Category::where('id',$id)->pluck('parent_id')->toArray();
         $category_of_product = Category::with('sub_categories')->where('id',$category_id)->get();
         $sub_caategory_of_product = Category::with('sub_categories')->where('parent_id','!=',0)->get();
-        return view('ecommerce.sub-catagories')->with(compact('sub_category_products','category_of_product','sub_caategory_of_product'));
+        $range_slug= $slug;
+        $range_id=$id;
+        return view('ecommerce.sub-catagories')->with(compact('sub_category_products','category_of_product','sub_caategory_of_product','range_slug','range_id'));
 
                                                
     }
-    public function Show_category_list($slugg , $idd){
-        $category_products = Product::with(['product_variations.variations.product', 'unit'])->where('category_id', $idd)->get();
+    public function Show_category_list($slugg , $idd,Request $req){
+
+        if($req->max_price != 0){
+            $max_price=(int)$req->max_price;
+            $min_price=(int)$req->min_price;
+            $category_products_id = Product::with(['product_variations.variations.product', 'unit'])->where('category_id', $idd)->pluck('id')->toArray();
+            $variation_compare = Variation::whereIn('product_id',$category_products_id)->whereBetween('market_price',[$min_price,$max_price])->pluck('product_id')->toArray();
+            $category_products = Product::with(['product_variations.variations.product', 'unit'])->whereIn('id', $variation_compare)->get();
+        }
+        else{
+            $category_products = Product::with(['product_variations.variations.product', 'unit'])->where('category_id', $idd)->get();
+        }
+        
         $category_of_product = Category::with('sub_categories')->where('id',$idd)->get();
         $sub_caategory_of_product = Category::with('sub_categories')->where('parent_id','!=',0)->get();
-        return view('ecommerce.category')->with(compact('category_products','category_of_product','sub_caategory_of_product'));                              
+        $range_slug= $slugg;
+        $range_id=$idd;
+        return view('ecommerce.category')->with(compact('category_products','category_of_product','sub_caategory_of_product','range_slug','range_id'));                              
     }
     public function getCustomer()
     {

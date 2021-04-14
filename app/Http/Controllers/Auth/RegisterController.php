@@ -104,7 +104,6 @@ class RegisterController extends Controller
                 'email'             =>      'required|email|unique:users,email',
                 'phone'             =>      'required|numeric|min:10',
                 'password'          =>      'required|string|min:8',
-                'address'           =>      'required|string'
             ]
         );
         
@@ -112,7 +111,6 @@ class RegisterController extends Controller
             "name"              =>          $req->name,
             "email"             =>          $req->email,
             "mobile"            =>          $req->phone,
-            "shipping_address"   =>          $req->address,
             "password"          =>          Hash::make($req['password']),
             "type"              =>          $type,
             "business_id"       =>          '1',
