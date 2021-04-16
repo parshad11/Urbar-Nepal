@@ -99,13 +99,14 @@ class ShopController extends Controller
 
     public function store(Request $request)
     {
+
         try {
             $input = $request->except('_token');
             $location = BusinessLocation::where('location_id', 'BL0001')->first();
             $input['status'] = 'draft';
             $input['location_id'] = $location->id;
             $assign_delivery = 1;
-            $user = Auth::guard('customer')->user();
+            $user = Auth::guard('customerapi')->user();
             $input['contact_id'] = $user->id;
             $business_id = $user->business_id;
             $input['commission_agent'] = !empty($request->input('commission_agent')) ? $request->input('commission_agent') : null;
