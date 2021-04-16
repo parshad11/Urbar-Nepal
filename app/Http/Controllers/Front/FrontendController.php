@@ -33,7 +33,7 @@ class FrontendController extends Controller
      */
     public function index()
     {
-        $home_settings = HomeSetting::first();
+        $home_settings = HomeSetting::latest()->first();
         $category = Category::with('sub_categories')->where('parent_id','=',0)->get();
         $sub_category = Category::with('sub_categories')->where('parent_id','!=',0)->get();
         $banners = Banner::where('status', 'active')->latest()->get();

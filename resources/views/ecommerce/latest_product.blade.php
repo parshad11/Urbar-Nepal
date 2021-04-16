@@ -48,29 +48,16 @@
                         </aside>
 
                     </div> -->
-                    <div class=" col-lg-10 col-md-9 box-shadow-xy">
+                    <div class=" col-lg-10 col-md-9 box-shadow-xy mx-auto">
 
-                        <div class="d-flex align-items-center justify-content-between">
-                            <div class="Name__of__category mt-2">
-                                <div class="heading d-flex">
+                    <div class="d-flex align-items-center justify-content-between">
+                            <div class="Name__of__category mt-2 mx-auto">
+                                <div class="heading ">
                                     <h3>Latest Products </h3>
                                 </div>
 
                             </div>
-                            <!-- <div class="product_sort_by ">
-                                <div class="d-flex align-items-center">
-                                    <div class="heading">
-                                        <h5>Sort by: &nbsp;</h5>
-
-                                    </div>
-                                    <select name="" class="uk-select" style="width: 100px">
-                                        <option value="">New</option>
-                                        <option value="">Price</option>
-                                        <option value="">Popular</option>
-                                    </select>
-                                </div>
-
-                            </div> -->
+                            
                         </div>
                         <div class="product-category white-product">
                             @forelse($products as $product)

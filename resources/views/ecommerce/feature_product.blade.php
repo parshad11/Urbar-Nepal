@@ -5,11 +5,11 @@
             <div class="w-100 mx-auto">
                 <div class="row my-4">
                  
-                    <div class=" col-lg-10 col-md-9 box-shadow-xy">
+                    <div class=" col-lg-10 col-md-9 box-shadow-xy mx-auto">
 
                         <div class="d-flex align-items-center justify-content-between">
-                            <div class="Name__of__category mt-2">
-                                <div class="heading d-flex">
+                            <div class="Name__of__category mt-2 mx-auto">
+                                <div class="heading ">
                                     <h3>Feature Products </h3>
                                 </div>
 
@@ -76,6 +76,8 @@
                                     @empty
                             @endforelse
                             
+                        </div>
+                        <div>
                         </div>
                         {{ $featured_products->links() }}
                     </div>
