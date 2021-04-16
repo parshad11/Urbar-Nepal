@@ -133,23 +133,23 @@ class ShopController extends Controller
             $product = [];
             $products = [];
             foreach ($cart_items as $item) {
-
-                $product['product_type'] = $item['variation']['product']['type'];
-                $product['unit_price'] = $item['variation']['default_sell_price'];
-                $product['line_discount_price'] = 'fixed';
-                $product['line_discount_amount'] = 0;
-                $product['item_tax'] = 0;
-                $product['tax_id'] = null;
-                $product['sell_line_note'] = null;
-                $product['lot_no_line_id'] = null;
-                $product['product_id'] = $item['variation']['product']['id'];
-                $product['variation_id'] = $item['variation']['id'];
-                $product['enable_stock'] = $item['variation']['product']['enable_stock'];
-                $product['quantity'] = $item['quantity'];
-                $product['product_unit_id'] = $item['variation']['product']['unit_id'];
-                $product['sub_unit_id'] = $item['variation']['product']['unit_id'];
-                $product['base_unit_multiplier'] = 1;
-                $product['unit_price_inc_tax'] = $item['variation']['sell_price_inc_tax'];
+                $variation=Variation::with('product')->where('id',$item['product_id'])->first();
+                $product['product_type']=$variation->product->type;
+                $product['unit_price']=$variation->default_sell_price;
+                $product['line_discount_price']='fixed';
+                $product['line_discount_amount']=0;
+                $product['item_tax']=0;
+                $product['tax_id']=null;
+                $product['sell_line_note']=null;
+                $product['lot_no_line_id']=null;
+                $product['product_id']=$variation->product->id;
+                $product['variation_id']=$variation->id;
+                $product['enable_stock']=$variation->product->enable_stock;
+                $product['quantity']=$item['quantity'];
+                $product['product_unit_id']=$variation->product->unit_id;
+                $product['sub_unit_id']=$variation->product->unit_id;
+                $product['base_unit_multiplier']=1;
+                $product['unit_price_inc_tax']=$variation->sell_price_inc_tax;
                 array_push($products, $product);
             }
 
