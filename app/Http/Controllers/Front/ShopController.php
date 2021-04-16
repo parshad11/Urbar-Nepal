@@ -242,9 +242,9 @@ class ShopController extends Controller
      */
     public function store(Request $request)
     {
-     
+
         try {
-            // dd($request->all());
+             dd($request->all());
             $input = $request->except('_token');
             $location = BusinessLocation::where('location_id', 'BL0001')->first();
             $input['status'] = 'draft';
