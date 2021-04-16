@@ -89,7 +89,7 @@ class LoginController extends Controller
         $request->validate(
             [
                 'name' => 'required|string|max:20',
-                'email' => 'required|email|unique:users,email',
+                'email' => 'required|email|unique:contacts,email',
                 'phone' => 'required|numeric|min:10',
                 'password' => 'required|string|min:8',
                 'address' => 'required|string'
