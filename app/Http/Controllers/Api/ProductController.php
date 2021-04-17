@@ -121,22 +121,32 @@ class ProductController extends Controller
         ]);
     }
 
-    public function PopularCategories()
-    {
+    public function PopularCategories(){
+        $popular_categories = Category::with(['sub_categories', 'sub_categories.sub_category_products.variations.media', 'products.variations.media'])
+            ->where('parent_id', 0)->whereHas('products')
+            ->orderBy('view','Desc')->limit(3)->get();
 
-        $popular_category = Category::with(['products' => function ($query) {
-            $location = BusinessLocation::where('location_id', 'BL0001')->first();
-            $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
-            $query->whereIn('products.id', $variation_location_product_ids);
-        }])
-            ->whereHas('products')
-            ->orderBy('view', 'Desc')->orderBY('created_at', 'desc')->limit(3)->where('deleted_at', NULL)->active()->get();
         return response()->json([
-            'data' => [
-                'popular_category' => $popular_category
-            ]
+            'popular_category' => $popular_categories
         ]);
     }
+
+//    public function PopularCategories()
+//    {
+//
+//        $popular_category = Category::with(['products.variations' => function ($query) {
+//            $location = BusinessLocation::where('location_id', 'BL0001')->first();
+//            $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
+//            $query->whereIn('products.id', $variation_location_product_ids);
+//        }])
+//            ->whereHas('products')
+//            ->orderBy('view', 'Desc')->orderBY('created_at', 'desc')->limit(3)->where('deleted_at', NULL)->active()->get();
+//        return response()->json([
+//            'data' => [
+//                'popular_category' => $popular_category
+//            ]
+//        ]);
+//    }
 
 
     public function product($slug)

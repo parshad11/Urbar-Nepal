@@ -45,6 +45,7 @@ class CartController extends Controller
         $user_id = Auth::guard('customerapi')->user()->id;
         $cart_items = Cart::where('user_id', $user_id)->get();
 		$variation_product = Variation::with('product')->where('product_id',$request->product_id)->first();
+		dd($variation_product);
         $variation_stock = VariationLocationDetails::where('variation_id', $variation_product->id)->first();
         if ($request->quantity > $variation_stock->qty_available) {
 			return response()->json(['status'=>'error', 'msg' => 'Quantity is not available']);
