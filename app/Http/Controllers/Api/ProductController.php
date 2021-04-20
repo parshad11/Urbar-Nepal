@@ -152,29 +152,11 @@ class ProductController extends Controller
             ->get();
         $items = [];
         $items = $popular_categories;
-        $popular_categories = collect([$items]);
+        $popular_categories = collect($items);
         return response()->json([
-            'special_category' => $popular_categories
+            'popular_category' => $popular_categories
         ]);
     }
-//
-//    public function PopularCategories()
-//    {
-//        $popular_category = Category::with(['products' => function ($query) {
-//            $location = BusinessLocation::where('location_id', 'BL0001')->first();
-//            $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
-//            $query->whereIn('products.id', $variation_location_product_ids)
-//            ->with('variations');
-//        }])
-//            ->whereHas('products')
-//            ->orderBy('view', 'Desc')->orderBY('created_at', 'desc')->limit(3)->where('deleted_at', NULL)->active()->get();
-//        return response()->json([
-//            'data' => [
-//                'popular_category' => $popular_category
-//            ]
-//        ]);
-//    }
-
 
     public function product($slug)
     {
