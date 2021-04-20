@@ -119,22 +119,11 @@
                                     @empty
                             @endforelse
                         </div>
-                     
-                            {{ $products -> links() }}
+<!--                      
+                            {{ $products -> links() }} -->
                         
                     </div>
                 </div>
             </div>
         </section>
 @endsection
-<script>
-    $(document).ready(function () {
-    
-    $("#view").load("pages/1.html");
-  
-    $("#routeLinks li a").click(function () {
-       $("#view").load("pages/" + $(this).attr("data-load") + ".html");
-         return false;
-    });
-});
-    </script>

@@ -74,6 +74,7 @@ class FrontendController extends Controller
 
     public function latestProduct()
     {
+        $home_settings = HomeSetting::latest()->first();
         $location = BusinessLocation::where('location_id', 'BL0001')->first();
         $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
         $products = Product::with(['product_variations.variations.product', 'unit'])->whereIn('id', $variation_location_product_ids)->latest()->paginate(5);
@@ -83,10 +84,11 @@ class FrontendController extends Controller
             $cart_items = Cart::with('variation')->where('user_id', auth()->guard('customer')->user()->id)->get();
         }
         
-        return view('ecommerce.latest_product')->with(compact('products','cart_items'));
+        return view('ecommerce.latest_product')->with(compact('products','cart_items','home_settings'));
     }
     public function featureProduct(Request $request)
     {
+        $home_settings = HomeSetting::latest()->first();
         $location = BusinessLocation::where('location_id', 'BL0001')->first();
         $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
         $featured_products =Product::whereIn('id', $variation_location_product_ids)->where('set_featured',1)->paginate(2);
@@ -99,7 +101,7 @@ class FrontendController extends Controller
         // if ($request->ajax()) {
         // return view('ecommerce.feature_product')->with(compact('featured_products','cart_items'));
         // }
-        return view('ecommerce.feature_product')->with(compact('featured_products','cart_items'));
+        return view('ecommerce.feature_product')->with(compact('featured_products','cart_items','home_settings'));
     }
     
     public function getBlog()
@@ -132,7 +134,7 @@ class FrontendController extends Controller
         //$about_details = FrontAbout::select('banner_image')->first();
         $categories = BlogCategory::with('news')->orderBy('id', 'desc')->get();
         $blog_single = Blog::where('slug', $slug)->first();
-        $blogs = Blog::orderBy('created_at', 'desc')->take(5)->get();
+        $blogs = Blog::orderBy('created_at', 'desc')->latest()->limit(5)->get();
         $cart_items=null;
         if(auth()->guard('customer')->user()){
             $cart_items = Cart::with('variation')->where('user_id', auth()->guard('customer')->user()->id)->get();

@@ -46,7 +46,7 @@
             <ul class="d-flex">
               <li class="px-1"><a href="{{route('front_dashboard')}}">Home</a></li>/
               <li class="px-1"><a href="{{route('blog')}}">blog</a></li>/
-              <li class="px-1"><a href="#">category</a></li>
+              <li class="px-1"><a href="#">Recent Blogs</a></li>
             </ul>
           </div>
           <!-- <div class="blog-content">
@@ -71,26 +71,26 @@
           </div>
         </div>
         <div class="col-lg-3 col-md-12 mt-5 border-left border-md-0 sidebar">
+        <ul class="mt-5">
+            <h4 class="py-1">Recent Blogs</h4>
+            @if(isset($blogs))
+                        @foreach($blogs as $blog)
+                        <li><a href="{{ route('blog_single', $blog->slug) }}">{{$blog->title}}</a> 
+                        </li>
+                        @endforeach
+             @endif
+          </ul>
           <ul class="mt-5">
             <h4 class="py-1">Categories</h4>
             @if(isset($categories))
                         @foreach($categories as $category)
-                        <li><a href="#">{{$category->title}}</a> 
+                        <li><a href="{{route('blog')}}">{{$category->title}}</a> 
                         <!-- <span class="pull-right">{{count($category->news)}}</span> -->
                         </li>
                         @endforeach
              @endif
           </ul>
-          <ul class="mt-5">
-            <h4 class="py-1">Recent Blogs</h4>
-            @if(isset($categories))
-                        @foreach($categories as $category)
-                        <li><a href="#">{{$category->title}}</a> 
-                        <!-- <span class="pull-right">{{count($category->news)}}</span> -->
-                        </li>
-                        @endforeach
-             @endif
-          </ul>
+         
         </div>
       </div>
     </div>

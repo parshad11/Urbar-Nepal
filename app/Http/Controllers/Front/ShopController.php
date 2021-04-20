@@ -192,9 +192,42 @@ class ShopController extends Controller
     }
     public function getCustomerEdit()
     {
-        return view('ecommerce.user_account_edit');
+        $user_id = Auth::guard('customer')->user()->id;
+        $customer = Contact::where('id', $user_id)->first();
+        $orders = Transaction::with(['sell_lines.variations','delivery'])->where('contact_id', $user_id)->where('is_ecommerce_order',1)->get();
+        if(auth()->guard('customer')->user()){
+            $cart_items = Cart::with('variation')->where('user_id', auth()->guard('customer')->user()->id)->get();
+        }
+        return view('ecommerce.user_account_edit')->with(compact('customer', 'orders','cart_items'));
     }
     
+    public function getCustomerUpdate(Request $request, $id)
+    {
+        $this->validate($request,[
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => 'required',
+            'mobile' => 'required',
+            'country' => 'required',
+            'state' => 'required',
+            'zip_code' => 'required',
+            'address_line_1' => 'required',
+            'city' => 'required',
+        ]);
+        $customer = Contact::find($id);
+        $customer->first_name = $request->first_name;
+        $customer->last_name = $request->last_name;
+        $customer->email = $request->email;
+        $customer->mobile = $request->mobile;
+        $customer->country = $request->country;
+        $customer->state = $request->state;
+        $customer->zip_code = $request->zip_code;
+        $customer->address_line_1 = $request->address_line_1;
+        $customer->city = $request->city;
+        $customer->save();
+        return redirect('/shop/user-account')->with('success', 'Account updated successfully!!');
+
+    }
     public function autoComplete(Request $request)
     {
         $path=asset('/uploads/media/');
