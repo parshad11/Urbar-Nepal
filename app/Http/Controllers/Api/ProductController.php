@@ -103,13 +103,29 @@ class ProductController extends Controller
     public function categories()
     {
 
-        $special_categories = Category::with(['sub_categories', 'sub_categories.sub_category_products.variations.media', 'products.variations.media'])->where('name', 'like', '%special%')->where('parent_id', 0)->first();
-
+        $special_categories = Category::with(['sub_categories', 'sub_categories.sub_category_products.variations.media', 'products.variations.media'])
+            ->where('name', 'like', '%special%')
+            ->where('parent_id', 0)
+            ->first();
         if ($special_categories == null) {
-            $all_categories = Category::with(['sub_categories', 'sub_categories.sub_category_products.variations.media', 'products.variations.media'])->where('parent_id', 0)
+            $all_categories = Category::with(['sub_categories', 'sub_categories.sub_category_products.variations.media', 'products'=> function ($query) {
+                $location = BusinessLocation::where('location_id', 'BL0001')->first();
+                $variation_location_product_ids = VariationLocationDetails::with('location')
+                    ->where('location_id', $location->id)->pluck('product_id')->toArray();
+                $query->whereIn('products.id', $variation_location_product_ids)
+                    ->with('variations.media');
+
+            }])->where('parent_id', 0)
                 ->active()->orderBy('display_order')->get();
         } else {
-            $all_categories = Category::with(['sub_categories', 'sub_categories.sub_category_products.variations.media', 'products.variations.media'])
+            $all_categories = Category::with(['sub_categories', 'sub_categories.sub_category_products.variations.media', 'products'=> function ($query) {
+                $location = BusinessLocation::where('location_id', 'BL0001')->first();
+                $variation_location_product_ids = VariationLocationDetails::with('location')
+                    ->where('location_id', $location->id)->pluck('product_id')->toArray();
+                $query->whereIn('products.id', $variation_location_product_ids)
+                    ->with('variations.media');
+
+            }])
                 ->where('id', '!=', $special_categories->id)->where('parent_id', 0)->active()->orderBy('display_order')->get();
         }
         $items = [];
@@ -121,23 +137,34 @@ class ProductController extends Controller
         ]);
     }
 
-    public function PopularCategories(){
-        $popular_categories = Category::with(['sub_categories', 'sub_categories.sub_category_products.variations.media', 'products.variations.media'])
-            ->where('parent_id', 0)->whereHas('products')
-            ->orderBy('view','Desc')->limit(3)->get();
-
+    public function PopularCategories()
+    {
+        $popular_categories = Category::with(['sub_categories', 'sub_categories.sub_category_products.variations.media', 'products' => function ($query) {
+            $location = BusinessLocation::where('location_id', 'BL0001')->first();
+            $variation_location_product_ids = VariationLocationDetails::with('location')
+                ->where('location_id', $location->id)->pluck('product_id')->toArray();
+            $query->whereIn('products.id', $variation_location_product_ids)
+                ->with('variations.media');
+        }])
+            ->where('parent_id', 0)
+            ->orderBy('view', 'Desc')
+            ->limit(3)
+            ->get();
+        $items = [];
+        $items = $popular_categories;
+        $popular_categories = collect([$items]);
         return response()->json([
-            'popular_category' => $popular_categories
+            'special_category' => $popular_categories
         ]);
     }
-
+//
 //    public function PopularCategories()
 //    {
-//
-//        $popular_category = Category::with(['products.variations' => function ($query) {
+//        $popular_category = Category::with(['products' => function ($query) {
 //            $location = BusinessLocation::where('location_id', 'BL0001')->first();
 //            $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
-//            $query->whereIn('products.id', $variation_location_product_ids);
+//            $query->whereIn('products.id', $variation_location_product_ids)
+//            ->with('variations');
 //        }])
 //            ->whereHas('products')
 //            ->orderBy('view', 'Desc')->orderBY('created_at', 'desc')->limit(3)->where('deleted_at', NULL)->active()->get();
@@ -173,8 +200,8 @@ class ProductController extends Controller
         if (!$product) {
             return response()->json(["message" => 'Product Not Found!']);
         }
-        $product_cat=$product->category_id;
-        $popular_category=Category::popularcategory($product_cat);
+        $product_cat = $product->category_id;
+        $popular_category = Category::popularcategory($product_cat);
 
         return response()->json([
             'product' => $product

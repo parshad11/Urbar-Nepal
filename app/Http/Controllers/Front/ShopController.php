@@ -190,7 +190,11 @@ class ShopController extends Controller
                                                
     }
     public function Show_category_list($slugg , $idd){
-        $category_products = Product::with(['product_variations.variations.product', 'unit'])->where('category_id', $idd)->get();
+        $location = BusinessLocation::where('location_id', 'BL0001')->first();
+        $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
+        $category_products = Product::with(['product_variations.variations.product', 'unit'])
+            ->whereIn('id', $variation_location_product_ids)
+            ->where('category_id', $idd)->get();
 
         $category_of_product = Category::with('sub_categories')->where('id',$idd)->get();
         $sub_caategory_of_product = Category::with('sub_categories')->where('parent_id','!=',0)->get();
