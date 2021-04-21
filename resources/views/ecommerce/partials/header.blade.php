@@ -29,7 +29,7 @@
                                     <img src="{{ asset('uploads/img/home/'.$home_settings->logo_image) }}"
                                             alt="">
                                 @else
-                                <img src="{{ asset('ecom/img/logo-main.png') }}" class="" alt="Urbar Nepal logo">
+                                <!-- <img src="{{ asset('ecom/img/logo-main.png') }}" class="" alt="Urbar Nepal logo"> -->
                                 @endif
                             </a>
                         </div>

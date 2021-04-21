@@ -106,13 +106,14 @@ class FrontendController extends Controller
     
     public function getBlog()
     {
+        $home_settings = HomeSetting::latest()->first();
         $categories = BlogCategory::latest()->get();
         $blogs = Blog::where('status','active')->latest()->get();
         $cart_items=null;
         if(auth()->guard('customer')->user()){
             $cart_items = Cart::with('variation')->where('user_id', auth()->guard('customer')->user()->id)->get();
         }
-        return view('ecommerce.blog',compact('categories','blogs','cart_items'));
+        return view('ecommerce.blog',compact('categories','blogs','cart_items','home_settings'));
        
     }
     
@@ -132,6 +133,7 @@ class FrontendController extends Controller
     public function getSingleBlog($slug)
     {
         //$about_details = FrontAbout::select('banner_image')->first();
+        $home_settings = HomeSetting::latest()->first();
         $categories = BlogCategory::with('news')->orderBy('id', 'desc')->get();
         $blog_single = Blog::where('slug', $slug)->first();
         $blogs = Blog::orderBy('created_at', 'desc')->latest()->limit(5)->get();
@@ -144,6 +146,7 @@ class FrontendController extends Controller
             ->with('blog_single', $blog_single)
             ->with('categories', $categories)
             ->with('cart_items', $cart_items)
+            ->with('home_settings', $home_settings)
             ->with('blogs', $blogs);
        
     }

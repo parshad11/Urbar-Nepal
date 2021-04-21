@@ -24,6 +24,7 @@ use App\Utils\NotificationUtil;
 use App\Utils\ProductUtil;
 use App\Utils\TransactionUtil;
 use App\Variation;
+use App\Front\HomeSetting;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -80,6 +81,7 @@ class ShopController extends Controller
 
     public function product($slug)
     {
+        $home_settings = HomeSetting::latest()->first();
         $product = Variation::with('product')->where('sub_sku', $slug)->first();
         $product_cat = $product->product->category_id;
         $location = BusinessLocation::where('location_id', 'BL0001')->first();
@@ -92,6 +94,7 @@ class ShopController extends Controller
         }
         return view('ecommerce.product_details')->with('variation', $product)
             ->with('products', $products)
+            ->with('home_settings', $home_settings)
             ->with('cart_items', $cart_items);
     }
 
@@ -104,6 +107,7 @@ class ShopController extends Controller
 
     public function checkout()
     {
+        $home_settings = HomeSetting::latest()->first();
         $user_id = Auth::guard('customer')->user()->id;
         $cart_items = Cart::with('variation.product')->where('user_id', $user_id)->get();
         $customer = Auth::guard('customer')->user();
@@ -112,7 +116,7 @@ class ShopController extends Controller
             request()->session()->flash('error', 'Your cart is empty. Please add product into cart');
             return redirect()->route('shop');
         }
-        return view('ecommerce.checkout')->with(compact('cart_items', 'customer', 'total_price'));
+        return view('ecommerce.checkout')->with(compact('cart_items', 'customer', 'total_price','home_settings'));
     }
 
 
@@ -137,6 +141,7 @@ class ShopController extends Controller
             
     }
     public function showAllCategory(){
+        $home_settings = HomeSetting::latest()->first();
         $category = Category::with('sub_categories')->where('parent_id','=',0)->get();
         $sub_category = Category::with('sub_categories')->where('parent_id','!=',0)->get();
         $cart_items=null;
@@ -145,11 +150,13 @@ class ShopController extends Controller
         }
         return view('ecommerce.all-category')->with('categories', $category)
                                              ->with('cart_items', $cart_items)
+                                             ->with('home_settings', $home_settings)
                                              ->with('sub_categoreis',$sub_category);
                                              
     }
     public function sub_category_Product($slug , $id)
     {
+        $home_settings = HomeSetting::latest()->first();
         $sub_category_products = Product::with(['product_variations.variations.product', 'unit'])->where('sub_category_id', $id)->get();
         $category_id = Category::where('id',$id)->pluck('parent_id')->toArray();
         $category_of_product = Category::with('sub_categories')->where('id',$category_id)->get();
@@ -157,7 +164,7 @@ class ShopController extends Controller
         if(auth()->guard('customer')->user()){
             $cart_items = Cart::with('variation')->where('user_id', auth()->guard('customer')->user()->id)->get();
         }
-        return view('ecommerce.sub-catagories')->with(compact('sub_category_products','category_of_product','sub_caategory_of_product','cart_items'));
+        return view('ecommerce.sub-catagories')->with(compact('sub_category_products','category_of_product','sub_caategory_of_product','cart_items','home_settings'));
         // dd($product_category);
         // if(count($sub_category_products)!=0){
         //     $sub_category_products_ids = Product::where('sub_category_id', $id)->pluck('category_id')->toArray();
@@ -172,33 +179,36 @@ class ShopController extends Controller
                                                
     }
     public function Show_category_list($slugg , $idd){
+        $home_settings = HomeSetting::latest()->first();
         $category_products = Product::with(['product_variations.variations.product', 'unit'])->where('category_id', $idd)->get();
         $category_of_product = Category::with('sub_categories')->where('id',$idd)->get();
         $sub_caategory_of_product = Category::with('sub_categories')->where('parent_id','!=',0)->get();
         if(auth()->guard('customer')->user()){
             $cart_items = Cart::with('variation')->where('user_id', auth()->guard('customer')->user()->id)->get();
         }
-        return view('ecommerce.category')->with(compact('category_products','category_of_product','sub_caategory_of_product','cart_items'));                              
+        return view('ecommerce.category')->with(compact('category_products','category_of_product','sub_caategory_of_product','cart_items','home_settings'));                              
     }
     public function getCustomer()
     {
+        $home_settings = HomeSetting::latest()->first();
         $user_id = Auth::guard('customer')->user()->id;
         $customer = Contact::where('id', $user_id)->first();
         $orders = Transaction::with(['sell_lines.variations','delivery'])->where('contact_id', $user_id)->where('is_ecommerce_order',1)->get();
         if(auth()->guard('customer')->user()){
             $cart_items = Cart::with('variation')->where('user_id', auth()->guard('customer')->user()->id)->get();
         }
-        return view('ecommerce.user_account')->with(compact('customer', 'orders','cart_items'));
+        return view('ecommerce.user_account')->with(compact('customer', 'orders','cart_items','home_settings'));
     }
     public function getCustomerEdit()
     {
+        $home_settings = HomeSetting::latest()->first();
         $user_id = Auth::guard('customer')->user()->id;
         $customer = Contact::where('id', $user_id)->first();
         $orders = Transaction::with(['sell_lines.variations','delivery'])->where('contact_id', $user_id)->where('is_ecommerce_order',1)->get();
         if(auth()->guard('customer')->user()){
             $cart_items = Cart::with('variation')->where('user_id', auth()->guard('customer')->user()->id)->get();
         }
-        return view('ecommerce.user_account_edit')->with(compact('customer', 'orders','cart_items'));
+        return view('ecommerce.user_account_edit')->with(compact('customer', 'orders','cart_items','home_settings'));
     }
     
     public function getCustomerUpdate(Request $request, $id)
