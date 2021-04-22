@@ -172,7 +172,7 @@ class ShopController extends Controller
         if(auth()->guard('customer')->user()){
             $cart_items = Cart::with('variation')->where('user_id', auth()->guard('customer')->user()->id)->get();
         }
-        return view('ecommerce.all-category',compact('popular_category','category_product','products'))->with('categories', $category)->with('cart_items', $cart_items)->with('home_settings', $home_settings);
+        return view('ecommerce.all-category',compact('popular_category','category_product','products'))->with('categories', $category)->with('sub_categories', $sub_category)->with('cart_items', $cart_items)->with('home_settings', $home_settings);
         
                                              
     }
