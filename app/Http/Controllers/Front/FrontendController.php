@@ -81,7 +81,7 @@ class FrontendController extends Controller
 
     public function getAbout()
     {
-        $home_settings = HomeSetting::select('welcome_description')->first();
+        $home_settings = HomeSetting::select('welcome_description')->latest()->first();
         $about_details = FrontAbout::first();
        
         $cart_items=null;
@@ -90,6 +90,7 @@ class FrontendController extends Controller
         }
         return view('ecommerce.about_page')->with('about_info', $about_details)
         ->with('about_content', $home_settings->welcome_description)
+        ->with('home_settings', $home_settings)
         ->with('cart_items', $cart_items);
     }
 
@@ -174,7 +175,7 @@ class FrontendController extends Controller
 
     public function getContact()
     {
-        $home_settings = HomeSetting::first();
+        $home_settings = HomeSetting::latest()->first();
         $cart_items=null;
         if(auth()->guard('customer')->user()){
             $cart_items = Cart::with('variation')->where('user_id', auth()->guard('customer')->user()->id)->get();
@@ -184,8 +185,9 @@ class FrontendController extends Controller
 
     public function getPages($slug)
     {
+        $home_settings = HomeSetting::latest()->first();
         $page_info = PageSetting::where('slug', $slug)->first();
-        return view('ecommerce.login');
+        return view('ecommerce.login',compact('home_settings'));
     }
 
     /**
