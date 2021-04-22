@@ -611,15 +611,14 @@
                                         </div>
                                     </div>
                                 </article>
-                        @endforeach
-                    @endforeach
-                @empty
-                @endforelse
+                                @endforeach
+                            @endforeach
+                        @empty
+                        @endforelse
 
+                </div>
+                <div><a href="{{route('latest_product')}}" class="m-2 uk-button view-cart">view more</a></div>
             </div>
-
-
-            <div><a href="{{route('latest_product')}}" class="m-2 uk-button view-cart">view more</a></div>
         </div>
 
 
