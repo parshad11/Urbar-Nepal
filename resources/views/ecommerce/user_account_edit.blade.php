@@ -12,11 +12,11 @@
             @csrf
               <div class="form-group ">
                 <label for="name">First Name</label>
-                <input type="text" name="first_name" id="first_name" placeholder="Eg. Shishir" class="form-control" required>
+                <input type="text" name="first_name" id="first_name" placeholder="Enter First Name" class="form-control" required>
               </div>
               <div class="form-group ">
                 <label for="name">Last Name</label>
-                <input type="text" name="last_name" id="last_name" placeholder="Eg. Karki" class="form-control" required>
+                <input type="text" name="last_name" id="last_name" placeholder="Enter Last Name" class="form-control" required>
               </div>
               <div class="form-group ">
                 <label for="email">Email</label>
