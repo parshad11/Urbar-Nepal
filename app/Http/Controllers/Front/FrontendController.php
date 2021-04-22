@@ -91,7 +91,7 @@ class FrontendController extends Controller
         $home_settings = HomeSetting::latest()->first();
         $location = BusinessLocation::where('location_id', 'BL0001')->first();
         $variation_location_product_ids = VariationLocationDetails::with('location')->where('location_id', $location->id)->pluck('product_id')->toArray();
-        $featured_products =Product::whereIn('id', $variation_location_product_ids)->where('set_featured',1)->paginate(2);
+        $featured_products =Product::whereIn('id', $variation_location_product_ids)->where('set_featured',1)->paginate(5);
         // return response()->json($featured_products);
         $cart_items=null;
         if(auth()->guard('customer')->user()){

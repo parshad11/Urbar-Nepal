@@ -2758,7 +2758,26 @@ pagination
   -ms-flex-pack: center;
   justify-content: center;
   padding: 10px 0;
+ 
 }
+
+.pagination  li{
+  padding: 0 10px;
+  border: 1px solid #e2e2e2;
+
+}
+
+.pagination li a,span{
+  font-size: 20px;
+
+}
+
+.pagination li a:hover,a:active{
+  cursor: pointer;
+  color: #f0713d;
+}
+
+
 
 .pagination-v4 > li > a,
 .pagination-v4 > li > span {
