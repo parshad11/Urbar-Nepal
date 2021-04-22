@@ -13,7 +13,7 @@
                             
                             <ul class="all-category-list">
                             
-                            @foreach ($sub_categories as $subcategory)
+                            @foreach ($sub_category as $subcategory)
                             @if ( $subcategory->parent_id == $category->id )
                             <li class="py-1 px-1"><a  href="{{route('product_sub_category', ['id' => $subcategory->id ,'slug' => $subcategory->slug])}}" class="nav_a">{{ $subcategory->name }}</a></li>
                                 @endif
