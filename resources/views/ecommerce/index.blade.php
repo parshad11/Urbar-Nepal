@@ -617,7 +617,10 @@
                         @endforelse
 
                 </div>
-                <div><a href="{{route('latest_product')}}" class="m-2 uk-button view-cart">view more</a></div>
+                <div class="w-100 text-right align-items-center justify-content-between">
+
+                        <div><a href="{{route('latest_product')}}" class="m-2 uk-button view-cart">view more</a></div>
+                    </div>
             </div>
         </div>
 
