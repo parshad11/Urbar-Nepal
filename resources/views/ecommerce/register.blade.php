@@ -14,7 +14,7 @@
 @section('content')
  <!-- Account Start -->
  <section class="account-area jarallax overlay-white">
-    <img class="jarallax-img" src="images/bg/6.jpg" alt="">
+    <!-- <img class="jarallax-img" src="images/bg/6.jpg" alt=""> -->
     <div class="container">
       <div class="row">
         <div class="col-md-8 col-md-offset-2">

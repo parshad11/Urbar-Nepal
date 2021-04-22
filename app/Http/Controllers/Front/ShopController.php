@@ -314,7 +314,7 @@ class ShopController extends Controller
     {
 
         try {
-             dd($request->all());
+            //  dd($request->all());
             $input = $request->except('_token');
             $location = BusinessLocation::where('location_id', 'BL0001')->first();
             $input['status'] = 'draft';
