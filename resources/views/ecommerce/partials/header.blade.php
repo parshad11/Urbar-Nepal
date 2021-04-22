@@ -29,7 +29,7 @@
                                     <img src="{{ asset('uploads/img/home/'.$home_settings->logo_image) }}"
                                             alt="">
                                 @else
-                                <img src="{{ asset('ecom/img/logo-main.png') }}" class="" alt="Urbar Nepal logo">
+                                <!-- <img src="{{ asset('ecom/img/logo-main.png') }}" class="" alt="Urbar Nepal logo"> -->
                                 @endif
                             </a>
                         </div>
@@ -216,7 +216,7 @@
             <div class="container">
                 <div class="row">
                     <div class="nav-category">
-                        <a href="allcategory.html" uk-toggle class="	">
+                        <a href="{{Route('show_all_category')}}" uk-toggle class="	">
                             <i class="fas fa-tasks mr-2"></i><span>Categories</span>
                         </a>
                         <a href="allcategory.html" class="pl-3"> All category</a>

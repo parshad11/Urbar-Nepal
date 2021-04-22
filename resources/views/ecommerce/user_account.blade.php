@@ -130,7 +130,7 @@
               </div>
               <hr>
               <!-- <button class="btn btn-success mt-5">Edit</button> -->
-              <a class="btn btn-success mt-5" href="{{route('customer.account_edit')}}">Edit</a>
+              <a class="btn btn-success mt-5" href="{{url('/shop/user-account-edit/'.$customer->id)}}">Edit</a>
             </div>
           </div>
 
@@ -305,4 +305,30 @@
     </section>
 
 
+@endsection
+@section('scripts')
+    @if (session()->has('success'))
+        <script>
+            $(document).ready(function () {
+                Swal.fire({
+                    icon: 'success',
+                    title: "{{Session::get('success')}}",
+                    showConfirmButton: false,
+                    timer: 4000
+                })
+            })
+        </script>
+    @endif
+    @if (session()->has('error'))
+        <script>
+            $(document).ready(function () {
+                Swal.fire({
+                    icon: 'error',
+                    title: "{{Session::get('error')}}",
+                    showConfirmButton: false,
+                    timer: 3000
+                })
+            })
+        </script>
+    @endif
 @endsection

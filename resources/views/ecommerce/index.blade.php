@@ -629,3 +629,29 @@
 
 
 @endsection
+@section('scripts')
+    @if (session()->has('success'))
+        <script>
+            $(document).ready(function () {
+                Swal.fire({
+                    icon: 'success',
+                    title: "{{Session::get('success')}}",
+                    showConfirmButton: false,
+                    timer: 4000
+                })
+            })
+        </script>
+    @endif
+    @if (session()->has('error'))
+        <script>
+            $(document).ready(function () {
+                Swal.fire({
+                    icon: 'error',
+                    title: "{{Session::get('error')}}",
+                    showConfirmButton: false,
+                    timer: 3000
+                })
+            })
+        </script>
+    @endif
+@endsection

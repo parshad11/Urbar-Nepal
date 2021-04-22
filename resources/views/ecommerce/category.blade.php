@@ -34,7 +34,7 @@
                         </li>
                         @endforeach 
                         @endif
-                        <li class=" ">
+                        <!-- <li class=" ">
                             <a class="uk-accordion-title" href="#">
                                 <h5> Price</h5>
                             </a>
@@ -51,7 +51,7 @@
                                     </form>
                                 </div>
                             </div>
-                        </li>
+                        </li> -->
 
                     </ul>
 
@@ -68,7 +68,7 @@
 
                     </div>
 
-                    <div class="product_sort_by ">
+                    <!-- <div class="product_sort_by ">
                         <div class="d-flex align-items-center">
                             <div class="heading">
                                 <h5>Sort by: &nbsp;</h5>
@@ -81,7 +81,7 @@
                             </select>
                         </div>
 
-                    </div>
+                    </div> -->
                 </div>
                 
                 <div class="product-category white-product">

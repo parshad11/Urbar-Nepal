@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Product;
 use App\Variation;
+use App\Front\HomeSetting;
 use App\VariationLocationDetails;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,9 +20,11 @@ class CartController extends Controller
      */
     public function index()
     {
+        $home_settings = HomeSetting::latest()->first();
         $cart_items = Cart::with('variation')->where('user_id', auth()->guard('customer')->user()->id)->get();
         // return $cart_items[0]->product->name;
-        return view('ecommerce.cart')->with('cart_items', $cart_items);
+        return view('ecommerce.cart')->with('cart_items', $cart_items)
+                                     ->with('home_settings', $home_settings);
     }
 
     public function updateNavCart()

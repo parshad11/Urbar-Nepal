@@ -384,7 +384,10 @@ class CmsController extends Controller
 
     public function storeBanner(Request $request)
     {
-    //    dd($request->hasFile('banner_image'));
+        $this->validate($request,[
+            'banner_image' => 'required|mimes:jpeg,jpg,bmp,png',
+        ]);
+        //  dd($request->hasFile('banner_image'));
         if ($request->hasFile('banner_image')) {
             $data['image'] = $this->util->uploadHomeFile($request->banner_image, config('constants.product_img_path') . '/home/banners');
        
@@ -409,6 +412,7 @@ class CmsController extends Controller
 
     public function updateBanner(Request $request, $id)
     {
+        
         $banner = banner::findOrFail($id);
         $banner_image = $banner->image;
         $banner->status = $request->status;
@@ -474,7 +478,10 @@ class CmsController extends Controller
 
     public function sliderstoreBanner(Request $request)
     {
-    //    dd($request->hasFile('banner_image'));
+        $this->validate($request,[
+            'slider_banner_image' => 'required|mimes:jpeg,jpg,bmp,png',
+        ]);
+        //    dd($request->hasFile('banner_image'));
         if ($request->hasFile('slider_banner_image')) {
             $data['image'] = $this->util->uploadHomeFile($request->slider_banner_image, config('constants.product_img_path') . '/home/slider_banners');
        
@@ -499,6 +506,7 @@ class CmsController extends Controller
 
     public function sliderupdateBanner(Request $request, $id)
     {
+    
         $slider_banner = SliderBanner::findOrFail($id);
         $slider_banner_image = $slider_banner->image;
         $slider_banner->status = $request->status;

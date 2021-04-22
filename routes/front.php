@@ -46,7 +46,8 @@ Route::namespace('Front')->group(function () {
 
 
     Route::get('/shop/user-account', 'ShopController@getCustomer')->name('customer.account')->middleware('auth:customer');
-    Route::get('/shop/user-account-edit', 'ShopController@getCustomerEdit')->name('customer.account_edit')->middleware('auth:customer');
+    Route::get('/shop/user-account-edit/{id}', 'ShopController@getCustomerEdit')->name('customer.account_edit')->middleware('auth:customer');
+    Route::post('/shop/user-account-update/{id}', 'ShopController@getCustomerUpdate')->name('customer.account_update')->middleware('auth:customer');
     Route::get('/shop/checkout', 'ShopController@checkout')->name('product.checkout')->middleware(['auth:customer','SetCustomerSessionData']);
     Route::post('/shop/checkout', 'ShopController@store')->name('order.store')->middleware(['auth:customer','SetCustomerSessionData']);
     Route::get('/shop/category/{slug}', 'ShopController@categoryProduct')->name('product_category');

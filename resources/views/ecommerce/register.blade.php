@@ -116,7 +116,7 @@
 
         </div>
 
-        <div class="form-sign-in-with-social">
+        <!-- <div class="form-sign-in-with-social">
 
           <div class="form-row form-title-row">
             <span class="form-title">Sign in with</span>
@@ -126,7 +126,7 @@
           <a href="#" class="form-facebook-button">Facebook</a>
           <a href="#" class="form-twitter-button">Twitter</a>
 
-        </div>
+        </div> -->
 
       </form>
 

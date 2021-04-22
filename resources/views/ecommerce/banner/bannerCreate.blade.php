@@ -20,7 +20,6 @@
             <div class="row form-group">
                 <div class="col-md-2">
                     <label class="control-label">{{__('Banner Image :')}} </label><br>
-                    <small>Dimension :- 512*512</small>
                 </div>
                 <div class="col-md-10">
                     <div id="banner">
