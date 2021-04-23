@@ -5,7 +5,14 @@
   margin-right: auto;
   margin-left: auto;
 }
-
+.mobile-nav .aa-dropdown-menu{
+  background: #d86537;
+  
+  }
+  
+  .mobile-nav .aa-dropdown-menu a{
+    padding: 2px 6px;
+  }
 .nav-tabs a {
   text-transform: capitalize;
 }
