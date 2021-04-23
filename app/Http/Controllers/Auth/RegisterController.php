@@ -7,6 +7,7 @@ use App\Contact;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use App\Front\HomeSetting;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
@@ -73,7 +74,8 @@ class RegisterController extends Controller
     }
 
     public function RegisterUserPage(){
-        return view('ecommerce.register');
+        $home_settings = HomeSetting::latest()->first();
+        return view('ecommerce.register',compact('home_settings'));
     }
 
     public function store(Request $req)

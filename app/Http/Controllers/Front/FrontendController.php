@@ -81,6 +81,7 @@ class FrontendController extends Controller
 
     public function getAbout()
     {
+        $home_settings = HomeSetting::latest()->first();
         $home_settings = HomeSetting::select('welcome_description')->latest()->first();
         $about_details = FrontAbout::first();
        
