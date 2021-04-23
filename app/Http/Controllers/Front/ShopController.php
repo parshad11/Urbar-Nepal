@@ -116,7 +116,7 @@ class ShopController extends Controller
         $total_price = Cart::where('user_id', $user_id)->sum('total_price');
         if (count($cart_items) <= 0) {
             request()->session()->flash('error', 'Your cart is empty. Please add product into cart');
-            return redirect()->route('shop');
+            return redirect()->route('front_dashboard');
         }
         return view('ecommerce.checkout')->with(compact('cart_items', 'customer', 'total_price','home_settings'));
     }
