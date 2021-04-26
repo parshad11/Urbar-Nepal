@@ -44,7 +44,11 @@ class CmsController extends Controller
      */
     public function index()
     {
-        return view('ecommerce.home_setting.form');
+        $data = $this->setting->first();
+        if (!$data) {
+            return redirect()->route('homepage-setting.create');
+        }
+        return view('ecommerce.home_setting.edit')->with('setting', $data);
     }
 
     /**
@@ -120,14 +124,17 @@ class CmsController extends Controller
         // dd($request->all());
         $this->setting = $this->setting->find($id);
         // dd($this->setting);
-        $data['logo_image'] = $request->previous_logo_image;
+        $data['logo_image'] = $request->logo_image;
         if ($request->has('logo_image')) {
             $data['logo_image'] = $this->util->uploadHomeFile($request->logo_image[0], config('constants.product_img_path') . '/home');
-        }
+            }
+            else{
+                $data['logo_image']=$this->setting->logo_image;
+            }
         $data['address'] = $request->address;
         $data['phone'] = $request->phone;
         $data['email'] = $request->email;
-        $data['about_content'] = $request->welcome_description;
+        $data['about_content'] = $request->about_content;
         $data['social_links'] = json_encode(array_combine($request->site, $request->sitelink));
         $data['google_map_link'] = $request->google_map_link;
         $data['created_by'] = Auth::user()->id;
@@ -176,7 +183,7 @@ class CmsController extends Controller
         $data['description'] = $request->description;
         if ($request->hasFile('blog_image')) {
             $data['image'] = $this->util->uploadHomeFile($request->blog_image, config('constants.product_img_path') . '/home/blogs');
-       
+
         }
         $this->blog->fill($data);
         $status = $this->blog->save();
@@ -192,6 +199,7 @@ class CmsController extends Controller
 
     public function editBlog($id)
     {
+
         $categories = BlogCategory::orderBy('id', 'desc')->get();
         $this->blog = $this->blog->where('id', $id)->first();
         return view('ecommerce.blog.edit')->with('blog_info', $this->blog)
@@ -274,7 +282,7 @@ class CmsController extends Controller
             return redirect()->back()->with('status', $output);
         }
     }
-    
+
     public function editBlogCat($id)
     {
 
@@ -283,12 +291,12 @@ class CmsController extends Controller
 
 
     }
-   
+
     public function updateBlogCat(Request $request , $id)
     {
             // $data=$request->all();
             $categories=BlogCategory::find($id);
-            // return $data; 
+            // return $data;
             $categories->update($data);
             return redirect()->route('ecommerce.blog.category_index');
     }
@@ -390,7 +398,7 @@ class CmsController extends Controller
         //  dd($request->hasFile('banner_image'));
         if ($request->hasFile('banner_image')) {
             $data['image'] = $this->util->uploadHomeFile($request->banner_image, config('constants.product_img_path') . '/home/banners');
-       
+
         }
         $this->banner->fill($data);
         $status = $this->banner->save();
@@ -412,7 +420,7 @@ class CmsController extends Controller
 
     public function updateBanner(Request $request, $id)
     {
-        
+
         $banner = banner::findOrFail($id);
         $banner_image = $banner->image;
         $banner->status = $request->status;
@@ -484,7 +492,7 @@ class CmsController extends Controller
         //    dd($request->hasFile('banner_image'));
         if ($request->hasFile('slider_banner_image')) {
             $data['image'] = $this->util->uploadHomeFile($request->slider_banner_image, config('constants.product_img_path') . '/home/slider_banners');
-       
+
         }
         $this->slider_banner->fill($data);
         $status = $this->slider_banner->save();
@@ -506,7 +514,7 @@ class CmsController extends Controller
 
     public function sliderupdateBanner(Request $request, $id)
     {
-    
+
         $slider_banner = SliderBanner::findOrFail($id);
         $slider_banner_image = $slider_banner->image;
         $slider_banner->status = $request->status;
@@ -559,12 +567,13 @@ class CmsController extends Controller
     //About section
     public function createAbout()
     {
+
         return view('ecommerce.about_form');
     }
 
     public function storeAbout(Request $request)
     {
-       
+
         if ($request->hasFile('banner_image')) {
             $data['banner_image'] = $this->util->uploadHomeFile($request->banner_image[0], config('constants.product_img_path') . '/home/about');
         }
@@ -593,6 +602,7 @@ class CmsController extends Controller
 
     public function editAbout()
     {
+
         $data = FrontAbout::first();
         if (!$data) {
             return redirect()->route('ecommerce_about_form');
@@ -632,6 +642,6 @@ class CmsController extends Controller
                 ->with('about_info', $settings);
         }
     }
- 
-  
+
+
 }

@@ -129,8 +129,8 @@
                                         
                                     </div>
                                     <div class=" btn_add-to-wishlist my-sm-2 my-2 my-md-0 my-lg-0">
-                                        <button class=" uk-button checkout">Add To Wishlist &nbsp;<i
-                                                class="far fa-heart"></i></button>
+                                        {{--<button class=" uk-button checkout">Add To Wishlist &nbsp;<i--}}
+                                                {{--class="far fa-heart"></i></button>--}}
                                     </div>
                                 </div>
                             </div>

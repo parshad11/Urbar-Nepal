@@ -82,7 +82,7 @@ class FrontendController extends Controller
     public function getAbout()
     {
         $home_settings = HomeSetting::latest()->first();
-        $home_settings = HomeSetting::select('welcome_description')->latest()->first();
+        $welcome_description = HomeSetting::select('welcome_description')->latest()->first();
         $about_details = FrontAbout::first();
        
         $cart_items=null;
@@ -90,7 +90,7 @@ class FrontendController extends Controller
             $cart_items = Cart::with('variation')->where('user_id', auth()->guard('customer')->user()->id)->get();
         }
         return view('ecommerce.about_page')->with('about_info', $about_details)
-        ->with('about_content', $home_settings->welcome_description)
+        ->with('about_content', $welcome_description->welcome_description)
         ->with('home_settings', $home_settings)
         ->with('cart_items', $cart_items);
     }
