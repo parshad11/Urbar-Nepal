@@ -25,9 +25,11 @@ return [
     'sku' => 'SKU',
     'alert_quantity' => 'Alert quantity',
     'product_name' => 'Product Name',
+    'add_category' => 'Add Category',
     'auto_generate' => 'Auto generate',
     'manage_stock' => 'Manage Stock?',
     'enable_stock_help' => 'Enable stock management at product level',
+    'set_featured_help' => 'Set the Product to feature it for selling',
     'barcode_type' => 'Barcode Type',
     'applicable_tax' => 'Applicable Tax',
     'selling_price_tax_type' => 'Selling Price Tax Type',
@@ -46,6 +48,7 @@ return [
     'product_updated_success' => 'Product updated successfully',
     'enable_product_expiry' => 'Enable Product Expiry',
     'expiry_period' => 'Expiry Period',
+    'set_featured' => 'Set Featured',
     'expires_in' => 'Expires in',
     'not_applicable' => 'Not Applicable',
     'months' => 'Months',
@@ -54,11 +57,10 @@ return [
     'exp_date' => 'EXP Date',
     'view_product' => 'View Product',
     'market_price' => 'Market Price',
+    'collection_due_date' => 'Collection Due Date',
     'add_product' => 'Add Product',
     'variations' => 'Variations',
     'import_products' => 'Import Products',
     'file_to_import' => 'File To Import',
-    'file_imported_successfully' => 'File imported successfully',
-    'set_featured_help'=>'Set Product to feature it for selling',
-    'set_featured' => 'Set Product'
+    'file_imported_successfully' => 'File imported successfully'
  ];

@@ -326,7 +326,7 @@ class PurchaseController extends Controller
                 'document' => 'file|max:' . (config('constants.document_size_limit') / 1000)
             ]);
 
-            $user_id = $request->session()->get('user.id');
+            $user_id = Auth::user()->id;
             $enable_product_editing = $request->session()->get('business.enable_editing_product_from_purchase');
 
             //Update business exchange rate.
@@ -780,7 +780,7 @@ class PurchaseController extends Controller
             }
 
             $business_id = request()->session()->get('user.business_id');
-            $user_id = request()->session()->get('user.id');
+            $user_id = Auth::user()->id;
 
             $query = Contact::where('business_id', $business_id)
                 ->active();

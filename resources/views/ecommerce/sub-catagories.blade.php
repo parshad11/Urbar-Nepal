@@ -91,10 +91,10 @@
 
 
                                 <figure>
-                                    <a href="singlepage.html">
+                                    <a href="{{route('product_single',$variation->sub_sku)}}">
                                         <div class="product-image">
                                             <img width="320" height="320"
-                                                src="https://cdn.shopify.com/s/files/1/0108/7370/0415/products/Shop-1.png"
+                                                src="@foreach($variation->media as $media){{ $media->display_url }}@endforeach"
                                                 class="attachment-shop_catalog size-shop_catalog" alt="">
                                         </div>
                                     </a>
@@ -106,8 +106,8 @@
                                 <div class="product-meta">
                                     <div class="title-wrap">
                                         <p class="product-title">
-                                            <a href="singlepage.html">{{$variation->product->name}}
-                                                            &nbsp;{{$variation->name != "DUMMY" ? $variation->name : ''}} </a>
+                                            <a href="{{route('product_single',$variation->sub_sku)}}">
+                                                {{$variation->product->name}}&nbsp;{{$variation->name != "DUMMY" ? $variation->name : ''}} </a>
                                         </p>
                                     </div>
                                 </div>
@@ -118,19 +118,20 @@
                                     @if($variation->market_price>0)
                                         <div class="product_price-actual">
                                          Price
-                                                                :Rs. {{ number_format($variation->market_price,2) }}
+                                         :Rs. {{ number_format($variation->market_price,2) }}
                                         </div>
                                         @endif
-                                        <!-- <div class="product_price-discount">
+                                        @if($variation->market_price>0)
+                                        <div class="product_price-discount">
                                             <span class="line-through">
-                                                Rs.70
+                                                Rs.{{ number_format($variation->market_price,2) }}
                                             </span>
-                                            <span>-20%</span>
-                                        </div> -->
+                                        </div>
+                                        @endif
                                     </div>
                                     
                                     <div class="product_cart">
-                                        <a href="javascript:void(0)">
+                                        <a href="javascript:void(0)" id="add_to_carts" product_id="{{$variation->id}}">
                                             <ion-icon name="cart" uk-tooltip=" Add to Cart"></ion-icon>
                                         </a>
                                     </div>

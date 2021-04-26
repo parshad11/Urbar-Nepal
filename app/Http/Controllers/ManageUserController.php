@@ -15,6 +15,7 @@ use App\Utils\ModuleUtil;
 use App\Utils\NotificationUtil;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB as FacadesDB;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
@@ -49,7 +50,7 @@ class ManageUserController extends Controller
 
         if (request()->ajax()) {
             $business_id = request()->session()->get('user.business_id');
-            $user_id = request()->session()->get('user.id');
+            $user_id = Auth::user()->id;
 
             $users = User::where('business_id', $business_id)
                         ->where('is_cmmsn_agnt', 0)
@@ -595,7 +596,7 @@ class ManageUserController extends Controller
             }
             
             $business_id = request()->session()->get('user.business_id');
-            $user_id = request()->session()->get('user.id');
+            $user_id = Auth::user()->id;
 
           
             $deliveryPeople = DeliveryPerson::leftJoin('users','delivery_people.user_id','=','users.id')

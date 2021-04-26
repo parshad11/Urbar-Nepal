@@ -7,7 +7,7 @@
         
 
         <!-- MOBILE NAV START -->
-        <div id="offcanvas-flip" uk-offcanvas="flip: true; overlay: true">
+        <!-- <div id="offcanvas-flip" uk-offcanvas="flip: true; overlay: true">
             <div class="uk-offcanvas-bar">
                 <button class="uk-offcanvas-close" type="button" uk-close style="color: #ef3e42;"></button>
 
@@ -46,7 +46,7 @@
                     </ul>
                 </section>
             </div>
-        </div>
+        </div> -->
 
         <!-- MOBILE NAV END -->
         <!-- END OF HEADER -->
@@ -103,7 +103,7 @@
                                 <div class="d-flex qty-number">
                                     <div class="btn-minus plus-minus px-2 pl-0"><i class="fas fa-minus"></i>
                                     </div>
-                                    <input value="1">
+                                    <input value="1" class="input_quantity"/>
                                     <div class="btn-plus plus-minus px-2"><i class="fas fa-plus"></i>
                                     </div>
                                 </div>
@@ -115,19 +115,22 @@
                                 <div
                                     class="d-flex justify-content-between   flex-column flex-lg-row flex-md-row align-items-start align-items-lg-center align-items-md-center align-items-sm-start">
                                     <div class="btn_add-to-cart my-sm-2 my-2 my-md-0 my-lg-0">
-                                        <a href="#!"><button class=" uk-button view-cart">Add to Cart&nbsp;<i
+                                        <!-- <a href="#!">
+                                         <button class=" uk-button view-cart">Add to Cart&nbsp;<i
                                                     class="fas fa-cart-plus"></i></button>
-                                        </a>
+                                        </a> -->
+                                        <button class="uk-button view-cart" id="add_to_carts" product_id="{{$variation->id}}">Add to Cart&nbsp;<i
+                                        class="fas fa-cart-plus"></i></button>
                                     </div>
 
                                     <div class="btn_add-to-cart my-sm-2 my-2 my-md-0 my-lg-0">
-                                        <a href="checkoutpage.html"><button class=" uk-button view-cart">Buy
-                                                Now &nbsp;<i class="fas fa-shopping-cart"></i></button>
-                                        </a>
+                                        <button class=" uk-button view-cart" id="product_buy_now" product_id="{{$variation->id}}"
+                                            >Buy Now &nbsp;<i class="fas fa-shopping-cart"></i></button>
+                                        
                                     </div>
                                     <div class=" btn_add-to-wishlist my-sm-2 my-2 my-md-0 my-lg-0">
-                                        <button class=" uk-button checkout">Add To Wishlist &nbsp;<i
-                                                class="far fa-heart"></i></button>
+                                        {{--<button class=" uk-button checkout">Add To Wishlist &nbsp;<i--}}
+                                                {{--class="far fa-heart"></i></button>--}}
                                     </div>
                                 </div>
                             </div>
@@ -399,4 +402,36 @@
 
 </div>
 
+@endsection
+@section('scripts')
+    <script>
+        $(document).ready(function () {
+            $(this).on('click', '#product_buy_now', function (event) {
+                event.preventDefault();
+                let quantity = $('.input_quantity').val();
+                let product_variation_id = $(this).attr('product_id');
+                $.ajax({
+                    method: 'POST',
+                    url: '{{ route('product_buy_now') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        quantity: quantity,
+                        variation_id: product_variation_id
+                    },
+                    success: function (response) {
+                        if (response.status == 'error') {
+                            showFrontendAlert('warning', response.msg);
+                        } else {
+                            location.href = "{{ route('product.checkout') }}";
+                        }
+                    },
+                    error: function (response) {
+                        if (response.error) {
+                            window.location.href = document.location.origin + '/shop/login';
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

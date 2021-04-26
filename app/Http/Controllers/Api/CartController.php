@@ -42,12 +42,12 @@ class CartController extends Controller
 
 	public function addToCart(Request $request)
 	{
-		$user_id = Auth::guard('customerapi')->user()->id;
-		$cart_items = Cart::where('user_id', $user_id)->get();
-		$variation_product = Variation::with('product')->find($request->product_id);
-		$variation_stock = VariationLocationDetails::where('variation_id', $variation_product->id)->first();
-		if ($request->quantity > $variation_stock->qty_available) {
-			return response()->json(['status'=>'error', 'msg' => 'Quantity is not available']);
+        $user_id = Auth::guard('customerapi')->user()->id;
+        $cart_items = Cart::where('user_id', $user_id)->get();
+        $variation_product = Variation::with('product')->find($request->product_id);
+        $variation_stock = VariationLocationDetails::where('variation_id', $variation_product->id)->first();
+        if ($request->quantity > @$variation_stock->qty_available) {
+            return response()->json(['status'=>'error', 'msg' => 'Quantity is not available']);
 		}
 		$data = array();
 		$data['product_id'] = $variation_product->id;
@@ -69,7 +69,6 @@ class CartController extends Controller
 				}
 				$cart->push($cartItem);
 			}
-
 			if (!$foundInCart) {
 
 				$cart->push($data);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\CustomerGroup;
 use App\Utils\Util;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
 class CustomerGroupController extends Controller
@@ -86,7 +87,7 @@ class CustomerGroupController extends Controller
         try {
             $input = $request->only(['name', 'amount']);
             $input['business_id'] = $request->session()->get('user.business_id');
-            $input['created_by'] = $request->session()->get('user.id');
+            $input['created_by'] = Auth::user()->id;
             $input['amount'] = !empty($input['amount']) ? $this->commonUtil->num_uf($input['amount']) : 0;
 
             $customer_group = CustomerGroup::create($input);

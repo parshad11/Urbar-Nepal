@@ -13,14 +13,31 @@
 
                 <div class="footer_list">
                     <ul>
-                        <li class="footer_list--item1"><a href="tel:01-6640123">01-6640123</a></li>
-                        <li class="footer_list--item1"> <a href="#!">Kathmandu, Nepal</a></li>
-                        <li class="footer_list--item1"> <a href="#!">www.urbarnepal.com</a></li>
+                        <li class="footer_list--item1">
+                            <a href="tel:{{isset($home_settings) ? $home_settings->phone : ''}}">
+                                {{ isset($home_settings) ? $home_settings->phone : '' }}
+                            </a>
+                        </li>
+                        <li class="footer_list--item1"> 
+                            <a href="#!">
+                            {{ isset($home_settings) ? $home_settings->address : ''}}
+                            </a>
+                        </li>
+                        <li class="footer_list--item1">
+                             <a href="mailto:{{isset($home_settings) ? $home_settings->email : ''}}">
+                             {{isset($home_settings) ? $home_settings->email : ''}}
+                            </a>
+                        </li>
                         <li class="footer_list--item1 d-flex align-items-center social_icons">
-                            <a href="#!" uk-icon="facebook" class="facebook"></a>
-                            <a href="#!" uk-icon="google-plus" class="google-plus"></a>
-                            <a href="#!" uk-icon="twitter" class="twitter"></a>
-                            <a href="#!" uk-icon="instagram" class="instagram"></a>
+                        @if(isset($home_settings) && $home_settings->social_links != null)
+                                @php
+                                    $result = json_decode($home_settings->social_links, true);
+                                @endphp
+                            <a href="{{ $result['facebook'] }}" uk-icon="facebook" class="facebook"></a>
+                            <a href="{{ $result['google'] }}" uk-icon="google-plus" class="google-plus"></a>
+                            <a href="{{ $result['twitter'] }}" uk-icon="twitter" class="twitter"></a>
+                            <a href="{{ $result['instagram'] }}" uk-icon="instagram" class="instagram"></a>
+                        @endif
                         </li>
                     </ul>
                 </div>
@@ -33,10 +50,10 @@
                 </div>
                 <div class="footer_list">
                     <ul>
+                        <li class="footer_list--item"><a href="{{ route('front_dashboard')}}">Home</a></li>
                         <li class="footer_list--item"><a href="{{ route('contact')}}">contact us</a></li>
                         <li class="footer_list--item"><a href="{{ route('front_about')}}">about us</a></li>
-                        <li class="footer_list--item"><a href="#!">details</a></li>
-                        <li class="footer_list--item"><a href="{{ route('faqs')}}">faq</a></li>
+                        <li class="footer_list--item"><a href="{{ route('blog')}}">blogs</a></li>
                     </ul>
                 </div>
             </div>

@@ -20,6 +20,7 @@ use Excel;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use App\TransactionPayment;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class ContactController extends Controller
@@ -482,7 +483,7 @@ class ContactController extends Controller
 
             $input['password']=Hash::make($input['password']); 
             $input['business_id'] = $business_id;
-            $input['created_by'] = $request->session()->get('user.id');
+            $input['created_by'] = Auth::user()->id;
 
             $input['credit_limit'] = $request->input('credit_limit') != '' ? $this->commonUtil->num_uf($request->input('credit_limit')) : null;
             $input['opening_balance'] = $this->commonUtil->num_uf($request->input('opening_balance'));
@@ -697,7 +698,7 @@ class ContactController extends Controller
             $term = request()->input('q', '');
 
             $business_id = request()->session()->get('user.business_id');
-            $user_id = request()->session()->get('user.id');
+            $user_id = Auth::user()->id;
 
             $contacts = Contact::where('business_id', $business_id)
                             ->active();
@@ -826,7 +827,7 @@ class ContactController extends Controller
                 $imported_data = array_splice($parsed_array[0], 1);
                 
                 $business_id = $request->session()->get('user.business_id');
-                $user_id = $request->session()->get('user.id');
+                $user_id = Auth::user()->id;
 
                 $formated_data = [];
 
@@ -1346,5 +1347,14 @@ class ContactController extends Controller
             return view('contact.partials.contact_payments_tab')
                     ->with(compact('payments', 'payment_types'));
         }
+    }
+
+    public function TrackSupplier(Request $request){
+	    if (!auth()->user()->can('supplier.view')) {
+		    abort(403, 'Unauthorized action.');
+	    }
+	    $supplier=Contact::getAllSupplier();
+	    return view('contact.track',compact('supplier'));
+
     }
 }

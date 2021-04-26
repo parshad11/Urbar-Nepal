@@ -64,6 +64,13 @@ class AdminSidebarMenu
                     function ($sub) {
                         if (auth()->user()->can('supplier.view')) {
                             $sub->url(
+                                action('ContactController@TrackSupplier'),
+                                __('Track Supplier'),
+                                ['icon' => 'fa fas fa-star', 'active' => request()->segment(1) == 'track' && request()->segment(2) == 'all-supplier']
+                            );
+                        }
+                        if (auth()->user()->can('supplier.view')) {
+                            $sub->url(
                                 action('ContactController@index', ['type' => 'supplier']),
                                 __('report.supplier'),
                                 ['icon' => 'fa fas fa-star', 'active' => request()->input('type') == 'supplier']
@@ -680,6 +687,11 @@ if (in_array('delivery', $enabled_modules) && (auth()->user()->can('delivery.vie
                             route('ecom_blog'),
                             'Blog Setting',
                             ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'ecommerce' && request()->segment(2) == 'blogs']
+                        );
+                        $sub->url(
+                            route('ecommerce_about_edit'),
+                            'About Settings',
+                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'ecommerce' && request()->segment(2) == 'about']
                         );
                         $sub->url(
                             route('ecom_pages'),

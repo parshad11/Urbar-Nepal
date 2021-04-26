@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Category;
 use App\Utils\ModuleUtil;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Str;
 
@@ -129,7 +130,7 @@ class TaxonomyController extends Controller
             $input['status'] = !empty($request->input('is_active')) ? 'active' : 'inactive';
             $input['slug'] = Str::slug($request->name);
             $input['business_id'] = $request->session()->get('user.business_id');
-            $input['created_by'] = $request->session()->get('user.id');
+            $input['created_by'] = Auth::user()->id;
             $category = Category::create($input);
             $output = ['success' => true,
                             'data' => $category,

@@ -198,7 +198,7 @@ class TaskController extends Controller
 
         ]);
         $business_id = $request->session()->get('user.business_id');
-        $user_id = $request->session()->get('user.id');
+        $user_id = Auth::user()->id;
         $task_details['assigned_by'] = $user_id;
         $task_details['business_id'] = $business_id;
         DB::beginTransaction(); 

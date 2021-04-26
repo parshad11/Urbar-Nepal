@@ -122,13 +122,13 @@
 
     <div class="row">
         <div class="col-sm-12">
-            <div class="text-center">  
+            <div class="text-center">
                 <button type="submit" value="submit" class="btn btn-primary submit_product_form">Save</button>
             </div>
         </div>
     </div>
 
-</form>  
+</form>
 </section>
 <!-- /.content -->
 
@@ -142,7 +142,7 @@
             $('#editor').summernote({
                 height: 300,
             });
-            
+
             $("#logo").spartanMultiImagePicker({
                 fieldName:        'logo_image[]',
                 maxCount:         1,

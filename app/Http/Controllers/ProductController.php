@@ -21,6 +21,7 @@ use App\VariationLocationDetails;
 use App\VariationTemplate;
 use App\Warranty;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
@@ -405,6 +406,7 @@ class ProductController extends Controller
     public function store(Request $request)
     {
     
+        // return $request->all();
         if (!auth()->user()->can('product.create')) {
             abort(403, 'Unauthorized action.');
         }
@@ -421,7 +423,7 @@ class ProductController extends Controller
             
             $product_details = $request->only($form_fields);
             $product_details['business_id'] = $business_id;
-            $product_details['created_by'] = $request->session()->get('user.id');
+            $product_details['created_by'] = Auth::user()->id;
 
             $product_details['enable_stock'] = (!empty($request->input('enable_stock')) &&  $request->input('enable_stock') == 1) ? 1 : 0;
             $product_details['set_featured'] = (!empty($request->input('set_featured')) &&  $request->input('set_featured') == 1) ? 1 : 0;
@@ -444,8 +446,8 @@ class ProductController extends Controller
             if (!empty($request->input('enable_sr_no')) &&  $request->input('enable_sr_no') == 1) {
                 $product_details['enable_sr_no'] = 1 ;
             }
-
-            //upload document
+                
+                            //upload document
             $product_details['image'] = $this->productUtil->uploadFile($request, 'image', config('constants.product_img_path'), 'image');
             $common_settings = session()->get('business.common_settings');
 
@@ -1320,7 +1322,7 @@ class ProductController extends Controller
             
             $product_details['type'] = empty($product_details['type']) ? 'single' : $product_details['type'];
             $product_details['business_id'] = $business_id;
-            $product_details['created_by'] = $request->session()->get('user.id');
+            $product_details['created_by'] = Auth::user()->id;
             if (!empty($request->input('enable_stock')) &&  $request->input('enable_stock') == 1) {
                 $product_details['enable_stock'] = 1 ;
                 //TODO: Save total qty
@@ -1367,7 +1369,7 @@ class ProductController extends Controller
             );
 
             if ($product->enable_stock == 1 && !empty($request->input('opening_stock'))) {
-                $user_id = $request->session()->get('user.id');
+                $user_id = Auth::user()->id;
 
                 $transaction_date = $request->session()->get("financial_year.start");
                 $transaction_date = \Carbon::createFromFormat('Y-m-d', $transaction_date)->toDateTimeString();

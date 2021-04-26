@@ -76,6 +76,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
 
     /*supplier detail*/
     Route::resource('records', 'RecordController');
+    Route::get('track/all-supplier/', 'ContactController@TrackSupplier');
     route::get('/supplier/detail', 'RecordController@getallsupplier');
     Route::get('/record/view/{id}', 'RecordController@view');
 
@@ -145,6 +146,8 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
 
     Route::resource('delivery', 'DeliveryController')->except(['create']);
     Route::get('delivery/{transactionId}/create/', 'DeliveryController@create');
+    Route::get('track/all-delivery-people/', 'DeliveryController@trackDeliveryPeople');
+    Route::get('track/live/track/all-delivery-people/', 'DeliveryController@livetrackDeliveryPeople');
     Route::get('/delivery-transaction', 'DeliveryController@listDeliveryTransaction')->name('delivery.transactions');
     Route::resource('task', 'TaskController');
     Route::put('/task/statusupdate/{id}', 'TaskController@statusupdate');
@@ -451,6 +454,12 @@ Route::namespace('Front')->middleware(['setData', 'auth', 'SetSessionData', 'lan
     Route::get('/ecommerce/pages/{id}/edit', 'CmsController@editPages')->name('ecom_pages_edit');
     Route::put('/ecommerce/pages/{id}', 'CmsController@updatePages')->name('ecom_pages_update');
     Route::delete('/ecommerce/pages/{id}/destroy', 'CmsController@deletePages')->name('ecom_pages_delete');
+
+    //About Section
+    Route::get('ecommerce/about-settings/create', 'CmsController@createAbout')->name('ecommerce_about_form');
+    Route::post('ecommerce/about-settings/store', 'CmsController@storeAbout')->name('ecommerce_about_store');
+    Route::get('ecommerce/about-settings', 'CmsController@editAbout')->name('ecommerce_about_edit');
+    Route::post('ecommerce/about-settings/update/', 'CmsController@updateAbout')->name('ecommerce_about_update');
 
 
 });

@@ -14,7 +14,7 @@
 @section('content') 
  <!-- Account Start -->
  <section class="account-area jarallax overlay-white">
-    <img class="jarallax-img" src="images/bg/6.jpg" alt="">
+    <!-- <img class="jarallax-img" src="images/bg/6.jpg" alt=""> -->
     <div class="container">
       <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -70,7 +70,7 @@
             <div class="form-row">
               <button type="submit" class="uk-button view-cart center">Log in</button>
             </div>
-            <a href="forget.html" class="form-forgotten-password">Forgotten password &middot;</a>
+            <!-- <a href="forget.html" class="form-forgotten-password">Forgotten password &middot;</a> -->
             <a href="{{route('registerr_user')}}" class="form-create-an-account">Create an account &rarr;</a>
 
           </div>
@@ -78,7 +78,7 @@
 
         </div>
 
-        <div class="form-sign-in-with-social">
+        <!-- <div class="form-sign-in-with-social">
 
           <div class="form-row form-title-row">
             <span class="form-title">Sign in with</span>
@@ -88,7 +88,7 @@
           <a href="#" class="form-facebook-button">Facebook</a>
           <a href="#" class="form-twitter-button">Twitter</a>
 
-        </div>
+        </div> -->
 
       </form>
 

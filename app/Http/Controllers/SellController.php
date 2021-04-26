@@ -23,6 +23,7 @@ use App\Utils\TransactionUtil;
 use App\Warranty;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
 class SellController extends Controller
@@ -1100,7 +1101,7 @@ class SellController extends Controller
 
         try {
             $business_id = request()->session()->get('user.business_id');
-            $user_id = request()->session()->get('user.id');
+            $user_id = Auth::user()->id;
 
             $transaction = Transaction::where('business_id', $business_id)
                             ->where('type', 'sell')

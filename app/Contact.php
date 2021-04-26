@@ -283,5 +283,11 @@ class Contact extends Authenticatable
         return $address;
     }
 
+    public static function getAllSupplier()
+	{
+		$contact = Contact::where('type', 'supplier')->get();
+//		$contact=$contact->pluck('name');
+		return $contact;
+	}
 
 }

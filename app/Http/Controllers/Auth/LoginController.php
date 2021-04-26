@@ -7,6 +7,7 @@ use App\Utils\BusinessUtil;
 use App\Utils\ModuleUtil;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use App\Front\HomeSetting;
 use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
@@ -52,9 +53,10 @@ class LoginController extends Controller
     public function showCustomerLoginForm()
     {
         if (Auth::guard('customer')->check()) {
-            return redirect('ecommerce.login');
+            return redirect()->route('front_dashboard');
         }
-        return view('ecommerce.login');
+        $home_settings = HomeSetting::latest()->first();
+        return view('ecommerce.login',compact('home_settings'));
     }
 
     public function customerLogin(Request $request)

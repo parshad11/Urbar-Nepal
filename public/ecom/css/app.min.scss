@@ -5,7 +5,9 @@ $primary-color: #006230;
 $secondary-color:#f0713d;
 
 
-
+.algolia-autocomplete{
+  width: 100%!important;
+}
 .center {
   display: table !important;
   margin-right: auto;
@@ -1814,7 +1816,7 @@ h1 {
   #form_register .form-register-with-email .form-row .uk-input {
     width: 230px; }
   #form_register .form-register-with-email:after {
-    content: 'OR';
+    // content: 'OR';
     position: absolute;
     bottom: 330px;
     right: -100px;
